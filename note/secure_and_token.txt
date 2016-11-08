@@ -11,3 +11,16 @@ http://www.ekino.com/introduction-aux-json-web-tokens/
 
 https://github.com/psenger/Jersey2-Security-JWT/tree/master/src/main/java/com/sample
 
+http://www.jasypt.org/index.html
+
+
+
+------
+https://github.com/keeweb/keeweb
+https://bitbucket.org/namn/browsepass
+https://github.com/lixmal/keepass4web/tree/master/doc/img
+
+--------------
+https://github.com/cloudskol/restskol
+
+

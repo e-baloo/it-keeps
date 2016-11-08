@@ -5,6 +5,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.grizzly2.servlet.GrizzlyWebContainerFactory;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.servlet.ServletContainer;
@@ -15,7 +16,7 @@ import org.slf4j.bridge.SLF4JBridgeHandler;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
-import org.ebaloo.itkeeps.restapp.ApplicationResourceConfig;
+import org.ebaloo.itkeeps.restapp.ApplicationConfig;
 import org.ebaloo.itkeeps.restapp.authentication.JwtFactory;
 import org.glassfish.grizzly.http.server.HttpServer;
 
@@ -36,8 +37,8 @@ public class App {
 	private static final String CONF_LOG_LEVEL = "level";
 
 	private static final String CONF_TOKEN = "token";
-
 	private static final String CONF_TOKEN_TIMEOUT = "timeout";
+	private static final String CONF_TOKEN_PASSWORD = "password";
 	
 	
 	
@@ -59,11 +60,15 @@ public class App {
         
     		logger.info("Application Starting");
         	
+    		/*
             Map<String, String> initParams = new HashMap<>();
             initParams.put(
                     ServerProperties.PROVIDER_PACKAGES,
                     ApplicationResourceConfig.class.getPackage().getName());
-            final HttpServer server = GrizzlyWebContainerFactory.create(baseUri, ServletContainer.class, initParams);
+                    */
+    		
+    		
+            final HttpServer server = GrizzlyHttpServerFactory.createHttpServer(baseUri, new ApplicationConfig());
             Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -75,7 +80,7 @@ public class App {
     		logger.info("Application Started!");
 
             Thread.currentThread().join();
-        } catch (IOException | InterruptedException ex) {
+        } catch (InterruptedException ex) {
         	logger.error(null, ex);
         }
     }
@@ -122,8 +127,11 @@ public class App {
 			Config tokenConf = conf.getConfig(CONF_LOG);
 			
 			if(tokenConf.hasPath(CONF_TOKEN_TIMEOUT))
-				JwtFactory.setExpiryDelay(tokenConf.getInt(CONF_TOKEN_TIMEOUT)); 
-			
+				JwtFactory.setTimeout(tokenConf.getInt(CONF_TOKEN_TIMEOUT)); 
+
+			if(tokenConf.hasPath(CONF_TOKEN_PASSWORD))
+				JwtFactory.setPassword(tokenConf.getString(CONF_TOKEN_PASSWORD)); 
+
 		}
 		
     	

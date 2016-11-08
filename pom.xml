@@ -13,6 +13,8 @@
 		<version.typesafe-config>1.3.1</version.typesafe-config>
 		<version.java-jwt>2.2.1</version.java-jwt>
 		<version.shiro>1.3.2</version.shiro>
+		<version.jasypt>1.9.2</version.jasypt>
+		<version.metrics>3.1.2</version.metrics>
 	</properties>
 
 	<dependencies>
@@ -119,15 +121,6 @@
 		
 		
 		<!-- JWT -->
-		<!-- 
-		<dependency>
-		    <groupId>com.auth0</groupId>
-		    <artifactId>java-jwt</artifactId>
-		    <version>${version.java-jwt}</version>
-		</dependency>
-		-->
-		
-		
 		<dependency>
 		    <groupId>io.jsonwebtoken</groupId>
 		    <artifactId>jjwt</artifactId>
@@ -147,13 +140,45 @@
 		    <version>${version.shiro}</version>
 		</dependency>
 		-->		
-		
-		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+
+		<!--   -->		
 		<dependency>
 		    <groupId>org.apache.commons</groupId>
 		    <artifactId>commons-lang3</artifactId>
 		    <version>3.5</version>
 		</dependency>
+		
+		<!-- Jasypt -->
+		<dependency>
+		    <groupId>org.jasypt</groupId>
+		    <artifactId>jasypt</artifactId>
+		    <version>${version.jasypt}</version>
+		</dependency>
+		
+		
+		<!-- Metrics -->
+		<dependency>
+		    <groupId>io.dropwizard.metrics</groupId>
+		    <artifactId>metrics-core</artifactId>
+		    <version>${version.metrics}</version>
+		</dependency>
+		<dependency>
+		    <groupId>io.dropwizard.metrics</groupId>
+		    <artifactId>metrics-json</artifactId>
+		    <version>${version.metrics}</version>
+		</dependency>
+		<dependency>
+		    <groupId>io.dropwizard.metrics</groupId>
+		    <artifactId>metrics-jvm</artifactId>
+		    <version>${version.metrics}</version>
+		</dependency>
+		<dependency>
+		    <groupId>io.dropwizard.metrics</groupId>
+		    <artifactId>metrics-jersey2</artifactId>
+		    <version>${version.metrics}</version>
+		</dependency>
+
+
 		
 		
 	</dependencies>  

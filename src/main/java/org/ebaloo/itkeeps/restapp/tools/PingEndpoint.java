@@ -8,6 +8,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
+import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -18,7 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-@Path(ToolsResourceConfig.PATH)
+@Path(ToolsConfig.PATH)
 public class PingEndpoint {
 
 	private static final Logger logger = LoggerFactory.getLogger(PingEndpoint.class.getName());
@@ -28,6 +29,7 @@ public class PingEndpoint {
     @Produces({MediaType.APPLICATION_JSON})
     @PermitAll
     @Path("ping")
+    @Timed
     public Response getPing() {
     	
     	if(logger.isTraceEnabled())

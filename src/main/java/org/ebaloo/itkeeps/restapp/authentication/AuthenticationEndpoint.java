@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 
 */
 
-@Path(AuthenticationResourceConfig.PATH)
+@Path(AuthenticationConfig.PATH)
 public class AuthenticationEndpoint {
 
 	private static final Logger logger = LoggerFactory.getLogger(AuthenticationEndpoint.class.getName());

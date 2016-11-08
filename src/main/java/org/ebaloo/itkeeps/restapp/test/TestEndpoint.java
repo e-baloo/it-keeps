@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  */
 
 
-@Path(TestResourceConfig.PATH)
+@Path(TestConfig.PATH)
 public class TestEndpoint {
 
 	private static final Logger logger = LoggerFactory.getLogger(TestEndpoint.class.getName());

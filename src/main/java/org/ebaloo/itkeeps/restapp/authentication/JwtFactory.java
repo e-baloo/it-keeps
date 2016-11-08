@@ -5,9 +5,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jasypt.util.text.BasicTextEncryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,15 +26,28 @@ public final class JwtFactory {
 
 	private static final Logger logger = LoggerFactory.getLogger(JwtFactory.class.getName());
 
-	private static final Key key = MacProvider.generateKey();
+	private static final Key KEY = MacProvider.generateKey();
 	
-	private static int expiryDelay = 10; // 10 minutes
+	private static final BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
+	private static final String DEFAULT_PASSWORD = "it-k33p5!@2017";
 
-	public static int getExpiryDelay() {
-		return expiryDelay;
+	
+	private static final String USER_ID = "user.id";
+	private static final String USER_NAME = "user.name";
+	private static final String USER_ROLES = "user.roles";
+	
+	
+	static {
+		JwtFactory.setPassword(DEFAULT_PASSWORD);
+	}
+	
+	private static int timeout = 10; // 10 minutes
+
+	public static int getTimeout() {
+		return timeout;
 	}
 
-	public static void setExpiryDelay(int expiryDelay) {
+	public static void setTimeout(int expiryDelay) {
 		
 		if(expiryDelay < 1)
 			expiryDelay = 1;
@@ -38,7 +55,7 @@ public final class JwtFactory {
 		if(expiryDelay > 120)
 			expiryDelay = 120;
 		
-		JwtFactory.expiryDelay = expiryDelay;
+		JwtFactory.timeout = expiryDelay;
 	}
 
 	public static String getJwtString(final String userId) {
@@ -67,20 +84,31 @@ public final class JwtFactory {
 
 		JwtBuilder jwtBuilder = Jwts.builder();
 
+		jwtBuilder.setHeaderParam("typ", "JWT");
+		
 		jwtBuilder.setIssuer("IT-Keeps");
-		jwtBuilder.setId(userId);
-		jwtBuilder.setSubject(userName);
+		
+		Map<String, Object> claimsProprties = new HashMap<String, Object>();
+		
+		claimsProprties.put(USER_ID, JwtFactory.encrypt(userId));
+		claimsProprties.put(USER_NAME, JwtFactory.encrypt(userName));
 
 		if (roles != null && roles.size() > 0)
-			jwtBuilder.setAudience(StringUtils.join(roles, ","));
+			claimsProprties.put(USER_ROLES, JwtFactory.encrypt(StringUtils.join(roles, ",")));
+		
+		jwtBuilder.setClaims(claimsProprties);
+		
+		jwtBuilder.setId(JwtFactory.encrypt(UUID.randomUUID().toString()));
+
 
 		jwtBuilder.setExpiration(expires);
 		jwtBuilder.setIssuedAt(new Date());
-		jwtBuilder.signWith(signatureAlgorithm, key);
+		
+		
+		jwtBuilder.signWith(signatureAlgorithm, KEY);
 
 
 		return jwtBuilder.compact();
-
 	}
 
 	public static final void isValid(final String token) {
@@ -90,7 +118,7 @@ public final class JwtFactory {
 
 		try {
 
-			Jwts.parser().setSigningKey(key).parseClaimsJws(token.trim());
+			Jwts.parser().setSigningKey(KEY).parseClaimsJws(token.trim());
 
 		} catch (Exception e) {
 			
@@ -106,7 +134,7 @@ public final class JwtFactory {
 
 		Jws<Claims> claimsJws = getClaims(token);
 		
-		return claimsJws.getBody().getSubject();
+		return JwtFactory.decrypt(claimsJws.getBody().get(USER_NAME, String.class));
 	}
 
 	public static final List<String> getRoles(final String token) {
@@ -116,12 +144,12 @@ public final class JwtFactory {
 
 		Jws<Claims> claimsJws = getClaims(token);
 
-		String audience = claimsJws.getBody().getAudience();
+		String userRoles = claimsJws.getBody().get(USER_ROLES, String.class);
 
 		ArrayList<String> list = new ArrayList<String>();
 
-		if (StringUtils.isNotEmpty(audience))
-			list.addAll(Arrays.asList(audience.split(",")));
+		if (StringUtils.isNotEmpty(userRoles))
+			list.addAll(Arrays.asList(JwtFactory.decrypt(userRoles).split(",")));
 
 		return list;
 	}
@@ -133,7 +161,7 @@ public final class JwtFactory {
 
 		Jws<Claims> claimsJws = getClaims(token);
 
-		return claimsJws.getBody().getId();
+		return JwtFactory.decrypt(claimsJws.getBody().get(USER_ID, String.class));
 	}
 
 	
@@ -144,7 +172,7 @@ public final class JwtFactory {
 
 		isValid(token);
 		
-		return Jwts.parser().setSigningKey(key).parseClaimsJws(token);
+		return Jwts.parser().setSigningKey(KEY).parseClaimsJws(token);
 	}
 	
 	
@@ -155,9 +183,33 @@ public final class JwtFactory {
 		
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(new Date());
-		calendar.add(Calendar.MINUTE, expiryDelay);
+		calendar.add(Calendar.MINUTE, timeout);
 		
 		return calendar.getTime();
 	}
+
+	
+	public static void setPassword(String password) {
+		JwtFactory.textEncryptor.setPassword(password);
+	}
+	
+	private static final String encrypt(final String message) {
+		return JwtFactory.textEncryptor.encrypt(message);
+	}
+
+	private static final String decrypt(final String encryptedMessage) {
+		return JwtFactory.textEncryptor.decrypt(encryptedMessage);
+	}
+
+	/*
+
+
+textEncryptor.setPassword(myEncryptionPassword);
+...
+String myEncryptedText = textEncryptor.encrypt(myText);
+...
+String plainText = textEncryptor.decrypt(myEncryptedText);
+
+*/
 
 }
