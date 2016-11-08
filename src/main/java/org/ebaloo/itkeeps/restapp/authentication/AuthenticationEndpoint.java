@@ -78,7 +78,7 @@ public class AuthenticationEndpoint {
         // The issued token must be associated to a user
         // Return the issued token
     	
-    	return JwtFactory.getJwtString(username, null, 0, JwtFactory.key);
+    	return JwtFactory.getJwtString(username, username, null);
     	
     }
 }

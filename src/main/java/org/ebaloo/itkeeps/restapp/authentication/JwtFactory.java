@@ -19,114 +19,145 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.crypto.MacProvider;
 
 public final class JwtFactory {
-	
-	public static final Key key = MacProvider.generateKey();
 
 	private static final Logger logger = LoggerFactory.getLogger(JwtFactory.class.getName());
 
+	private static final Key key = MacProvider.generateKey();
+	
+	private static int expiryDelay = 10; // 10 minutes
 
-	public static String getJwtString(final String issuer, List<String> roles, int version, Key key) {
+	public static int getExpiryDelay() {
+		return expiryDelay;
+	}
 
-    	if(logger.isTraceEnabled())
-    		logger.trace("getJwtString()");
-
-        if (issuer == null) {
-            throw new NullPointerException("null username is illegal");
-        }
-        
-        /*
-        if (roles == null) {
-            throw new NullPointerException("null roles are illegal");
-        }
-        */
-        
-        /*
-        if (expires == null) {
-            throw new NullPointerException("null expires is illegal");
-        }
-        */
-        
-        if (key == null) {
-            throw new NullPointerException("null key is illegal");
-        }
-    	
-
-		Date expires = getExpiryDate(60);
+	public static void setExpiryDelay(int expiryDelay) {
 		
-        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+		if(expiryDelay < 1)
+			expiryDelay = 1;
+		
+		if(expiryDelay > 120)
+			expiryDelay = 120;
+		
+		JwtFactory.expiryDelay = expiryDelay;
+	}
 
-        
-        JwtBuilder jwtBuilder = Jwts.builder();
-        
-        		jwtBuilder.setIssuer("Jersey-Security-Basic");
-        		jwtBuilder.setSubject(issuer);
-        		
-        		if(roles != null && roles.size() > 0)
-        			jwtBuilder.setAudience(StringUtils.join(roles, ","));
-        		
-        		jwtBuilder.setExpiration(expires);
-        		jwtBuilder.setIssuedAt(new Date());
-        		jwtBuilder.setId(String.valueOf(version));
-        		jwtBuilder.signWith(signatureAlgorithm, key);
-        		
-        String jwtString = jwtBuilder.compact();
-        		
-        return jwtString;
+	public static String getJwtString(final String userId) {
+		return getJwtString(userId, userId);
+	}
+
+	public static String getJwtString(final String userId, final String userName) {
+		return getJwtString(userId, userName, null);
+	}
+
+	public static String getJwtString(final String userId, final String userName, final List<String> roles) {
+
+		if (logger.isTraceEnabled())
+			logger.trace("getJwtString()");
 		
 		
+		if (StringUtils.isEmpty(userId))
+			throw new NullPointerException("null or empty 'userId' is illegal");
+
+		if (StringUtils.isEmpty(userName))
+			throw new NullPointerException("null or empty 'userName' is illegal");
+
+		Date expires = getExpiryDate();
+
+		SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+
+		JwtBuilder jwtBuilder = Jwts.builder();
+
+		jwtBuilder.setIssuer("IT-Keeps");
+		jwtBuilder.setId(userId);
+		jwtBuilder.setSubject(userName);
+
+		if (roles != null && roles.size() > 0)
+			jwtBuilder.setAudience(StringUtils.join(roles, ","));
+
+		jwtBuilder.setExpiration(expires);
+		jwtBuilder.setIssuedAt(new Date());
+		jwtBuilder.signWith(signatureAlgorithm, key);
+
+
+		return jwtBuilder.compact();
+
+	}
+
+	public static final void isValid(final String token) {
+
+		if (logger.isTraceEnabled())
+			logger.trace("isValid()");
+
+		try {
+
+			Jwts.parser().setSigningKey(key).parseClaimsJws(token.trim());
+
+		} catch (Exception e) {
+			
+			throw new RuntimeException(e);
+			
+		}
+	}
+
+	public static final String getUserName(final String token) {
+
+		if (logger.isTraceEnabled())
+			logger.trace("getJwtString()");
+
+		Jws<Claims> claimsJws = getClaims(token);
+		
+		return claimsJws.getBody().getSubject();
+	}
+
+	public static final List<String> getRoles(final String token) {
+
+		if (logger.isTraceEnabled())
+			logger.trace("getRoles()");
+
+		Jws<Claims> claimsJws = getClaims(token);
+
+		String audience = claimsJws.getBody().getAudience();
+
+		ArrayList<String> list = new ArrayList<String>();
+
+		if (StringUtils.isNotEmpty(audience))
+			list.addAll(Arrays.asList(audience.split(",")));
+
+		return list;
+	}
+
+	public static final String getUserId(final String token) {
+
+		if (logger.isTraceEnabled())
+			logger.trace("getVersion()");
+
+		Jws<Claims> claimsJws = getClaims(token);
+
+		return claimsJws.getBody().getId();
+	}
+
+	
+	private static final Jws<Claims> getClaims(final String token) {
+		
+		if (logger.isTraceEnabled())
+			logger.trace("getClaims()");
+
+		isValid(token);
+		
+		return Jwts.parser().setSigningKey(key).parseClaimsJws(token);
 	}
 	
-    public static final void isValid(final String token, final Key key) {
-    	
-    	if(logger.isTraceEnabled())
-    		logger.trace("isValid()");
-
-        try {
-        	
-            Jwts.parser().setSigningKey(key).parseClaimsJws(token.trim());
-            
-        } catch (Exception e) {
-        	
-        	logger.error("isValid()", e);
-        	
-        	throw new RuntimeException(e);
-        }
-    }
-
-    public static String getName(String jwsToken, Key key) {
-
-    	isValid(jwsToken, key);
-        
-    
-        Jws<Claims> claimsJws = Jwts.parser().setSigningKey(key).parseClaimsJws(jwsToken);
-        return claimsJws.getBody().getSubject();
-    }
-
-    public static List<String> getRoles(String jwsToken, Key key) {
-
-        isValid(jwsToken, key);
-        
-    	ArrayList<String> list = new ArrayList<String>();
-    	
-        Jws<Claims> claimsJws = Jwts.parser().setSigningKey(key).parseClaimsJws(jwsToken);
-        return Arrays.asList(claimsJws.getBody().getAudience().split(","));
-//        return new ArrayList<String>();
-    }
-
-    public static int getVersion(String jwsToken, Key key) {
-
-    	isValid(jwsToken, key);
-        
-            Jws<Claims> claimsJws = Jwts.parser().setSigningKey(key).parseClaimsJws(jwsToken);
-            return Integer.parseInt(claimsJws.getBody().getId());
-//        return -1;
-    }
 	
-    private static Date getExpiryDate(int minutes) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        calendar.add(Calendar.MINUTE, minutes);
-        return calendar.getTime();
-    }
+	private static final Date getExpiryDate() {
+
+		if (logger.isTraceEnabled())
+			logger.trace("getExpiryDate()");
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(new Date());
+		calendar.add(Calendar.MINUTE, expiryDelay);
+		
+		return calendar.getTime();
+	}
 
 }

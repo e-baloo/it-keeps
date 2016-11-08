@@ -1,6 +1,7 @@
 package org.ebaloo.itkeeps.restapp;
 
 import org.ebaloo.itkeeps.restapp.authentication.AuthenticationResourceConfig;
+import org.ebaloo.itkeeps.restapp.exception.ExceptionMapper;
 import org.ebaloo.itkeeps.restapp.test.TestResourceConfig;
 import org.ebaloo.itkeeps.restapp.tools.ToolsResourceConfig;
 import org.glassfish.jersey.server.ResourceConfig;

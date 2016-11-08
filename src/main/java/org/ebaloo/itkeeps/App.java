@@ -16,6 +16,7 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
 import org.ebaloo.itkeeps.restapp.ApplicationResourceConfig;
+import org.ebaloo.itkeeps.restapp.authentication.JwtFactory;
 import org.glassfish.grizzly.http.server.HttpServer;
 
 
@@ -26,20 +27,17 @@ import org.glassfish.grizzly.http.server.HttpServer;
  */
 public class App {
 
-	/*
-	static {
-		SLF4JBridgeHandler.removeHandlersForRootLogger();
-		SLF4JBridgeHandler.install();
-	}
-	*/
-	
-	private static Logger logger = null;//= LoggerFactory.getLogger(App.class.getName());
+	private static Logger logger = null;
 
 	private static final String CONF_HTTP = "http";
 	private static final String CONF_HTTP_PORT = "port";
 
 	private static final String CONF_LOG = "log";
 	private static final String CONF_LOG_LEVEL = "level";
+
+	private static final String CONF_TOKEN = "token";
+
+	private static final String CONF_TOKEN_TIMEOUT = "timeout";
 	
 	
 	
@@ -54,12 +52,6 @@ public class App {
     		
     		init();
     		
-    		{
-	    		System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, logLevel);
-	    		SLF4JBridgeHandler.removeHandlersForRootLogger();
-	    		SLF4JBridgeHandler.install();
-	    		logger = LoggerFactory.getLogger(App.class.getName());
-    		}
     		
     		
     		baseUri = URI.create("http://localhost:" + baseUriPort + "/");
@@ -100,7 +92,20 @@ public class App {
     		return;
 
 		Config conf = ConfigFactory.load();
+
+		// LOGGER
+		if(conf.hasPath(CONF_LOG)) {
+			
+			Config logConf = conf.getConfig(CONF_LOG);
+			
+			if(logConf.hasPath(CONF_LOG_LEVEL))
+				logLevel = logConf.getString(CONF_LOG_LEVEL); 
+			
+		}
+		initLog();
+
 		
+		// HTTP
 		if(conf.hasPath(CONF_HTTP)) {
 			
 			Config httpConf = conf.getConfig(CONF_HTTP);
@@ -111,16 +116,26 @@ public class App {
 		}
 		
 
-		if(conf.hasPath(CONF_LOG)) {
+		// TOKEN
+		if(conf.hasPath(CONF_TOKEN)) {
 			
-			Config httpLog = conf.getConfig(CONF_LOG);
+			Config tokenConf = conf.getConfig(CONF_LOG);
 			
-			if(httpLog.hasPath(CONF_LOG_LEVEL))
-				logLevel = httpLog.getString(CONF_LOG_LEVEL); 
+			if(tokenConf.hasPath(CONF_TOKEN_TIMEOUT))
+				JwtFactory.setExpiryDelay(tokenConf.getInt(CONF_TOKEN_TIMEOUT)); 
 			
 		}
-
+		
     	
+    }
+    
+    private static final void initLog() {
+		System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, logLevel);
+		
+		SLF4JBridgeHandler.removeHandlersForRootLogger();
+		SLF4JBridgeHandler.install();
+		
+		logger = LoggerFactory.getLogger(App.class.getName());
     }
     
 }

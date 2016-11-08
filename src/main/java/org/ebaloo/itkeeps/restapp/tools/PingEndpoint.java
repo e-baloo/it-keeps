@@ -33,12 +33,7 @@ public class PingEndpoint {
     	if(logger.isTraceEnabled())
     		logger.trace("getPing()");
 
-    	try {
 	   		return Response.ok(new Pong()).build();
-	    } catch (Exception e) {
-	        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-	    }      
-
     }
 
     
