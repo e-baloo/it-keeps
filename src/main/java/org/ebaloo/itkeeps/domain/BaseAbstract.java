@@ -589,8 +589,7 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 		Map<String, String> map = this.getEmbeddedMapString(property);
 		
 		if(map.containsKey(key)) {
-			String value = map.remove(key);
-			
+			map.remove(key);
 			this.setProperty(property, map);
 		}
 	}

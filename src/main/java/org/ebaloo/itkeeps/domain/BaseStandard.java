@@ -78,7 +78,6 @@ public class BaseStandard extends Base {
 		return getByExternalRef(target, key, value, false);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static <T extends BaseAbstract> T getByExternalRef(final Class<T> target,
 			final String key, final String value, final boolean instanceOf) {
 
