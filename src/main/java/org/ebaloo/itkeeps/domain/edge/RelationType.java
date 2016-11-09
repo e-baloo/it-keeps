@@ -10,20 +10,20 @@
  * entered into with Group JCDecaux.
  */
 
-package org.ebaloo.itkeeps.domain;
+package org.ebaloo.itkeeps.domain.edge;
 
 import com.tinkerpop.blueprints.Direction;
 
-public enum ERelationship {
+public enum RelationType {
 
 	//TODO: A voir pour inverser le terme IN/OUT -> PARENT/ENFANT
 	PARENT(Direction.OUT),
-	CHILD(Direction.IN),
-	BOTH(Direction.BOTH);
+	CHILD(Direction.IN);
+	//BOTH(Direction.BOTH);
 	
 	private final Direction direction;
 	
-	private ERelationship(Direction direction)
+	private RelationType(Direction direction)
 	{
 		this.direction = direction;
 	}

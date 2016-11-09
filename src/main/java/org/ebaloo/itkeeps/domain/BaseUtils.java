@@ -3,6 +3,9 @@ package org.ebaloo.itkeeps.domain;
 
 import java.util.function.Predicate;
 
+import org.ebaloo.itkeeps.domain.vertex.Base;
+import org.ebaloo.itkeeps.domain.vertex.BaseAbstract;
+
 public class BaseUtils {
 	
 	public static class WhereClause {

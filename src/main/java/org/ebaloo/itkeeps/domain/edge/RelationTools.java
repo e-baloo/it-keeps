@@ -10,11 +10,11 @@
  * entered into with Group JCDecaux.
  */
 
-package org.ebaloo.itkeeps.domain;
+package org.ebaloo.itkeeps.domain.edge;
 
 import com.tinkerpop.blueprints.Direction;
 
-public class DirectionUtils {
+public class RelationTools {
 
 	public static String toLogger(Direction dir)
 	{

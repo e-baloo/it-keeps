@@ -27,6 +27,7 @@
 		<version.metrics>3.1.2</version.metrics>
 		<version.orientdb>2.2.12</version.orientdb>
 		<version.reflections>0.9.8</version.reflections>
+		<version.ehcache-core>2.6.11</version.ehcache-core>
 	</properties>
 
 	<dependencies>
@@ -169,6 +170,12 @@
 		    <artifactId>google-collections</artifactId>
 		    <version>1.0</version>
 		</dependency>
+		<dependency>
+	    <groupId>commons-codec</groupId>
+		    <artifactId>commons-codec</artifactId>
+		    <version>1.10</version>
+		</dependency>
+		
 
 		
 		<!-- Jasypt -->
@@ -209,6 +216,14 @@
 			<groupId>org.reflections</groupId>
 			<artifactId>reflections</artifactId>
 			<version>${version.reflections}</version>
+		</dependency>
+		
+		
+		<!-- Version -->
+		<dependency>
+		  <groupId>net.sf.ehcache</groupId>
+		  <artifactId>ehcache-core</artifactId>
+		  <version>${version.ehcache-core}</version>
 		</dependency>
 		
 		<dependency>

@@ -1,5 +1,5 @@
 
-package org.ebaloo.itkeeps.domain;
+package org.ebaloo.itkeeps.domain.vertex;
 
 
 import java.util.List;
@@ -9,6 +9,10 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.ebaloo.itkeeps.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.database.annotation.DatabaseVertrex;
+import org.ebaloo.itkeeps.domain.BaseUtils;
+import org.ebaloo.itkeeps.domain.Guid;
+import org.ebaloo.itkeeps.domain.ModelFactory;
+import org.ebaloo.itkeeps.domain.BaseUtils.WhereClause;
 import org.ebaloo.itkeeps.domain.ModelFactory.ModelClass;
 import org.ebaloo.itkeeps.domain.annotation.ModelClassAnnotation;
 import org.ebaloo.itkeeps.domain.annotation.ModelPropertyAnnotation;
@@ -271,7 +275,39 @@ public class BaseStandard extends Base {
 	
 
 
+	public static final String ICON = "icon";
 	
+	@DatabaseProperty(name = ICON)
+	@ModelPropertyAnnotation(
+			name = ICON, 
+			type = TypeProperty.GET
+			)
+	public String getIconType() {
+		
+		String value = this.getProperty(ICON);
+		
+		if(Guid.isGuid(value)) {
+			return value;
+		}
+		
+		if(StringUtils.isBlank(value)) {
+			return ICON_NAME_PREFIX + this.getClass().getSimpleName();
+		} else {
+			
+			if(value.startsWith(ICON_NAME_PREFIX)) {
+				return value;
+			} else {
+				return ICON_NAME_PREFIX + value;
+			}
+			
+		}
+	}
+	
+	@ModelPropertyAnnotation(name = ICON, type = TypeProperty.SET)
+	public void setIconType(String value) {
+		this.setProperty(ICON, value);
+	}
+
 }
 
 

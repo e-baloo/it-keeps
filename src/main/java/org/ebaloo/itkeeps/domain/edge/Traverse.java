@@ -1,18 +1,18 @@
 
-package org.ebaloo.itkeeps.domain.relation;
+package org.ebaloo.itkeeps.domain.edge;
 
 import org.ebaloo.itkeeps.database.annotation.DatabaseEdge;
 
 import com.tinkerpop.blueprints.impls.orient.OrientEdge;
 
 @DatabaseEdge()
-public class NoTraverse extends Relation {
+public class Traverse extends Relation {
 
-	public NoTraverse(OrientEdge oe) throws Exception {
+	public Traverse(OrientEdge oe) throws Exception {
 		super(oe);
 	}
 	
-	public NoTraverse() {
+	public Traverse() {
 		super();
 	}
 

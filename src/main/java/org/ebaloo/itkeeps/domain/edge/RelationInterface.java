@@ -1,5 +1,5 @@
 
-package org.ebaloo.itkeeps.domain;
+package org.ebaloo.itkeeps.domain.edge;
 
 
 public interface RelationInterface {

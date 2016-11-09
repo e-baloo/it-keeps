@@ -1,6 +1,6 @@
 
 
-package org.ebaloo.itkeeps.domain;
+package org.ebaloo.itkeeps.domain.vertex;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,10 +17,18 @@ import org.apache.commons.lang.StringUtils;
 import org.ebaloo.itkeeps.database.GraphFactory;
 import org.ebaloo.itkeeps.database.TraverseField;
 import org.ebaloo.itkeeps.database.annotation.DatabaseProperty;
+import org.ebaloo.itkeeps.domain.BaseUtils;
+import org.ebaloo.itkeeps.domain.Guid;
+import org.ebaloo.itkeeps.domain.ModelFactory;
+import org.ebaloo.itkeeps.domain.BaseUtils.WhereClause;
+import org.ebaloo.itkeeps.domain.ModelFactory.ModelClass;
 import org.ebaloo.itkeeps.domain.annotation.ModelPropertyAnnotation;
 import org.ebaloo.itkeeps.domain.annotation.ModelPropertyAnnotation.TypeProperty;
-import org.ebaloo.itkeeps.domain.relation.Relation;
-import org.ebaloo.itkeeps.domain.relation.Traverse;
+import org.ebaloo.itkeeps.domain.edge.Relation;
+import org.ebaloo.itkeeps.domain.edge.RelationInterface;
+import org.ebaloo.itkeeps.domain.edge.RelationTools;
+import org.ebaloo.itkeeps.domain.edge.RelationType;
+import org.ebaloo.itkeeps.domain.edge.Traverse;
 import org.ebaloo.itkeeps.tools.MetricsFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,7 +100,6 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 		return this.getOrientVertex().getType().getName();
 	}
     
-    public abstract String getIconType();
 
     // -----------------------------------------------------------------
 
@@ -116,21 +123,21 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 
 
 	
-	private final Map<ERelationship, List<BaseAbstract>> objectCache = new HashMap<>();
+	private final Map<RelationType, List<BaseAbstract>> objectCache = new HashMap<>();
 	public boolean loadRelationshipOnce = false;
 	
 	public void loadRelationshipOnce() {
 		loadRelationshipOnce = true;
 	}
 
-	public void loadAllRelationship(final ERelationship relationship) {
+	public void loadAllRelationship(final RelationType relationship) {
         //TODO /!\ Ne prend pas en compte relation (label)
 		objectCache.put(relationship, this.getBaseQuery().parse(this.getOrientVertex().getVertices(relationship.getDirection())));
 	}
 	
 	
 	@Deprecated
-	protected final <T extends BaseAbstract> List<T> getEdgesByClassesNames(final Class<T> targetClass, final ERelationship relationship, final boolean isInstanceof) {
+	protected final <T extends BaseAbstract> List<T> getEdgesByClassesNames(final Class<T> targetClass, final RelationType relationship, final boolean isInstanceof) {
 		return getEdgesByClassesNames(targetClass, relationship, isInstanceof, Traverse.class);
 	}
 
@@ -140,7 +147,7 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 
 	
 	@SuppressWarnings("unchecked")
-	protected final <T extends BaseAbstract> List<T> getEdgesByClassesNames(final Class<T> targetClass, final ERelationship relationship, final boolean isInstanceof, Class<? extends RelationInterface> relation) {
+	protected final <T extends BaseAbstract> List<T> getEdgesByClassesNames(final Class<T> targetClass, final RelationType relationship, final boolean isInstanceof, Class<? extends RelationInterface> relation) {
 
 		final Timer.Context timerContext = TIMER_DATABASE_REQUEST_CODE.time();
 		
@@ -220,11 +227,11 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 	 * @throws Exception
 	 */
 
-	protected final <T extends BaseAbstract> T getEdgeByClassesNames(final Class<T> targetClass, final ERelationship relationship, final boolean isInstanceof) {
+	protected final <T extends BaseAbstract> T getEdgeByClassesNames(final Class<T> targetClass, final RelationType relationship, final boolean isInstanceof) {
 		return getEdgeByClassesNames(targetClass, relationship, isInstanceof, Traverse.class) ;
 	}
 
-	protected final <T extends BaseAbstract> T getEdgeByClassesNames(final Class<T> targetClass, final ERelationship relationship, final boolean isInstanceof, Class<? extends RelationInterface> relation) {
+	protected final <T extends BaseAbstract> T getEdgeByClassesNames(final Class<T> targetClass, final RelationType relationship, final boolean isInstanceof, Class<? extends RelationInterface> relation) {
 		
 		List<T> list = getEdgesByClassesNames(targetClass, relationship, isInstanceof, relation);
 		
@@ -233,14 +240,14 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 		}
 		
 		if(list.size() > 1) {
-			logger.warn("For ["  + this.toString() + "] have note unique Edge for " + DirectionUtils.toLogger(relationship.getDirection()) + " " + targetClass.getSimpleName());
+			logger.warn("For ["  + this.toString() + "] have note unique Edge for " + RelationTools.toLogger(relationship.getDirection()) + " " + targetClass.getSimpleName());
 		}
 			
 		return list.get(0);
 	}
 
 	
-	protected final <T extends BaseAbstract> void addEdge(BaseAbstract newIBase, ERelationship relationship, Class<? extends RelationInterface> relation) {
+	protected final <T extends BaseAbstract> void addEdge(BaseAbstract newIBase, RelationType relationship, Class<? extends RelationInterface> relation) {
 		
 		this.checkOrientVertex();
 		
@@ -255,7 +262,7 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 
     			if(relation == null || e.getLabel().equals(relation.getSimpleName())) {
     	    		if(logger.isTraceEnabled())
-    	    			logger.trace("Link exist! [" + this.toString() + "] " + DirectionUtils.toLogger(relationship.getDirection()) + " [" + newIBase.toString() + "]");
+    	    			logger.trace("Link exist! [" + this.toString() + "] " + RelationTools.toLogger(relationship.getDirection()) + " [" + newIBase.toString() + "]");
     	    		return;
     			}
     		}
@@ -292,11 +299,11 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 
     	
 		if(logger.isDebugEnabled()) 
-			logger.debug("Add Link! [@" + this.toString() + "] " + DirectionUtils.toLogger(relationship.getDirection()) + "(@" + relation.getSimpleName() + ")" + " [@" + newIBase.toString() + "]");
+			logger.debug("Add Link! [@" + this.toString() + "] " + RelationTools.toLogger(relationship.getDirection()) + "(@" + relation.getSimpleName() + ")" + " [@" + newIBase.toString() + "]");
 	}
 	
 	
-	protected final <T extends BaseAbstract> void removeEdge(BaseAbstract oldBaseAbstract, ERelationship relationship,
+	protected final <T extends BaseAbstract> void removeEdge(BaseAbstract oldBaseAbstract, RelationType relationship,
 			Class<? extends RelationInterface> relation) {
 
 		if (oldBaseAbstract == null) {
@@ -343,7 +350,7 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 
 			if(logger.isTraceEnabled()) {
 				String comment = "Remove link ! [@" + this.toString() + "] "
-						+ DirectionUtils.toLogger(relationship.getDirection()) + " [@" + oldBaseAbstract.toString() + "]";
+						+ RelationTools.toLogger(relationship.getDirection()) + " [@" + oldBaseAbstract.toString() + "]";
 
 				logger.trace(comment);
 			}
@@ -392,7 +399,7 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 
 
 	protected final <T extends BaseAbstract> void setEdge(
-			final Class<? extends T> targetClass, final ERelationship relationship, final boolean isInstanceof, final  T newParent, final Class<? extends RelationInterface> relation) {
+			final Class<? extends T> targetClass, final RelationType relationship, final boolean isInstanceof, final  T newParent, final Class<? extends RelationInterface> relation) {
 		
 
 		T oldParnet = this.getEdgeByClassesNames(targetClass, relationship, isInstanceof, relation);
@@ -409,7 +416,7 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 		if(newParent != null && oldParnet != null && newParent.getOrientVertex().equals(oldParnet.getOrientVertex()))
 		{
 			if(logger.isTraceEnabled())
-				logger.trace("Link exist ! [@" + this.toString() + "] " + DirectionUtils.toLogger(relationship.getDirection()) + " [@" + newParent.toString() + "]");
+				logger.trace("Link exist ! [@" + this.toString() + "] " + RelationTools.toLogger(relationship.getDirection()) + " [@" + newParent.toString() + "]");
 			return; 
 		}
 		
@@ -437,7 +444,7 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 	*/
 	
 
-	protected final <T extends BaseAbstract> List<T> getChainEdge(final Class<T> targetClass, final ERelationship relationship, final boolean isInstanceof, final boolean revers) {
+	protected final <T extends BaseAbstract> List<T> getChainEdge(final Class<T> targetClass, final RelationType relationship, final boolean isInstanceof, final boolean revers) {
 		
 		if((targetClass == null) || (relationship == null)) {
 			// TODO
@@ -690,11 +697,11 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 
 	}
 
-		public Map<String, List<BaseStandard>>  getAllLink(ERelationship relationShip) {
+		public Map<String, List<BaseStandard>>  getAllLink(RelationType relationShip) {
 			return this.getAllLink(relationShip, Traverse.class);
 		}
 
-		protected Stream<BaseAbstract> getVertices(final ERelationship direction, final Class<? extends RelationInterface> relation) {
+		protected Stream<BaseAbstract> getVertices(final RelationType direction, final Class<? extends RelationInterface> relation) {
 			if(logger.isTraceEnabled()) {
 				logger.trace(String.format("getVertices - Object: %s '%s' (%s) ; Direction: %s ; Relation: %s",
 						this.getGuid(), this.getName(), this.getORID(), direction, relation));
@@ -702,11 +709,11 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 			return this.getBaseQuery().parse(this.getOrientVertex().getVertices(direction.getDirection(), relation.getSimpleName())).stream();
 		}
 
-		protected List<BaseAbstract> getVerticesList(final ERelationship direction, final Class<? extends RelationInterface> relation) {
+		protected List<BaseAbstract> getVerticesList(final RelationType direction, final Class<? extends RelationInterface> relation) {
 			return this.getVertices(direction, relation).collect(Collectors.toList());
 		}
 
-		protected Stream<BaseAbstract> traverse(final ERelationship direction, final Class<? extends RelationInterface> relation, OCommandPredicate predicate) {
+		protected Stream<BaseAbstract> traverse(final RelationType direction, final Class<? extends RelationInterface> relation, OCommandPredicate predicate) {
 			if(logger.isTraceEnabled()) {
 				logger.trace(String.format("Traverse - Object: %s '%s' (%s) ; Direction: %s ; Relation: %s ; Predicate: %s",
 						this.getGuid(), this.getName(), this.getORID(), direction, relation, predicate));
@@ -716,26 +723,21 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 					.stream();
 		}
 
-		protected Stream<BaseAbstract> traverse(final ERelationship direction, final Class<? extends RelationInterface> relation) {
+		protected Stream<BaseAbstract> traverse(final RelationType direction, final Class<? extends RelationInterface> relation) {
 			return this.traverse(direction, relation, null);
 		}
 
-		protected List<BaseAbstract> traverseList(final ERelationship direction, final Class<? extends RelationInterface> relation) {
+		protected List<BaseAbstract> traverseList(final RelationType direction, final Class<? extends RelationInterface> relation) {
 			return this.traverse(direction, relation).collect(Collectors.toList());
 		}
 
-		public Map<String, List<BaseStandard>>  getAllLink(ERelationship relationship, Class <? extends Relation> relation)  {
+		public Map<String, List<BaseStandard>>  getAllLink(RelationType relationship, Class <? extends Relation> relation)  {
 			
 			if(relationship == null) {
 				// TODO
 				throw new RuntimeException("TODO");
 			}
-			
-			if(relationship.equals(ERelationship.BOTH)) {
-				// TODO
-				throw new RuntimeException("TODO");
-			}
-			
+						
 			HashMap<String, List<BaseStandard>> map = new HashMap<>();
 			
 			StringBuilder request = new StringBuilder();
@@ -811,7 +813,7 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 				logger.trace(this.baseQuery.hashCode() + " - Load parent of " + this.getGuid());
 			}
             //TODO: Si passage sur des lightweight edges, a voir l'implementation d'un cache InternalId sur BaseQuery
-            _objParent = this.getVertices(ERelationship.PARENT, Traverse.class)
+            _objParent = this.getVertices(RelationType.PARENT, Traverse.class)
 					.filter(BaseUtils.WhereClause.enableFilter())
 					.filter(BaseUtils.WhereClause.classInstanceOf(this.getClass(), false))
 					.findFirst().orElse(null);

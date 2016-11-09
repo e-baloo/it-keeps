@@ -42,9 +42,9 @@ public final class GraphFactory {
 	public static final String DATABASE_POOL_MAX = "database.pool.max";
 	//public static final String DATABASE_DEFAULT_TYPE = "database.defaultType";
 	
-	private static final String DEFAULT_DATABASE_URI = "memory:test";
-	private static final String DEFAULT_DATABASE_USER = "ITKeeps";
-	private static final String DEFAULT_DATABASE_PASSWORD = "nop"; 
+	private static final String DEFAULT_DATABASE_URI = "memory:itkeeps";
+	private static final String DEFAULT_DATABASE_USER = "admin";
+	private static final String DEFAULT_DATABASE_PASSWORD = "admin"; 
 	private static final int DEFAULT_DATABASE_POOL_MIN = 0;
 	private static final int DEFAULT_DATABASE_POOL_MAX = 24;
 	

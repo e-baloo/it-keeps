@@ -1,8 +1,7 @@
 
-package org.ebaloo.itkeeps.domain.relation;
+package org.ebaloo.itkeeps.domain.edge;
 
 import org.ebaloo.itkeeps.database.annotation.DatabaseEdge;
-import org.ebaloo.itkeeps.domain.RelationInterface;
 
 import com.tinkerpop.blueprints.impls.orient.OrientEdge;
 

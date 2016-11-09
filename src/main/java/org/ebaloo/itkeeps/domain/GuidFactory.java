@@ -3,6 +3,9 @@ package org.ebaloo.itkeeps.domain;
 
 import java.util.UUID;
 
+import org.ebaloo.itkeeps.domain.vertex.Base;
+import org.ebaloo.itkeeps.domain.vertex.CommonOrientVertex;
+
 
 public class GuidFactory {
 	

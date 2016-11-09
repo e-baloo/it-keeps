@@ -1,5 +1,5 @@
 
-package org.ebaloo.itkeeps.domain;
+package org.ebaloo.itkeeps.domain.vertex;
 
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
@@ -13,6 +13,8 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.ebaloo.itkeeps.database.GraphFactory;
+import org.ebaloo.itkeeps.domain.edge.RelationInterface;
+import org.ebaloo.itkeeps.domain.edge.RelationTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -131,7 +133,7 @@ public abstract class CommonOrientVertex  {
 		return orid;
 	}
 
-	protected final <T> T getProperty(final String key) {
+	public final <T> T getProperty(final String key) {
 			return this.getOrientVertex().getProperty(key);
  	}
 
@@ -206,7 +208,7 @@ public abstract class CommonOrientVertex  {
 	}
 	
 	
-	protected static List<OrientVertex> command(String cmdSQL, Object... args) {
+	public static List<OrientVertex> command(String cmdSQL, Object... args) {
 		return GraphFactory.command(cmdSQL, args);
 	}
 	
@@ -247,7 +249,7 @@ public abstract class CommonOrientVertex  {
 		for(Edge e : iterable)
 		{
 			if(logger.isDebugEnabled()) {
-				String comment = "Remove link ! [@" + this.toString() + "] " + DirectionUtils.toLogger(direction) + " [@" + oldOrientVertex.toString() + "]";
+				String comment = "Remove link ! [@" + this.toString() + "] " + RelationTools.toLogger(direction) + " [@" + oldOrientVertex.toString() + "]";
 				logger.debug(comment);
 			}
 			
@@ -276,7 +278,7 @@ public abstract class CommonOrientVertex  {
 		
 		
     	if(this.getOrientVertex().getEdges(orientVertex, direction).iterator().hasNext()) {
-    		logger.debug("Link exist! [" + this.toString() + "] " + DirectionUtils.toLogger(direction) + " [" + orientVertex.toString() + "]");
+    		logger.debug("Link exist! [" + this.toString() + "] " + RelationTools.toLogger(direction) + " [" + orientVertex.toString() + "]");
     		return;
     	}
     	
@@ -302,7 +304,7 @@ public abstract class CommonOrientVertex  {
     	}
     	
 		if(logger.isDebugEnabled())  {
-			String comment = "Add Link! [@" + this.toString() + "] " + DirectionUtils.toLogger(direction) + "(@" + relation + ")" + " [@" + orientVertex.toString() + "]";
+			String comment = "Add Link! [@" + this.toString() + "] " + RelationTools.toLogger(direction) + "(@" + relation + ")" + " [@" + orientVertex.toString() + "]";
 			logger.debug(comment);
 		}
     	
@@ -332,7 +334,7 @@ public abstract class CommonOrientVertex  {
 		if(newCommonOrientVertex != null && oldParnet != null && newCommonOrientVertex.getOrientVertex().equals(oldParnet))
 		{
 			if(logger.isDebugEnabled()) {
-				logger.debug("Link exist ! [@" + this.toString() + "] " + DirectionUtils.toLogger(direction) + " [@" + newCommonOrientVertex.toString() + "]");
+				logger.debug("Link exist ! [@" + this.toString() + "] " + RelationTools.toLogger(direction) + " [@" + newCommonOrientVertex.toString() + "]");
 			}
 			return; 
 		}
@@ -362,7 +364,7 @@ public abstract class CommonOrientVertex  {
 		}
 		
 		if(list.size() > 1) {
-			logger.warn("For ["  + this.toString() + "] have note unique Edge for " + DirectionUtils.toLogger(direction) + " " + targetClass);
+			logger.warn("For ["  + this.toString() + "] have note unique Edge for " + RelationTools.toLogger(direction) + " " + targetClass);
 		}
 			
 		return list.get(0);
