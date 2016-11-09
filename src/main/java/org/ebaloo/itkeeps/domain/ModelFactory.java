@@ -5,6 +5,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.ebaloo.itkeeps.domain.annotation.ModelClassAnnotation;
 import org.ebaloo.itkeeps.tools.ReflectionsFactory;
 import org.reflections.Reflections;
 import org.slf4j.Logger;

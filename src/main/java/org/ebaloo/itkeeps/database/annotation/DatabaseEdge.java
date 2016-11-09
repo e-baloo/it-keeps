@@ -1,5 +1,5 @@
 
-package org.ebaloo.itkeeps.database;
+package org.ebaloo.itkeeps.database.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

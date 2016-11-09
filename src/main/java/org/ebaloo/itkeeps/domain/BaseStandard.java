@@ -7,10 +7,11 @@ import java.util.Map;
 
 
 import org.apache.commons.lang3.StringUtils;
-import org.ebaloo.itkeeps.database.DatabaseProperty;
-import org.ebaloo.itkeeps.database.DatabaseVertrex;
-//import org.ebaloo.itkeeps.domain.ModelFactory.ModelClass;
-import org.ebaloo.itkeeps.domain.ModelPropertyAnnotation.TypeProperty;
+import org.ebaloo.itkeeps.database.annotation.DatabaseProperty;
+import org.ebaloo.itkeeps.database.annotation.DatabaseVertrex;
+import org.ebaloo.itkeeps.domain.annotation.ModelClassAnnotation;
+import org.ebaloo.itkeeps.domain.annotation.ModelPropertyAnnotation;
+import org.ebaloo.itkeeps.domain.annotation.ModelPropertyAnnotation.TypeProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

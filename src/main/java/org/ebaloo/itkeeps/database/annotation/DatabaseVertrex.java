@@ -1,22 +1,16 @@
 
-package org.ebaloo.itkeeps.domain;
+package org.ebaloo.itkeeps.database.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-
-
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface ModelClassAnnotation{
-	
+public @interface DatabaseVertrex {
+
+	boolean isAbstract() default false; 
 	String name() default "";
 	
-	String[] disableProperty() default {};
-
-	boolean isAbstract() default false;
-
 }

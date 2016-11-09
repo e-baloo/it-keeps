@@ -12,6 +12,9 @@ import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
+import org.ebaloo.itkeeps.database.annotation.DatabaseEdge;
+import org.ebaloo.itkeeps.database.annotation.DatabaseProperty;
+import org.ebaloo.itkeeps.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.domain.Base;
 import org.ebaloo.itkeeps.tools.ReflectionsFactory;
 import org.slf4j.Logger;

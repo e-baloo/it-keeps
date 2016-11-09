@@ -10,7 +10,7 @@
  * entered into with Group JCDecaux.
  */
 
-package org.ebaloo.itkeeps.domain;
+package org.ebaloo.itkeeps.domain.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
