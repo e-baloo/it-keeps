@@ -4,6 +4,8 @@ import java.net.URI;
 
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.ebaloo.itkeeps.database.DatabaseFactory;
+import org.ebaloo.itkeeps.domain.Base;
+import org.ebaloo.itkeeps.domain.BaseStandard;
 import org.ebaloo.itkeeps.domain.ModelFactory;
 import org.ebaloo.itkeeps.restapp.ApplicationConfig;
 import org.glassfish.grizzly.http.server.HttpServer;
@@ -33,6 +35,12 @@ public class App {
     		DatabaseFactory.init();
     		
     		ModelFactory.init();
+    		
+    		
+    		Base b = new BaseStandard("Marc");
+    		
+    		ConfigFactory.getManiLogger().warn(b.getGuid().toString());
+    		ConfigFactory.getManiLogger().warn(BaseStandard.findByGuidOrName(ModelFactory.get(BaseStandard.class), "Marc").getGuid().toString());
     		
     		
     		baseUriPort = ConfigFactory.getString(ConfigFactory.CONF_HTTP_PORT, baseUriPort);

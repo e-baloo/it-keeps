@@ -3,7 +3,6 @@ package org.ebaloo.itkeeps.tools;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ebaloo.itkeeps.database.DatabaseFactory;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

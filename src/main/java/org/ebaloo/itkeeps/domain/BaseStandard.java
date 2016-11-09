@@ -9,6 +9,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.ebaloo.itkeeps.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.database.annotation.DatabaseVertrex;
+import org.ebaloo.itkeeps.domain.ModelFactory.ModelClass;
 import org.ebaloo.itkeeps.domain.annotation.ModelClassAnnotation;
 import org.ebaloo.itkeeps.domain.annotation.ModelPropertyAnnotation;
 import org.ebaloo.itkeeps.domain.annotation.ModelPropertyAnnotation.TypeProperty;
@@ -73,18 +74,18 @@ public class BaseStandard extends Base {
 	}
 	
 	
-	public static <T extends BaseAbstract> T getByExternalRef(final Class<T> target,
+	public static <T extends BaseAbstract> T getByExternalRef(final ModelClass<T> target,
 			final String key, final String value) {
 		return getByExternalRef(target, key, value, false);
 	}
 	
-	public static <T extends BaseAbstract> T getByExternalRef(final Class<T> target,
+	public static <T extends BaseAbstract> T getByExternalRef(final ModelClass<T> target,
 			final String key, final String value, final boolean instanceOf) {
 
 		
-		String cmdSql = "SELECT FROM " + target.getSimpleName() + " WHERE "
+		String cmdSql = "SELECT FROM " + target.getClassName() + " WHERE "
 				+ BaseUtils.WhereClause.enable() + " AND "
-				+ BaseUtils.WhereClause.classIsntanceOf(target.getSimpleName(), instanceOf) + " AND "
+				+ BaseUtils.WhereClause.classIsntanceOf(target.getClassName(), instanceOf) + " AND "
 				+ BaseStandard.EXTERNAL_REF + "['"+ key + "'] = ?";
 
 		List<OrientVertex> list = CommonOrientVertex.command(cmdSql, value);
@@ -97,16 +98,17 @@ public class BaseStandard extends Base {
 
 		if (list.size() > 1) {
 			// TODO
-			throw new RuntimeException(new Exception ("To many obejct for [k,v]: " + key + "," + value + " [" + cmdSql + "]"));
+			throw new RuntimeException("To many obejct for [k,v]: " + key + "," + value + " [" + cmdSql + "]");
 		}
 
 		OrientVertex ov = list.get(0);
 
-//		ModelClass<T> modelClass = (ModelClass<T>) ModelFactory.get(ov.getType().getName());
+		@SuppressWarnings("unchecked")
+		ModelClass<T> modelClass = (ModelClass<T>) ModelFactory.get(ov.getType().getName());
 
 		T baseAbstract;
 		try {
-			baseAbstract = target.newInstance();
+			baseAbstract = modelClass.newInstance();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -174,26 +176,12 @@ public class BaseStandard extends Base {
 		this.removeEmbeddedListString(OTHER_NAME, value);
 	}
 	
-	/*
-	@Deprecated
-	public static final <T extends BaseAbstract> T getByOtherName(Class<T> target, final String iValue) {
+	public static final <T extends BaseAbstract> T getByOtherName(ModelClass<T> target, final String iValue) {
 		return getByOtherName(target, iValue, false);
 	}
-	*/
-
-	public static final <T extends BaseAbstract> T getByOtherName(Class<T> target, final String iValue) {
-		return getByOtherName(target, iValue, false);
-	}
-
-	/*
-	@Deprecated
-	public static final <T extends BaseAbstract> T getByOtherName(Class<T> target, final String iValue, final boolean isntanceof) {
-		return getByOtherName(ModelFactory.get(target), iValue, isntanceof);
-	}
-	*/
 
 	@SuppressWarnings("unchecked")
-	public static final <T extends BaseAbstract> T getByOtherName(Class<T> target, final String iValue, final boolean isInstanceOf) {
+	public static final <T extends BaseAbstract> T getByOtherName(ModelClass<T> target, final String iValue, final boolean isInstanceOf) {
 		
 		if(StringUtils.isBlank(iValue)) {
 			return null;
@@ -205,9 +193,9 @@ public class BaseStandard extends Base {
 		// TODO Injection SQL
 		
 		String cmdSQL = "";
-		cmdSQL += "SELECT FROM " + target.getSimpleName()+ " WHERE @rid in ";
+		cmdSQL += "SELECT FROM " + target.getClassName() + " WHERE @rid in ";
 		cmdSQL += "  (SELECT myRid FROM ";
-		cmdSQL += "    (SELECT @rid as myRid, " + BaseStandard.OTHER_NAME + " FROM " + target.getSimpleName() + "";
+		cmdSQL += "    (SELECT @rid as myRid, " + BaseStandard.OTHER_NAME + " FROM " + target.getClassName() + "";
 		cmdSQL += "    WHERE " + BaseStandard.OTHER_NAME + " IS NOT NULL ";
 		cmdSQL +=        "AND "; 
 		cmdSQL +=      BaseUtils.WhereClause.enable();
@@ -236,13 +224,13 @@ public class BaseStandard extends Base {
 	 * Find
 	 */
 
-	public static <T extends BaseAbstract> T findByGuidOrName(final Class<T> target, final String tofinde) {
+	public static <T extends BaseAbstract> T findByGuidOrName(final ModelClass<T> target, final String tofinde) {
 		return findByGuidOrName(target, tofinde, false);
 	}
 
 	
-	@SuppressWarnings({ "unchecked", "deprecation" })
-	public static <T extends BaseAbstract> T findByGuidOrName(final Class<T> target, final String tofinde, final boolean isntanceof) {
+	@SuppressWarnings({ "unchecked"})
+	public static <T extends BaseAbstract> T findByGuidOrName(final ModelClass<T> target, final String tofinde, final boolean isntanceof) {
 		
 		T retTarget = null;
 		
@@ -255,11 +243,11 @@ public class BaseStandard extends Base {
 			}
 
 			if(!(isntanceof && target.isInstance(ab))) {
-				throw new RuntimeException("the 'guid' ("+tofinde+") is not instance @" + target.getSimpleName());
+				throw new RuntimeException("the '" + GUID + "' ("+tofinde+") is not instance @" + target.getClassName());
 			}
 
-			if(!isntanceof && !ab.getType().equals(target.getSimpleName())) {
-				throw new RuntimeException("the 'guid' ("+tofinde+") is not @" + target.getSimpleName());
+			if(!isntanceof && !ab.getType().equals(target.getClassName())) {
+				throw new RuntimeException("the '" + GUID + "' ("+tofinde+") is not @" + target.getClassName());
 			}
 
 			retTarget = (T) ab;
