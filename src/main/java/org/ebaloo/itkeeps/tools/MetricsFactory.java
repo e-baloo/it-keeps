@@ -13,7 +13,9 @@
 package org.ebaloo.itkeeps.tools;
 
 import java.lang.management.ManagementFactory;
+import java.util.concurrent.TimeUnit;
 
+import com.codahale.metrics.ConsoleReporter;
 import com.codahale.metrics.JmxReporter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.jvm.BufferPoolMetricSet;
@@ -36,20 +38,25 @@ public class MetricsFactory {
 	
 	static {
 
-		// ConsoleReporter reporter = ConsoleReporter.forRegistry(METRIC_REGISTRY).convertRatesTo(TimeUnit.SECONDS)
-		// 		.convertDurationsTo(TimeUnit.MILLISECONDS).build();
-		// reporter.start(5, TimeUnit.SECONDS);
+		if(false) {
+		ConsoleReporter reporter = ConsoleReporter.forRegistry(METRIC_REGISTRY).convertRatesTo(TimeUnit.SECONDS)
+		 		.convertDurationsTo(TimeUnit.MILLISECONDS).build();
+		 reporter.start(15, TimeUnit.SECONDS);
+		}
+		
 
-		
-		METRIC_REGISTRY.register(PROP_METRIC_REG_JVM_MEMORY, new MemoryUsageGaugeSet()); 
-		METRIC_REGISTRY.register(PROP_METRIC_REG_JVM_GARBAGE, new GarbageCollectorMetricSet()); 
-		METRIC_REGISTRY.register(PROP_METRIC_REG_JVM_THREADS, new ThreadStatesGaugeSet()); 
-		METRIC_REGISTRY.register(PROP_METRIC_REG_JVM_FILES, new FileDescriptorRatioGauge()); 
-		METRIC_REGISTRY.register(PROP_METRIC_REG_JVM_BUFFERS, new BufferPoolMetricSet(ManagementFactory.getPlatformMBeanServer())); 
-		
-		final JmxReporter jmxReporter = JmxReporter.forRegistry(METRIC_REGISTRY).build();
-		jmxReporter.start();
-		
+	}
+	
+	public static final void enableJvm() {
+			
+			METRIC_REGISTRY.register(PROP_METRIC_REG_JVM_MEMORY, new MemoryUsageGaugeSet()); 
+			METRIC_REGISTRY.register(PROP_METRIC_REG_JVM_GARBAGE, new GarbageCollectorMetricSet()); 
+			METRIC_REGISTRY.register(PROP_METRIC_REG_JVM_THREADS, new ThreadStatesGaugeSet()); 
+			METRIC_REGISTRY.register(PROP_METRIC_REG_JVM_FILES, new FileDescriptorRatioGauge()); 
+			METRIC_REGISTRY.register(PROP_METRIC_REG_JVM_BUFFERS, new BufferPoolMetricSet(ManagementFactory.getPlatformMBeanServer())); 
+			
+			final JmxReporter jmxReporter = JmxReporter.forRegistry(METRIC_REGISTRY).build();
+			jmxReporter.start();
 	}
 
 	public static final MetricRegistry getMetricRegistry() {

@@ -2,6 +2,7 @@ package org.ebaloo.itkeeps.restapp.exception;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 import org.ebaloo.itkeeps.restapp.authentication.JwtFactory;
@@ -9,14 +10,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Provider
-public class ExceptionMapper implements javax.ws.rs.ext.ExceptionMapper<Exception> {
+public class ApplicationExceptionMapper implements ExceptionMapper<Exception> {
 
 	private static final Logger logger = LoggerFactory.getLogger(JwtFactory.class.getName());
 
 	@Override
 	public Response toResponse(Exception exception) {
 
-		logger.error(null, exception);
+		logger.error("toResponse() : ", exception);
 
 		Response response;
 

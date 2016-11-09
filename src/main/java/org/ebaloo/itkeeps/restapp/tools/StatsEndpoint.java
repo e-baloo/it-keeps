@@ -2,7 +2,6 @@
 package org.ebaloo.itkeeps.restapp.tools;
 
 import java.net.InetAddress;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -20,8 +19,6 @@ import com.codahale.metrics.Metric;
 import com.codahale.metrics.MetricFilter;
 import com.codahale.metrics.annotation.Timed;
 import com.codahale.metrics.json.MetricsModule;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -34,13 +31,13 @@ import org.slf4j.LoggerFactory;
 
 
 @Path(ToolsConfig.PATH)
-public class StatEndpoint {
+public class StatsEndpoint {
 
-	private static final Logger logger = LoggerFactory.getLogger(StatEndpoint.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(StatsEndpoint.class.getName());
 	
 	
 	private final ObjectMapper MAPPER = new ObjectMapper().registerModule(
-            new MetricsModule(TimeUnit.MINUTES, TimeUnit.MINUTES, false, MetricFilter.ALL));
+            new MetricsModule(TimeUnit.MINUTES, TimeUnit.MILLISECONDS, false, MetricFilter.ALL));
 	
     @GET
     @Produces({MediaType.APPLICATION_JSON})
@@ -69,7 +66,7 @@ public class StatEndpoint {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		tag.add("take-it");
+		tag.add("IT-Keeps");
 			
 		root.set("tags", MAPPER.valueToTree(tag));
 		

@@ -8,6 +8,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
+import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -69,6 +70,7 @@ public class TestEndpoint {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("exception") 
     @PermitAll 
+    @Timed()
     public Response getException() {
     	
     	throw new RuntimeException(new IllegalArgumentException("test exception") );

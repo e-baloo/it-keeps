@@ -6,7 +6,7 @@ import java.util.Set;
 import javax.ws.rs.ApplicationPath;
 
 import org.ebaloo.itkeeps.restapp.authentication.AuthenticationConfig;
-import org.ebaloo.itkeeps.restapp.exception.ExceptionMapper;
+import org.ebaloo.itkeeps.restapp.exception.ApplicationExceptionMapper;
 import org.ebaloo.itkeeps.restapp.test.TestConfig;
 import org.ebaloo.itkeeps.restapp.tools.ToolsConfig;
 import org.ebaloo.itkeeps.tools.MetricsFactory;
@@ -66,7 +66,7 @@ public class ApplicationConfig extends ResourceConfig implements InterfaceApplic
 	}
 
 	private void registerProviders() {
-		classes.add(ExceptionMapper.class);
+		classes.add(ApplicationExceptionMapper.class);
 	}
 
 	@Override

@@ -1,14 +1,8 @@
 package org.ebaloo.itkeeps;
 
-import java.io.IOException;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
-import org.glassfish.jersey.grizzly2.servlet.GrizzlyWebContainerFactory;
-import org.glassfish.jersey.server.ServerProperties;
-import org.glassfish.jersey.servlet.ServletContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
@@ -18,6 +12,7 @@ import com.typesafe.config.ConfigFactory;
 
 import org.ebaloo.itkeeps.restapp.ApplicationConfig;
 import org.ebaloo.itkeeps.restapp.authentication.JwtFactory;
+import org.ebaloo.itkeeps.tools.MetricsFactory;
 import org.glassfish.grizzly.http.server.HttpServer;
 
 
@@ -39,6 +34,9 @@ public class App {
 	private static final String CONF_TOKEN = "token";
 	private static final String CONF_TOKEN_TIMEOUT = "timeout";
 	private static final String CONF_TOKEN_PASSWORD = "password";
+
+	private static final String CONF_STATS = "stats";
+	private static final String CONF_STATS_JVM = "jvm";
 	
 	
 	
@@ -134,7 +132,18 @@ public class App {
 
 		}
 		
-    	
+
+		// STATS
+		if(conf.hasPath(CONF_STATS)) {
+			
+			Config statsConf = conf.getConfig(CONF_STATS);
+			
+			if(statsConf.hasPath(CONF_STATS_JVM))
+				if(statsConf.getBoolean(CONF_STATS_JVM))
+					MetricsFactory.enableJvm();
+					
+		}
+
     }
     
     private static final void initLog() {

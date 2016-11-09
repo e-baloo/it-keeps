@@ -11,7 +11,7 @@ public class ToolsConfig {
 	public static void init(InterfaceApplicationConfig parent) {
 		
 		parent.classesAdd(PingEndpoint.class);
-		parent.classesAdd(StatEndpoint.class);
+		parent.classesAdd(StatsEndpoint.class);
 		
 	}
 	
