@@ -28,35 +28,36 @@ public class MetricsFactory {
 
 	private static final MetricRegistry METRIC_REGISTRY = new MetricRegistry();
 
+	private static final String PROP_METRIC_REG_JVM_MEMORY = "jvm.memory";
+	private static final String PROP_METRIC_REG_JVM_GARBAGE = "jvm.garbage";
+	private static final String PROP_METRIC_REG_JVM_THREADS = "jvm.threads";
+	private static final String PROP_METRIC_REG_JVM_FILES = "jvm.files";
+	private static final String PROP_METRIC_REG_JVM_BUFFERS = "jvm.buffers";
 
-    private static final String PROP_METRIC_REG_JVM_MEMORY = "jvm.memory"; 
-    private static final String PROP_METRIC_REG_JVM_GARBAGE = "jvm.garbage"; 
-    private static final String PROP_METRIC_REG_JVM_THREADS = "jvm.threads"; 
-    private static final String PROP_METRIC_REG_JVM_FILES = "jvm.files"; 
-    private static final String PROP_METRIC_REG_JVM_BUFFERS = "jvm.buffers"; 
-
-	
-	static {
-
-		if(false) {
+	public static final void enableConsole() {
 		ConsoleReporter reporter = ConsoleReporter.forRegistry(METRIC_REGISTRY).convertRatesTo(TimeUnit.SECONDS)
-		 		.convertDurationsTo(TimeUnit.MILLISECONDS).build();
-		 reporter.start(15, TimeUnit.SECONDS);
-		}
-		
-
+				.convertDurationsTo(TimeUnit.MILLISECONDS).build();
+		reporter.start(15, TimeUnit.SECONDS);
 	}
-	
+
+	private static Boolean bEnableJvm = false;
+
 	public static final void enableJvm() {
-			
-			METRIC_REGISTRY.register(PROP_METRIC_REG_JVM_MEMORY, new MemoryUsageGaugeSet()); 
-			METRIC_REGISTRY.register(PROP_METRIC_REG_JVM_GARBAGE, new GarbageCollectorMetricSet()); 
-			METRIC_REGISTRY.register(PROP_METRIC_REG_JVM_THREADS, new ThreadStatesGaugeSet()); 
-			METRIC_REGISTRY.register(PROP_METRIC_REG_JVM_FILES, new FileDescriptorRatioGauge()); 
-			METRIC_REGISTRY.register(PROP_METRIC_REG_JVM_BUFFERS, new BufferPoolMetricSet(ManagementFactory.getPlatformMBeanServer())); 
-			
-			final JmxReporter jmxReporter = JmxReporter.forRegistry(METRIC_REGISTRY).build();
-			jmxReporter.start();
+
+		if (bEnableJvm)
+			return;
+
+		METRIC_REGISTRY.register(PROP_METRIC_REG_JVM_MEMORY, new MemoryUsageGaugeSet());
+		METRIC_REGISTRY.register(PROP_METRIC_REG_JVM_GARBAGE, new GarbageCollectorMetricSet());
+		METRIC_REGISTRY.register(PROP_METRIC_REG_JVM_THREADS, new ThreadStatesGaugeSet());
+		METRIC_REGISTRY.register(PROP_METRIC_REG_JVM_FILES, new FileDescriptorRatioGauge());
+		METRIC_REGISTRY.register(PROP_METRIC_REG_JVM_BUFFERS,
+				new BufferPoolMetricSet(ManagementFactory.getPlatformMBeanServer()));
+
+		final JmxReporter jmxReporter = JmxReporter.forRegistry(METRIC_REGISTRY).build();
+		jmxReporter.start();
+
+		bEnableJvm = true;
 	}
 
 	public static final MetricRegistry getMetricRegistry() {
