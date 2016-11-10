@@ -88,9 +88,9 @@ public class ModelFactory {
 			return this.modelClassAnnotation.isAbstract();
 		}
 
-		@SuppressWarnings({ "unchecked", "deprecation" })
-		public final List<T> getAllBase(final boolean isInstanceof, final boolean selected) {
-			return (List<T>) Base.getAllBase(this.clasz, isInstanceof, selected);
+		@SuppressWarnings("unchecked")
+		public final List<T> getAllBase(final boolean isInstanceof) {
+			return (List<T>) Base.getAllBase(this, isInstanceof);
 		}
 
 		public boolean isInstance(BaseAbstract baseAbstract) {

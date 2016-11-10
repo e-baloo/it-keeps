@@ -264,7 +264,13 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 		}
 	}
 
+	protected final void putEmbeddedListString(final String property, List<String> list) {
+		
+		if(list == null)
+			list = new ArrayList<String>();
 
+		this.setProperty(property, list);
+	}
 	
 	protected final void addEmbeddedMapString(final String property, final String key, final String value) {
 
@@ -275,6 +281,14 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 			
 			this.setProperty(property, map);
 		}
+	}
+
+	protected final void putEmbeddedMapString(final String property, Map<String, String> map) {
+
+		if(map == null)
+			map = new HashMap<String, String>();
+		
+		this.setProperty(property, map);
 	}
 
 	
@@ -288,16 +302,16 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 			return 0;
 		}
 
-		if(StringUtils.isBlank(obj.getDisplayName())) {
+		if(StringUtils.isBlank(obj.getName())) {
 			return 0;
 		}
 		
-		if(StringUtils.isBlank(this.getDisplayName())) {
+		if(StringUtils.isBlank(this.getName())) {
 			return 0;
 		}
 
-		// Tri en fonction du displayName //
-		return this.getDisplayName().compareTo(((BaseAbstract)obj).getDisplayName());
+		// Tri en fonction du Name //
+		return this.getName().compareTo(((BaseAbstract)obj).getName());
 	}
 		
 
@@ -389,8 +403,6 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 	}
 	
 	
-	public abstract List<BaseAbstract> getAlternatDiplayName();
-
 
 	protected BaseQuery getBaseQuery() {
 		
@@ -437,8 +449,6 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 	}
 
 	
-	
-	public abstract String getDisplayName();
 	
 
 	/**
@@ -794,6 +804,7 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 		}
 	}
 
+    /*
     protected final <T> void setBaseProperty(String property, T newValue) {
 
 		T oldValue = this.getProperty(property);
@@ -810,6 +821,7 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 
 		this.setProperty(property, newValue);
  	}
+ 	*/
 
     protected void setBaseQuery(BaseQuery obj) {
 		

@@ -1,23 +1,59 @@
-package org.ebaloo.itkeeps.restapp.api.pojo;
+package org.ebaloo.itkeeps.domain.pojo;
 
 import java.util.Optional;
+
+import org.ebaloo.itkeeps.domain.vertex.Image;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class JImage extends JBase {
 	
+	
+	public JImage() {
+		super();
+	};
+	
+
+	public JImage(final Image image) {
+		this(image, true);
+	}
+
+	public JImage(final Image image, final boolean full) {
+		super(image);
+		
+		this.setImageType(image.getImageType());
+		
+		if(full)
+			this.setBase64(image.getBase64());
+	}
+	
+
+	public void update(Image image) {
+		super.update(image);
+		
+		if(this.isPresentImageType())
+			image.setImageType(this.getImageType());
+
+		if(this.isPresentBase64())
+			image.setBase64(this.getBase64());
+		
+		
+	}
+	
+	
+	
 	// IAMGE TYPE
 	
 	@JsonIgnore
 	private Optional<String> imageType = Optional.empty();
 	
-	@JsonProperty("imageType")
+	@JsonProperty(Image.IMAGE_TYPE)
 	public final String getImageType() {
 		return imageType.orElse(null);
 	}
 
-	@JsonProperty("imageType")
+	@JsonProperty(Image.IMAGE_TYPE)
 	public final void setImageType(String imageType) {
 		this.imageType = Optional.of(imageType == null ? "" : imageType);
 	}

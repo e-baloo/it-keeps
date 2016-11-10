@@ -16,7 +16,6 @@ import org.ebaloo.itkeeps.database.annotation.DatabaseEdge;
 import org.ebaloo.itkeeps.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.domain.Guid;
-import org.ebaloo.itkeeps.domain.vertex.Base;
 import org.ebaloo.itkeeps.tools.ReflectionsFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +59,14 @@ public class DatabaseFactory {
 			graph.commit();
 
 			logger.info(" - Vertrex schemat init done.");
+			
+			
+			GraphFactory.executeNoReturn("ALTER DATABASE DATETIMEFORMAT \"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\"");
+
+			
+			
+			
+			
 			
 			//AuthAccessLevelClass.init();
 //			AuthAccessLevelClass.init();

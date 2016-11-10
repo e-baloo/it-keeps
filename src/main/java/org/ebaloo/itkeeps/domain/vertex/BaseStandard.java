@@ -2,9 +2,10 @@
 package org.ebaloo.itkeeps.domain.vertex;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ebaloo.itkeeps.database.annotation.DatabaseProperty;
@@ -60,6 +61,10 @@ public class BaseStandard extends Base {
 
 	public String getExternalRefValue(String key) {
 		return getExternalRef().get(key);
+	}
+	
+	public void putExternalRef( Map<String, String> map) {
+		this.putEmbeddedMapString(EXTERNAL_REF, map);
 	}
 
 	public void addExternalRef(final String key, final String value) {
@@ -163,6 +168,16 @@ public class BaseStandard extends Base {
 		}
 		
 		this.addEmbeddedListString(OTHER_NAME, stripOtherName(value));
+	}
+
+	public final void putOtherName(List<String> list) {
+		
+		if(list == null)
+			list = new ArrayList<String>();
+		
+		list = list.stream().map(e -> stripOtherName(e)).collect(Collectors.toList());
+		
+		this.putEmbeddedListString(OTHER_NAME, list);
 	}
 
 	public final void removeOtherName(String value) {
@@ -272,7 +287,7 @@ public class BaseStandard extends Base {
 	public static final String ICON = "icon";
 	
 	@DatabaseProperty(name = ICON)
-	public String getIconType() {
+	public String getIcon() {
 		
 		String value = this.getProperty(ICON);
 		
@@ -293,7 +308,7 @@ public class BaseStandard extends Base {
 		}
 	}
 	
-	public void setIconType(String value) {
+	public void setIcon(String value) {
 		this.setProperty(ICON, value);
 	}
 

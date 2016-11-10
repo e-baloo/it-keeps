@@ -2,9 +2,7 @@
 
 package org.ebaloo.itkeeps.domain.vertex;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ebaloo.itkeeps.database.annotation.DatabaseProperty;
@@ -13,7 +11,6 @@ import org.ebaloo.itkeeps.domain.BaseUtils;
 import org.ebaloo.itkeeps.domain.Guid;
 import org.ebaloo.itkeeps.domain.GuidFactory;
 import org.ebaloo.itkeeps.domain.ModelFactory;
-import org.ebaloo.itkeeps.domain.BaseUtils.WhereClause;
 import org.ebaloo.itkeeps.domain.ModelFactory.ModelClass;
 import org.ebaloo.itkeeps.domain.annotation.ModelClassAnnotation;
 import org.joda.time.DateTime;
@@ -38,7 +35,6 @@ public abstract class Base extends BaseAbstract {
 
 	public static final String ENABLE = "enable";
 	public static final String CREATION_DATE = "creationDate";
-	public static final String UPDATE_DATE = "updateDate";
 	public static final String DESCRIPTION = "description";
 
 
@@ -61,46 +57,6 @@ public abstract class Base extends BaseAbstract {
 
 	}
 
-	/*
-	 * Only FILL project
-	 * 
-	public Base(Guid guid, String name, Class<? extends BaseAbstract> myClass)
-			{
-
-		OrientBaseGraph graph = this.getGraph();
-
-		if (guid == null) {
-			guid = GuidFactory.getGuid();
-		}
-
-		if (GuidFactory.isExist(guid)) {
-			this.setOrientVertex(ModelFactory.getBaseAbstract(guid).getOrientVertex());
-		} else {
-
-			OrientVertexType ovt = graph.getVertexType(myClass.getSimpleName());
-
-			if (ovt == null) {
-				throw new RuntimeException(new OrientVertexException(
-						"The class \"" + this.getClass().getSimpleName() + "\" is note defined in the database"));
-			}
-
-			this.setOrientVertex(graph.addVertex("class:" + ovt.getName()));
-
-			defaultSetting(guid);
-
-			logger.warn("ADD : @" + myClass.getSimpleName() + "  name:" + name + "  guid:" + guid.toString());
-		}
-
-		this.setProperty(CONST.I18N.LABEL.NAME, name);
-
-		graph.commit();
-		
-		this.setContext(context);
-
-	}
-	*/
-
-	
 	
 	private void defaultSetting(Guid guid) {
 
@@ -139,14 +95,13 @@ public abstract class Base extends BaseAbstract {
 	}
 
 	public void setName(String newValue) {
-		this.setBaseProperty(NAME, newValue);
+		this.setProperty(NAME, newValue);
 	}
 
 	/*
 	 * ENABLE
 	 */
 
-	//@ModelPropertyAnnotation(name = ENABLE, type = TypeProperty.GET) 
 	@DatabaseProperty(name = ENABLE, type = OType.BOOLEAN)
 	public Boolean isEnable() {
 		return (Boolean) this.getProperty(ENABLE);
@@ -190,28 +145,6 @@ public abstract class Base extends BaseAbstract {
 
 	
 	
-	/**
-	 * 
-	 * @return
-	 * @throws Exception
-	 */
-	@DatabaseProperty(name = UPDATE_DATE)
-	public final DateTime getUpdateDate() {
-		String value = this.getProperty(UPDATE_DATE);
-
-		if (value == null) {
-			return null;
-		}
-
-		return DateTime.parse(value);
-	}
-
-	protected void setUpdateDate() {
-		
-		this.setProperty(UPDATE_DATE, DateTime.now(DateTimeZone.UTC).toString());
-		this.commit();
-
-	}
 
 	/*
 	 * DESCRIPTION
@@ -221,53 +154,21 @@ public abstract class Base extends BaseAbstract {
 		return this.getProperty(DESCRIPTION);
 	}
 
-	public final void setDescription(final String newValue) throws Exception {
-		this.setBaseProperty(DESCRIPTION, newValue);
+	public final void setDescription(final String value) {
+		this.setProperty(DESCRIPTION, value);
 	}
 
 	
 	
 
 	
-	
-	protected String displayName = null;
-	public String getDisplayName() {
-		if(displayName == null) {
-			displayName = String.join(
-                            getAlternatDiplayNameSeparator(),
-                            this.getAlternatDiplayName().stream().map(e -> e.getName()).collect(Collectors.toList()));
-		}
-
-		return displayName;
-	}
-
-	public List<BaseAbstract> getAlternatDiplayName() {
-		return Collections.singletonList(this);
-	}
-
-    public String getAlternatDiplayNameSeparator() {
-        return StringUtils.EMPTY;
-    }
-
 	/*
 	 * GetByName
 	 */
 
-	@Deprecated
-	public static <T extends BaseAbstract> T getByName(final Class<T> target,
-			final String name) {
-		return getByName(target, name, false);
-	}
-
 	public static <T extends BaseAbstract> T getByName(final ModelClass<T> target,
 			final String name) {
 		return getByName(target, name, false);
-	}
-
-	@Deprecated
-	public static <T extends BaseAbstract> T getByName(final Class<T> target,
-													   final String name, boolean isInstanceOf) {
-		return getByName(ModelFactory.get(target), name, isInstanceOf);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -326,13 +227,12 @@ public abstract class Base extends BaseAbstract {
 	 * 
 	 */
 	
-	@Deprecated
-	public final static List<BaseAbstract> getAllBase(final Class<? extends BaseAbstract> target, final boolean isInstanceof, final boolean selected) {
-		return getAllBase(ModelFactory.get(target), isInstanceof, selected);
+
+	public final static List<BaseAbstract> getAllBase(final ModelClass<? extends BaseAbstract> target) {
+		return getAllBase(target, true);
 	}
-
-	public final static List<BaseAbstract> getAllBase(final ModelClass<? extends BaseAbstract> target, final boolean isInstanceof, final boolean selected) {
-
+	
+	public final static List<BaseAbstract> getAllBase(final ModelClass<? extends BaseAbstract> target, final boolean isInstanceof) {
 
 		StringBuilder request = new StringBuilder();
 		

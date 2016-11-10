@@ -17,7 +17,6 @@ import org.ebaloo.itkeeps.domain.edge.RelationTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.orientechnologies.orient.core.metadata.schema.OClass;
 
 /**
@@ -54,10 +53,8 @@ public abstract class CommonOrientVertex {
 		return str.matches("#\\d+:\\d+");
 	}
 
-	@JsonIgnore
 	private String orid = null;
 
-	@JsonIgnore
 	private OrientVertex orientVertex = null;
 
 	protected final Edge addEdge(CommonOrientVertex cov, Class<? extends RelationInterface> relation) {
@@ -221,7 +218,6 @@ public abstract class CommonOrientVertex {
 		return this.getOrientVertex().getGraph();
 	}
 
-	@JsonIgnore
 	public final String getORID() {
 
 		if (StringUtils.isBlank(orid)) {
@@ -271,14 +267,12 @@ public abstract class CommonOrientVertex {
 		return ovt;
 	}
 
-	@JsonIgnore
 	protected final boolean hasOrientVertex() {
 
 		return this.orientVertex != null;
 
 	}
 
-	@JsonIgnore
 	public final String OrientVertexToJson() {
 		return this.getOrientVertex().getRecord().toJSON();
 	}
@@ -424,7 +418,6 @@ public abstract class CommonOrientVertex {
 		this.commit();
 	}
 
-	@JsonIgnore
 	public String toString() {
 
 		if (this.orientVertex == null) {

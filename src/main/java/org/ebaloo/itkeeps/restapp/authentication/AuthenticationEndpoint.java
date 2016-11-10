@@ -1,17 +1,18 @@
 package org.ebaloo.itkeeps.restapp.authentication;
 
-import java.util.List;
 
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.ebaloo.itkeeps.domain.pojo.JCredentials;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 
 /*
@@ -26,23 +27,25 @@ public class AuthenticationEndpoint {
 
 	
     @POST
-    @Produces("application/json")
-    @Consumes("application/x-www-form-urlencoded")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
     @PermitAll
     @Path("login")
-    public Response authenticateUser(@FormParam("username") String username, 
-                                     @FormParam("password") String password) {
+    public Response authenticateUser(JCredentials credentials) {
 
+
+    	System.out.println(credentials.getUsername() + " / " + credentials.getPassword());
+    	
     	if(logger.isTraceEnabled())
     		logger.trace("authenticateUser()");
     	
         try {
 
             // Authenticate the user using the credentials provided
-            authenticate(username, password);
+            authenticate(credentials);
 
             // Issue a token for the user
-            String token = issueToken(username);
+            String token = issueToken(credentials);
 
             // Return the token on the response
             return Response.ok(token).build();
@@ -52,7 +55,7 @@ public class AuthenticationEndpoint {
         }      
     }
 
-    private void authenticate(String username, String password) throws Exception {
+    private void authenticate(JCredentials credentials) throws Exception {
     	
     	if(logger.isTraceEnabled())
     		logger.trace("authenticate()");
@@ -63,11 +66,7 @@ public class AuthenticationEndpoint {
         // Throw an Exception if the credentials are invalid
     }
 
-    private String issueToken(String username) {
-    	return issueToken(username, null);
-    }
-    
-    private String issueToken(String username, List<String> roles) {
+    private String issueToken(JCredentials credentials) {
     	
     	if(logger.isTraceEnabled())
     		logger.trace("issueToken()");
@@ -78,7 +77,7 @@ public class AuthenticationEndpoint {
         // The issued token must be associated to a user
         // Return the issued token
     	
-    	return JwtFactory.getJwtString(username, username, null);
+    	return JwtFactory.getJwtString(credentials.getUsername(), credentials.getUsername(), null);
     	
     }
 }

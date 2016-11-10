@@ -108,7 +108,7 @@ public final class GraphFactory {
 		final Timer.Context timerContext = TIMER_DATABASE_REQUEST_SQL.time();
 		
 		try {
-			long tStart = System.nanoTime();
+			long tStart = System.currentTimeMillis();
 			
 			OrientBaseGraph graph = GraphFactory.getOrientBaseGraph();
 			
@@ -116,7 +116,7 @@ public final class GraphFactory {
 			List<OrientVertex> list = IteratorUtils.toList(iterable.iterator());
 	
 	
-			long elapsedSeconds = (System.nanoTime() - tStart);
+			long elapsedSeconds = (System.currentTimeMillis() - tStart);
 			
 			if(logger.isDebugEnabled()) {
 				int size = list.size();

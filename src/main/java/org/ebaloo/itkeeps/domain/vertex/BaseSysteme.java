@@ -21,9 +21,6 @@ public class BaseSysteme extends Base {
 		super(name);
 		
 	}
-
-	
-
 	
 }
 
