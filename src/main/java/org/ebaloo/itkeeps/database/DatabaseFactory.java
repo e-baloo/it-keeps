@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.ebaloo.itkeeps.database.annotation.DatabaseEdge;
 import org.ebaloo.itkeeps.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.database.annotation.DatabaseVertrex;
+import org.ebaloo.itkeeps.domain.Guid;
 import org.ebaloo.itkeeps.domain.vertex.Base;
 import org.ebaloo.itkeeps.tools.ReflectionsFactory;
 import org.slf4j.Logger;
@@ -92,7 +93,7 @@ public class DatabaseFactory {
 
 			Map<String, Class<?>> map = new TreeMap<String, Class<?>>();
 
-			for (Class<?> clasz : ReflectionsFactory.getReflections(Base.class).getTypesAnnotatedWith(DatabaseVertrex.class)) {
+			for (Class<?> clasz : ReflectionsFactory.getReflections(Guid.class).getTypesAnnotatedWith(DatabaseVertrex.class)) {
 				if (clasz.getSuperclass() != null) {
 					map.put(getAllSuperclass(clasz), (Class<?>) clasz);
 				}
@@ -107,7 +108,7 @@ public class DatabaseFactory {
 
 			Map<String, Class<?>> map = new TreeMap<String, Class<?>>();
 
-			for (Class<?> clasz : ReflectionsFactory.getReflections(Base.class).getTypesAnnotatedWith(DatabaseEdge.class)) {
+			for (Class<?> clasz : ReflectionsFactory.getReflections(Guid.class).getTypesAnnotatedWith(DatabaseEdge.class)) {
 				
 				logger.info(clasz.getName());
 				

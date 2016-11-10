@@ -17,7 +17,7 @@ public final class ConfigFactory {
 	public static final String CONF_HTTP_PORT = CONF_HTTP + "." + "port";
 
 	public static final String CONF_LOG = "log";
-	public static final String CONF_LOG_LEVEL = "level";
+	public static final String CONF_LOG_LEVEL = CONF_LOG + "." + "level";
 
 	public static final String CONF_TOKEN = "token";
 	public static final String CONF_TOKEN_TIMEOUT = "timeout";
@@ -50,6 +50,8 @@ public final class ConfigFactory {
 		SLF4JBridgeHandler.install();
 		
 		mainLogger = LoggerFactory.getLogger(App.class.getName());
+		
+		mainLogger.info("Start log @" + logLevel);
     }
 	
     
@@ -76,19 +78,9 @@ public final class ConfigFactory {
     	if(init)
     		return;
     	
-    	if(getConfig() != null)
-    		return;
-
-
 		// LOGGER
-		if(getConfig().hasPath(CONF_LOG)) {
-			
-			Config logConf = getConfig().getConfig(CONF_LOG);
-			
-			if(logConf.hasPath(CONF_LOG_LEVEL))
-				initLog(logConf.getString(CONF_LOG_LEVEL)); 
-			
-		}
+    	if(getConfig().hasPath(CONF_LOG_LEVEL))
+    		initLog(getConfig().getString(CONF_LOG_LEVEL)); 
 
 		
 
@@ -116,6 +108,8 @@ public final class ConfigFactory {
 					MetricsFactory.enableJvm();
 					
 		}
+		
+		init = true;
 
     }
 

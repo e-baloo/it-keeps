@@ -12,11 +12,8 @@ import org.ebaloo.itkeeps.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.domain.BaseUtils;
 import org.ebaloo.itkeeps.domain.Guid;
 import org.ebaloo.itkeeps.domain.ModelFactory;
-import org.ebaloo.itkeeps.domain.BaseUtils.WhereClause;
 import org.ebaloo.itkeeps.domain.ModelFactory.ModelClass;
 import org.ebaloo.itkeeps.domain.annotation.ModelClassAnnotation;
-import org.ebaloo.itkeeps.domain.annotation.ModelPropertyAnnotation;
-import org.ebaloo.itkeeps.domain.annotation.ModelPropertyAnnotation.TypeProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,7 +54,6 @@ public class BaseStandard extends Base {
 	public static final String EXTERNAL_REF = "externealRef";
 
 	@DatabaseProperty(name = EXTERNAL_REF, type = OType.EMBEDDEDMAP)
-	@ModelPropertyAnnotation(name = EXTERNAL_REF, type = TypeProperty.GET)
 	public Map<String, String> getExternalRef()  {
 		return this.getEmbeddedMapString(EXTERNAL_REF);
 	}
@@ -66,16 +62,17 @@ public class BaseStandard extends Base {
 		return getExternalRef().get(key);
 	}
 
-	
-	@ModelPropertyAnnotation(name = EXTERNAL_REF, type = TypeProperty.ADD)
 	public void addExternalRef(final String key, final String value) {
 		this.addEmbeddedMapString(EXTERNAL_REF, key, value);
 	}
 
-	@ModelPropertyAnnotation(name = EXTERNAL_REF, type = TypeProperty.REMOVE)
 	public void removeExternalRef(final String key) {
 		this.removeEmbeddedMapString(EXTERNAL_REF, key);
 	}
+	
+
+	
+	
 	
 	
 	public static <T extends BaseAbstract> T getByExternalRef(final ModelClass<T> target,
@@ -155,12 +152,10 @@ public class BaseStandard extends Base {
 			name = OTHER_NAME, 
 			type = OType.EMBEDDEDLIST
 			)
-	@ModelPropertyAnnotation(name = OTHER_NAME, type = TypeProperty.GET) 
 	public final List<String> getOtherName() {
 		return this.getEmbeddedListString(OTHER_NAME);
 	}
 
-	@ModelPropertyAnnotation(name = OTHER_NAME, type = TypeProperty.ADD)
 	public final void addOtherName(String value) {
 		
 		if(StringUtils.isBlank(value)) {
@@ -170,7 +165,6 @@ public class BaseStandard extends Base {
 		this.addEmbeddedListString(OTHER_NAME, stripOtherName(value));
 	}
 
-	@ModelPropertyAnnotation(name = OTHER_NAME, type = TypeProperty.REMOVE)
 	public final void removeOtherName(String value) {
 
 		if(StringUtils.isBlank(value)) {
@@ -278,10 +272,6 @@ public class BaseStandard extends Base {
 	public static final String ICON = "icon";
 	
 	@DatabaseProperty(name = ICON)
-	@ModelPropertyAnnotation(
-			name = ICON, 
-			type = TypeProperty.GET
-			)
 	public String getIconType() {
 		
 		String value = this.getProperty(ICON);
@@ -303,7 +293,6 @@ public class BaseStandard extends Base {
 		}
 	}
 	
-	@ModelPropertyAnnotation(name = ICON, type = TypeProperty.SET)
 	public void setIconType(String value) {
 		this.setProperty(ICON, value);
 	}

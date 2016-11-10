@@ -48,7 +48,7 @@ public class ModelFactory {
 
 	public static Reflections getReflections() {
 
-		return ReflectionsFactory.getReflections(Base.class.getPackage().getName());
+		return ReflectionsFactory.getReflections(ModelFactory.class.getPackage().getName());
 
 	}
 

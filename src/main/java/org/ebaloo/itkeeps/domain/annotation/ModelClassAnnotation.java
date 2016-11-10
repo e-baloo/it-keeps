@@ -15,7 +15,7 @@ public @interface ModelClassAnnotation{
 	
 	String name() default "";
 	
-	String[] disableProperty() default {};
+	//String[] disableProperty() default {};
 
 	boolean isAbstract() default false;
 

@@ -16,8 +16,6 @@ import org.ebaloo.itkeeps.domain.ModelFactory;
 import org.ebaloo.itkeeps.domain.BaseUtils.WhereClause;
 import org.ebaloo.itkeeps.domain.ModelFactory.ModelClass;
 import org.ebaloo.itkeeps.domain.annotation.ModelClassAnnotation;
-import org.ebaloo.itkeeps.domain.annotation.ModelPropertyAnnotation;
-import org.ebaloo.itkeeps.domain.annotation.ModelPropertyAnnotation.TypeProperty;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
@@ -135,13 +133,11 @@ public abstract class Base extends BaseAbstract {
 	
 	public static final String NAME = "name";
 	
-	@ModelPropertyAnnotation(name = NAME, type = TypeProperty.GET) 
 	@DatabaseProperty(name = NAME, isNotNull = true)
 	public final String getName() {
 		return this.getProperty(NAME);
 	}
 
-	@ModelPropertyAnnotation(name = NAME, type = TypeProperty.SET)
 	public void setName(String newValue) {
 		this.setBaseProperty(NAME, newValue);
 	}
@@ -180,7 +176,6 @@ public abstract class Base extends BaseAbstract {
 	 */
 	
 	@DatabaseProperty(name = CREATION_DATE, isReadOnly = true)
-	@ModelPropertyAnnotation(name = CREATION_DATE, type = TypeProperty.GET) 
 	public final DateTime getCreationDate() {
 		String value = this.getProperty(CREATION_DATE);
 
@@ -201,7 +196,6 @@ public abstract class Base extends BaseAbstract {
 	 * @throws Exception
 	 */
 	@DatabaseProperty(name = UPDATE_DATE)
-	@ModelPropertyAnnotation(name = UPDATE_DATE, type = TypeProperty.GET) 
 	public final DateTime getUpdateDate() {
 		String value = this.getProperty(UPDATE_DATE);
 
@@ -223,12 +217,10 @@ public abstract class Base extends BaseAbstract {
 	 * DESCRIPTION
 	 */
 	@DatabaseProperty(name = DESCRIPTION)
-	@ModelPropertyAnnotation(name = DESCRIPTION, type = TypeProperty.GET) 
 	public final String getDescription() {
 		return this.getProperty(DESCRIPTION);
 	}
 
-	@ModelPropertyAnnotation(name = DESCRIPTION, type = TypeProperty.SET) 
 	public final void setDescription(final String newValue) throws Exception {
 		this.setBaseProperty(DESCRIPTION, newValue);
 	}
@@ -236,27 +228,8 @@ public abstract class Base extends BaseAbstract {
 	
 	
 
-
-	/**
-	 * @throws IOException
-	 * @throws JsonMappingException
-	 * @throws JsonParseException
-	 * @throws Exception
-	 * 
-	 */
-	
-
-	
-
-
 	
 	
-	/**
-	 * 
-	 * @return
-	 * @throws Exception
-	 * @throws Throwable
-	 */
 	protected String displayName = null;
 	public String getDisplayName() {
 		if(displayName == null) {

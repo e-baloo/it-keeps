@@ -1,12 +1,11 @@
-package org.ebaloo.itkeeps.restapp.image;
+package org.ebaloo.itkeeps.restapp.api;
 
 import org.ebaloo.itkeeps.restapp.InterfaceApplicationConfig;
 
 
-public class ImageConfig {
+public class ApiConfig {
 
-	public static final String PATH_IMAGE = "image";
-
+	public static final String PATH = "api";
 
 	
     public static void init(InterfaceApplicationConfig parent) {

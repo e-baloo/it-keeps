@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.ws.rs.ApplicationPath;
 
+import org.ebaloo.itkeeps.restapp.api.ApiConfig;
 import org.ebaloo.itkeeps.restapp.authentication.AuthenticationConfig;
 import org.ebaloo.itkeeps.restapp.exception.ApplicationExceptionMapper;
 import org.ebaloo.itkeeps.restapp.image.ImageConfig;
@@ -65,6 +66,7 @@ public class ApplicationConfig extends ResourceConfig implements InterfaceApplic
 		AuthenticationConfig.init(this);
 		TestConfig.init(this);
 		ImageConfig.init(this);
+		ApiConfig.init(this);
 	}
 
 	private void registerProviders() {
