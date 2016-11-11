@@ -10,6 +10,10 @@ public class ApiConfig {
 	
     public static void init(InterfaceApplicationConfig parent) {
     	
+    	parent.classesAdd(AuthenticationTypeEndpoint.class);
+    	
+    	
+    	
     	parent.classesAdd(ImageEndpoint.class);
         
     }

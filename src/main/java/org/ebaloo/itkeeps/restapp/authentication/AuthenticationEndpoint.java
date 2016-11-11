@@ -1,17 +1,24 @@
 package org.ebaloo.itkeeps.restapp.authentication;
 
 
+import java.util.ArrayList;
+
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.ebaloo.itkeeps.tools.SecurityFactory.SecurityRole;
 
-import org.ebaloo.itkeeps.domain.pojo.JCredentials;
+import org.ebaloo.itkeeps.domain.pojo.JCredential;
+import org.ebaloo.itkeeps.domain.vertex.User;
+import org.ebaloo.itkeeps.tools.SecurityFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 
 
@@ -31,10 +38,10 @@ public class AuthenticationEndpoint {
     @Consumes({MediaType.APPLICATION_JSON})
     @PermitAll
     @Path("login")
-    public Response authenticateUser(JCredentials credentials) {
+    public Response authenticateUser(JCredential credentials) {
 
 
-    	System.out.println(credentials.getUsername() + " / " + credentials.getPassword());
+    	System.out.println(credentials.getId() + " / " + credentials.getPassword());
     	
     	if(logger.isTraceEnabled())
     		logger.trace("authenticateUser()");
@@ -42,10 +49,19 @@ public class AuthenticationEndpoint {
         try {
 
             // Authenticate the user using the credentials provided
-            authenticate(credentials);
+            this.user = authenticate(credentials);
 
+            
+            // TODO
+            ArrayList<SecurityRole> listRoles = new ArrayList<SecurityRole>();
+            listRoles.add(SecurityRole.USER);
+            listRoles.add(SecurityRole.ADMIN);
+            listRoles.add(SecurityRole.ROOT);
+            this.user.setRoles(listRoles);
+            
+            
             // Issue a token for the user
-            String token = issueToken(credentials);
+            String token = issueToken(this.user);
 
             // Return the token on the response
             return Response.ok(token).build();
@@ -55,18 +71,30 @@ public class AuthenticationEndpoint {
         }      
     }
 
-    private void authenticate(JCredentials credentials) throws Exception {
+    @Context
+    User user;
+
+    
+    private User authenticate(JCredential credentials) throws Exception {
     	
     	if(logger.isTraceEnabled())
     		logger.trace("authenticate()");
     	
-    	// TODO
+    	SecurityFactory.validateCredential(credentials);
     	
-        // Authenticate against a database, LDAP, file or whatever
-        // Throw an Exception if the credentials are invalid
+    	User user = User.getByCredentials(credentials);
+    	
+    	if(user == null) 
+    		throw new RuntimeException("user '" + credentials.getId() + "' not definde!");
+
+    	
+    	return user;
     }
 
-    private String issueToken(JCredentials credentials) {
+    
+
+    
+    private String issueToken(User user) {
     	
     	if(logger.isTraceEnabled())
     		logger.trace("issueToken()");
@@ -77,7 +105,7 @@ public class AuthenticationEndpoint {
         // The issued token must be associated to a user
         // Return the issued token
     	
-    	return JwtFactory.getJwtString(credentials.getUsername(), credentials.getUsername(), null);
+    	return JwtFactory.getJwtString(user);
     	
     }
 }

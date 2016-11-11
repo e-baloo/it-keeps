@@ -11,6 +11,8 @@ import java.util.stream.Stream;
 
 import com.orientechnologies.orient.core.command.OCommandPredicate;
 import com.orientechnologies.orient.core.db.record.OIdentifiable;
+import com.orientechnologies.orient.core.metadata.schema.OType;
+import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
 import org.apache.commons.lang.StringUtils;
@@ -39,6 +41,8 @@ import com.tinkerpop.blueprints.impls.orient.OrientVertexType;
  * 
  *
  */
+
+
 public abstract class BaseAbstract extends CommonOrientVertex implements Comparable<BaseAbstract> {
 
 	public static class BaseQuery {
@@ -572,8 +576,6 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 	
 
 	 
-	 public abstract String getName();
-	 
 	 
 		// TODO: GetParent() existe déjà //
 		// Utilisait avant la fonction : getChainEdge() et donc faisait un Traverse (normalement pas d'impact)
@@ -921,6 +923,46 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 	
 	protected List<BaseAbstract> traverseList(final RelationType direction, final Class<? extends RelationInterface> relation) {
 		return this.traverse(direction, relation).collect(Collectors.toList());
+	}
+	
+	
+	/*
+	 * NAME
+	 */
+	
+	public static final String NAME = "name";
+	
+	@DatabaseProperty(name = NAME, isNotNull = true)
+	public String getName() {
+		return this.getProperty(NAME);
+	}
+
+	public void setName(String newValue) {
+		this.setProperty(NAME, newValue);
+	}
+
+	/*
+	 * ENABLE
+	 */
+
+	public static final String ENABLE = "enable";
+	
+	@DatabaseProperty(name = ENABLE, type = OType.BOOLEAN)
+	public Boolean isEnable() {
+		return (Boolean) this.getProperty(ENABLE);
+	}
+
+	/*
+	 * DISABLE
+	 */
+
+	public boolean disable() {
+		
+		this.deleteAllEdges(Direction.IN);
+		this.deleteAllEdges(Direction.OUT);
+		this.setProperty(ENABLE, false);
+		this.commit();
+		return true;
 	}
 }
 

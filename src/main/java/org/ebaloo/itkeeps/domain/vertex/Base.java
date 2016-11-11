@@ -2,6 +2,7 @@
 
 package org.ebaloo.itkeeps.domain.vertex;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -18,7 +19,6 @@ import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 import com.orientechnologies.orient.core.metadata.schema.OType;
@@ -33,9 +33,7 @@ public abstract class Base extends BaseAbstract {
 
 	private static Logger logger = LoggerFactory.getLogger(Base.class);
 
-	public static final String ENABLE = "enable";
 	public static final String CREATION_DATE = "creationDate";
-	public static final String DESCRIPTION = "description";
 
 
 	public Base() {
@@ -62,9 +60,8 @@ public abstract class Base extends BaseAbstract {
 
 		this.setProperty(GUID, guid.toString());
 
-		this.setProperty(CREATION_DATE, DateTime.now(DateTimeZone.UTC).toString());
+		this.setProperty(CREATION_DATE, DateTime.now(DateTimeZone.UTC).toDate());
 		this.setProperty(ENABLE, true);
-		this.setProperty(DESCRIPTION, StringUtils.EMPTY);
 		this.setProperty(NAME, guid.toString());		
 		this.commit();
 	}
@@ -83,42 +80,7 @@ public abstract class Base extends BaseAbstract {
 	}
 	
 
-	/*
-	 * NAME
-	 */
-	
-	public static final String NAME = "name";
-	
-	@DatabaseProperty(name = NAME, isNotNull = true)
-	public final String getName() {
-		return this.getProperty(NAME);
-	}
 
-	public void setName(String newValue) {
-		this.setProperty(NAME, newValue);
-	}
-
-	/*
-	 * ENABLE
-	 */
-
-	@DatabaseProperty(name = ENABLE, type = OType.BOOLEAN)
-	public Boolean isEnable() {
-		return (Boolean) this.getProperty(ENABLE);
-	}
-
-	/*
-	 * DISABLE
-	 */
-
-	public boolean disable() {
-		
-		this.deleteAllEdges(Direction.IN);
-		this.deleteAllEdges(Direction.OUT);
-		this.setProperty(ENABLE, false);
-		this.commit();
-		return true;
-	}
 
 	
 
@@ -130,15 +92,16 @@ public abstract class Base extends BaseAbstract {
 	 * CREATION_DATE
 	 */
 	
-	@DatabaseProperty(name = CREATION_DATE, isReadOnly = true)
+	@DatabaseProperty(name = CREATION_DATE, isReadOnly = true, type = OType.DATETIME)
 	public final DateTime getCreationDate() {
-		String value = this.getProperty(CREATION_DATE);
+		
+		Date value = (Date) this.getProperty(CREATION_DATE);
 
 		if (value == null) {
 			return null;
 		}
 
-		return DateTime.parse(value);
+		return new DateTime(value);
 	}
 
 
@@ -149,6 +112,9 @@ public abstract class Base extends BaseAbstract {
 	/*
 	 * DESCRIPTION
 	 */
+
+	public static final String DESCRIPTION = "description";
+	
 	@DatabaseProperty(name = DESCRIPTION)
 	public final String getDescription() {
 		return this.getProperty(DESCRIPTION);

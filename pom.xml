@@ -106,6 +106,11 @@
 			<artifactId>jackson-jaxrs-json-provider</artifactId>
 			<version>${version.jackson}</version>
 		</dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.datatype</groupId>
+		    <artifactId>jackson-datatype-joda</artifactId>
+			<version>${version.jackson}</version>
+		</dependency>
 		
 		<!-- SLF4J -->
 		<dependency>
@@ -226,6 +231,7 @@
 		  <version>${version.ehcache-core}</version>
 		</dependency>
 		
+		<!-- JodaTime -->
 		<dependency>
 		    <groupId>joda-time</groupId>
 		    <artifactId>joda-time</artifactId>

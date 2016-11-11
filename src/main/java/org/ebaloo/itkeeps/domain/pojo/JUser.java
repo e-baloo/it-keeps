@@ -7,36 +7,36 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.ebaloo.itkeeps.domain.vertex.BaseStandard;
+import org.ebaloo.itkeeps.domain.vertex.User;
+import org.ebaloo.itkeeps.tools.SecurityFactory.SecurityRole;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class JBaseStandard extends JBase{
+public class JUser extends JBaseStandard{
 
 	
-	public JBaseStandard() {
+	public JUser() {
 		super();
 	}
 	
-	public JBaseStandard(BaseStandard obj) {
+	public JUser(User obj) {
 		super(obj);
 		
-		this.setIcon(obj.getIcon());
-		this.setOtherName(obj.getOtherName());
-		this.setExternalRef(obj.getExternalRef());
+		this.setId(obj.getId());
 		
 	}
 	
 	
-	public void update(BaseStandard obj) {
+	public void update(User obj) {
 		super.update(obj);
 		
-		if(this.isPresentIcon())
+		if(this.isPresentId())
 			obj.setIcon(this.getIcon());
 
-		if(this.isPresentOtherName())
+		if(this.isPresentExternalRef())
 			obj.putExternalRef(this.getExternalRef());
 
 		if(this.isPresentOtherName())
@@ -45,26 +45,29 @@ public class JBaseStandard extends JBase{
 		if(this.isPresentDescription())
 			obj.setDescription(this.getDescription());
 
+		if(this.isPresentRoles())
+			obj.setRoles(this.getRoles());
+
 	}
 	
-	// ICON
+	// ID
 	
 	@JsonIgnore
-	private Optional<String> icon = Optional.empty();
+	private Optional<String> id = Optional.empty();
 	
-	@JsonProperty(BaseStandard.ICON)
-	public String getIcon() {
-		return icon.orElse(null);
+	@JsonProperty(User.ID)
+	public String getId() {
+		return id.orElse(null);
 	}
 
-	@JsonProperty(BaseStandard.ICON)
-	public void setIcon(String value) {
-		this.icon = Optional.of(value == null ? "" : value);
+	@JsonProperty(User.ID)
+	public void setId(String value) {
+		this.id = Optional.of(value == null ? "" : value);
 	}
 
 	@JsonIgnore
-	public boolean isPresentIcon() {
-		return this.icon.isPresent();
+	public boolean isPresentId() {
+		return this.id.isPresent();
 	}
 	
 
@@ -109,4 +112,45 @@ public class JBaseStandard extends JBase{
 		return this.externalRef.isPresent();
 	}
 
+	// DESCRIPTION
+	
+	@JsonIgnore
+	private Optional<String> description = Optional.empty();
+	
+	@JsonProperty(BaseStandard.DESCRIPTION)
+	public String getDescription() {
+		return this.description.orElse(null);
+	}
+
+	@JsonProperty(BaseStandard.DESCRIPTION)
+	public void setDescription(String value) {
+		this.description = Optional.of(value == null ? "" : value);
+	}
+
+	@JsonIgnore
+	public boolean isPresentDescription() {
+		return this.description.isPresent();
+	}
+
+	// ROLES
+
+	public static final String ROLES = "roles";
+
+	@JsonIgnore
+	private Optional<List<SecurityRole>> roles = Optional.empty();
+	
+	@JsonProperty(ROLES)
+	public final List<SecurityRole> getRoles() {
+		return this.roles.orElse(null);
+	}
+
+	@JsonProperty(ROLES)
+	public final void setRoles(List<SecurityRole> value) {
+		roles = Optional.of(value);
+	}
+
+	@JsonIgnore
+	public final boolean isPresentRoles() {
+		return this.roles.isPresent();
+	}
 }

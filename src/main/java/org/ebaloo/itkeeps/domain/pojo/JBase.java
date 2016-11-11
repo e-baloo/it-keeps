@@ -4,6 +4,8 @@ import java.util.Optional;
 
 import org.ebaloo.itkeeps.domain.Guid;
 import org.ebaloo.itkeeps.domain.vertex.Base;
+import org.ebaloo.itkeeps.domain.vertex.BaseStandard;
+import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -20,7 +22,10 @@ public class JBase {
 		
 		this.setGuid(base.getGuid().toString());
 		this.setName(base.getName());
-		
+		this.setType(base.getType());
+		this.setEnable(base.isEnable());
+		this.setCreationDate(base.getCreationDate());
+		this.setDescription(base.getDescription());
 		
 	}
 	
@@ -28,7 +33,10 @@ public class JBase {
 		
 		if(this.isPresentName())
 			base.setName(this.getName());
-		
+
+		if(this.isPresentDescription())
+			base.setDescription(this.getDescription());
+
 	}
 
 
@@ -125,5 +133,52 @@ public class JBase {
 	public final boolean isPresentEnable() {
 		return this.enable.isPresent();
 	}
+
+	
+	// CREATION_DATE
+	
+	@JsonIgnore
+	private Optional<DateTime> creationDate = Optional.empty();
+	
+	@JsonProperty(Base.CREATION_DATE)
+	public final DateTime getCreationDate() {
+		return this.creationDate.orElse(null);
+	}
+
+	@JsonProperty(Base.CREATION_DATE)
+	public final void setCreationDate(DateTime value) {
+		
+		if(value == null)
+			this.creationDate = Optional.empty();
+		else
+			this.creationDate = Optional.of(value);
+	}
+
+	@JsonIgnore
+	public final boolean isPresentCreationDate() {
+		return this.creationDate.isPresent();
+	}
+
+
+	// DESCRIPTION
+	
+	@JsonIgnore
+	private Optional<String> description = Optional.empty();
+	
+	@JsonProperty(BaseStandard.DESCRIPTION)
+	public String getDescription() {
+		return this.description.orElse(null);
+	}
+
+	@JsonProperty(BaseStandard.DESCRIPTION)
+	public void setDescription(String value) {
+		this.description = Optional.of(value == null ? "" : value);
+	}
+
+	@JsonIgnore
+	public boolean isPresentDescription() {
+		return this.description.isPresent();
+	}
+
 
 }

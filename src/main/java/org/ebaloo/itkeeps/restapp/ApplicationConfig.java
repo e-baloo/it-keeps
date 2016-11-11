@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.ext.ContextResolver;
+import javax.ws.rs.ext.Provider;
 
 import org.ebaloo.itkeeps.restapp.api.ApiConfig;
 import org.ebaloo.itkeeps.restapp.authentication.AuthenticationConfig;
@@ -19,6 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.codahale.metrics.jersey2.MetricsFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 
 @ApplicationPath("/*")
 public class ApplicationConfig extends ResourceConfig implements InterfaceApplicationConfig {
@@ -54,6 +58,8 @@ public class ApplicationConfig extends ResourceConfig implements InterfaceApplic
 
 	private void registerFeatures() {
 		register(JacksonFeature.class); // Enable Jackson parsing support
+		register(ObjectMapperContextResolver.class);
+		
 		register(SseFeature.class); // Enable Server sent events
 	}
 
@@ -78,4 +84,24 @@ public class ApplicationConfig extends ResourceConfig implements InterfaceApplic
 		return this;
 	}
 
+	
+	@Provider
+	public static class ObjectMapperContextResolver implements ContextResolver<ObjectMapper> {
+
+	    final ObjectMapper mapper = new ObjectMapper();
+
+	    public ObjectMapperContextResolver() {
+	    	
+	    	
+	        mapper.registerModule(new JodaModule());
+	        mapper.configure(com.fasterxml.jackson.databind.SerializationFeature.
+		    	    WRITE_DATES_AS_TIMESTAMPS , false);
+	    }
+
+	    @Override
+	    public ObjectMapper getContext(Class<?> type) {
+	        return mapper;
+	    }  
+	}
+	
 }

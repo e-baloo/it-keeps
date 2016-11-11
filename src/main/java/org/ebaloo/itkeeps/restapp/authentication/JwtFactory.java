@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
+import org.ebaloo.itkeeps.domain.vertex.Base;
+import org.ebaloo.itkeeps.domain.vertex.User;
 import org.jasypt.util.text.BasicTextEncryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,26 +60,12 @@ public final class JwtFactory {
 		JwtFactory.timeout = expiryDelay;
 	}
 
-	public static String getJwtString(final String userId) {
-		return getJwtString(userId, userId);
-	}
-
-	public static String getJwtString(final String userId, final String userName) {
-		return getJwtString(userId, userName, null);
-	}
-
-	public static String getJwtString(final String userId, final String userName, final List<String> roles) {
+	public static String getJwtString(final User user) {
 
 		if (logger.isTraceEnabled())
 			logger.trace("getJwtString()");
 		
 		
-		if (StringUtils.isEmpty(userId))
-			throw new NullPointerException("null or empty 'userId' is illegal");
-
-		if (StringUtils.isEmpty(userName))
-			throw new NullPointerException("null or empty 'userName' is illegal");
-
 		Date expires = getExpiryDate();
 
 		SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
@@ -90,11 +78,10 @@ public final class JwtFactory {
 		
 		Map<String, Object> claimsProprties = new HashMap<String, Object>();
 		
-		claimsProprties.put(USER_ID, JwtFactory.encrypt(userId));
-		claimsProprties.put(USER_NAME, JwtFactory.encrypt(userName));
-
-		if (roles != null && roles.size() > 0)
-			claimsProprties.put(USER_ROLES, JwtFactory.encrypt(StringUtils.join(roles, ",")));
+		claimsProprties.put(Base.GUID, JwtFactory.encrypt(user.getGuid().toString()));
+		claimsProprties.put(USER_ID, JwtFactory.encrypt(user.getId()));
+		claimsProprties.put(USER_NAME, JwtFactory.encrypt(user.getName()));
+		claimsProprties.put(USER_ROLES, JwtFactory.encrypt(StringUtils.join(user.getRoles(), ",")));
 		
 		jwtBuilder.setClaims(claimsProprties);
 		

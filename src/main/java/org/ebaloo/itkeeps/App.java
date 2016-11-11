@@ -44,11 +44,10 @@ public class App {
     		
     		baseUriPort = ConfigFactory.getString(ConfigFactory.CONF_HTTP_PORT, baseUriPort);
     		
-    		
     		baseUri = URI.create("http://localhost:" + baseUriPort + "/");
     		ConfigFactory.getManiLogger().trace(baseUri.toString());
         
-    		ConfigFactory.getManiLogger().info("Application Starting");
+    		ConfigFactory.getManiLogger().info("Application Starting...");
         	
     		
             final HttpServer server = GrizzlyHttpServerFactory.createHttpServer(baseUri, new ApplicationConfig());
