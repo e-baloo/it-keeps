@@ -15,15 +15,17 @@ import javax.ws.rs.core.Response;
 
 import org.ebaloo.itkeeps.domain.ModelFactory;
 import org.ebaloo.itkeeps.domain.pojo.JImage;
+import org.ebaloo.itkeeps.domain.pojo.JUser;
 import org.ebaloo.itkeeps.domain.vertex.BaseAbstract;
 import org.ebaloo.itkeeps.domain.vertex.Image;
+import org.ebaloo.itkeeps.domain.vertex.User;
 import org.ebaloo.itkeeps.tools.SecurityRole;
 
 import com.codahale.metrics.annotation.Timed;
 
 
-@Path(ApiConfig.PATH + "/image")
-public class ImageEndpoint {
+@Path(ApiConfig.PATH + "/user")
+public class UserEndpoint {
 
 	@GET
     @Produces({MediaType.APPLICATION_JSON})
@@ -32,10 +34,10 @@ public class ImageEndpoint {
     @Timed
     public Response get() {
 
-		List<JImage> list = new ArrayList<JImage>();
+		List<JUser> list = new ArrayList<JUser>();
 		
-		for(BaseAbstract ba : Image.getAllBase(ModelFactory.get(Image.class), false)) {
-		    	list.add(new JImage((Image) ba, false));
+		for(BaseAbstract ba : Image.getAllBase(ModelFactory.get(User.class), false)) {
+		    	list.add(new JUser((User) ba));
 		}
 		
     	return Response.ok().entity(list).build();

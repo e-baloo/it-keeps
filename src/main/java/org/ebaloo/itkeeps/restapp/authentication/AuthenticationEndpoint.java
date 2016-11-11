@@ -11,11 +11,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.ebaloo.itkeeps.tools.SecurityFactory.SecurityRole;
 
 import org.ebaloo.itkeeps.domain.pojo.JCredential;
 import org.ebaloo.itkeeps.domain.vertex.User;
 import org.ebaloo.itkeeps.tools.SecurityFactory;
+import org.ebaloo.itkeeps.tools.SecurityRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

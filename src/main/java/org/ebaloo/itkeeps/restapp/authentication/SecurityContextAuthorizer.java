@@ -6,7 +6,7 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.lang3.StringUtils;
-import org.ebaloo.itkeeps.tools.SecurityFactory;
+import org.ebaloo.itkeeps.tools.SecurityRole;
 
 import java.security.Principal;
 import java.util.HashSet;
@@ -35,7 +35,7 @@ public class SecurityContextAuthorizer implements SecurityContext {
                 }
             };
 
-            this.roles.add(SecurityFactory.SecurityRole.GUEST.toString());
+            this.roles.add(SecurityRole.GUEST.toString());
             
             
         } else {

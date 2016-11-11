@@ -25,6 +25,7 @@ public class JUser extends JBaseStandard{
 		super(obj);
 		
 		this.setId(obj.getId());
+		this.setId(obj.getId());
 		
 	}
 	
@@ -34,15 +35,6 @@ public class JUser extends JBaseStandard{
 		
 		if(this.isPresentId())
 			obj.setIcon(this.getIcon());
-
-		if(this.isPresentExternalRef())
-			obj.putExternalRef(this.getExternalRef());
-
-		if(this.isPresentOtherName())
-			obj.putOtherName(this.getOtherName());
-
-		if(this.isPresentDescription())
-			obj.setDescription(this.getDescription());
 
 		if(this.isPresentRoles())
 			obj.setRoles(this.getRoles());

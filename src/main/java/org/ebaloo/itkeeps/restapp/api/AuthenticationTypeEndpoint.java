@@ -4,7 +4,7 @@ package org.ebaloo.itkeeps.restapp.api;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -13,6 +13,7 @@ import javax.ws.rs.core.Response;
 
 import org.ebaloo.itkeeps.tools.SecurityFactory;
 import org.ebaloo.itkeeps.tools.SecurityFactory.AuthenticationType;
+import org.ebaloo.itkeeps.tools.SecurityRole;
 
 import com.codahale.metrics.annotation.Timed;
 
@@ -22,7 +23,7 @@ public class AuthenticationTypeEndpoint {
 
 	@GET
     @Produces({MediaType.APPLICATION_JSON})
-    @PermitAll
+    @RolesAllowed(SecurityRole.ROOT)
     @Timed
     public Response get() {
 
