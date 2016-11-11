@@ -4,20 +4,25 @@ package org.ebaloo.itkeeps.restapp.authentication;
 import javax.security.auth.Subject;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+
+import org.apache.commons.lang3.StringUtils;
+import org.ebaloo.itkeeps.tools.SecurityFactory;
+
 import java.security.Principal;
-import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class SecurityContextAuthorizer implements SecurityContext {
 
     private Principal principal;
     private javax.inject.Provider<UriInfo> uriInfo;
-    private Set<String> roles;
+    private Set<String> roles = new HashSet<String>();
 
-    public SecurityContextAuthorizer(final javax.inject.Provider<UriInfo> uriInfo, final Principal principal, final String[] roles) {
-        this.principal = principal;
-        if (principal == null) {
+    public SecurityContextAuthorizer(javax.inject.Provider<UriInfo> uriInfo, String guid, List<String> roles) {
+
+        if (StringUtils.isEmpty(guid)) {
             this.principal = new Principal() {
                 @Override
                 public String getName() {
@@ -29,12 +34,35 @@ public class SecurityContextAuthorizer implements SecurityContext {
                     return true;
                 }
             };
+
+            this.roles.add(SecurityFactory.SecurityRole.GUEST.toString());
+            
+            
+        } else {
+        	
+            this.principal = new Principal() {
+                @Override
+                public String getName() {
+                    return guid;
+                }
+
+                @Override
+                public boolean implies(Subject subject) {
+                    return true;
+                }
+            };
+
+            if(roles != null)
+            	this.roles = roles.stream().collect(Collectors.toSet()); 
         }
+        
+        
         this.uriInfo = uriInfo;
-        this.roles = new HashSet<>(Arrays.asList((roles != null) ? roles : new String[]{}));
+        
     }
 
-    public Principal getUserPrincipal() {
+
+	public Principal getUserPrincipal() {
         return this.principal;
     }
 

@@ -4,7 +4,6 @@ package org.ebaloo.itkeeps.domain.vertex;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.ebaloo.itkeeps.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.database.annotation.DatabaseVertrex;
@@ -12,7 +11,6 @@ import org.ebaloo.itkeeps.domain.BaseUtils;
 import org.ebaloo.itkeeps.domain.annotation.ModelClassAnnotation;
 import org.ebaloo.itkeeps.domain.pojo.JCredential;
 import org.ebaloo.itkeeps.tools.SecurityFactory;
-import org.ebaloo.itkeeps.tools.SecurityFactory.SecurityRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -110,17 +108,17 @@ public class User extends BaseStandard {
 	
 	
 	@DatabaseProperty(name = ROLES, type = OType.EMBEDDEDLIST)
-	public List<SecurityRole> getRoles() {
-		return this.getEmbeddedListString(ROLES).stream().map(e -> SecurityRole.valueOf(e)).collect(Collectors.toList());
+	public List<String> getRoles() {
+		return this.getEmbeddedListString(ROLES);
 	}
 	
 	
-	public void setRoles(List<SecurityRole> roles) {
+	public void setRoles(List<String> roles) {
 		
 		if(roles == null)
 			roles = new ArrayList<>();
 		
-		this.setProperty(ROLES, roles.stream().map(e -> e.toString()).collect(Collectors.toList()));
+		this.setProperty(ROLES, roles);
 	}
 
 	

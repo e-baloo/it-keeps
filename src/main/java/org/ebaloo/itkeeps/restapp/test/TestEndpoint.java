@@ -4,6 +4,8 @@ package org.ebaloo.itkeeps.restapp.test;
 import java.time.Instant;
 
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
+//import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -12,9 +14,12 @@ import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
+import org.ebaloo.itkeeps.tools.SecurityFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,15 +38,26 @@ public class TestEndpoint {
 
 	private static final Logger logger = LoggerFactory.getLogger(TestEndpoint.class.getName());
 
+    @Context
+    SecurityContext securityContext;
+
+    
 	
     @GET
     @Produces({MediaType.APPLICATION_JSON})
+    @RolesAllowed(SecurityFactory.SecurityRole.GUEST)
     @Path("ping")
     public Response getSecurePing() {
     	
     	if(logger.isTraceEnabled())
     		logger.trace("getPing()");
 
+    	System.out.println("guid   : " + securityContext.getUserPrincipal().getName());
+    	System.out.println("GUEST  : " + securityContext.isUserInRole("GUEST"));
+    	System.out.println("USER   : " + securityContext.isUserInRole("USER"));
+    	System.out.println("ADMIN  : " + securityContext.isUserInRole("ADMIN"));
+    	System.out.println("ROOT   : " + securityContext.isUserInRole("ROOT"));
+    	
    		return Response.ok(new Pong()).build();
     }
 

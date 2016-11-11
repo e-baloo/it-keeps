@@ -53,7 +53,7 @@ public class AuthenticationEndpoint {
 
             
             // TODO
-            ArrayList<SecurityRole> listRoles = new ArrayList<SecurityRole>();
+            ArrayList<String> listRoles = new ArrayList<String>();
             listRoles.add(SecurityRole.USER);
             listRoles.add(SecurityRole.ADMIN);
             listRoles.add(SecurityRole.ROOT);

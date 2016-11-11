@@ -8,7 +8,6 @@ import java.util.Optional;
 
 import org.ebaloo.itkeeps.domain.vertex.BaseStandard;
 import org.ebaloo.itkeeps.domain.vertex.User;
-import org.ebaloo.itkeeps.tools.SecurityFactory.SecurityRole;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -137,15 +136,15 @@ public class JUser extends JBaseStandard{
 	public static final String ROLES = "roles";
 
 	@JsonIgnore
-	private Optional<List<SecurityRole>> roles = Optional.empty();
+	private Optional<List<String>> roles = Optional.empty();
 	
 	@JsonProperty(ROLES)
-	public final List<SecurityRole> getRoles() {
+	public final List<String> getRoles() {
 		return this.roles.orElse(null);
 	}
 
 	@JsonProperty(ROLES)
-	public final void setRoles(List<SecurityRole> value) {
+	public final void setRoles(List<String> value) {
 		roles = Optional.of(value);
 	}
 

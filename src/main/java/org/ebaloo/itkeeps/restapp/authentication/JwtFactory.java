@@ -151,6 +151,16 @@ public final class JwtFactory {
 		return JwtFactory.decrypt(claimsJws.getBody().get(USER_ID, String.class));
 	}
 
+	public static final String getGuid(final String token) {
+
+		if (logger.isTraceEnabled())
+			logger.trace("getGuid()");
+
+		Jws<Claims> claimsJws = getClaims(token);
+
+		return JwtFactory.decrypt(claimsJws.getBody().get(Base.GUID, String.class));
+	}
+
 	
 	private static final Jws<Claims> getClaims(final String token) {
 		

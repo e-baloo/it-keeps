@@ -1,11 +1,9 @@
 package org.ebaloo.itkeeps.domain.pojo;
 
 
-import java.util.List;
 import java.util.Optional;
 
 import org.ebaloo.itkeeps.tools.SecurityFactory.AuthenticationType;
-import org.ebaloo.itkeeps.tools.SecurityFactory.SecurityRole;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
