@@ -20,17 +20,31 @@ public class JBase {
 	
 	public JBase(Base base) {
 		
-		this.setGuid(base.getGuid().toString());
-		this.setName(base.getName());
 		this.getJObject().setType(base.getType());
 		this.getJObject().setEnable(base.isEnable());
 		this.getJObject().setCreationDate(base.getCreationDate());
 		this.getJObject().setVersion(base.getObjectVersion());
+
+		this.setGuid(base.getGuid().toString());
+		this.setName(base.getName());
 		this.setDescription(base.getDescription());
 		
 	}
 	
 	public void update(Base base) {
+		
+		if(this.jobject == null) {
+			throw new RuntimeException(); //TODO
+		}
+
+		if(!this.jobject.isPresentVersion()) {
+			throw new RuntimeException(); //TODO
+		}
+
+		if(this.jobject.getVersion() != base.getObjectVersion()) {
+			throw new RuntimeException(); //TODO
+		}
+
 		
 		if(this.isPresentName())
 			base.setName(this.getName());
@@ -44,7 +58,7 @@ public class JBase {
 	@JsonProperty("_object")
 	private JObject jobject = null;
 	
-	private JObject getJObject() {
+	public JObject getJObject() {
 		
 		if(jobject == null)
 			jobject = new JObject();
