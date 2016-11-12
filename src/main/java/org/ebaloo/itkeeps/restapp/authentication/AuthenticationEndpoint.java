@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.ebaloo.itkeeps.domain.pojo.JCredential;
+import org.ebaloo.itkeeps.domain.pojo.JToken;
 import org.ebaloo.itkeeps.domain.vertex.User;
 import org.ebaloo.itkeeps.tools.SecurityFactory;
 import org.ebaloo.itkeeps.tools.SecurityRole;
@@ -60,11 +61,9 @@ public class AuthenticationEndpoint {
             this.user.setRoles(listRoles);
             
             
-            // Issue a token for the user
             String token = issueToken(this.user);
-
-            // Return the token on the response
-            return Response.ok(token).build();
+            
+            return Response.ok(new JToken(token)).build();
 
         } catch (Exception e) {
             return Response.status(Response.Status.UNAUTHORIZED).build();

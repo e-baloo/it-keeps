@@ -229,6 +229,12 @@ public abstract class CommonOrientVertex {
 		return orid;
 	}
 
+	
+	public final int getObjectVersion() {
+
+		return this.getProperty("@version");
+	}
+
 	protected final List<String> getOridByDirection(final Direction direction) {
 
 		List<String> list = new ArrayList<String>();

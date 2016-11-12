@@ -22,9 +22,10 @@ public class JBase {
 		
 		this.setGuid(base.getGuid().toString());
 		this.setName(base.getName());
-		this.setType(base.getType());
-		this.setEnable(base.isEnable());
-		this.setCreationDate(base.getCreationDate());
+		this.getJObject().setType(base.getType());
+		this.getJObject().setEnable(base.isEnable());
+		this.getJObject().setCreationDate(base.getCreationDate());
+		this.getJObject().setVersion(base.getObjectVersion());
 		this.setDescription(base.getDescription());
 		
 	}
@@ -39,6 +40,17 @@ public class JBase {
 
 	}
 
+
+	@JsonProperty("_object")
+	private JObject jobject = null;
+	
+	private JObject getJObject() {
+		
+		if(jobject == null)
+			jobject = new JObject();
+		
+		return jobject;
+	}
 
 
 	// GUID
@@ -89,75 +101,6 @@ public class JBase {
 	}
 	
 	
-	// TYPE
-	
-	@JsonIgnore
-	private Optional<String> type = Optional.empty();
-	
-	@JsonProperty(Base.CLASS_TYPE)
-	public final String getType() {
-		return this.type.orElse(null);
-	}
-
-	@JsonProperty(Base.CLASS_TYPE)
-	public final void setType(String value) {
-		this.type = Optional.of(value == null ? "" : value);
-	}
-
-	@JsonIgnore
-	public final boolean isPresentType() {
-		return this.type.isPresent();
-	}
-
-	
-	// ENABLE
-	
-	@JsonIgnore
-	private Optional<Boolean> enable = Optional.empty();
-	
-	@JsonProperty(Base.ENABLE)
-	public final Boolean getEnable() {
-		return this.enable.orElse(null);
-	}
-
-	@JsonProperty(Base.ENABLE)
-	public final void setEnable(Boolean value) {
-		
-		if(value == null)
-			this.enable = Optional.empty();
-		else
-			this.enable = Optional.of(value);
-	}
-
-	@JsonIgnore
-	public final boolean isPresentEnable() {
-		return this.enable.isPresent();
-	}
-
-	
-	// CREATION_DATE
-	
-	@JsonIgnore
-	private Optional<DateTime> creationDate = Optional.empty();
-	
-	@JsonProperty(Base.CREATION_DATE)
-	public final DateTime getCreationDate() {
-		return this.creationDate.orElse(null);
-	}
-
-	@JsonProperty(Base.CREATION_DATE)
-	public final void setCreationDate(DateTime value) {
-		
-		if(value == null)
-			this.creationDate = Optional.empty();
-		else
-			this.creationDate = Optional.of(value);
-	}
-
-	@JsonIgnore
-	public final boolean isPresentCreationDate() {
-		return this.creationDate.isPresent();
-	}
 
 
 	// DESCRIPTION
@@ -180,5 +123,109 @@ public class JBase {
 		return this.description.isPresent();
 	}
 
+	
+	private static class JObject {
+		
+		public JObject() {
+			
+		}
+		
+		// TYPE
+		
+		@JsonIgnore
+		private Optional<String> type = Optional.empty();
+		
+		@JsonProperty(Base.CLASS_TYPE)
+		public final String getType() {
+			return this.type.orElse(null);
+		}
+
+		@JsonProperty(Base.CLASS_TYPE)
+		public final void setType(String value) {
+			this.type = Optional.of(value == null ? "" : value);
+		}
+
+		@JsonIgnore
+		public final boolean isPresentType() {
+			return this.type.isPresent();
+		}
+
+		
+		// ENABLE
+		
+		@JsonIgnore
+		private Optional<Boolean> enable = Optional.empty();
+		
+		@JsonProperty(Base.ENABLE)
+		public final Boolean getEnable() {
+			return this.enable.orElse(null);
+		}
+
+		@JsonProperty(Base.ENABLE)
+		public final void setEnable(Boolean value) {
+			
+			if(value == null)
+				this.enable = Optional.empty();
+			else
+				this.enable = Optional.of(value);
+		}
+
+		@JsonIgnore
+		public final boolean isPresentEnable() {
+			return this.enable.isPresent();
+		}
+
+		
+		// CREATION_DATE
+		
+		@JsonIgnore
+		private Optional<DateTime> creationDate = Optional.empty();
+		
+		@JsonProperty(Base.CREATION_DATE)
+		public final DateTime getCreationDate() {
+			return this.creationDate.orElse(null);
+		}
+
+		@JsonProperty(Base.CREATION_DATE)
+		public final void setCreationDate(DateTime value) {
+			
+			if(value == null)
+				this.creationDate = Optional.empty();
+			else
+				this.creationDate = Optional.of(value);
+		}
+
+		@JsonIgnore
+		public final boolean isPresentCreationDate() {
+			return this.creationDate.isPresent();
+		}
+
+		// VERSION
+		
+		public static final String VERSION = "version";
+		
+		@JsonIgnore
+		private Optional<Integer> version = Optional.empty();
+		
+		@JsonProperty(VERSION)
+		public final Integer getVersion() {
+			return this.version.orElse(null);
+		}
+
+		@JsonProperty(VERSION)
+		public final void setVersion(Integer value) {
+			
+			if(value == null)
+				this.version = Optional.empty();
+			else
+				this.version = Optional.of(value);
+		}
+
+		@JsonIgnore
+		public final boolean isPresentVersion() {
+			return this.version.isPresent();
+		}
+		
+	}
 
 }

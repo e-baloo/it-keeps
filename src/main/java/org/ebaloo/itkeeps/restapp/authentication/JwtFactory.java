@@ -13,22 +13,21 @@ import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 import org.ebaloo.itkeeps.domain.vertex.Base;
 import org.ebaloo.itkeeps.domain.vertex.User;
+import org.glassfish.jersey.internal.util.Base64;
 import org.jasypt.util.text.BasicTextEncryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.impl.crypto.MacProvider;
+import com.auth0.jwt.JWTSigner;
+import com.auth0.jwt.JWTVerifier;
+
 
 public final class JwtFactory {
 
 	private static final Logger logger = LoggerFactory.getLogger(JwtFactory.class.getName());
 
-	private static final Key KEY = MacProvider.generateKey();
+//	private static final Key KEY = MacProvider.generateKey();
+	private static final String KEY = ("test");
 	
 	private static final BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
 	private static final String DEFAULT_PASSWORD = "it-k33p5!@2017";
@@ -43,21 +42,21 @@ public final class JwtFactory {
 		JwtFactory.setPassword(DEFAULT_PASSWORD);
 	}
 	
-	private static int timeout = 10; // 10 minutes
+	private static long timeout = 10; // 10 minutes
 
-	public static int getTimeout() {
+	public static long getTimeout() {
 		return timeout;
 	}
 
-	public static void setTimeout(int expiryDelay) {
+	public static void setTimeout(long timeout) {
 		
-		if(expiryDelay < 1)
-			expiryDelay = 1;
+		if(timeout < 1)
+			timeout = 1;
 		
-		if(expiryDelay > 120)
-			expiryDelay = 120;
+		if(timeout > 120)
+			timeout = 120;
 		
-		JwtFactory.timeout = expiryDelay;
+		JwtFactory.timeout = timeout;
 	}
 
 	public static String getJwtString(final User user) {
@@ -66,47 +65,58 @@ public final class JwtFactory {
 			logger.trace("getJwtString()");
 		
 		
-		Date expires = getExpiryDate();
 
-		SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
-
-		JwtBuilder jwtBuilder = Jwts.builder();
-
-		jwtBuilder.setHeaderParam("typ", "JWT");
 		
-		jwtBuilder.setIssuer("IT-Keeps");
-		
-		Map<String, Object> claimsProprties = new HashMap<String, Object>();
-		
-		claimsProprties.put(Base.GUID, JwtFactory.encrypt(user.getGuid().toString()));
-		claimsProprties.put(USER_ID, JwtFactory.encrypt(user.getId()));
-		claimsProprties.put(USER_NAME, JwtFactory.encrypt(user.getName()));
-		claimsProprties.put(USER_ROLES, JwtFactory.encrypt(StringUtils.join(user.getRoles(), ",")));
-		
-		jwtBuilder.setClaims(claimsProprties);
-		
-		jwtBuilder.setId(JwtFactory.encrypt(UUID.randomUUID().toString()));
+		/*
+		 * 
+		 * 
+final String issuer = "https://mydomain.com/";
+final String secret = "{{secret used for signing}}";
 
 
-		jwtBuilder.setExpiration(expires);
-		jwtBuilder.setIssuedAt(new Date());
+final JWTSigner signer = new JWTSigner(secret);
+final HashMap<String, Object> claims = new HashMap<String, Object>();
+claims.put("iss", issuer);
+
+final String jwt = signer.sign(claims);
+		 */
+		
+		//SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+
+		//JwtBuilder jwtBuilder = Jwts.builder();
+
+		final JWTSigner signer = new JWTSigner(KEY);
+
+		
+
+		final long iat = System.currentTimeMillis() / 1000L; // issued at claim 
+		final long exp = iat + 60L * getTimeout(); // expires claim. In this case the token expires in 60 seconds
+
+		final HashMap<String, Object> claims = new HashMap<String, Object>();
+		claims.put("exp", exp);
+		claims.put("iat", iat);
+		claims.put("iss", "IT-Keeps");		
 		
 		
-		jwtBuilder.signWith(signatureAlgorithm, KEY);
-
-
-		return jwtBuilder.compact();
+		claims.put(Base.GUID, user.getGuid().toString());
+		claims.put(USER_ID, user.getId());
+		claims.put(USER_NAME, user.getName());
+		claims.put(USER_ROLES, StringUtils.join(user.getRoles(), ","));
+		
+		
+		return signer.sign(claims);
 	}
 
-	public static final void isValid(final String token) {
+	public static final Map<String, Object> isValid(final String token) {
 
 		if (logger.isTraceEnabled())
 			logger.trace("isValid()");
 
 		try {
 
-			Jwts.parser().setSigningKey(KEY).parseClaimsJws(token.trim());
-
+			final JWTVerifier verifier = new JWTVerifier(KEY);
+		    return verifier.verify(token);
+		    
 		} catch (Exception e) {
 			
 			throw new RuntimeException(e);
@@ -114,77 +124,48 @@ public final class JwtFactory {
 		}
 	}
 
-	public static final String getUserName(final String token) {
+	public static final String getUserName(Map<String, Object> claims) {
 
 		if (logger.isTraceEnabled())
 			logger.trace("getJwtString()");
 
-		Jws<Claims> claimsJws = getClaims(token);
-		
-		return JwtFactory.decrypt(claimsJws.getBody().get(USER_NAME, String.class));
+		return claims.get(USER_NAME).toString();
 	}
 
-	public static final List<String> getRoles(final String token) {
+	public static final List<String> getRoles(Map<String, Object> claims) {
 
 		if (logger.isTraceEnabled())
 			logger.trace("getRoles()");
 
-		Jws<Claims> claimsJws = getClaims(token);
 
-		String userRoles = claimsJws.getBody().get(USER_ROLES, String.class);
+		String userRoles = claims.get(USER_ROLES).toString();
 
 		ArrayList<String> list = new ArrayList<String>();
 
 		if (StringUtils.isNotEmpty(userRoles))
-			list.addAll(Arrays.asList(JwtFactory.decrypt(userRoles).split(",")));
+			list.addAll(Arrays.asList(userRoles.split(",")));
 
 		return list;
 	}
 
-	public static final String getUserId(final String token) {
+	public static final String getUserId(Map<String, Object> claims) {
 
 		if (logger.isTraceEnabled())
 			logger.trace("getVersion()");
 
-		Jws<Claims> claimsJws = getClaims(token);
-
-		return JwtFactory.decrypt(claimsJws.getBody().get(USER_ID, String.class));
+		return claims.get(USER_ID).toString();
 	}
 
-	public static final String getGuid(final String token) {
+	public static final String getGuid(Map<String, Object> claims) {
 
 		if (logger.isTraceEnabled())
 			logger.trace("getGuid()");
 
-		Jws<Claims> claimsJws = getClaims(token);
 
-		return JwtFactory.decrypt(claimsJws.getBody().get(Base.GUID, String.class));
+		return claims.get(Base.GUID).toString(); 
 	}
 
 	
-	private static final Jws<Claims> getClaims(final String token) {
-		
-		if (logger.isTraceEnabled())
-			logger.trace("getClaims()");
-
-		isValid(token);
-		
-		return Jwts.parser().setSigningKey(KEY).parseClaimsJws(token);
-	}
-	
-	
-	private static final Date getExpiryDate() {
-
-		if (logger.isTraceEnabled())
-			logger.trace("getExpiryDate()");
-		
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(new Date());
-		calendar.add(Calendar.MINUTE, timeout);
-		
-		return calendar.getTime();
-	}
-
 	
 	public static void setPassword(String password) {
 		JwtFactory.textEncryptor.setPassword(password);

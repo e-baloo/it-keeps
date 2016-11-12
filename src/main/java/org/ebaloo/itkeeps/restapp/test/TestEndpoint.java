@@ -45,7 +45,7 @@ public class TestEndpoint {
 	
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    @RolesAllowed(SecurityRole.GUEST)
+    @RolesAllowed({SecurityRole.GUEST, SecurityRole.USER, SecurityRole.ADMIN, SecurityRole.ROOT})
     @Path("ping")
     public Response getSecurePing() {
     	

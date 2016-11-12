@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.security.PermitAll;
@@ -77,9 +78,13 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 		// Extract the token from the HTTP Authorization header
 		String token = StringUtils.removeIgnoreCase(authorizationHeader, BEARE).trim();
 
+		final Map<String, Object> claims;
 		try {
 
-			JwtFactory.isValid(token);
+			logger.trace("token = " + token);
+			
+			claims = JwtFactory.isValid(token);
+			
 
 		} catch (Exception e) {
 
@@ -90,8 +95,8 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 			return;
 		}
 		
-		List<String> roles = JwtFactory.getRoles(token);
-		String guid = JwtFactory.getGuid(token);
+		List<String> roles = JwtFactory.getRoles(claims);
+		String guid = JwtFactory.getGuid(claims);
 		
 		
         //Verify user access by Roles

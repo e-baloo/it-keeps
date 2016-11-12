@@ -5,7 +5,7 @@ package org.ebaloo.itkeeps.domain.vertex;
 import org.ebaloo.itkeeps.database.annotation.DatabaseVertrex;
 
 @DatabaseVertrex()
-public class BaseSysteme extends Base {
+public abstract class BaseSysteme extends Base {
 
 	public BaseSysteme() {
 		super();

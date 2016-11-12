@@ -15,7 +15,12 @@ public class ApiConfig {
     	
     	
     	parent.classesAdd(ImageEndpoint.class);
-        
+
+    	
+    	
+    	parent.classesAdd(UserEndpoint.class);
+
+    	
     }
 
 	

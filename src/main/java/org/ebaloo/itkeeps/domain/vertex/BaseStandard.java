@@ -26,7 +26,7 @@ import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 		name = "BaseStandard",
 		isAbstract = true)
 @DatabaseVertrex()
-public class BaseStandard extends Base {
+public abstract class BaseStandard extends Base {
 
 	private static Logger logger = LoggerFactory.getLogger(BaseStandard.class);
 
