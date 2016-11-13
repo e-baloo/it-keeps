@@ -1,18 +1,15 @@
 package org.ebaloo.itkeeps.core.restapp.authentication;
 
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.ebaloo.itkeeps.api.model.JBase;
 import org.ebaloo.itkeeps.core.ConfigFactory;
-import org.ebaloo.itkeeps.core.domain.vertex.Base;
 import org.ebaloo.itkeeps.core.domain.vertex.User;
+import org.ebaloo.itkeeps.core.restapp.authentication.ApplicationRolesAllowed.SecurityRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,7 +64,7 @@ public final class JwtFactory {
 	
 	private static final String USER_ID = "user.id";
 	private static final String USER_NAME = "user.name";
-	private static final String USER_ROLES = "user.roles";
+	private static final String USER_ROLE = "user.role";
 	
 	
 	
@@ -122,7 +119,9 @@ public final class JwtFactory {
 		claims.put(JBase.GUID, user.getGuid().toString());
 		claims.put(USER_ID, user.getId());
 		claims.put(USER_NAME, user.getName());
-		claims.put(USER_ROLES, StringUtils.join(user.getRoles(), ","));
+		
+		//claims.put(USER_ROLE, user.getRole().toString());
+		claims.put(USER_ROLE, SecurityRole.ROOT.toString());
 		
 		
 		return signer.sign(claims);
@@ -153,13 +152,14 @@ public final class JwtFactory {
 		return claims.get(USER_NAME).toString();
 	}
 
+	/*
 	public static final List<String> getRoles(Map<String, Object> claims) {
 
 		if (logger.isTraceEnabled())
 			logger.trace("getRoles()");
 
 
-		String userRoles = claims.get(USER_ROLES).toString();
+		String userRoles = claims.get(USER_ROLE).toString();
 
 		ArrayList<String> list = new ArrayList<String>();
 
@@ -168,6 +168,7 @@ public final class JwtFactory {
 
 		return list;
 	}
+	*/
 
 	public static final String getUserId(Map<String, Object> claims) {
 
@@ -184,6 +185,13 @@ public final class JwtFactory {
 
 
 		return claims.get(JBase.GUID).toString(); 
+	}
+
+	public static SecurityRole getRole(Map<String, Object> claims) {
+		
+		String role = claims.get(USER_ROLE).toString();
+
+		return SecurityRole.valueOf(role);
 	}
 
 	

@@ -2,15 +2,17 @@
 package org.ebaloo.itkeeps.core.domain.vertex;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.model.JBase;
 import org.ebaloo.itkeeps.api.model.JCredential;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.BaseUtils;
+import org.ebaloo.itkeeps.core.domain.ModelFactory;
 import org.ebaloo.itkeeps.core.domain.annotation.ModelClassAnnotation;
+import org.ebaloo.itkeeps.core.restapp.authentication.ApplicationRolesAllowed.SecurityRole;
 import org.ebaloo.itkeeps.core.tools.SecurityFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import  org.ebaloo.itkeeps.api.model.JUser;
 
 import com.auth0.jwt.internal.org.apache.commons.lang3.StringUtils;
-import com.orientechnologies.orient.core.metadata.schema.OType;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 
@@ -113,7 +114,7 @@ public class User extends BaseStandard {
 	 * ROLES
 	 */
 	
-	
+	/*
 	
 	@DatabaseProperty(name = JUser.ROLES, type = OType.EMBEDDEDLIST)
 	public List<String> getRoles() {
@@ -128,43 +129,86 @@ public class User extends BaseStandard {
 		
 		this.setProperty(JUser.ROLES, roles);
 	}
+	*/
 
+
+	/*
+	 * ROLE
+	 */
 	
+	@DatabaseProperty(name = JUser.ROLE)
+	public SecurityRole getRole() {
+		return SecurityRole.valueOf(this.getProperty(JUser.ROLE));
+	}
+	
+	public void setRole(String role) {
+		this.setRole(SecurityRole.valueOf(role));
+	}
+	
+	public void setRole(SecurityRole role) {
+		this.setProperty(JUser.ROLE, role.toString());
+	}
 
 	// API
 	
 	@Override
-	public <T extends JBase> void apiFill(T obj) {
+	public <T extends JBase> void apiFill(T obj, Guid requesteurGuid) {
 		
 		if(!(obj instanceof JUser))
 			throw new RuntimeException("TODO"); //TODO
 		
-		super.apiFill(obj);
+		super.apiFill(obj, requesteurGuid);
 
 		JUser juser = (JUser) obj;
 		
 		juser.setId(this.getId());
-		juser.setRoles(this.getRoles());
+		juser.setRole(this.getRole().toString());
 		
 	}
 	
 	@Override
-	public <T extends JBase> void apiUpdate(T obj) {
+	public <T extends JBase> void apiUpdate(T obj, Guid requesteurGuid) {
 		
 		if(!(obj instanceof JUser))
 			throw new RuntimeException("TODO"); //TODO
 
-		super.apiUpdate(obj);
+		super.apiUpdate(obj, requesteurGuid);
+		
+		
+		User requesterUser = User.getByGuid(ModelFactory.get(User.class), requesteurGuid);
+
+		switch(requesterUser.getRole()) {
+
+		case ROOT:
+			// -> Ok is root
+			break;
+
+		case ADMIN:
+			//TODO Check it requesterUser have the right to update this
+			break;
+			
+		case USER:
+			if(!this.getGuid().equals(requesterUser.getGuid())) {
+				throw new RuntimeException("TODO"); //TODO
+			}
+			break;
+
+		case GUEST:
+		default:
+			throw new RuntimeException("TODO"); //TODO
+		}
+		
 
 		JUser juser = (JUser) obj;
 		
 		if(juser.isPresentId())
 			this.setIcon(juser.getIcon());
 
-		if(juser.isPresentRoles())
-			this.setRoles(juser.getRoles());
+		if(juser.isPresentRole())
+			this.setRole(juser.getRole());
 
 	}
+
 
 	
 }

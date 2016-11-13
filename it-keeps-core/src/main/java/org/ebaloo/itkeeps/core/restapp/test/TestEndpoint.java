@@ -19,7 +19,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
-import org.ebaloo.itkeeps.core.tools.SecurityRole;
+import org.ebaloo.itkeeps.core.restapp.authentication.ApplicationRolesAllowed;
+import org.ebaloo.itkeeps.core.restapp.authentication.ApplicationRolesAllowed.SecurityRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +46,7 @@ public class TestEndpoint {
 	
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    @RolesAllowed({SecurityRole.GUEST, SecurityRole.USER, SecurityRole.ADMIN, SecurityRole.ROOT})
+    @ApplicationRolesAllowed(SecurityRole.GUEST)
     @Path("ping")
     public Response getSecurePing() {
     	

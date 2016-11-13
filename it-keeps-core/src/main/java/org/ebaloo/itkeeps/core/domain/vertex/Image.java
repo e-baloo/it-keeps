@@ -197,17 +197,18 @@ public class Image extends BaseSysteme {
 	
 	// API
 	
-	public <T extends JBase> void apiFill(T obj) {
-		apiFill(obj, true);
+	@Override
+	public <T extends JBase> void apiFill(T obj, Guid requesteurGuid) {
+		apiFill(obj, requesteurGuid, true);
 	}
 
 	
-	public <T extends JBase> void apiFill(T obj, final boolean full) {
+	public <T extends JBase> void apiFill(T obj, Guid requesteurGuid, final boolean full) {
 
 		if(!(obj instanceof JImage))
 			throw new RuntimeException("TODO"); //TODO
 
-		super.apiFill(obj);
+		super.apiFill(obj, requesteurGuid);
 		
 		JImage jimage = (JImage) obj;
 		
@@ -219,12 +220,12 @@ public class Image extends BaseSysteme {
 
 	
 	@Override
-	public <T extends JBase> void apiUpdate(T obj) {
+	public <T extends JBase> void apiUpdate(T obj, Guid requesteurGuid) {
 		
 		if(!(obj instanceof JImage))
 			throw new RuntimeException("TODO"); //TODO
 
-		super.apiUpdate(obj);
+		super.apiUpdate(obj, requesteurGuid);
 		
 		JImage jimage = (JImage) obj;
 		

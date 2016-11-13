@@ -16,7 +16,6 @@ import org.ebaloo.itkeeps.api.model.JCredential;
 import org.ebaloo.itkeeps.api.model.JToken;
 import org.ebaloo.itkeeps.core.domain.vertex.User;
 import org.ebaloo.itkeeps.core.tools.SecurityFactory;
-import org.ebaloo.itkeeps.core.tools.SecurityRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,18 +49,13 @@ public class AuthenticationEndpoint {
         try {
 
             // Authenticate the user using the credentials provided
-            this.user = authenticate(credentials);
+            User user = authenticate(credentials);
 
             
             // TODO
-            ArrayList<String> listRoles = new ArrayList<String>();
-            listRoles.add(SecurityRole.USER);
-            listRoles.add(SecurityRole.ADMIN);
-            listRoles.add(SecurityRole.ROOT);
-            this.user.setRoles(listRoles);
             
             
-            String token = issueToken(this.user);
+            String token = issueToken(user);
             
             return Response.ok(new JToken(token)).build();
 
@@ -70,8 +64,7 @@ public class AuthenticationEndpoint {
         }      
     }
 
-    @Context
-    User user;
+
 
     
     private User authenticate(JCredential credentials) throws Exception {
@@ -89,8 +82,6 @@ public class AuthenticationEndpoint {
     	
     	return user;
     }
-
-    
 
     
     private String issueToken(User user) {

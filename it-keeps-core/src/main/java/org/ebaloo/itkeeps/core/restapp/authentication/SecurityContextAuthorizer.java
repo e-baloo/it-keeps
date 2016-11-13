@@ -6,7 +6,7 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.lang3.StringUtils;
-import org.ebaloo.itkeeps.core.tools.SecurityRole;
+import org.ebaloo.itkeeps.core.restapp.authentication.ApplicationRolesAllowed.SecurityRole;
 
 import java.security.Principal;
 import java.util.HashSet;
@@ -18,9 +18,9 @@ public class SecurityContextAuthorizer implements SecurityContext {
 
     private Principal principal;
     private javax.inject.Provider<UriInfo> uriInfo;
-    private Set<String> roles = new HashSet<String>();
+    private SecurityRole role = null;
 
-    public SecurityContextAuthorizer(javax.inject.Provider<UriInfo> uriInfo, String guid, List<String> roles) {
+    public SecurityContextAuthorizer(javax.inject.Provider<UriInfo> uriInfo, String guid, SecurityRole role) {
 
         if (StringUtils.isEmpty(guid)) {
             this.principal = new Principal() {
@@ -35,7 +35,7 @@ public class SecurityContextAuthorizer implements SecurityContext {
                 }
             };
 
-            this.roles.add(SecurityRole.GUEST.toString());
+            this.role = SecurityRole.GUEST;
             
             
         } else {
@@ -52,8 +52,8 @@ public class SecurityContextAuthorizer implements SecurityContext {
                 }
             };
 
-            if(roles != null)
-            	this.roles = roles.stream().collect(Collectors.toSet()); 
+            if(role != null)
+            	this.role = role; 
         }
         
         
@@ -66,8 +66,13 @@ public class SecurityContextAuthorizer implements SecurityContext {
         return this.principal;
     }
 
-    public boolean isUserInRole(String role) {
-        return this.roles.contains(((role == null) ? "" : role));
+	@Override
+	public boolean isUserInRole(String role) {
+		return isUserInRole(SecurityRole.valueOf(role));
+	}
+
+    public boolean isUserInRole(SecurityRole role) {
+        return  this.role.isInRole(role);
     }
 
     public boolean isSecure() {
@@ -77,4 +82,6 @@ public class SecurityContextAuthorizer implements SecurityContext {
     public String getAuthenticationScheme() {
         return SecurityContext.DIGEST_AUTH;
     }
+
+
 }

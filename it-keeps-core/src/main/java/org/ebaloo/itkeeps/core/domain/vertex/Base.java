@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.model.JBase;
+import org.ebaloo.itkeeps.api.model.JBaseStandard;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.BaseUtils;
@@ -287,17 +288,62 @@ public abstract class Base extends BaseAbstract {
 	public static final String ICON_NAME_PREFIX = "icon:";
 
 
+	
+	
+	
+	public static <T extends BaseAbstract> T getByGuid(final ModelClass<T> target,
+			final Guid guid) {
+
+		
+		String cmdSql = "SELECT FROM " + target.getClassName() + " WHERE "
+				+ BaseUtils.WhereClause.enable() + " AND " + JBase.GUID  + " = ?";
+
+		List<OrientVertex> list = CommonOrientVertex.command(cmdSql, guid.toString());
+
+		if (list.isEmpty()) {
+			if (logger.isTraceEnabled())
+				logger.trace("OrientVertex not found for 'guid': " + guid);
+			return null;
+		}
+
+		if (list.size() > 1) {
+			// TODO
+			throw new RuntimeException("To many obejct for for 'guid': " + guid + " [" + cmdSql + "]");
+		}
+
+		OrientVertex ov = list.get(0);
+
+		@SuppressWarnings("unchecked")
+		ModelClass<T> modelClass = (ModelClass<T>) ModelFactory.get(ov.getType().getName());
+
+		T baseAbstract;
+		try {
+			baseAbstract = modelClass.newInstance();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		baseAbstract.setOrientVertex(ov);
+
+		if (logger.isTraceEnabled())
+			logger.trace("OrientVertex found for for 'guid': " + guid + " @" + ov.getType().getName() + " "
+					+ ov.getIdentity().toString());
+
+		return baseAbstract;
+	}
+	
+	
+	
 
 	// API Methose
 	
 	
-	public <T extends JBase> void apiFill(T obj) {
+	public <T extends JBase> void apiFill(T obj, Guid requesteurGuid) {
 		
 		obj.getJObject().setType(this.getType());
-		obj.getJObject().setEnable(this.isEnable());
-		obj.getJObject().setCreationDate(this.getCreationDate());
 		obj.getJObject().setVersion(this.getObjectVersion());
 
+		obj.setEnable(this.isEnable());
+		obj.setCreationDate(this.getCreationDate());
 		obj.setGuid(this.getGuid().toString());
 		obj.setName(this.getName());
 		obj.setDescription(this.getDescription());
@@ -305,7 +351,7 @@ public abstract class Base extends BaseAbstract {
 	}
 	
 	
-	public <T extends JBase> void apiUpdate(T obj) {
+	public <T extends JBase> void apiUpdate(T obj, Guid requesteurGuid) {
 		
 		if(!obj.isPresentJObject())
 			throw new RuntimeException(); //TODO
@@ -318,7 +364,6 @@ public abstract class Base extends BaseAbstract {
 		if(obj.getJObject().getVersion() != this.getObjectVersion()) {
 			throw new RuntimeException(); //TODO
 		}
-
 		
 		if(obj.isPresentName())
 			this.setName(obj.getName());

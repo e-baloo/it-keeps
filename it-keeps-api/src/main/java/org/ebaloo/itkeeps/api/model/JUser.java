@@ -1,6 +1,5 @@
 package org.ebaloo.itkeeps.api.model;
 
-import java.util.List;
 import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -11,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class JUser extends JBaseStandard{
 
 	public static final String ID = "id";
-	public static final String ROLES = "roles";
+	public static final String ROLE = "role";
 
 	
 	public JUser() {
@@ -39,23 +38,26 @@ public class JUser extends JBaseStandard{
 		return this.id.isPresent();
 	}
 	
-	// ROLES
-
-	@JsonIgnore
-	private Optional<List<String>> roles = Optional.empty();
 	
-	@JsonProperty(ROLES)
-	public final List<String> getRoles() {
-		return this.roles.orElse(null);
+	// ROLE
+	
+	@JsonIgnore
+	private Optional<String> role = Optional.empty();
+	
+	@JsonProperty(ROLE)
+	public final String getRole() {
+		return this.role.orElse(null);
 	}
 
-	@JsonProperty(ROLES)
-	public final void setRoles(List<String> value) {
-		roles = Optional.of(value);
+	@JsonProperty(ROLE)
+	public final void setRole(String value) {
+		role = Optional.of(value);
 	}
 
 	@JsonIgnore
-	public final boolean isPresentRoles() {
-		return this.roles.isPresent();
+	public final boolean isPresentRole() {
+		return this.role.isPresent();
 	}
+
+	
 }

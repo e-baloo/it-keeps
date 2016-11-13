@@ -21,6 +21,7 @@ import javax.ws.rs.ext.Provider;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.ebaloo.itkeeps.core.restapp.authentication.ApplicationRolesAllowed.SecurityRole;
 import org.ebaloo.itkeeps.core.restapp.exception.ExceptionResponse;
 import org.glassfish.jersey.server.ContainerRequest;
 import org.slf4j.Logger;
@@ -93,20 +94,21 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 			return;
 		}
 		
-		List<String> roles = JwtFactory.getRoles(claims);
+		SecurityRole role = JwtFactory.getRole(claims);
 		String guid = JwtFactory.getGuid(claims);
 		
 		
         //Verify user access by Roles
-        if(method.isAnnotationPresent(RolesAllowed.class))
+        if(method.isAnnotationPresent(ApplicationRolesAllowed.class))
         {
-            RolesAllowed rolesAnnotation = method.getAnnotation(RolesAllowed.class);
-            Set<String> rolesSet = new HashSet<String>(Arrays.asList(rolesAnnotation.value()));
+        	ApplicationRolesAllowed applicationRolesAllowed = method.getAnnotation(ApplicationRolesAllowed.class);
+            SecurityRole tRole = applicationRolesAllowed.value() ;
               
-            if(CollectionUtils.intersection(roles, rolesSet).size() <= 0) {
-            	
+            logger.info("role : " + role + "  /  tRole: " + tRole);
+            if(tRole.isInRole(role)) {
+            
     			if (logger.isTraceEnabled())
-    				logger.trace("'token.roles' is invalide -> Deniy");
+    				logger.trace("'token.role' is invalide -> Deniy");
             	
     			requestContext.abortWith((new ExceptionResponse(Response.Status.UNAUTHORIZED)).getResponse());
     			return;
@@ -115,7 +117,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
         }
 		
 		
-		requestContext.setSecurityContext(new SecurityContextAuthorizer(uriInfo, guid, roles));
+		requestContext.setSecurityContext(new SecurityContextAuthorizer(uriInfo, guid, role));
 		
 	}
 

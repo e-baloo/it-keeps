@@ -316,12 +316,12 @@ public abstract class BaseStandard extends Base {
 	// API
 	
 	@Override
-	public <T extends JBase> void apiFill(T obj) {
+	public <T extends JBase> void apiFill(T obj, Guid requesteurGuid) {
 		
 		if(!(obj instanceof JBaseStandard))
 			throw new RuntimeException("TODO"); //TODO
 		
-		super.apiFill(obj);
+		super.apiFill(obj, requesteurGuid);
 		
 		JBaseStandard jBaseStandard = (JBaseStandard) obj;
 		
@@ -333,12 +333,12 @@ public abstract class BaseStandard extends Base {
 	
 	
 	@Override
-	public <T extends JBase> void apiUpdate(T obj) {
+	public <T extends JBase> void apiUpdate(T obj, Guid requesteurGuid) {
 		
 		if(!(obj instanceof JBaseStandard))
 			throw new RuntimeException("TODO"); //TODO
 
-		super.apiUpdate(obj);
+		super.apiUpdate(obj, requesteurGuid);
 
 		JBaseStandard jBaseStandard = (JBaseStandard) obj;
 
