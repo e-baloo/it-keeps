@@ -8,7 +8,6 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.model.JBase;
-import org.ebaloo.itkeeps.api.model.JBaseStandard;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.BaseUtils;
@@ -51,11 +50,28 @@ public abstract class Base extends BaseAbstract {
 
 		if(StringUtils.isNoneBlank(name)) {
 			this.setName(name);
-			this.commit();
 		}
 
 	}
 
+	
+	protected Base(final JBase j, final boolean f) {
+		super(true);
+
+		this.setProperty(JBase.GUID, guid.toString());
+
+		if(j.isPresentName())
+			this.setName(j.getName());
+
+		if(j.isPresentDescription())
+			this.setDescription(j.getDescription());
+
+		this.setProperty(JBase.CREATION_DATE, DateTime.now(DateTimeZone.UTC).toDate());
+		
+		if(f)
+			this.setEnable(Boolean.TRUE);
+	}
+	
 	
 	private void defaultSetting(Guid guid) {
 

@@ -4,6 +4,7 @@ package org.ebaloo.itkeeps.core.domain.vertex;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.model.JBase;
 import org.ebaloo.itkeeps.api.model.JCredential;
@@ -19,7 +20,6 @@ import org.slf4j.LoggerFactory;
 
 import  org.ebaloo.itkeeps.api.model.JUser;
 
-import com.auth0.jwt.internal.org.apache.commons.lang3.StringUtils;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 
@@ -39,6 +39,48 @@ public class User extends BaseStandard {
 	}
 
 
+	public User(final JUser j) {
+		this(j, true);
+	}
+	
+	
+	public User(final JCredential j) {
+		super(j.getUserName());
+		
+		if(User.getById(j.getId()) != null) {
+			this.disable();
+			throw new RuntimeException("TODO"); //TODO
+		}
+		
+		if(StringUtils.isEmpty(j.getId())) {
+			this.disable();
+			throw new RuntimeException("TODO"); //TODO
+		}
+
+		this.setId(j.getId());
+		this.setRole(SecurityRole.GUEST);
+		
+		this.setEnable(Boolean.TRUE);
+		
+	}
+	
+	
+	protected User(final JUser j, final boolean f) {
+		super(j, false);
+		
+		if(User.getById(j.getId()) != null)
+			throw new RuntimeException("TODO"); //TODO
+
+		if(StringUtils.isEmpty(j.getRole()))
+				j.setRole(SecurityRole.GUEST.toString());
+		
+		this.setId(j.getId());
+		this.setRole(j.getRole());
+
+		if(f)
+			this.setEnable(Boolean.TRUE);
+	}
+	
 	
 	/*
 	 * 
@@ -59,6 +101,10 @@ public class User extends BaseStandard {
 	}
 
 	public void setId(final String id) {
+		
+		if(StringUtils.isEmpty(id))
+			throw new RuntimeException("TODO"); //TODO
+		
 		this.setProperty(JUser.ID, id);
 	}
 
@@ -109,6 +155,23 @@ public class User extends BaseStandard {
 		
 		return user;
 	}
+	
+	
+	/*
+	 *   PASSWORD
+	 */
+	
+
+	@DatabaseProperty(name = JUser.PASSWORD)
+	public String getPassword()  {
+		return this.getProperty(JUser.PASSWORD);
+	}
+
+	public void setPassowrd(final String value) {
+		
+		this.setProperty(JUser.PASSWORD, value);
+	}
+	
 	
 	/*
 	 * ROLES
@@ -204,9 +267,24 @@ public class User extends BaseStandard {
 		if(juser.isPresentId())
 			this.setIcon(juser.getIcon());
 
-		if(juser.isPresentRole())
+		if(juser.isPresentRole() 
+				&& requesterUser.getRole().isAdmin() 
+				&& (
+						!requesterUser.getRole().isRoot() 
+						|| 
+						(
+							requesterUser.getRole().isRoot() 
+							&& 
+							SecurityRole.valueOf(juser.getRole()).isRoot()
+						)
+					)
+				)
 			this.setRole(juser.getRole());
 
+		if(juser.isPresentId())
+			this.setIcon(juser.getIcon());
+
+		
 	}
 
 

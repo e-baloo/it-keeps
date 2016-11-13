@@ -44,6 +44,30 @@ public class Image extends BaseSysteme {
 		this.setImageType(imageType);
 		this.setBase64(base64);
 	}
+
+	public Image(final JImage j) {
+		this(j, true);
+	}
+	
+	protected Image(final JImage j, final boolean f) {
+		super(j, false);
+		
+		if(Image.getImage(j.getName()) == null)
+			throw new RuntimeException("TODO"); //
+		
+		if(StringUtils.isEmpty(j.getImageType()) || StringUtils.isEmpty(j.getBase64()))
+				throw new RuntimeException("TODO"); //
+				
+		
+		this.setImageType(j.getImageType());
+		this.setBase64(j.getBase64());
+		
+		if(f)
+			this.setEnable(Boolean.TRUE);
+	}
+	
+
+	
 	
 	
 //	public static String ICON = "ico:";
@@ -220,14 +244,14 @@ public class Image extends BaseSysteme {
 
 	
 	@Override
-	public <T extends JBase> void apiUpdate(T obj, Guid requesteurGuid) {
+	public <T extends JBase> void apiUpdate(T j, Guid requesteurGuid) {
 		
-		if(!(obj instanceof JImage))
+		if(!(j instanceof JImage))
 			throw new RuntimeException("TODO"); //TODO
 
-		super.apiUpdate(obj, requesteurGuid);
+		super.apiUpdate(j, requesteurGuid);
 		
-		JImage jimage = (JImage) obj;
+		JImage jimage = (JImage) j;
 		
 		
 		if(jimage.isPresentImageType())

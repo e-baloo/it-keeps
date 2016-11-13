@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class JUser extends JBaseStandard{
 
 	public static final String ID = "id";
+	public static final String PASSWORD = "password";
 	public static final String ROLE = "role";
 
 	
@@ -59,5 +60,24 @@ public class JUser extends JBaseStandard{
 		return this.role.isPresent();
 	}
 
+	// PASSWORD
+	
+	@JsonIgnore
+	private Optional<String> password = Optional.empty();
+	
+	@JsonProperty(PASSWORD)
+	public final String getPassword() {
+		return this.password.orElse(null);
+	}
+
+	@JsonProperty(PASSWORD)
+	public final void setPassword(String value) {
+		password = Optional.of(value);
+	}
+
+	@JsonIgnore
+	public final boolean isPresentPassword() {
+		return this.password.isPresent();
+	}
 	
 }

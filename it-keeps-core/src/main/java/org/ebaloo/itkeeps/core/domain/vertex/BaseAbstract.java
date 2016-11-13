@@ -936,6 +936,10 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 
 	
 	@DatabaseProperty(name = JBase.ENABLE, type = OType.BOOLEAN)
+	protected void setEnable(Boolean enable) {
+		this.setProperty(JBase.ENABLE, enable);
+	}
+
 	public Boolean isEnable() {
 		return (Boolean) this.getProperty(JBase.ENABLE);
 	}

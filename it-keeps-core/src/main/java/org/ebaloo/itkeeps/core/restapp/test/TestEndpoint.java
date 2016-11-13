@@ -4,8 +4,6 @@ package org.ebaloo.itkeeps.core.restapp.test;
 import java.time.Instant;
 
 import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
-//import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -23,15 +21,6 @@ import org.ebaloo.itkeeps.core.restapp.authentication.ApplicationRolesAllowed;
 import org.ebaloo.itkeeps.core.restapp.authentication.ApplicationRolesAllowed.SecurityRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-/*
- * eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJKZXJzZXktU2VjdXJpdHktQmFzaWMiLCJzdWIiOiJtYXJjIiwiZXhwIjoxNDc4NTUyMTQ3LCJpYXQiOjE0Nzg1NDg1NDcsImp0aSI6IjAifQ.K_RjWoMWeBo4_LlFvDTDg56311Nf_UE7rBjUp3m-r9Q
- * 
- * curl http://127.0.0.1:8080/test/ping -H "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJJVC1LZWVwcyIsImp0aSI6Im1hcmMiLCJzdWIiOiJtYXJjIiwiZXhwIjoxNDc4NjA1MTc5LCJpYXQiOjE0Nzg2MDQ1Nzl9.IoYfyqHqEDwL33SDMcELR7HfT6psZuPwXjq2irhE5L8"
- * 
- * 
- * 
- */
 
 
 @Path(TestConfig.PATH)

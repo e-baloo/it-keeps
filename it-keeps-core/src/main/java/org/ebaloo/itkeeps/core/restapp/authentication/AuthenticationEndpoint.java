@@ -1,14 +1,11 @@
 package org.ebaloo.itkeeps.core.restapp.authentication;
 
 
-import java.util.ArrayList;
-
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -22,10 +19,6 @@ import org.slf4j.LoggerFactory;
 
 
 
-/*
-	curl --data "username=marc&password=password" http://127.0.0.1:8080/auth/login
-
-*/
 
 @Path(AuthenticationConfig.PATH)
 public class AuthenticationEndpoint {

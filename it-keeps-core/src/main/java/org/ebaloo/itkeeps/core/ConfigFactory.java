@@ -1,6 +1,5 @@
 package org.ebaloo.itkeeps.core;
 
-import org.ebaloo.itkeeps.core.restapp.authentication.JwtFactory;
 import org.ebaloo.itkeeps.core.tools.MetricsFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

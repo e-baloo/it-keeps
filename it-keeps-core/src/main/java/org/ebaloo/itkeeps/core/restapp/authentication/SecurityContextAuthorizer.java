@@ -9,10 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.ebaloo.itkeeps.core.restapp.authentication.ApplicationRolesAllowed.SecurityRole;
 
 import java.security.Principal;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class SecurityContextAuthorizer implements SecurityContext {
 

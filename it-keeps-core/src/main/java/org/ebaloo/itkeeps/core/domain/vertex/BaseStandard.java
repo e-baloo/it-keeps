@@ -48,7 +48,24 @@ public abstract class BaseStandard extends Base {
 		
 	}
 
-	
+
+	protected BaseStandard(final JBaseStandard j, final boolean f) {
+		super(j, f);
+		
+		if(j.isPresentExternalRef())
+			this.putExternalRef(j.getExternalRef());
+		
+		if(j.isPresentOtherName())
+			this.putOtherName(j.getOtherName());
+
+		if(j.isPresentIcon()) {
+			this.setIcon(j.getIcon());
+		}
+
+		if(f)
+			this.setEnable(Boolean.TRUE);
+	}
+
 	
 	/*
 	 *   EXTERNAL_REF
@@ -316,14 +333,14 @@ public abstract class BaseStandard extends Base {
 	// API
 	
 	@Override
-	public <T extends JBase> void apiFill(T obj, Guid requesteurGuid) {
+	public <T extends JBase> void apiFill(T j, Guid requesteurGuid) {
 		
-		if(!(obj instanceof JBaseStandard))
+		if(!(j instanceof JBaseStandard))
 			throw new RuntimeException("TODO"); //TODO
 		
-		super.apiFill(obj, requesteurGuid);
+		super.apiFill(j, requesteurGuid);
 		
-		JBaseStandard jBaseStandard = (JBaseStandard) obj;
+		JBaseStandard jBaseStandard = (JBaseStandard) j;
 		
 		jBaseStandard.setIcon(this.getIcon());
 		jBaseStandard.setOtherName(this.getOtherName());
@@ -333,14 +350,14 @@ public abstract class BaseStandard extends Base {
 	
 	
 	@Override
-	public <T extends JBase> void apiUpdate(T obj, Guid requesteurGuid) {
+	public <T extends JBase> void apiUpdate(T j, Guid requesteurGuid) {
 		
-		if(!(obj instanceof JBaseStandard))
+		if(!(j instanceof JBaseStandard))
 			throw new RuntimeException("TODO"); //TODO
 
-		super.apiUpdate(obj, requesteurGuid);
+		super.apiUpdate(j, requesteurGuid);
 
-		JBaseStandard jBaseStandard = (JBaseStandard) obj;
+		JBaseStandard jBaseStandard = (JBaseStandard) j;
 
 		if(jBaseStandard.isPresentIcon())
 			this.setIcon(jBaseStandard.getIcon());
@@ -351,8 +368,6 @@ public abstract class BaseStandard extends Base {
 		if(jBaseStandard.isPresentOtherName())
 			this.putOtherName(jBaseStandard.getOtherName());
 
-		if(jBaseStandard.isPresentDescription())
-			this.setDescription(jBaseStandard.getDescription());
 
 	}
 
