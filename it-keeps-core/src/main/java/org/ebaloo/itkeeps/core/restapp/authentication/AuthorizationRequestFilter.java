@@ -110,6 +110,8 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
             	
         }
 		
+		if (logger.isTraceEnabled())
+			logger.trace("'token.role' is valide -> Ok");
 		
 		requestContext.setSecurityContext(new SecurityContextAuthorizer(uriInfo, guid, role));
 		

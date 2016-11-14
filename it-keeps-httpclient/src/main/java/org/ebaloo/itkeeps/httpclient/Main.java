@@ -16,7 +16,9 @@ import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
+import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.model.JCredential;
+import org.ebaloo.itkeeps.api.model.JGroup;
 import org.ebaloo.itkeeps.api.model.JUser;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -26,6 +28,7 @@ import org.slf4j.bridge.SLF4JBridgeHandler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 
 public class Main {
 
@@ -37,6 +40,11 @@ public class Main {
 		SLF4JBridgeHandler.removeHandlersForRootLogger();
 		SLF4JBridgeHandler.install();
 		LOGGER = LoggerFactory.getLogger("Main");
+		
+		
+		MAPPER.registerModule(new JodaModule());
+		MAPPER.configure(com.fasterxml.jackson.databind.SerializationFeature.
+	    	    WRITE_DATES_AS_TIMESTAMPS , false);
 	}
 
 	public static final String URL = "http://localhost:8080";
@@ -78,6 +86,37 @@ public class Main {
 		
 		user = callJsonUpdate("/api/user", juser);
 		LOGGER.info(MAPPER.writeValueAsString(user));
+		
+		
+		JUser neuwjuser = new JUser();
+		Guid nguid = new Guid();
+		neuwjuser.setUserId("id----" + nguid.toString());
+		neuwjuser.setPassword("password");
+		neuwjuser.setName("NAME : " + nguid.toString());	
+		user = callJsonCreat("/api/user", neuwjuser);
+		LOGGER.info(MAPPER.writeValueAsString(user));
+		
+		
+		JGroup jg_r = new JGroup();
+		jg_r.setName("root");
+		JGroup jg_n1 = new JGroup();
+		JGroup jg_n2 = new JGroup();
+		jg_n1.setName("node 1");
+		jg_n2.setName("node 2");
+		
+		jg_r = MAPPER.treeToValue(callJsonCreat("/api/group", jg_r), JGroup.class);
+		jg_n1 = MAPPER.treeToValue(callJsonCreat("/api/group", jg_n1), JGroup.class);
+		jg_n2 = MAPPER.treeToValue(callJsonCreat("/api/group", jg_n2), JGroup.class);
+		
+		jg_r.getChildGroup().add(jg_n1.getJBaseLight());
+		jg_r.getChildGroup().add(jg_n2.getJBaseLight());
+
+		long tStart = System.currentTimeMillis();
+		
+		jg_r = MAPPER.treeToValue(callJsonUpdate("/api/group", jg_r), JGroup.class);
+		
+		long elapsedSeconds = (System.currentTimeMillis() - tStart);
+		LOGGER.info(String.format("Query executed in %d ms", elapsedSeconds));
 		
 
 		LOGGER.info("END");
@@ -141,6 +180,8 @@ public class Main {
 
 	public static final JsonNode callJsonCRUD(CRUD command, String url, Object data) {
 
+		long tStart = System.currentTimeMillis();
+		
 		url = urlFormat(url);
 
 		HttpRequestBase request = null;
@@ -195,6 +236,11 @@ public class Main {
 			}
 
 			JsonNode node = MAPPER.readValue(response.getEntity().getContent(), JsonNode.class);
+			
+			long elapsedSeconds = (System.currentTimeMillis() - tStart);
+			
+			//if(LOGGER.isTraceEnabled())
+				LOGGER.info(String.format("Query executed in %d ms", elapsedSeconds));
 			
 			return node;
 

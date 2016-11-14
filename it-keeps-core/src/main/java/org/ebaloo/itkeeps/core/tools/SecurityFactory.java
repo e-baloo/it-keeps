@@ -15,7 +15,7 @@ public final class SecurityFactory {
     		logger.trace("validateCredential()");
 
 		
-		if(!user.getId().equals(credential.getId()))
+		if(!user.getUserId().equals(credential.getId()))
 			throw new RuntimeException("TODO"); //TODO
 		
 

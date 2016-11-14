@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class JUser extends JBaseStandard{
 
-	public static final String ID = "id";
+	public static final String USER_ID = "userId";
 	public static final String PASSWORD = "password";
 	public static final String ROLE = "role";
 
@@ -22,21 +22,21 @@ public class JUser extends JBaseStandard{
 	// ID
 	
 	@JsonIgnore
-	private Optional<String> id = Optional.empty();
+	private Optional<String> userId = Optional.empty();
 	
-	@JsonProperty(ID)
-	public String getId() {
-		return id.orElse(null);
+	@JsonProperty(USER_ID)
+	public String getUserId() {
+		return userId.orElse(null);
 	}
 
-	@JsonProperty(ID)
-	public void setId(String value) {
-		this.id = Optional.of(value == null ? "" : value);
+	@JsonProperty(USER_ID)
+	public void setUserId(String value) {
+		this.userId = Optional.of(value == null ? "" : value);
 	}
 
 	@JsonIgnore
-	public boolean isPresentId() {
-		return this.id.isPresent();
+	public boolean isPresentUserId() {
+		return this.userId.isPresent();
 	}
 	
 	

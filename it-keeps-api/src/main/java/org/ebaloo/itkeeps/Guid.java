@@ -14,7 +14,11 @@ public final class Guid {
 	//------------------------
 	
 	private UUID uuid = null;
-	
+
+	public Guid() {
+		this.uuid =  UUID.randomUUID();
+	}
+
 	
 	public Guid(UUID uuid) {
 		this.uuid =  uuid;

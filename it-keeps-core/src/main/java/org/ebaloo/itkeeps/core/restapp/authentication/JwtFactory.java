@@ -117,7 +117,7 @@ public final class JwtFactory {
 		
 		
 		claims.put(JBase.GUID, user.getGuid().toString());
-		claims.put(USER_ID, user.getId());
+		claims.put(USER_ID, user.getUserId());
 		claims.put(USER_NAME, user.getName());
 		
 		//claims.put(USER_ROLE, user.getRole().toString());

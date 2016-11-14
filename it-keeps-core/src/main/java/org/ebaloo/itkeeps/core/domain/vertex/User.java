@@ -39,10 +39,6 @@ public class User extends BaseStandard {
 	}
 
 
-	public User(final JUser j) {
-		this(j, true);
-	}
-	
 	
 	public User(final JCredential j) {
 		super(j.getUserName());
@@ -57,7 +53,7 @@ public class User extends BaseStandard {
 			throw new RuntimeException("TODO"); //TODO
 		}
 
-		this.setId(j.getId());
+		this.setUserId(j.getId());
 		this.setRole(SecurityRole.GUEST);
 		
 		this.setEnable(Boolean.TRUE);
@@ -65,21 +61,7 @@ public class User extends BaseStandard {
 	}
 	
 	
-	protected User(final JUser j, final boolean f) {
-		super(j, false);
-		
-		if(User.getById(j.getId()) != null)
-			throw new RuntimeException("TODO"); //TODO
 
-		if(StringUtils.isEmpty(j.getRole()))
-				j.setRole(SecurityRole.GUEST.toString());
-		
-		this.setId(j.getId());
-		this.setRole(j.getRole());
-
-		if(f)
-			this.setEnable(Boolean.TRUE);
-	}
 	
 	
 	/*
@@ -95,17 +77,17 @@ public class User extends BaseStandard {
 	 */
 	
 
-	@DatabaseProperty(name = JUser.ID, isNotNull = true)
-	public String getId()  {
-		return this.getProperty(JUser.ID);
+	@DatabaseProperty(name = JUser.USER_ID, isNotNull = true)
+	public String getUserId()  {
+		return this.getProperty(JUser.USER_ID);
 	}
 
-	public void setId(final String id) {
+	public void setUserId(final String id) {
 		
 		if(StringUtils.isEmpty(id))
 			throw new RuntimeException("TODO"); //TODO
 		
-		this.setProperty(JUser.ID, id);
+		this.setProperty(JUser.USER_ID, id);
 	}
 
 	
@@ -129,7 +111,7 @@ public class User extends BaseStandard {
 			throw new RuntimeException("TODO"); //TODO
 		
 		
-		String cmdSql = "SELECT FROM " + User.class.getSimpleName() + " WHERE " + BaseUtils.WhereClause.enable() + " AND " + JUser.ID
+		String cmdSql = "SELECT FROM " + User.class.getSimpleName() + " WHERE " + BaseUtils.WhereClause.enable() + " AND " + JUser.USER_ID
 				+ ".toLowerCase() = ?";
 
 		List<OrientVertex> list = CommonOrientVertex.command(cmdSql, id.toLowerCase());
@@ -173,27 +155,7 @@ public class User extends BaseStandard {
 	}
 	
 	
-	/*
-	 * ROLES
-	 */
 	
-	/*
-	
-	@DatabaseProperty(name = JUser.ROLES, type = OType.EMBEDDEDLIST)
-	public List<String> getRoles() {
-		return this.getEmbeddedListString(JUser.ROLES);
-	}
-	
-	
-	public void setRoles(List<String> roles) {
-		
-		if(roles == null)
-			roles = new ArrayList<>();
-		
-		this.setProperty(JUser.ROLES, roles);
-	}
-	*/
-
 
 	/*
 	 * ROLE
@@ -214,6 +176,27 @@ public class User extends BaseStandard {
 
 	// API
 	
+	public User(final JUser j) {
+		this(j, true);
+	}
+	
+	protected User(final JUser j, final boolean f) {
+		super(j, false);
+		
+		if(User.getById(j.getUserId()) != null)
+			throw new RuntimeException("TODO"); //TODO
+
+		if(StringUtils.isEmpty(j.getRole()))
+				j.setRole(SecurityRole.GUEST.toString());
+		
+		this.setUserId(j.getUserId());
+		this.setRole(j.getRole());
+
+		if(f)
+			this.setEnable(Boolean.TRUE);
+	}
+
+	
 	@Override
 	public <T extends JBase> void apiFill(T obj, Guid requesteurGuid) {
 		
@@ -224,7 +207,7 @@ public class User extends BaseStandard {
 
 		JUser juser = (JUser) obj;
 		
-		juser.setId(this.getId());
+		juser.setUserId(this.getUserId());
 		juser.setRole(this.getRole().toString());
 		
 	}
@@ -264,7 +247,7 @@ public class User extends BaseStandard {
 
 		JUser juser = (JUser) obj;
 		
-		if(juser.isPresentId())
+		if(juser.isPresentUserId())
 			this.setIcon(juser.getIcon());
 
 		if(juser.isPresentRole() 
@@ -281,7 +264,7 @@ public class User extends BaseStandard {
 				)
 			this.setRole(juser.getRole());
 
-		if(juser.isPresentId())
+		if(juser.isPresentUserId())
 			this.setIcon(juser.getIcon());
 
 		

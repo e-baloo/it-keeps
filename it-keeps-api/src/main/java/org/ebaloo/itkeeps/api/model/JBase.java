@@ -20,7 +20,30 @@ public class JBase extends JBaseLight {
 		
 	}
 	
-	
+	@JsonIgnore
+	public final JBaseLight getJBaseLight() {
+		
+		JBaseLight j = new JBaseLight();
+		
+		if(this.isPresentGuid())
+			j.setGuid(this.getGuid());
+		
+		if(this.isPresentName())
+			j.setName(this.getName());
+
+		if(this.isPresentJObject()) {
+			
+			if(this.getJObject().isPresentType())
+				this.getJObject().setType(this.getJObject().getType());
+			
+			if(this.getJObject().isPresentVersion())
+				this.getJObject().setVersion(this.getJObject().getVersion());
+		}
+
+		
+		return j;
+		
+	}
 
 
 

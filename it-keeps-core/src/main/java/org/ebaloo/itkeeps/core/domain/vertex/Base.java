@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.model.JBase;
+import org.ebaloo.itkeeps.api.model.JBaseLight;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.BaseUtils;
@@ -58,7 +59,7 @@ public abstract class Base extends BaseAbstract {
 	protected Base(final JBase j, final boolean f) {
 		super(true);
 
-		this.setProperty(JBase.GUID, guid.toString());
+		this.setProperty(JBase.GUID, GuidFactory.getGuid());
 
 		if(j.isPresentName())
 			this.setName(j.getName());
@@ -347,6 +348,23 @@ public abstract class Base extends BaseAbstract {
 		return baseAbstract;
 	}
 	
+	
+	
+    public static JBaseLight getJBaseLight (final BaseAbstract ba)  
+    {
+    	if(ba == null)
+    		return null;
+    	
+    	JBaseLight j = new JBaseLight();
+    	
+    	j.setGuid(ba.getGuid());
+    	j.setName(ba.getName());
+    	j.getJObject().setType(ba.getType());
+    	j.getJObject().setVersion(ba.getObjectVersion());
+
+    	return j;
+	}
+
 	
 	
 

@@ -81,6 +81,13 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>${version.jackson}</version>
 		</dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.datatype</groupId>
+		    <artifactId>jackson-datatype-joda</artifactId>
+			<version>${version.jackson}</version>
+		</dependency>
+		
+		
 
 		<dependency>
 			<groupId>org.e-ballo</groupId>

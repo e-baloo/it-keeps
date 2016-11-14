@@ -17,26 +17,29 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 import org.ebaloo.itkeeps.Guid;
-import org.ebaloo.itkeeps.api.model.JUser;
+import org.ebaloo.itkeeps.api.model.JGroup;
 import org.ebaloo.itkeeps.core.domain.ModelFactory;
 import org.ebaloo.itkeeps.core.domain.vertex.BaseAbstract;
 import org.ebaloo.itkeeps.core.domain.vertex.Image;
-import org.ebaloo.itkeeps.core.domain.vertex.User;
+import org.ebaloo.itkeeps.core.domain.vertex.Group;
 import org.ebaloo.itkeeps.core.restapp.authentication.ApplicationRolesAllowed;
 import org.ebaloo.itkeeps.core.restapp.authentication.ApplicationRolesAllowed.SecurityRole;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.codahale.metrics.annotation.Timed;
 
 
-@Path(ApiConfig.PATH + "/user")
-public class UserEndpoint {
+@Path(ApiConfig.PATH + "/group")
+public class GroupEndpoint {
+
+	private static final Logger logger = LoggerFactory.getLogger(GroupEndpoint.class.getName());
 
     @Context
     SecurityContext securityContext;
 
 	
-	@SuppressWarnings("unused")
-	@GET // LIST
+	@GET 
     @Produces({MediaType.APPLICATION_JSON})
 	@ApplicationRolesAllowed(SecurityRole.ADMIN)
     @Timed
@@ -44,20 +47,20 @@ public class UserEndpoint {
 		
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
 
-		List<JUser> list = new ArrayList<JUser>();
+		List<JGroup> jl = new ArrayList<JGroup>();
 		
-		for(BaseAbstract ba : Image.getAllBase(ModelFactory.get(User.class), false)) {
-			JUser juser = new JUser();
-			((User) ba).apiFill(juser, new Guid(securityContext.getUserPrincipal().getName()));
-	    	list.add(juser);
+		for(BaseAbstract ba : Image.getAllBase(ModelFactory.get(Group.class), false)) {
+			JGroup j = new JGroup();
+			((Group) ba).apiFill(j, requesteurGuid);
+	    	jl.add(j);
 		}
 		
-    	return Response.ok().entity(list).build();
+    	return Response.ok().entity(jl).build();
 	}
 	
 	
 	
-    @GET //READ
+    @GET 
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/{id}")
 	@ApplicationRolesAllowed(SecurityRole.USER)
@@ -66,57 +69,58 @@ public class UserEndpoint {
 
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
 
-		JUser juser = new JUser();
-		User user;
+		JGroup j = new JGroup();
+		Group group = null;
 		
-		if(Guid.isGuid(id)) {
-			user = (User) User.getBaseAbstract(new Guid(id));
-		} else {
-			user = User.getById(id);
-		}
+		if(Guid.isGuid(id))
+			group = (Group) Group.getBaseAbstract(new Guid(id));
 		
-		if(user == null)
+		if(group == null)
 			throw new RuntimeException("TODO"); // TODO
 		
-		user.apiFill(juser, requesteurGuid);
+		group.apiFill(j, requesteurGuid);
 		
-    	return Response.ok().entity(juser).build();
+    	return Response.ok().entity(j).build();
     }
 	
 
-    @PUT // UPDATE
-    @Produces({MediaType.APPLICATION_JSON})
-    @Consumes({MediaType.APPLICATION_JSON})
-	@ApplicationRolesAllowed(SecurityRole.USER)
-    @Timed
-    public Response update(final JUser juser) {
-    	
-    	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
-    	
-    	User user = (User) User.getBaseAbstract(new Guid(juser.getGuid()));
-
-    	user.apiUpdate(juser, requesteurGuid);
-
-    	JUser newjuser = new JUser();
-    	user.apiFill(newjuser, requesteurGuid);
-
-    	return Response.ok().entity(newjuser).build();
-    }
-
-    @POST // CREATE
+    @PUT 
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
 	@ApplicationRolesAllowed(SecurityRole.ADMIN)
     @Timed
-    public Response create(final JUser juser) {
+    public Response update(final JGroup j) {
+    	
+		if (logger.isTraceEnabled())
+			logger.trace("updateGroup()");
+
+    	
+    	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
+    	
+    	Group group = (Group) Group.getBaseAbstract(new Guid(j.getGuid()));
+
+    	group.apiUpdate(j, requesteurGuid);
+
+    	JGroup nj = new JGroup();
+    	group.apiFill(nj, requesteurGuid);
+
+    	return Response.ok().entity(nj).build();
+    }
+
+    @POST 
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+	@ApplicationRolesAllowed(SecurityRole.ADMIN)
+    @Timed
+    public Response create(final JGroup j) {
 
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
 
-    	User user = new User(juser);
-    	JUser newjuser = new JUser();
-    	user.apiFill(newjuser, requesteurGuid);
+    	Group group = new Group(j);
+    	JGroup nj = new JGroup();
+    	group.apiFill(nj, requesteurGuid);
 
-    	return Response.ok().entity(newjuser).build();
+    	return Response.ok().entity(nj).build();
     }
     
     

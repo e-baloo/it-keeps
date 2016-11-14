@@ -18,6 +18,7 @@ import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
 import org.apache.commons.lang.StringUtils;
 import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.model.JBase;
+import org.ebaloo.itkeeps.api.model.JBaseLight;
 import org.ebaloo.itkeeps.core.database.GraphFactory;
 import org.ebaloo.itkeeps.core.database.TraverseField;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
@@ -71,6 +72,7 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 		}
 
 		public final List<BaseAbstract> parse(Iterable<?> ref) {
+			
 			List<BaseAbstract> list = new ArrayList<>();
 
 			for(Object obj : ref) {
@@ -135,9 +137,27 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 	}
 	
     // Imported from IBase //
+	
+    public static BaseAbstract getBaseAbstract(final JBaseLight baselight)  
+	{
+    	if(baselight == null)
+    		return null;
+    	
+    	if(!baselight.isPresentGuid())
+    		return null;
+    	
+		Guid guid = new Guid(baselight.getGuid());
+
+		return getBaseAbstract(guid);
+
+	}
+	
+	
 
     public static BaseAbstract getBaseAbstract(final Guid guid)  
 	{
+    	if(guid == null)
+    		return null;
 		
 		String cmdSQL = "SELECT FROM " + Base.class.getSimpleName() + " WHERE " + BaseUtils.WhereClause.enable() + " AND (guid = ?)";
 		

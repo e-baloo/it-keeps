@@ -19,6 +19,7 @@ public class ApiConfig {
     	
     	
     	parent.classesAdd(UserEndpoint.class);
+    	parent.classesAdd(GroupEndpoint.class);
 
     	
     }
