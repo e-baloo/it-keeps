@@ -29,6 +29,14 @@
 		<version.orientdb>2.2.12</version.orientdb>
 		<version.reflections>0.9.8</version.reflections>
 		<version.ehcache-core>2.6.11</version.ehcache-core>
+		<version.joda-time>2.9.5</version.joda-time>
+		<version.commons-lang3>3.5</version.commons-lang3>
+		<version.httpclient>4.5.2</version.httpclient>
+		<version.commons-collections4>4.1</version.commons-collections4>
+		<version.google-collections>1.0</version.google-collections>
+		<version.commons-codec>1.10</version.commons-codec>
+		
+		
 	</properties>
 
 	<modules>
