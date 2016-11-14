@@ -3,7 +3,6 @@
 package org.ebaloo.itkeeps.core.domain.vertex;
 
 import org.ebaloo.itkeeps.api.model.JBase;
-import org.ebaloo.itkeeps.api.model.JBaseStandard;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 
 @DatabaseVertrex()

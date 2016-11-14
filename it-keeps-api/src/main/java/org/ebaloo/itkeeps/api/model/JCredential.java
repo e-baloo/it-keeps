@@ -81,13 +81,13 @@ public class JCredential {
 	private AuthenticationType authenticationType = AuthenticationType.BASIC;
 	
 	@JsonProperty(AUTHENTICATION_TYPE)
-	public final String getAuthenticationType() {
-		return this.userName.orElse(null);
+	public final AuthenticationType getAuthenticationType() {
+		return this.authenticationType;
 	}
 
 	@JsonProperty(AUTHENTICATION_TYPE)
-	public final void setAuthenticationType(String value) {
-		authenticationType = AuthenticationType.valueOf(value);
+	public final void setAuthenticationType(AuthenticationType value) {
+		authenticationType = value;
 	}
 
 

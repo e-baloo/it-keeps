@@ -26,6 +26,9 @@ import com.codahale.metrics.jvm.ThreadStatesGaugeSet;
 
 public class MetricsFactory {
 
+	
+	
+	
 	private static final MetricRegistry METRIC_REGISTRY = new MetricRegistry();
 
 	private static final String PROP_METRIC_REG_JVM_MEMORY = "jvm.memory";

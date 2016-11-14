@@ -19,7 +19,18 @@ public final class SecurityFactory {
 			throw new RuntimeException("TODO"); //TODO
 		
 
+		switch(credential.getAuthenticationType()) {
 		
+		case BASIC:
+			
+			break;
+		case LDAP:
+		case TOKEN:
+		case ACTIVE_DIRECTORY:
+		default:
+			throw new RuntimeException("TODO"); //TODO
+		
+		}
 		
 		
 		// TODO
