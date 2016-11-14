@@ -4,6 +4,8 @@ package org.ebaloo.itkeeps;
 import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 /**
  * 
@@ -12,7 +14,9 @@ import org.apache.commons.lang3.StringUtils;
 public final class Guid {
 	
 	//------------------------
-	
+
+	public static final String GUID = "guid";
+
 	private UUID uuid = null;
 
 	public Guid() {
@@ -28,14 +32,18 @@ public final class Guid {
 		this.uuid = UUID.fromString(guid);
 	}
 	
+	
+	@JsonIgnore
 	public String toString() {
 		return this.uuid.toString();
 	}
 	
+	@JsonIgnore
 	public boolean equals(Object guid) {
 		return guid instanceof Guid && this.uuid.equals(((Guid) guid).uuid);
 	}
 
+	@JsonIgnore
 	public static boolean isGuid(String guid) {
 		try{
 			
@@ -50,5 +58,6 @@ public final class Guid {
 		
 		return true;
 	}
-	
+
+
 }

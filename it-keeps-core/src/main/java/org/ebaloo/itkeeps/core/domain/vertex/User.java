@@ -2,17 +2,22 @@
 package org.ebaloo.itkeeps.core.domain.vertex;
 
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.model.JBase;
+import org.ebaloo.itkeeps.api.model.JBaseLight;
 import org.ebaloo.itkeeps.api.model.JCredential;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.BaseUtils;
 import org.ebaloo.itkeeps.core.domain.ModelFactory;
 import org.ebaloo.itkeeps.core.domain.annotation.ModelClassAnnotation;
+import org.ebaloo.itkeeps.core.domain.edge.RelationType;
+import org.ebaloo.itkeeps.core.domain.edge.TraverseInGroup;
 import org.ebaloo.itkeeps.core.restapp.authentication.ApplicationRolesAllowed.SecurityRole;
 import org.ebaloo.itkeeps.core.tools.SecurityFactory;
 import org.slf4j.Logger;
@@ -62,7 +67,59 @@ public class User extends BaseStandard {
 	
 	
 
+	/*
+	 * IN_GROUP
+	 */
 	
+	public List<Group> getInGroup() {
+		return this.getEdgesByClassesNames(Group.class, RelationType.CHILD, false, TraverseInGroup.class);
+	}
+	
+	public void addInGroup(final Group group) {
+		this.addEdge(group, RelationType.CHILD, TraverseInGroup.class);
+	}
+	
+	public void removeInGroup(final Group group) {
+		this.removeEdge(group, RelationType.CHILD, TraverseInGroup.class);
+	}
+
+	
+	public void putInGroup(List<Group> list) {
+		
+		List<Group> oriList = getInGroup();
+		
+		for(Group grp : list) {
+			
+			if(oriList.contains(grp)) {
+				oriList.remove(grp);
+			} else {
+				addInGroup(grp);
+			}
+		}
+		
+		for(Group grp : oriList) {
+			removeInGroup(grp);
+		}
+		
+	}
+
+	private void putInGroupJBaseLight(List<JBaseLight> inGroup) {
+		
+		if(inGroup == null) {
+			inGroup = new ArrayList<JBaseLight>();
+		}
+		
+		List<Group> groups = new ArrayList<Group>();
+		
+		for(JBaseLight child : inGroup) {
+			groups.add((Group) getBaseAbstract(child));
+		}
+		
+		putInGroup(groups);
+	}
+
+	
+
 	
 	/*
 	 * 
@@ -209,6 +266,7 @@ public class User extends BaseStandard {
 		
 		juser.setUserId(this.getUserId());
 		juser.setRole(this.getRole().toString());
+		juser.setInGroup(this.getInGroup().stream().map(e -> Base.getJBaseLight(e)).collect(Collectors.toList()));
 		
 	}
 	
@@ -247,26 +305,36 @@ public class User extends BaseStandard {
 
 		JUser juser = (JUser) obj;
 		
-		if(juser.isPresentUserId())
-			this.setIcon(juser.getIcon());
-
-		if(juser.isPresentRole() 
-				&& requesterUser.getRole().isAdmin() 
-				&& (
-						!requesterUser.getRole().isRoot() 
-						|| 
-						(
-							requesterUser.getRole().isRoot() 
-							&& 
-							SecurityRole.valueOf(juser.getRole()).isRoot()
-						)
-					)
-				)
-			this.setRole(juser.getRole());
+		if(juser.isPresentRole()) {
+			
+			SecurityRole requesterRole = requesterUser.getRole();
+			SecurityRole jRole = SecurityRole.valueOf(juser.getRole());
+			
+			if(requesterRole.isRoot()) {
+				this.setRole(jRole);
+			} else if(requesterRole.isAdmin() && !jRole.isRoot()) {
+				this.setRole(jRole);
+			} else {
+				throw new RuntimeException(""); //TODO
+			}
+		}
 
 		if(juser.isPresentUserId())
 			this.setIcon(juser.getIcon());
 
+		
+		// AMIN & ROOT
+		
+		if(requesterUser.getRole().isAdmin()) {
+			
+			
+			if(juser.isChildGroup()) {
+				this.putInGroupJBaseLight(juser.getInGroup());
+			}
+
+			
+		}
+		
 		
 	}
 

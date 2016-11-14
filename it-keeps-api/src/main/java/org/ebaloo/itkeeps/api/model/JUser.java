@@ -1,5 +1,7 @@
 package org.ebaloo.itkeeps.api.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -12,6 +14,7 @@ public class JUser extends JBaseStandard{
 	public static final String USER_ID = "userId";
 	public static final String PASSWORD = "password";
 	public static final String ROLE = "role";
+	public static final String IN_GROUP = "inGroup";
 
 	
 	public JUser() {
@@ -79,5 +82,27 @@ public class JUser extends JBaseStandard{
 	public final boolean isPresentPassword() {
 		return this.password.isPresent();
 	}
+
+	// CHILD_GROUP
 	
+	@JsonIgnore
+	private Optional<List<JBaseLight>> inGroup = Optional.empty();
+	
+	@JsonProperty(IN_GROUP)
+	public final List<JBaseLight> getInGroup() {
+		return this.inGroup.orElse(new ArrayList<JBaseLight>());
+	}
+
+	@JsonProperty(IN_GROUP)
+	public final void setInGroup(List<JBaseLight> value) {
+		if(value == null)
+			inGroup = Optional.of(new ArrayList<JBaseLight>());
+		else
+			inGroup = Optional.of(value);
+	}
+
+	@JsonIgnore
+	public final boolean isChildGroup() {
+		return this.inGroup.isPresent();
+	}
 }

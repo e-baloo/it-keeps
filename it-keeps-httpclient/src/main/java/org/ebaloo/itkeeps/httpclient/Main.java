@@ -66,35 +66,13 @@ public class Main {
 		httpJsonClient = null;
 
 		
-		node = callJsonRead("/tools/ping", null);
-		LOGGER.info(MAPPER.writeValueAsString(node));
-
-		node = callJsonRead("/test/ping", null);
-		LOGGER.info(MAPPER.writeValueAsString(node));
-
-		JsonNode allUser = callJsonRead("/api/user", null);
-		LOGGER.info(MAPPER.writeValueAsString(allUser));
-		
-		String guid = allUser.get(0).get("guid").asText();
-		JsonNode user = callJsonRead("/api/user/" + guid, null);
-		LOGGER.info(MAPPER.writeValueAsString(user));
-		
-		
-		JUser juser = MAPPER.treeToValue(user, JUser.class);
-		
-		juser.setName("Marc DONVAL " + DateTime.now().toString());
-		
-		user = callJsonUpdate("/api/user", juser);
-		LOGGER.info(MAPPER.writeValueAsString(user));
-		
 		
 		JUser neuwjuser = new JUser();
 		Guid nguid = new Guid();
-		neuwjuser.setUserId("id----" + nguid.toString());
+		neuwjuser.setUserId("ID : " + nguid.toString());
 		neuwjuser.setPassword("password");
 		neuwjuser.setName("NAME : " + nguid.toString());	
-		user = callJsonCreat("/api/user", neuwjuser);
-		LOGGER.info(MAPPER.writeValueAsString(user));
+		JUser testUser =  MAPPER.treeToValue(callJsonCreat("/api/user", neuwjuser), JUser.class);
 		
 		
 		JGroup jg_r = new JGroup();
@@ -119,6 +97,19 @@ public class Main {
 		LOGGER.info(String.format("Query executed in %d ms", elapsedSeconds));
 		
 
+		testUser.getInGroup().add(jg_n1.getJBaseLight());
+		testUser.getInGroup().add(jg_n2.getJBaseLight());
+		testUser.getInGroup().add(jg_r.getJBaseLight());
+		JsonNode user = callJsonUpdate("/api/user", testUser);
+		LOGGER.info(MAPPER.writeValueAsString(user));
+		
+		user = callJsonRead("/api/user/" + testUser.getGuid());
+		
+		LOGGER.info(MAPPER.writeValueAsString(user));
+
+		
+		
+		
 		LOGGER.info("END");
 
 	}
@@ -169,8 +160,8 @@ public class Main {
 		return callJsonCRUD(CRUD.CREATE, url, data);
 	}
 
-	public static final JsonNode callJsonRead(String url, Object data) {
-		return callJsonCRUD(CRUD.READ, url, data);
+	public static final JsonNode callJsonRead(String url) {
+		return callJsonCRUD(CRUD.READ, url, null);
 	}
 
 	public static final JsonNode callJsonUpdate(String url, Object data) {

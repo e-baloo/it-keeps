@@ -114,12 +114,6 @@ public class Group extends BaseStandard {
 	}
 
 	
-	/*
-	 * GROUPE
-	 */
-	
-	public static final String GROUPE = "group";
-	
 	
 	
 

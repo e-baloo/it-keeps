@@ -39,9 +39,11 @@
 		
 	</properties>
 
+<!-- 
 	<modules>
 		<module>it-keeps-core</module>
 		<module>it-keeps-api</module>
 		<module>it-keeps-httpclient</module>
 	</modules>
+-->
 </project>

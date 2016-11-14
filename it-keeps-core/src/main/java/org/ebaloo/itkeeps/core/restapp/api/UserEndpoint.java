@@ -62,7 +62,7 @@ public class UserEndpoint {
     @Path("/{id}")
 	@ApplicationRolesAllowed(SecurityRole.USER)
     @Timed
-    public Response read(@PathParam("id") String id) {
+    public Response readId(@PathParam("id") String id) {
 
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
 
@@ -93,12 +93,12 @@ public class UserEndpoint {
     	
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
     	
-    	User user = (User) User.getBaseAbstract(new Guid(juser.getGuid()));
+    	User user = (User) User.getBaseAbstract(juser.getGuid());
 
     	user.apiUpdate(juser, requesteurGuid);
 
     	JUser newjuser = new JUser();
-    	user.apiFill(newjuser, requesteurGuid);
+    	((User) User.getBaseAbstract(juser.getGuid())).apiFill(newjuser, requesteurGuid);
 
     	return Response.ok().entity(newjuser).build();
     }

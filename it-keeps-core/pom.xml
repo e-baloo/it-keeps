@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.e-ballo</groupId>
     <artifactId>it-keeps</artifactId>
-	<version>${project.version}</version>
+	<version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>it-keeps-core</artifactId>
   

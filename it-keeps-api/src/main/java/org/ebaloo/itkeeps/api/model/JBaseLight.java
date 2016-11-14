@@ -23,41 +23,19 @@ public class JBaseLight {
 	
 
 
-	@JsonProperty("_object")
-	private JObject jobject = null;
-	
-	public JObject getJObject() {
-		
-		if(jobject == null)
-			jobject = new JObject();
-		
-		return jobject;
-	}
-	
-	@JsonIgnore
-	public boolean isPresentJObject() {
-		return jobject != null;
-	}
-
-
 	// GUID
 	
 	@JsonIgnore
-	private Optional<String> guid = Optional.empty();
+	private Optional<Guid> guid = Optional.empty();
 	
 	@JsonProperty(GUID)
-	public final String getGuid() {
+	public final Guid getGuid() {
 		return this.guid.orElse(null);
 	}
 
 	@JsonProperty(GUID)
-	public final void setGuid(String guid) {
-		this.guid = Optional.of(guid == null ? "" : guid);
-	}
-
-	@JsonIgnore
 	public final void setGuid(Guid guid) {
-		this.guid = Optional.of(guid == null ? "" : guid.toString());
+		this.guid = Optional.of(guid);
 	}
 	
 	@JsonIgnore
@@ -89,12 +67,6 @@ public class JBaseLight {
 	
 
 
-	
-	public static class JObject {
-		
-		public JObject() {
-			
-		}
 		
 		// TYPE
 		
@@ -142,6 +114,6 @@ public class JBaseLight {
 			return this.version.isPresent();
 		}
 		
-	}
+	
 
 }

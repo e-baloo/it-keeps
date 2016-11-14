@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.e-ballo</groupId>
     <artifactId>it-keeps</artifactId>
-    <version>${project.version}</version>
+    <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>it-keeps-api</artifactId>
   
@@ -12,6 +12,11 @@
   		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-annotations</artifactId>
+			<version>${version.jackson}</version>
+		</dependency>
+  		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
 			<version>${version.jackson}</version>
 		</dependency>
   

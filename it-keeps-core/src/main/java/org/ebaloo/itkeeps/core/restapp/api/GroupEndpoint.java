@@ -97,7 +97,7 @@ public class GroupEndpoint {
     	
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
     	
-    	Group group = (Group) Group.getBaseAbstract(new Guid(j.getGuid()));
+    	Group group = (Group) Group.getBaseAbstract(j.getGuid());
 
     	group.apiUpdate(j, requesteurGuid);
 

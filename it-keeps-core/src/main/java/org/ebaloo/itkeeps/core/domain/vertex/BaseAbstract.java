@@ -45,6 +45,8 @@ import com.tinkerpop.blueprints.impls.orient.OrientVertexType;
 
 public abstract class BaseAbstract extends CommonOrientVertex implements Comparable<BaseAbstract> {
 
+	
+	
 	public static class BaseQuery {
 
 		private OrientBaseGraph graph;
@@ -146,7 +148,7 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
     	if(!baselight.isPresentGuid())
     		return null;
     	
-		Guid guid = new Guid(baselight.getGuid());
+		Guid guid = baselight.getGuid();
 
 		return getBaseAbstract(guid);
 

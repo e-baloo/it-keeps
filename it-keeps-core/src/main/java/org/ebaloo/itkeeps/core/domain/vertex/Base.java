@@ -359,8 +359,8 @@ public abstract class Base extends BaseAbstract {
     	
     	j.setGuid(ba.getGuid());
     	j.setName(ba.getName());
-    	j.getJObject().setType(ba.getType());
-    	j.getJObject().setVersion(ba.getObjectVersion());
+    	j.setType(ba.getType());
+    	j.setVersion(ba.getObjectVersion());
 
     	return j;
 	}
@@ -375,10 +375,10 @@ public abstract class Base extends BaseAbstract {
 		
 		obj.getJObject().setType(this.getType());
 		obj.getJObject().setVersion(this.getObjectVersion());
+		obj.getJObject().setEnable(this.isEnable());
+		obj.getJObject().setCreationDate(this.getCreationDate());
 
-		obj.setEnable(this.isEnable());
-		obj.setCreationDate(this.getCreationDate());
-		obj.setGuid(this.getGuid().toString());
+		obj.setGuid(this.getGuid());
 		obj.setName(this.getName());
 		obj.setDescription(this.getDescription());
 		
