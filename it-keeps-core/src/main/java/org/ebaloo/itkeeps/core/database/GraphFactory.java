@@ -105,13 +105,14 @@ public final class GraphFactory {
 
     
     
-	public static List<OrientVertex> command(String cmdSQL, Object... args) {
+	public static List<OrientVertex> command(OrientBaseGraph graph, String cmdSQL, Object... args) {
 		
 		final Timer.Context timerContext = TIMER_DATABASE_REQUEST_SQL.time();
 		
 		try {
 			
-			OrientBaseGraph graph = GraphFactory.getOrientBaseGraph();
+			if(graph == null)
+				graph = GraphFactory.getOrientBaseGraph();
 
 			long tStart = System.currentTimeMillis();
 
@@ -129,6 +130,7 @@ public final class GraphFactory {
 				int size = list.size();
 				StringBuilder message = new StringBuilder();
 				
+				message.append("command() : ");
 				message.append(String.format("Query executed in %d ms Returned %d record%s", elapsedSeconds, size, size > 1 ? "s" : ""));
 				
 				/*
@@ -163,7 +165,7 @@ public final class GraphFactory {
 	
 	
 	
-	public static int execute(String cmdSQL, Object... args) {
+	public static int execute(OrientBaseGraph graph, String cmdSQL, Object... args) {
 		
 		final Timer.Context timerContext = TIMER_DATABASE_REQUEST_SQL.time();
 		
@@ -171,7 +173,8 @@ public final class GraphFactory {
 		try {
 			long tStart = System.currentTimeMillis();
 			
-			OrientBaseGraph graph = GraphFactory.getOrientBaseGraph();
+			if(graph == null)
+				graph = GraphFactory.getOrientBaseGraph();
 			
 			Integer value = (Integer) graph.command(new OCommandSQL(cmdSQL)).execute(args);
 	
@@ -210,7 +213,7 @@ public final class GraphFactory {
 		}
 	}
     
-	public static void executeNoReturn(String cmdSQL, Object... args) {
+	public static void executeNoReturn(OrientBaseGraph graph, String cmdSQL, Object... args) {
 		
 		final Timer.Context timerContext = TIMER_DATABASE_REQUEST_SQL.time();
 		
@@ -219,7 +222,8 @@ public final class GraphFactory {
 	
 			long tStart = System.currentTimeMillis();
 			
-			OrientBaseGraph graph = GraphFactory.getOrientBaseGraph();
+			if(graph == null)
+				graph = GraphFactory.getOrientBaseGraph();
 			
 			graph.command(new OCommandSQL(cmdSQL)).execute(args);
 	
@@ -230,6 +234,7 @@ public final class GraphFactory {
 			if(logger.isDebugEnabled()) {
 				StringBuilder message = new StringBuilder();
 				
+				message.append("executeNoReturn() : ");
 				message.append(String.format("Query executed in %d ms", elapsedSeconds));
 				
 				/*

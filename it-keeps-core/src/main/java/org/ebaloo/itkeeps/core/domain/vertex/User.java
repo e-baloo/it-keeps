@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import  org.ebaloo.itkeeps.api.model.JUser;
 
+import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 
@@ -48,7 +49,7 @@ public class User extends BaseStandard {
 	public User(final JCredential j) {
 		super(j.getUserName());
 		
-		if(User.getById(j.getId()) != null) {
+		if(User.getById(this.getGraph(), j.getId()) != null) {
 			this.disable();
 			throw new RuntimeException("TODO"); //TODO
 		}
@@ -75,6 +76,7 @@ public class User extends BaseStandard {
 		return this.getEdgesByClassesNames(ModelFactory.get(Group.class), RelationType.CHILD, false, TraverseInGroup.class);
 	}
 	
+	/*
 	public void addInGroup(final Group group) {
 		this.addEdge(group, RelationType.CHILD, TraverseInGroup.class);
 	}
@@ -82,25 +84,11 @@ public class User extends BaseStandard {
 	public void removeInGroup(final Group group) {
 		this.removeEdge(group, RelationType.CHILD, TraverseInGroup.class);
 	}
+	*/
 
 	
 	public void putInGroup(List<Group> list) {
-		
-		List<Group> oriList = getInGroup();
-		
-		for(Group grp : list) {
-			
-			if(oriList.contains(grp)) {
-				oriList.remove(grp);
-			} else {
-				addInGroup(grp);
-			}
-		}
-		
-		for(Group grp : oriList) {
-			removeInGroup(grp);
-		}
-		
+		setEdges(this.getGraph(), ModelFactory.get(Group.class), this, list, RelationType.CHILD, TraverseInGroup.class, false);
 	}
 
 	private void putInGroupJBaseLight(List<JBaseLight> inGroup) {
@@ -112,7 +100,7 @@ public class User extends BaseStandard {
 		List<Group> groups = new ArrayList<Group>();
 		
 		for(JBaseLight child : inGroup) {
-			groups.add( getBaseAbstract(ModelFactory.get(Group.class), child));
+			groups.add( getBaseAbstract(this.getGraph(), ModelFactory.get(Group.class), child));
 		}
 		
 		putInGroup(groups);
@@ -149,12 +137,12 @@ public class User extends BaseStandard {
 
 	
 	
-	public static User getByCredentials(final JCredential credentials) {
+	public static User getByCredentials(OrientBaseGraph graph, final JCredential credentials) {
 
 		if(credentials == null) 
 			throw new RuntimeException("TODO"); //TODO
 		
-		User user = getById(credentials.getId());
+		User user = getById(graph, credentials.getId());
 		
 		SecurityFactory.validateCredential(user, credentials);
 
@@ -162,7 +150,7 @@ public class User extends BaseStandard {
 	}
 
 	
-	public static User getById(final String id) {
+	public static User getById(OrientBaseGraph graph, final String id) {
 
 		if(StringUtils.isEmpty(id))
 			throw new RuntimeException("TODO"); //TODO
@@ -171,7 +159,7 @@ public class User extends BaseStandard {
 		String cmdSql = "SELECT FROM " + User.class.getSimpleName() + " WHERE " + BaseUtils.WhereClause.enable() + " AND " + JUser.USER_ID
 				+ ".toLowerCase() = ?";
 
-		List<OrientVertex> list = CommonOrientVertex.command(cmdSql, id.toLowerCase());
+		List<OrientVertex> list = CommonOrientVertex.command(graph, cmdSql, id.toLowerCase());
 
 		if (list.isEmpty()) {
 			if (logger.isTraceEnabled())
@@ -240,7 +228,10 @@ public class User extends BaseStandard {
 	protected User(final JUser j, final boolean f) {
 		super(j, false);
 		
-		if(User.getById(j.getUserId()) != null)
+		this.commit();
+		this.reload();
+
+		if(User.getById(this.getGraph(), j.getUserId()) != null)
 			throw new RuntimeException("TODO"); //TODO
 
 		if(StringUtils.isEmpty(j.getRole()))
@@ -279,7 +270,7 @@ public class User extends BaseStandard {
 		super.apiUpdate(obj, requesteurGuid);
 		
 		
-		User requesterUser = User.getByGuid(ModelFactory.get(User.class), requesteurGuid);
+		User requesterUser = User.getByGuid(this.getGraph(), ModelFactory.get(User.class), requesteurGuid);
 
 		switch(requesterUser.getRole()) {
 

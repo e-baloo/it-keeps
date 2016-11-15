@@ -159,9 +159,9 @@ public class Image extends BaseSysteme {
 		
 		
 		if(Guid.isGuid(id)) {
-			image = BaseAbstract.getBaseAbstract(ModelFactory.get(Image.class), new Guid(id));
+			image = BaseAbstract.getBaseAbstract(null, ModelFactory.get(Image.class), new Guid(id));
 		} else {
-			image = getByName(ModelFactory.get(Image.class), id);
+			image = getByName(null, ModelFactory.get(Image.class), id);
 		}
 
 		if(image != null) {

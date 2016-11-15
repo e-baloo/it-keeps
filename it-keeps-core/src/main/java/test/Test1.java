@@ -10,34 +10,35 @@ public class Test1 {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-		List<String> listA = new ArrayList<String>();
-		List<String> listB = new ArrayList<String>();
+		List<String> listDstNew = new ArrayList<String>();
+		List<String> listDstBck = new ArrayList<String>();
 
-		listA.add("A");
-		listA.add("B");
-		listA.add("C");
+		listDstNew.add("A");
+		listDstNew.add("B");
+		listDstNew.add("C");
 
-		listA.add("M");
-		listA.add("N");
-		listA.add("O");
-		listB.add("M");
-		listB.add("N");
-		listB.add("O");
+		listDstNew.add("M");
+		listDstNew.add("N");
+		listDstNew.add("O");
+		listDstBck.add("M");
+		listDstBck.add("N");
+		listDstBck.add("O");
 
 		
-		listB.add("X");
-		listB.add("Y");
-		listB.add("Z");
+		listDstBck.add("X");
+		listDstBck.add("Y");
+		listDstBck.add("Z");
 		
 		
-		System.out.println("List A       : " + listA);
-		System.out.println("List A       : " + listB);
-		System.out.println("List A (I) B : " + listA.stream().filter(listB::contains).collect(Collectors.toList()));
-		System.out.println("List A (-) B : " + listA.stream().filter(
+		System.out.println("List listDstNew       : " + listDstNew);
+		System.out.println("List listDstBck       : " + listDstBck);
+		System.out.println("List listRemove       : " + listDstBck.stream().filter(
 				f -> 
-					!listB.contains(f)
-				
-				
+				!listDstNew.contains(f)
+				).collect(Collectors.toList()));
+		System.out.println("List listAdd          : " + listDstNew.stream().filter(
+				f -> 
+				!listDstBck.contains(f)
 				).collect(Collectors.toList()));
 		
 		

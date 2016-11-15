@@ -46,7 +46,7 @@ public class UserEndpoint {
 
 		List<JUser> list = new ArrayList<JUser>();
 		
-		for(BaseAbstract ba : Image.getAllBase(ModelFactory.get(User.class), false)) {
+		for(BaseAbstract ba : Image.getAllBase(null, ModelFactory.get(User.class), false)) {
 			JUser juser = new JUser();
 			((User) ba).apiFill(juser, new Guid(securityContext.getUserPrincipal().getName()));
 	    	list.add(juser);
@@ -70,9 +70,9 @@ public class UserEndpoint {
 		User user;
 		
 		if(Guid.isGuid(id)) {
-			user = User.getBaseAbstract(ModelFactory.get(User.class), new Guid(id));
+			user = User.getBaseAbstract(null, ModelFactory.get(User.class), new Guid(id));
 		} else {
-			user = User.getById(id);
+			user = User.getById(null, id);
 		}
 		
 		if(user == null)
@@ -93,12 +93,12 @@ public class UserEndpoint {
     	
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
     	
-    	User user = User.getBaseAbstract(ModelFactory.get(User.class),  juser.getGuid());
+    	User user = User.getBaseAbstract(null, ModelFactory.get(User.class),  juser.getGuid());
 
     	user.apiUpdate(juser, requesteurGuid);
 
     	JUser newjuser = new JUser();
-    	User.getBaseAbstract(ModelFactory.get(User.class), juser.getGuid()).apiFill(newjuser, requesteurGuid);
+    	User.getBaseAbstract(null, ModelFactory.get(User.class), juser.getGuid()).apiFill(newjuser, requesteurGuid);
 
     	return Response.ok().entity(newjuser).build();
     }

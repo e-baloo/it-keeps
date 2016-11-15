@@ -16,7 +16,7 @@ public class GuidFactory {
 	{
 		String cmdSql = "SELECT FROM " + Base.class.getSimpleName() + " WHERE " + JBase.GUID + " = ?";
 		
-		return CommonOrientVertex.command(cmdSql, guid.toString()).size() > 0;
+		return CommonOrientVertex.command(null, cmdSql, guid.toString()).size() > 0;
 	}
 
 	

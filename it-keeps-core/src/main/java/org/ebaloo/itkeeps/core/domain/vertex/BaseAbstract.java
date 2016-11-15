@@ -23,10 +23,10 @@ import org.ebaloo.itkeeps.core.domain.ModelFactory.ModelClass;
 import org.ebaloo.itkeeps.core.domain.edge.RelationInterface;
 import org.ebaloo.itkeeps.core.domain.edge.RelationTools;
 import org.ebaloo.itkeeps.core.domain.edge.RelationType;
-import org.ebaloo.itkeeps.core.domain.edge.Traverse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 import com.tinkerpop.blueprints.impls.orient.OrientVertexType;
 
@@ -38,16 +38,14 @@ import com.tinkerpop.blueprints.impls.orient.OrientVertexType;
 
 public abstract class BaseAbstract extends CommonOrientVertex implements Comparable<BaseAbstract> {
 
-	
-	
 	private static Logger logger = LoggerFactory.getLogger(BaseAbstract.class);
 	
 
-	public final static <T extends BaseAbstract> List<T> commandBaseAbstract(final ModelClass<T> target, final String cmdSQL, Object... args) {
+	public final static <T extends BaseAbstract> List<T> commandBaseAbstract(OrientBaseGraph graph, final ModelClass<T> target, final String cmdSQL, Object... args) {
         
 		try {
 		
-			List<OrientVertex> listOV = GraphFactory.command(cmdSQL, args);
+			List<OrientVertex> listOV = GraphFactory.command(graph, cmdSQL, args);
 			List<T> listBA = new ArrayList<T>();
 			
 			
@@ -64,10 +62,7 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 	}
 
 	
-	
-	
-	
-	public static <T extends BaseAbstract> T getBaseAbstract(final ModelClass<T> target, final JBaseLight baselight)  
+	public static <T extends BaseAbstract> T getBaseAbstract(OrientBaseGraph graph, final ModelClass<T> target, final JBaseLight baselight)  
  	{
  
     	if(baselight == null)
@@ -78,14 +73,14 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
     	
 		Guid guid = baselight.getGuid();
 
-		return getBaseAbstract(target, guid);
+		return getBaseAbstract(graph, target, guid);
 
 	}
 	
 	
     
 
-    public static  <T extends BaseAbstract> T getBaseAbstract(final ModelClass<T> target, final Guid guid)  
+    public static  <T extends BaseAbstract> T getBaseAbstract(OrientBaseGraph graph, final ModelClass<T> target, final Guid guid)  
 	{
     	if(guid == null)
     		return null;
@@ -93,7 +88,7 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 		String cmdSQL = "SELECT FROM " + Base.class.getSimpleName() + " WHERE " + BaseUtils.WhereClause.enable() + " AND (guid = ?)";
 		
 		
-		List<T> list = BaseAbstract.commandBaseAbstract(target, cmdSQL, guid.toString());
+		List<T> list = BaseAbstract.commandBaseAbstract(graph, target, cmdSQL, guid.toString());
 		
 		if(list.size() == 0) {
 			return null;
@@ -106,17 +101,16 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 		return list.get(0);
 	}
     
-	public static <T extends BaseAbstract> List<T> getListBaseAbstract(final ModelClass<T> target, final List<Guid> guid) {
+	public static <T extends BaseAbstract> List<T> getListBaseAbstract(OrientBaseGraph graph, final ModelClass<T> target, final List<Guid> guid) {
 
 		String cmdSQL = "SELECT FROM " + Base.class.getSimpleName() + " WHERE " + BaseUtils.WhereClause.enable()
 				+ " AND (guid IN [" + guid.stream().map(e -> "'" + e.toString() + "'").collect(Collectors.joining(","))
 				+ "])";
 
-		return BaseAbstract.commandBaseAbstract(target, cmdSQL);
+		return BaseAbstract.commandBaseAbstract(graph, target, cmdSQL);
 	}
     
     
-	protected Guid guid = null; 
 	
 	
 	public BaseAbstract() {
@@ -132,14 +126,151 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 
 	}
 
+	
+	/*
+	 * 
+	 */
+
+	protected final static void setEdges(OrientBaseGraph graph, final ModelClass<? extends BaseAbstract> target, BaseAbstract src, BaseAbstract dst, RelationType direction, Class<? extends RelationInterface> relation, boolean instanceOf) {
+
+		List<BaseAbstract> listSrc = new ArrayList<>();
+		if(src != null)
+			listSrc.add(src);
+
+		List<BaseAbstract> listDst = new ArrayList<>();
+		if(dst != null)
+			listDst.add(dst);
+
+		setEdges(graph, target, listSrc, listDst, direction, relation, instanceOf);
+	}
+
+	protected final static void setEdges(OrientBaseGraph graph, final ModelClass<? extends BaseAbstract> target, BaseAbstract src, List<? extends BaseAbstract> dst, RelationType direction, Class<? extends RelationInterface> relation, boolean instanceOf) {
+
+		List<BaseAbstract> listSrc = new ArrayList<>();
+		if(src != null)
+			listSrc.add(src);
+		
+		setEdges(graph, target, listSrc, dst, direction, relation, instanceOf);
+	}
+	
+	protected final static void setEdges(OrientBaseGraph graph, final ModelClass<? extends BaseAbstract> target, List<? extends BaseAbstract> src, List<? extends BaseAbstract> dst, RelationType direction, Class<? extends RelationInterface> relation, boolean instanceOf) {
+
+		if(direction == null) 
+			throw new RuntimeException("direction is null!");
+
+		if(relation == null) 
+			throw new RuntimeException("relation is null!");
+
+		if(src == null)
+			src = new ArrayList<BaseAbstract>();
+		
+		if(dst == null)
+			dst = new ArrayList<BaseAbstract>();
+		
+
+		List<String> ovSrc = null;
+		List<String> ovDstNew =  null;
+		List<String> ovDstBck =  null;
+		List<String> ovDstRemove = new ArrayList<String>();
+		List<String> ovDstAdd = new ArrayList<String>();
+
+			
+			List<String> srcOrid = src.stream().map(e -> e.getORID()).collect(Collectors.toList());
+			List<String> dstOrid = dst.stream().map(e -> e.getORID()).collect(Collectors.toList());
+
+			String cmdSQL = ""
+					+ "SELECT FROM "
+					+ " (TRAVERSE "
+					+ "     " + direction.getDirection().toString() + "('" + relation.getSimpleName() + "') "
+					+ "     FROM [" + StringUtils.join(srcOrid, ", ") + "] "
+					+ "     WHILE $depth <= 1) "
+					+ "WHERE @rid NOT IN [" + StringUtils.join(srcOrid, ", ") + "]";
+
+			cmdSQL = cmdSQL + " AND " + BaseUtils.WhereClause.enable();  
+
+			if(target != null)
+				cmdSQL = cmdSQL + " AND " + BaseUtils.WhereClause.classIsntanceOf(target, instanceOf);  
+			
+			
+			ovDstBck = command(graph, cmdSQL).stream().map(e -> e.getIdentity().toString()).collect(Collectors.toList());
+			
+	    	switch(direction) {
+	    	
+	    	case PARENT:
+	        	ovSrc = srcOrid;
+	        	ovDstNew = dstOrid;
+	    		break;
+	    		
+	    	case CHILD:
+	        	ovSrc = dstOrid;
+	        	ovDstNew = srcOrid; 
+	    		break;
+	    		
+			default:
+				throw new RuntimeException("relation [" + direction.toString() + "] is not autorized!");
+	    		
+	    	}
+	    	
+
+	    	for(String s : ovDstBck)
+	    		if(!ovDstNew.contains(s))
+	    			ovDstRemove.add(s);
+	    	
+	    	for(String s : ovDstNew)
+	    		if(!ovDstBck.contains(s))
+	    			ovDstAdd.add(s);
+
+	    	/*
+		ovDstRemove = ovDstBck.stream().filter(f -> !ovDstNew.contains(f)).collect(Collectors.toList());
+		ovDstAdd    = ovDstNew.stream().filter(f -> !ovDstBck.contains(f)).collect(Collectors.toList());
+		*/
+		
+		logger.warn("ovSrc       : " + ovSrc);
+		logger.warn("ovDst       : " + ovDstNew);
+		logger.warn("ovDstBck    : " + ovDstBck);
+		logger.warn("ovDstRemove : " + ovDstRemove);
+		logger.warn("ovDstAdd    : " + ovDstAdd);
+		
+
+		if(ovSrc.size() > 0) {
+			if(ovDstRemove.size() > 0) {
+		    	String cmd = "DELETE EDGE FROM [" + StringUtils.join(ovSrc, ", ") + "] TO [" + StringUtils.join(ovDstRemove, ", ") + "] ";
+		   		cmd += " WHERE @class = '" + relation.getSimpleName() + "'";
+				CommonOrientVertex.executeNoReturn(graph, cmd);
+			}
+			
+			if(ovDstAdd.size() > 0) {
+		    	String cmd = "CREATE EDGE " + relation.getSimpleName() + " FROM [" + StringUtils.join(ovSrc, ", ") + "] TO [" + StringUtils.join(ovDstAdd, ", ") + "] ";
+				CommonOrientVertex.executeNoReturn(graph, cmd);
+			}
+		}
+		
+	}
+		
+	
+	
+	
+	
+	/*
 	protected final <T extends BaseAbstract> void addEdge(BaseAbstract newIBase, RelationType relationship, Class<? extends RelationInterface> relation) {
 		
 		this.checkOrientVertex();
-		
-		
+
 		if(newIBase == null) {
 			return;
 		}
+
+		{
+			ArrayList<BaseAbstract> src = new ArrayList<BaseAbstract>();
+			ArrayList<BaseAbstract> dst = new ArrayList<BaseAbstract>();
+		
+			src.add(this);
+			if(newIBase != null)
+				dst.add(newIBase);
+			
+		}
+		
+		
 		
     	if(this.getOrientVertex().getEdges(newIBase.getOrientVertex(), relationship.getDirection()).iterator().hasNext()) {
     		
@@ -185,11 +316,83 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
     	
 		if(logger.isDebugEnabled()) 
 			logger.debug("Add Link! [@" + this.toString() + "] " + RelationTools.toLogger(relationship.getDirection()) + "(@" + relation.getSimpleName() + ")" + " [@" + newIBase.toString() + "]");
-	}
-	
+	}*/
 	
 
-	protected final void setEmbeddedListString(final String property, List<String> list) {
+	/*
+	protected final <T extends BaseAbstract> void removeEdge(BaseAbstract oldBaseAbstract, RelationType relationship,
+			Class<? extends RelationInterface> relation) {
+
+		if (oldBaseAbstract == null) {
+			return;
+		}
+
+    	BaseAbstract ovSrc = null;
+    	BaseAbstract ovDst =  null;
+
+    	switch(relationship) {
+    	
+    	case PARENT:
+        	ovSrc = this;
+        	ovDst =  oldBaseAbstract;
+    		break;
+    		
+    	case CHILD:
+        	ovSrc = oldBaseAbstract;
+        	ovDst =  this; 
+    		break;
+    		
+		default:
+			// TODO
+			throw new RuntimeException(new Exception("BOTH relation is not autorized!"));
+    		
+    	}
+
+    	
+    	String cmd = "DELETE EDGE FROM " + ovSrc.getORID() + " TO " + ovDst.getORID();
+    	if(relation != null) {
+    		cmd += " WHERE @class = '" + relation.getSimpleName() + "'";
+    	}
+    	
+    	
+		
+		int ret = CommonOrientVertex.execute(cmd);
+
+		if (ret > 0) {
+
+			ovSrc.reload();
+			ovDst.reload();
+
+
+
+			if(logger.isTraceEnabled()) {
+				String comment = "Remove link ! [@" + this.toString() + "] "
+						+ RelationTools.toLogger(relationship.getDirection()) + " [@" + oldBaseAbstract.toString() + "]";
+
+				logger.trace(comment);
+			}
+
+		}
+
+	
+	}
+	*/
+
+	/*
+	 * List<String>
+	 */
+	
+	protected final  List<String> getListString(final String property) {
+		
+		List<String> list = this.getProperty(property);
+		
+		if(list == null)
+			list = new ArrayList<String>();
+		
+		return list;
+	}
+
+	protected final void setListString(final String property, List<String> list) {
 		
 		if(list == null)
 			list = new ArrayList<String>();
@@ -197,7 +400,21 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 		this.setProperty(property, list);
 	}
 
-	protected final void setEmbeddedMapString(final String property, Map<String, String> map) {
+	/*
+	 * Map<String, String>
+	 */
+	
+	protected final Map<String, String> getMapString(final String property) {
+		
+		Map<String, String> map = this.getProperty(property);
+		
+		if(map == null)
+			map = new HashMap<String, String>();
+		
+		return map;
+	}
+	
+	protected final void setMapString(final String property, Map<String, String> map) {
 
 		if(map == null)
 			map = new HashMap<String, String>();
@@ -205,6 +422,12 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 		this.setProperty(property, map);
 	}
 
+	
+	/*
+	 * 
+	 * 
+	 */
+	
 
 	@Override
 	public int compareTo(BaseAbstract obj) {
@@ -229,18 +452,28 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 	
 	@Override
     public final boolean equals(Object obj) {
-          try {
-                return (obj instanceof BaseAbstract) && this.getGuid().equals(((BaseAbstract)obj).getGuid());
+        try {
+		
+			if(obj == null)
+				return false;
+			
+			if(!(obj instanceof BaseAbstract))
+				return false;
+			
+			return this.getORID().equals(((BaseAbstract)obj).getORID());
+			
+			
           } catch (Throwable e) {
                 return false;
           }
     }
 
 
-
+	/*
 	protected final <T extends BaseAbstract> T getEdgeByClassesNames(final ModelClass<T> target, final RelationType relationship, final boolean isInstanceof) {
 		return getEdgeByClassesNames(target, relationship, isInstanceof, Traverse.class) ;
 	}
+	*/
 
 	
 	protected final <T extends BaseAbstract> T getEdgeByClassesNames(final ModelClass<T> target, final RelationType relationship, final boolean isInstanceof, Class<? extends RelationInterface> relation) {
@@ -283,10 +516,11 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 			
 			
 			
-			return  BaseAbstract.commandBaseAbstract(target, request.toString());
+			return  BaseAbstract.commandBaseAbstract(this.getGraph(), target, request.toString());
 			
     }
 
+	/*
 	protected final List<String> getEmbeddedListString(final String property) {
 
 		List<String> list = this.getProperty(property);
@@ -297,6 +531,7 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 		
 		return list;
 	}
+	*/
 	
 	
 
@@ -305,6 +540,7 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 	 * 
 	 */
 	
+	/*
 	protected final Map<String, String> getEmbeddedMapString(final String property) {
 
 		Map<String, String> map = this.getProperty(property);
@@ -315,18 +551,8 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 		
 		return map;
 	}
+*/
 	
-	@DatabaseProperty(name = JBase.GUID, isNotNull = true, isReadOnly = true)
-	public final Guid getGuid() {
-		
-		if(this.guid == null) {
-			
-			guid = new Guid(this.getProperty(JBase.GUID).toString());
-			
-		}
-		
-		return guid;
-	}
 
 	
 	public ModelFactory.ModelClass<BaseAbstract> getModelClass() {
@@ -398,62 +624,7 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 			
 	}
 
-	protected final <T extends BaseAbstract> void removeEdge(BaseAbstract oldBaseAbstract, RelationType relationship,
-			Class<? extends RelationInterface> relation) {
 
-		if (oldBaseAbstract == null) {
-			return;
-		}
-
-    	BaseAbstract ovSrc = null;
-    	BaseAbstract ovDst =  null;
-
-    	switch(relationship) {
-    	
-    	case PARENT:
-        	ovSrc = this;
-        	ovDst =  oldBaseAbstract;
-    		break;
-    		
-    	case CHILD:
-        	ovSrc = oldBaseAbstract;
-        	ovDst =  this; 
-    		break;
-    		
-		default:
-			// TODO
-			throw new RuntimeException(new Exception("BOTH relation is not autorized!"));
-    		
-    	}
-
-    	
-    	String cmd = "DELETE EDGE FROM " + ovSrc.getORID() + " TO " + ovDst.getORID();
-    	if(relation != null) {
-    		cmd += " WHERE @class = '" + relation.getSimpleName() + "'";
-    	}
-    	
-    	
-		
-		int ret = CommonOrientVertex.execute(cmd);
-
-		if (ret > 0) {
-
-			ovSrc.reload();
-			ovDst.reload();
-
-
-
-			if(logger.isTraceEnabled()) {
-				String comment = "Remove link ! [@" + this.toString() + "] "
-						+ RelationTools.toLogger(relationship.getDirection()) + " [@" + oldBaseAbstract.toString() + "]";
-
-				logger.trace(comment);
-			}
-
-		}
-
-	
-	}
 
 	/*
     protected final void removeEmbeddedListString(final String property, final String value) {
@@ -485,7 +656,11 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 	}
 	*/
 
- 
+	
+	// TODO
+	// TODO
+	// TODO
+	// TODO
     protected final <T extends BaseAbstract> void setEdge(
     		final ModelClass<T> target, final RelationType relationship, final boolean isInstanceof, final  T newParent, final Class<? extends RelationInterface> relation) {
 		
@@ -509,10 +684,10 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 		}
 		
 		if(oldParnet != null) {
-			removeEdge(oldParnet, relationship, relation);
+			//removeEdge(oldParnet, relationship, relation);
 		}
 		
-    	addEdge(newParent, relationship, relation);
+    	//addEdge(newParent, relationship, relation);
     	
     	if(oldParnet != null) {
     		oldParnet.commit();
@@ -544,19 +719,45 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 		return sb.toString();
 	}
 
+	/*
+	 * GUID 
+	 */
+	
+	private Guid guid = null; 
+
+	
+	@DatabaseProperty(name = JBase.GUID, isNotNull = true, isReadOnly = true)
+	public final Guid getGuid() {
+		
+		if(this.guid == null) {
+			guid = new Guid(this.getProperty(JBase.GUID).toString());
+		}
+		
+		return guid;
+	}
+
 
 	/*
 	 * NAME
 	 */
 	
+	private String name = null;
 	
 	@DatabaseProperty(name = JBase.NAME, isNotNull = true)
 	public String getName() {
-		return this.getProperty(JBase.NAME);
+		
+		if(this.name == null) {
+			this.name = this.getProperty(JBase.NAME);
+		}
+		
+		return this.name;
 	}
 
-	public void setName(String newValue) {
-		this.setProperty(JBase.NAME, newValue);
+	public void setName(String value) {
+		
+		this.name = value;
+		this.setProperty(JBase.NAME, this.name);
+		
 	}
 
 	/*
@@ -585,6 +786,11 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 		this.commit();
 		return true;
 	}
+	
+	
+	/*
+	 * 
+	 */
 	
 	
 	protected final static <T extends BaseAbstract> T newInstance(final ModelClass<T> target, final OrientVertex ov){

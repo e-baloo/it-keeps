@@ -50,11 +50,11 @@ public class Group extends BaseStandard {
 	}
 	
 	public void setParentGroup(final Group group) {
-		this.addEdge(group, RelationType.CHILD, TraverseInGroup.class);
+		setEdges(this.getGraph(), ModelFactory.get(Group.class), this, group, RelationType.CHILD, TraverseInGroup.class, false);
 	}
 
 	private void setParentGroupJBaseLight(JBaseLight parentGroup) {
-		this.setParentGroup(getBaseAbstract(ModelFactory.get(Group.class), parentGroup));
+		this.setParentGroup(getBaseAbstract(this.getGraph(), ModelFactory.get(Group.class), parentGroup));
 	}
 
 	
@@ -68,6 +68,7 @@ public class Group extends BaseStandard {
 		return this.getEdgesByClassesNames(ModelFactory.get(Group.class), RelationType.PARENT, false, TraverseInGroup.class);
 	}
 	
+	/*
 	public void addChildGroup(final Group group) {
 		this.addEdge(group, RelationType.PARENT, TraverseInGroup.class);
 	}
@@ -75,28 +76,17 @@ public class Group extends BaseStandard {
 	public void removeChildGroup(final Group group) {
 		this.removeEdge(group, RelationType.PARENT, TraverseInGroup.class);
 	}
+	*/
 
 	
 	public void putChildGroup(List<Group> list) {
-		
-		List<Group> oriList = getChildGroup();
-		
-		for(Group grp : list) {
-			
-			if(oriList.contains(grp)) {
-				oriList.remove(grp);
-			} else {
-				addChildGroup(grp);
-			}
-		}
-		
-		for(Group grp : oriList) {
-			removeChildGroup(grp);
-		}
-		
+		setEdges(this.getGraph(), ModelFactory.get(Group.class), this, list, RelationType.PARENT, TraverseInGroup.class, false);
 	}
 
 	private void putChildGroupJBaseLight(List<JBaseLight> childGroup) {
+		
+		long tStart = System.currentTimeMillis();
+
 		
 		if(childGroup == null) {
 			childGroup = new ArrayList<JBaseLight>();
@@ -105,10 +95,14 @@ public class Group extends BaseStandard {
 		List<Group> groups = new ArrayList<Group>();
 		
 		for(JBaseLight child : childGroup) {
-			groups.add(getBaseAbstract(ModelFactory.get(Group.class), child));
+			groups.add(getBaseAbstract(this.getGraph(), ModelFactory.get(Group.class), child));
 		}
 		
 		putChildGroup(groups);
+		
+		long elapsedSeconds = (System.currentTimeMillis() - tStart);
+		System.out.println(String.format("Query executed in %d ms", elapsedSeconds));
+
 	}
 
 	
@@ -298,6 +292,9 @@ public class Group extends BaseStandard {
 	protected Group(final JGroup j, final boolean f) {
 		super(j, false);
 		
+		this.commit();
+		this.reload();
+		
 		this.setParentGroupJBaseLight(j.getParentGroup());
 		this.putChildGroupJBaseLight(j.getChildGroups());
 
@@ -330,7 +327,7 @@ public class Group extends BaseStandard {
 
 		super.apiUpdate(obj, requesteurGuid);
 		
-		User requesterUser = User.getByGuid(ModelFactory.get(User.class), requesteurGuid);
+		User requesterUser = User.getByGuid(this.getGraph(), ModelFactory.get(User.class), requesteurGuid);
 
 		switch(requesterUser.getRole()) {
 

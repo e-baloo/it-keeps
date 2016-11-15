@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.orientechnologies.orient.core.metadata.schema.OType;
+import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 
@@ -72,7 +73,7 @@ public abstract class BaseStandard extends Base {
 
 	@DatabaseProperty(name = JBaseStandard.EXTERNAL_REF, type = OType.EMBEDDEDMAP)
 	public Map<String, String> getExternalRef()  {
-		return this.getEmbeddedMapString(JBaseStandard.EXTERNAL_REF);
+		return this.getMapString(JBaseStandard.EXTERNAL_REF);
 	}
 
 	public String getExternalRefValue(String key) {
@@ -81,7 +82,7 @@ public abstract class BaseStandard extends Base {
 	
 	
 	public void setExternalRef( Map<String, String> map) {
-		this.setEmbeddedMapString(JBaseStandard.EXTERNAL_REF, map);
+		this.setMapString(JBaseStandard.EXTERNAL_REF, map);
 	}
 
 	
@@ -93,7 +94,7 @@ public abstract class BaseStandard extends Base {
 	}
 	*/
 	
-	public static <T extends BaseAbstract> T getByExternalRef(final ModelClass<T> target,
+	public static <T extends BaseAbstract> T getByExternalRef(OrientBaseGraph graph, final ModelClass<T> target,
 			final String key, final String value, final boolean instanceOf) {
 
 		
@@ -102,7 +103,7 @@ public abstract class BaseStandard extends Base {
 				+ BaseUtils.WhereClause.classIsntanceOf(target.getClassName(), instanceOf) + " AND "
 				+ JBaseStandard.EXTERNAL_REF + "['"+ key + "'] = ?";
 
-		List<OrientVertex> list = CommonOrientVertex.command(cmdSql, value);
+		List<OrientVertex> list = CommonOrientVertex.command(graph, cmdSql, value);
 
 		if (list.isEmpty()) {
 			if (logger.isTraceEnabled())
@@ -146,7 +147,7 @@ public abstract class BaseStandard extends Base {
 			type = OType.EMBEDDEDLIST
 			)
 	public final List<String> getOtherName() {
-		return this.getEmbeddedListString(JBaseStandard.OTHER_NAME);
+		return this.getListString(JBaseStandard.OTHER_NAME);
 	}
 
 	public final void setOtherName(List<String> list) {
@@ -156,17 +157,17 @@ public abstract class BaseStandard extends Base {
 		
 		list = list.stream().map(e -> stripOtherName(e)).collect(Collectors.toList());
 		
-		this.setEmbeddedListString(JBaseStandard.OTHER_NAME, list);
+		this.setListString(JBaseStandard.OTHER_NAME, list);
 	}
 
 	
 	
 	
-	public static final <T extends BaseAbstract> T getByOtherName(ModelClass<T> target, final String iValue) {
-		return getByOtherName(target, iValue, false);
+	public static final <T extends BaseAbstract> T getByOtherName(OrientBaseGraph graph, ModelClass<T> target, final String iValue) {
+		return getByOtherName(graph, target, iValue, false);
 	}
 
-	public static final <T extends BaseAbstract> T getByOtherName(ModelClass<T> target, final String iValue, final boolean isInstanceOf) {
+	public static final <T extends BaseAbstract> T getByOtherName(OrientBaseGraph graph, ModelClass<T> target, final String iValue, final boolean isInstanceOf) {
 		
 		if(StringUtils.isBlank(iValue)) {
 			return null;
@@ -190,7 +191,7 @@ public abstract class BaseStandard extends Base {
 		cmdSQL += "  WHERE " + JBaseStandard.OTHER_NAME + ".toLowerCase() = '" + value + "') ";
 		
 		//BaseQuery bq = new BaseQuery();
-		List<T> list = BaseAbstract.commandBaseAbstract(target, cmdSQL);
+		List<T> list = BaseAbstract.commandBaseAbstract(graph, target, cmdSQL);
         
 		if(list.isEmpty()) {
 			return null;
@@ -209,19 +210,19 @@ public abstract class BaseStandard extends Base {
 	 * Find
 	 */
 
-	public static <T extends BaseAbstract> T findByGuidOrName(final ModelClass<T> target, final String tofinde) {
-		return findByGuidOrName(target, tofinde, false);
+	public static <T extends BaseAbstract> T findByGuidOrName(OrientBaseGraph graph, final ModelClass<T> target, final String tofinde) {
+		return findByGuidOrName(graph, target, tofinde, false);
 	}
 
 	
 	@SuppressWarnings({ "unchecked"})
-	public static <T extends BaseAbstract> T findByGuidOrName(final ModelClass<T> target, final String tofinde, final boolean isntanceof) {
+	public static <T extends BaseAbstract> T findByGuidOrName(OrientBaseGraph graph, final ModelClass<T> target, final String tofinde, final boolean isntanceof) {
 		
 		T retTarget = null;
 		
 		if(Guid.isGuid(tofinde)) {
 			
-			BaseAbstract ab = BaseAbstract.getBaseAbstract(target, new Guid(tofinde));
+			BaseAbstract ab = BaseAbstract.getBaseAbstract(graph, target, new Guid(tofinde));
 
 			if(ab == null) {
 				return null;
@@ -240,12 +241,12 @@ public abstract class BaseStandard extends Base {
 			return retTarget;
 		}
 
-		retTarget = Base.getByName(target, tofinde, isntanceof);
+		retTarget = Base.getByName(graph, target, tofinde, isntanceof);
 		if(retTarget != null) {
 			return retTarget;
 		}
 		
-		retTarget = BaseStandard.getByOtherName(target, tofinde, isntanceof);
+		retTarget = BaseStandard.getByOtherName(graph, target, tofinde, isntanceof);
 		if(retTarget != null) {
 			return retTarget;
 		}

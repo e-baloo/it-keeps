@@ -67,7 +67,7 @@ public class AuthenticationEndpoint {
     	
     	SecurityFactory.validateCredential(credentials);
     	
-    	User user = User.getByCredentials(credentials);
+    	User user = User.getByCredentials(null, credentials);
     	
     	if(user == null) 
     		throw new RuntimeException("user '" + credentials.getId() + "' not definde!");

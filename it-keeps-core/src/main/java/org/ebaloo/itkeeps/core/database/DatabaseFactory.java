@@ -61,7 +61,7 @@ public class DatabaseFactory {
 			logger.info(" - Vertrex schemat init done.");
 			
 			
-			GraphFactory.executeNoReturn("ALTER DATABASE DATETIMEFORMAT \"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\"");
+			GraphFactory.executeNoReturn(null, "ALTER DATABASE DATETIMEFORMAT \"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\"");
 
 			
 			

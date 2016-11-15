@@ -49,7 +49,7 @@ public class GroupEndpoint {
 
 		List<JGroup> jl = new ArrayList<JGroup>();
 		
-		for(BaseAbstract ba : Image.getAllBase(ModelFactory.get(Group.class), false)) {
+		for(BaseAbstract ba : Image.getAllBase(null, ModelFactory.get(Group.class), false)) {
 			JGroup j = new JGroup();
 			((Group) ba).apiFill(j, requesteurGuid);
 	    	jl.add(j);
@@ -73,7 +73,7 @@ public class GroupEndpoint {
 		Group group = null;
 		
 		if(Guid.isGuid(id))
-			group = Group.getBaseAbstract(ModelFactory.get(Group.class), new Guid(id));
+			group = Group.getBaseAbstract(null, ModelFactory.get(Group.class), new Guid(id));
 		
 		if(group == null)
 			throw new RuntimeException("TODO"); // TODO
@@ -97,7 +97,7 @@ public class GroupEndpoint {
     	
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
     	
-    	Group group = Group.getBaseAbstract(ModelFactory.get(Group.class), j.getGuid());
+    	Group group = Group.getBaseAbstract(null, ModelFactory.get(Group.class), j.getGuid());
 
     	group.apiUpdate(j, requesteurGuid);
 

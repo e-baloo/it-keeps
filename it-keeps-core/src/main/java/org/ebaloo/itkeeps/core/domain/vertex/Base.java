@@ -21,6 +21,7 @@ import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 import com.orientechnologies.orient.core.metadata.schema.OType;
@@ -149,19 +150,19 @@ public abstract class Base extends BaseAbstract {
 	 * GetByName
 	 */
 
-	public static <T extends BaseAbstract> T getByName(final ModelClass<T> target,
+	public static <T extends BaseAbstract> T getByName(OrientBaseGraph graph, final ModelClass<T> target,
 			final String name) {
-		return getByName(target, name, false);
+		return getByName(graph, target, name, false);
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T extends BaseAbstract> T getByName(final ModelClass<T> target,
+	public static <T extends BaseAbstract> T getByName(OrientBaseGraph graph, final ModelClass<T> target,
 			final String name, boolean isInstanceof) {
 
 		String cmdSql = "SELECT FROM " + target.getClassName() + " WHERE " + BaseUtils.WhereClause.enable() + " AND " + BaseUtils.WhereClause.classIsntanceOf(target, isInstanceof) + " AND " + JBase.NAME
 				+ ".toLowerCase() = ?";
 
-		List<OrientVertex> list = CommonOrientVertex.command(cmdSql, name.toLowerCase());
+		List<OrientVertex> list = CommonOrientVertex.command(graph, cmdSql, name.toLowerCase());
 
 		if (list.isEmpty()) {
 			if (logger.isTraceEnabled())
@@ -211,11 +212,11 @@ public abstract class Base extends BaseAbstract {
 	 */
 	
 
-	public final static <T extends BaseAbstract> List<T> getAllBase(final ModelClass<T> target) {
-		return getAllBase(target, true);
+	public final static <T extends BaseAbstract> List<T> getAllBase(OrientBaseGraph graph, final ModelClass<T> target) {
+		return getAllBase(graph, target, true);
 	}
 	
-	public final static <T extends BaseAbstract> List<T> getAllBase(final ModelClass<T> target, final boolean isInstanceof) {
+	public final static <T extends BaseAbstract> List<T> getAllBase(OrientBaseGraph graph, final ModelClass<T> target, final boolean isInstanceof) {
 
 		StringBuilder request = new StringBuilder();
 		
@@ -226,7 +227,7 @@ public abstract class Base extends BaseAbstract {
 		BaseUtils.WhereClause.classIsntanceOf(target, isInstanceof, request);
 
 		//BaseQuery bq = new BaseQuery();
-        return BaseAbstract.commandBaseAbstract(target, request.toString());
+        return BaseAbstract.commandBaseAbstract(graph, target, request.toString());
         
 	}
 	
@@ -308,14 +309,14 @@ public abstract class Base extends BaseAbstract {
 	
 	
 	
-	public static <T extends BaseAbstract> T getByGuid(final ModelClass<T> target,
+	public static <T extends BaseAbstract> T getByGuid(OrientBaseGraph graph, final ModelClass<T> target,
 			final Guid guid) {
 
 		
 		String cmdSql = "SELECT FROM " + target.getClassName() + " WHERE "
 				+ BaseUtils.WhereClause.enable() + " AND " + JBase.GUID  + " = ?";
 
-		List<OrientVertex> list = CommonOrientVertex.command(cmdSql, guid.toString());
+		List<OrientVertex> list = CommonOrientVertex.command(graph, cmdSql, guid.toString());
 
 		if (list.isEmpty()) {
 			if (logger.isTraceEnabled())

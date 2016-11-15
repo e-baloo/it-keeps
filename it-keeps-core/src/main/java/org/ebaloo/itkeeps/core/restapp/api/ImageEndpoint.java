@@ -41,7 +41,7 @@ public class ImageEndpoint {
 
 		List<JImage> list = new ArrayList<JImage>();
 		
-		for(BaseAbstract ba : Image.getAllBase(ModelFactory.get(Image.class), false)) {
+		for(BaseAbstract ba : Image.getAllBase(null, ModelFactory.get(Image.class), false)) {
 			
 			JImage jimage = new JImage();
 			((Image) ba).apiFill(jimage, new Guid(securityContext.getUserPrincipal().getName()), false);
