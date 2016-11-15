@@ -288,18 +288,19 @@ public class Group extends BaseStandard {
 	
 
 	@Override
-	public <T extends JBase> void apiFill(T obj, Guid requesteurGuid) {
+	public <T extends JBase> T apiFill(T j, Guid requesteurGuid) {
 		
-		if(!(obj instanceof JGroup))
+		if(!(j instanceof JGroup))
 			throw new RuntimeException("TODO"); //TODO
 		
-		super.apiFill(obj, requesteurGuid);
+		super.apiFill(j, requesteurGuid);
 
-		JGroup jgroup = (JGroup) obj;
+		JGroup jgroup = (JGroup) j;
 		
 		jgroup.setParentGroup(getJBaseLight(this.getParentGroup()));
 		jgroup.setChildGroups(this.getChildGroup().stream().map(e -> getJBaseLight(e)).collect(Collectors.toList()));
 		
+		return j;
 	}
 	
 	@Override

@@ -101,10 +101,7 @@ public class GroupEndpoint {
 
     	group.apiUpdate(j, requesteurGuid);
 
-    	JGroup nj = new JGroup();
-    	group.apiFill(nj, requesteurGuid);
-
-    	return Response.ok().entity(nj).build();
+    	return Response.ok().entity(group.apiFill(new JGroup(), requesteurGuid)).build();
     }
 
     @POST 

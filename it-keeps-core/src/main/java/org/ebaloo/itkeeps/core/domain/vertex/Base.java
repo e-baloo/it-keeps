@@ -372,17 +372,18 @@ public abstract class Base extends BaseAbstract {
 	// API Methose
 	
 	
-	public <T extends JBase> void apiFill(T obj, Guid requesteurGuid) {
+	public <T extends JBase> T apiFill(T j, Guid requesteurGuid) {
 		
-		obj.getJObject().setType(this.getType());
-		obj.getJObject().setVersion(this.getObjectVersion());
-		obj.getJObject().setEnable(this.isEnable());
-		obj.getJObject().setCreationDate(this.getCreationDate());
+		j.getJObject().setType(this.getType());
+		j.getJObject().setVersion(this.getObjectVersion());
+		j.getJObject().setEnable(this.isEnable());
+		j.getJObject().setCreationDate(this.getCreationDate());
 
-		obj.setGuid(this.getGuid());
-		obj.setName(this.getName());
-		obj.setDescription(this.getDescription());
+		j.setGuid(this.getGuid());
+		j.setName(this.getName());
+		j.setDescription(this.getDescription());
 		
+		return j;
 	}
 	
 	

@@ -66,7 +66,6 @@ public class UserEndpoint {
 
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
 
-		JUser juser = new JUser();
 		User user;
 		
 		if(Guid.isGuid(id)) {
@@ -78,9 +77,8 @@ public class UserEndpoint {
 		if(user == null)
 			throw new RuntimeException("TODO"); // TODO
 		
-		user.apiFill(juser, requesteurGuid);
 		
-    	return Response.ok().entity(juser).build();
+    	return Response.ok().entity(user.apiFill(new JUser(), requesteurGuid)).build();
     }
 	
 

@@ -289,7 +289,7 @@ public abstract class BaseStandard extends Base {
 	// API
 	
 	@Override
-	public <T extends JBase> void apiFill(T j, Guid requesteurGuid) {
+	public <T extends JBase> T apiFill(T j, Guid requesteurGuid) {
 		
 		if(!(j instanceof JBaseStandard))
 			throw new RuntimeException("TODO"); //TODO
@@ -302,6 +302,7 @@ public abstract class BaseStandard extends Base {
 		jBaseStandard.setOtherName(this.getOtherName());
 		jBaseStandard.setExternalRef(this.getExternalRef());
 		
+		return j;
 	}
 	
 	

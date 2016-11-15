@@ -15,6 +15,7 @@ import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.BaseUtils;
 import org.ebaloo.itkeeps.core.domain.ModelFactory;
+import org.ebaloo.itkeeps.core.domain.ModelFactory.ModelClass;
 import org.ebaloo.itkeeps.core.domain.annotation.ModelClassAnnotation;
 import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
 import org.ebaloo.itkeeps.core.domain.edge.TraverseInGroup;
@@ -80,19 +81,17 @@ public class User extends BaseStandard {
 		setEdges(this.getGraph(), ModelFactory.get(Group.class), this, list, DirectionType.CHILD, TraverseInGroup.class, false);
 	}
 
-	private void setInGroupJBL(List<JBaseLight> inGroup) {
+	private void setInGroupJBL(List<JBaseLight> list) {
 		
-		if(inGroup == null) {
-			inGroup = new ArrayList<JBaseLight>();
+		if(list == null) {
+			list = new ArrayList<JBaseLight>();
 		}
 		
-		List<Group> groups = new ArrayList<Group>();
+		// Optimization
+		ModelClass<Group> mc = ModelFactory.get(Group.class);
+		OrientBaseGraph graph = this.getGraph();
 		
-		for(JBaseLight child : inGroup) {
-			groups.add( getBaseAbstract(this.getGraph(), ModelFactory.get(Group.class), child));
-		}
-		
-		setInGroup(groups);
+		setInGroup(list.stream().map(e -> getBaseAbstract(graph, mc, e)).collect(Collectors.toList())); 
 	}
 
 	
@@ -225,19 +224,20 @@ public class User extends BaseStandard {
 
 	
 	@Override
-	public <T extends JBase> void apiFill(T obj, Guid requesteurGuid) {
+	public <T extends JBase> T apiFill(T j, Guid requesteurGuid) {
 		
-		if(!(obj instanceof JUser))
+		if(!(j instanceof JUser))
 			throw new RuntimeException("TODO"); //TODO
 		
-		super.apiFill(obj, requesteurGuid);
+		super.apiFill(j, requesteurGuid);
 
-		JUser juser = (JUser) obj;
+		JUser juser = (JUser) j;
 		
 		juser.setUserId(this.getUserId());
 		juser.setRole(this.getRole().toString());
 		juser.setInGroups(this.getInGroup().stream().map(e -> Base.getJBaseLight(e)).collect(Collectors.toList()));
 		
+		return j;
 	}
 	
 	@Override

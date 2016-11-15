@@ -63,8 +63,7 @@ public class ImageEndpoint {
     @Timed
     public Response getImage(@PathParam("id") String id) {
     	
-		JImage jimage = new JImage();
-		Image.getImage(id).apiFill(jimage, new Guid(securityContext.getUserPrincipal().getName()), false);
+		JImage jimage = Image.getImage(id).apiFill(new JImage(), new Guid(securityContext.getUserPrincipal().getName()), false);
     	
     	return Response.ok().entity(jimage).build();
     }
