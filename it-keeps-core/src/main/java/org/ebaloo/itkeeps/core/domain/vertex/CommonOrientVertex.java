@@ -57,6 +57,7 @@ public abstract class CommonOrientVertex {
 
 	private OrientVertex orientVertex = null;
 
+	/*
 	protected final Edge addEdge(CommonOrientVertex cov, Class<? extends RelationInterface> relation) {
 
 		Edge edge = this.getOrientVertex().addEdge(null, cov.getOrientVertex(), relation.getSimpleName());
@@ -65,6 +66,7 @@ public abstract class CommonOrientVertex {
 
 		return edge;
 	}
+	*/
 
 	protected final void addEdge(CommonOrientVertex newCommonOrientVertex, Direction direction, String relation) {
 		if (newCommonOrientVertex == null) {
@@ -185,9 +187,11 @@ public abstract class CommonOrientVertex {
 		return list.get(0);
 	}
 
+	/*
 	protected final Iterable<Edge> getEdges(CommonOrientVertex cov, Direction direction) {
 		return this.getOrientVertex().getEdges(cov.getOrientVertex(), direction);
 	}
+	*/
 
 	protected final List<OrientVertex> getEdgesByClassesNames(final String targetClass, final Direction direction,
 			final boolean isInstanceof) {

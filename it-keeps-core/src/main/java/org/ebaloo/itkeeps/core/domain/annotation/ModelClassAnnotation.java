@@ -13,10 +13,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface ModelClassAnnotation{
 	
-	String name() default "";
-	
-	//String[] disableProperty() default {};
-
 	boolean isAbstract() default false;
 
 }

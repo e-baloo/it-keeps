@@ -23,9 +23,7 @@ import org.ebaloo.itkeeps.core.domain.edge.TraverseInGroup;
  *
  */
 @DatabaseVertrex()
-@ModelClassAnnotation(
-		name = "Group"
-		)
+@ModelClassAnnotation()
 public class Group extends BaseStandard {
 
 	public Group() {

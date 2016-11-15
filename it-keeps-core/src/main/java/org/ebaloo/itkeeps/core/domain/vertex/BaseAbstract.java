@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import java.util.stream.Collectors;
 
 import com.orientechnologies.orient.core.metadata.schema.OType;
 import com.tinkerpop.blueprints.Direction;
@@ -106,6 +106,15 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 		return list.get(0);
 	}
     
+	public static <T extends BaseAbstract> List<T> getListBaseAbstract(final ModelClass<T> target, final List<Guid> guid) {
+
+		String cmdSQL = "SELECT FROM " + Base.class.getSimpleName() + " WHERE " + BaseUtils.WhereClause.enable()
+				+ " AND (guid IN [" + guid.stream().map(e -> "'" + e.toString() + "'").collect(Collectors.joining(","))
+				+ "])";
+
+		return BaseAbstract.commandBaseAbstract(target, cmdSQL);
+	}
+    
     
 	protected Guid guid = null; 
 	
@@ -179,23 +188,6 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 	}
 	
 	
-	/*
-	protected final void addEmbeddedListString(final String property, final String value) {
-
-		List<String> list = this.getProperty(property);
-		
-		if(list == null) {
-			list = new ArrayList<String>();
-		}
-
-		if (!list.contains(value)) {
-
-			list.add(value);
-
-			this.setProperty(property, list);
-		}
-	}
-	*/
 
 	protected final void setEmbeddedListString(final String property, List<String> list) {
 		
@@ -205,19 +197,6 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 		this.setProperty(property, list);
 	}
 
-	/*
-	protected final void addEmbeddedMapString(final String property, final String key, final String value) {
-
-		Map<String, String> map = this.getEmbeddedMapString(property);
-
-		if((!map.containsKey(key)) || (!map.get(key).equals(value))) {
-			map.put(key, value);
-			
-			this.setProperty(property, map);
-		}
-	}
-	*/
-
 	protected final void setEmbeddedMapString(final String property, Map<String, String> map) {
 
 		if(map == null)
@@ -226,10 +205,6 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 		this.setProperty(property, map);
 	}
 
-	
-	protected boolean checkUserUpdateLink(final BaseAbstract ovDst) {
-		 return true;
-	 }
 
 	@Override
 	public int compareTo(BaseAbstract obj) {
@@ -288,7 +263,6 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 	 */
 	
 	
-	@SuppressWarnings("unchecked")
 	protected final <T extends BaseAbstract> List<T> getEdgesByClassesNames(final ModelClass<T> target, final RelationType relationship, final boolean isInstanceof, Class<? extends RelationInterface> relation) {
 
 			if((target == null) || (relationship == null)) {

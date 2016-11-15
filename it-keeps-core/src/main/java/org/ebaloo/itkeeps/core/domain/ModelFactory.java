@@ -2,12 +2,8 @@
 package org.ebaloo.itkeeps.core.domain;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
-import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.core.domain.annotation.ModelClassAnnotation;
-import org.ebaloo.itkeeps.core.domain.vertex.Base;
 import org.ebaloo.itkeeps.core.domain.vertex.BaseAbstract;
 import org.ebaloo.itkeeps.core.tools.ReflectionsFactory;
 import org.reflections.Reflections;
@@ -38,7 +34,8 @@ public class ModelFactory {
 				ModelClass<BaseAbstract> modelClass = new ModelClass<BaseAbstract>(
 						BaseAbstract.class.getClass().cast(clasz));
 
-				mapIBaseClass.put(clasz.getSimpleName(), modelClass);
+				mapName.put(clasz.getSimpleName(), modelClass);
+				mapClass.put((Class<? extends BaseAbstract>) clasz, modelClass);
 			}
 		}
 
@@ -53,24 +50,18 @@ public class ModelFactory {
 
 	}
 
-	private static Map<String, ModelClass<BaseAbstract>> mapIBaseClass = new HashMap<>();
+	private static Map<String, ModelClass<BaseAbstract>> mapName = new HashMap<>();
+	private static Map<Class<? extends BaseAbstract>, ModelClass<BaseAbstract>> mapClass = new HashMap<>();
 
 	public static class ModelClass<T extends BaseAbstract> {
 
-		private final String className;
 		private final Class<T> clasz;
 		private final ModelClassAnnotation modelClassAnnotation;
 
 		protected ModelClass(Class<T> clasz) {
 
 			this.clasz = clasz;
-			this.className = clasz.getSimpleName();
 			this.modelClassAnnotation = this.clasz.getAnnotation(ModelClassAnnotation.class);
-
-			if (StringUtils.isNoneBlank(this.modelClassAnnotation.name())
-					&& !this.className.equals(modelClassAnnotation.name()))
-				throw new RuntimeException("The Class name [" + this.className
-						+ "] is not the same name with the Annotation name [" + modelClassAnnotation.name() + "]!");
 		}
 
 		public String getClassName() {
@@ -89,11 +80,6 @@ public class ModelFactory {
 			return this.modelClassAnnotation.isAbstract();
 		}
 
-		@SuppressWarnings("unchecked")
-		public final List<T> getAllBase(final boolean isInstanceof) {
-			return (List<T>) Base.getAllBase(this, isInstanceof);
-		}
-
 		public boolean isInstance(BaseAbstract baseAbstract) {
 			return this.clasz.isInstance(baseAbstract);
 		}
@@ -102,16 +88,19 @@ public class ModelFactory {
 
 	@SuppressWarnings("unchecked")
 	public static <T extends BaseAbstract> ModelClass<T> get(Class<? extends T> clazz) {
-		return (ModelClass<T>) get(clazz.getSimpleName());
+
+		if (!init)
+			init();
+
+		return (ModelClass<T>) mapClass.get(clazz);
 	}
 
 	public static ModelClass<BaseAbstract> get(String key) {
 
-		if (!init) {
+		if (!init)
 			init();
-		}
 
-		return mapIBaseClass.get(key);
+		return mapName.get(key);
 	}
 
 	/*

@@ -14,7 +14,6 @@ import org.ebaloo.itkeeps.api.model.JBaseStandard;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.BaseUtils;
-import org.ebaloo.itkeeps.core.domain.ModelFactory;
 import org.ebaloo.itkeeps.core.domain.ModelFactory.ModelClass;
 import org.ebaloo.itkeeps.core.domain.annotation.ModelClassAnnotation;
 import org.slf4j.Logger;
@@ -25,7 +24,6 @@ import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 
 @ModelClassAnnotation(
-		name = "BaseStandard",
 		isAbstract = true)
 @DatabaseVertrex()
 public abstract class BaseStandard extends Base {
@@ -113,26 +111,12 @@ public abstract class BaseStandard extends Base {
 		}
 
 		if (list.size() > 1) {
-			// TODO
 			throw new RuntimeException("To many obejct for [k,v]: " + key + "," + value + " [" + cmdSql + "]");
 		}
 
 		
 		OrientVertex ov = list.get(0);
 		T baseAbstract = BaseAbstract.newInstance(target, ov);
-
-		/*
-		@SuppressWarnings("unchecked")
-		ModelClass<T> modelClass = (ModelClass<T>) ModelFactory.get(ov.getType().getName());
-
-		T baseAbstract;
-		try {
-			baseAbstract = modelClass.newInstance();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		baseAbstract.setOrientVertex(ov);
-		*/
 
 		if (logger.isTraceEnabled())
 			logger.trace("OrientVertex found for [k,v]: " + key + "," + value + " @" + ov.getType().getName() + " #"
@@ -165,17 +149,6 @@ public abstract class BaseStandard extends Base {
 		return this.getEmbeddedListString(JBaseStandard.OTHER_NAME);
 	}
 
-	/*
-	public final void addOtherName(String value) {
-		
-		if(StringUtils.isBlank(value)) {
-			return;
-		}
-		
-		this.addEmbeddedListString(JBaseStandard.OTHER_NAME, stripOtherName(value));
-	}
-	*/
-
 	public final void setOtherName(List<String> list) {
 		
 		if(list == null)
@@ -186,18 +159,6 @@ public abstract class BaseStandard extends Base {
 		this.setEmbeddedListString(JBaseStandard.OTHER_NAME, list);
 	}
 
-	/*
-	public final void removeOtherName(String value) {
-
-		if(StringUtils.isBlank(value)) {
-			return;
-		}
-
-		this.removeEmbeddedListString(JBaseStandard.OTHER_NAME, value);
-	}
-	*/
-	
-	
 	
 	
 	
@@ -205,7 +166,6 @@ public abstract class BaseStandard extends Base {
 		return getByOtherName(target, iValue, false);
 	}
 
-	@SuppressWarnings("unchecked")
 	public static final <T extends BaseAbstract> T getByOtherName(ModelClass<T> target, final String iValue, final boolean isInstanceOf) {
 		
 		if(StringUtils.isBlank(iValue)) {
