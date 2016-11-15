@@ -34,6 +34,7 @@ public class BaseUtils {
 		public static String WHERE_CLAUSE__TRUE = " (true) ";
 		public static String WHERE_CLAUSE__ENABLE_IS_TRUE = " (" + JBase.ENABLE + "=true) ";
 		
+		/*
 		public static final String enable() {
 			return WHERE_CLAUSE__ENABLE_IS_TRUE;
 		}
@@ -45,7 +46,7 @@ public class BaseUtils {
 		public static final Predicate<? super BaseAbstract> enableFilter() {
 			return e -> e.getProperty(JBase.ENABLE) != null && (boolean)e.getProperty(JBase.ENABLE);
 		}
-		
+		*/
 		//-------------------
 		
 		public final static String classIsntanceOf(final String targetClass, final boolean instanceOf) {

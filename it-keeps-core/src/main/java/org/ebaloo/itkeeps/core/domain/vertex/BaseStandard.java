@@ -99,7 +99,7 @@ public abstract class BaseStandard extends Base {
 
 		
 		String cmdSql = "SELECT FROM " + target.getClassName() + " WHERE "
-				+ BaseUtils.WhereClause.enable() + " AND "
+				+ BaseUtils.WhereClause.WHERE_CLAUSE__ENABLE_IS_TRUE + " AND "
 				+ BaseUtils.WhereClause.classIsntanceOf(target.getClassName(), instanceOf) + " AND "
 				+ JBaseStandard.EXTERNAL_REF + "['"+ key + "'] = ?";
 
@@ -184,7 +184,7 @@ public abstract class BaseStandard extends Base {
 		cmdSQL += "    (SELECT @rid as myRid, " + JBaseStandard.OTHER_NAME + " FROM " + target.getClassName() + "";
 		cmdSQL += "    WHERE " + JBaseStandard.OTHER_NAME + " IS NOT NULL ";
 		cmdSQL +=        "AND "; 
-		cmdSQL +=      BaseUtils.WhereClause.enable();
+		cmdSQL +=      BaseUtils.WhereClause.WHERE_CLAUSE__ENABLE_IS_TRUE;
 		cmdSQL +=        "AND "; 
 		cmdSQL +=      BaseUtils.WhereClause.classIsntanceOf(target, isInstanceOf);
 		cmdSQL += "    UNWIND " + JBaseStandard.OTHER_NAME + " ) ";

@@ -14,7 +14,7 @@ package org.ebaloo.itkeeps.core.domain.edge;
 
 import com.tinkerpop.blueprints.Direction;
 
-public enum RelationType {
+public enum DirectionType {
 
 	//TODO: A voir pour inverser le terme IN/OUT -> PARENT/ENFANT
 	PARENT(Direction.OUT),
@@ -23,7 +23,7 @@ public enum RelationType {
 	
 	private final Direction direction;
 	
-	private RelationType(Direction direction)
+	private DirectionType(Direction direction)
 	{
 		this.direction = direction;
 	}

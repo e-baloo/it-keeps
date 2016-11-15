@@ -12,9 +12,13 @@ import org.ebaloo.itkeeps.api.model.JBaseLight;
 import org.ebaloo.itkeeps.api.model.JGroup;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.ModelFactory;
+import org.ebaloo.itkeeps.core.domain.ModelFactory.ModelClass;
 import org.ebaloo.itkeeps.core.domain.annotation.ModelClassAnnotation;
-import org.ebaloo.itkeeps.core.domain.edge.RelationType;
+import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
 import org.ebaloo.itkeeps.core.domain.edge.TraverseInGroup;
+
+import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
+
 
 
 
@@ -46,15 +50,15 @@ public class Group extends BaseStandard {
 	 */
 	
 	public Group getParentGroup() {
-		return this.getEdgeByClassesNames(ModelFactory.get(Group.class), RelationType.CHILD, false, TraverseInGroup.class);
+		return this.getEdgeByClassesNames(ModelFactory.get(Group.class), DirectionType.CHILD, false, TraverseInGroup.class);
 	}
 	
 	public void setParentGroup(final Group group) {
-		setEdges(this.getGraph(), ModelFactory.get(Group.class), this, group, RelationType.CHILD, TraverseInGroup.class, false);
+		setEdges(this.getGraph(), ModelFactory.get(Group.class), this, group, DirectionType.CHILD, TraverseInGroup.class, false);
 	}
 
-	private void setParentGroupJBaseLight(JBaseLight parentGroup) {
-		this.setParentGroup(getBaseAbstract(this.getGraph(), ModelFactory.get(Group.class), parentGroup));
+	private void setParentGroupJBL(JBaseLight group) {
+		this.setParentGroup(getBaseAbstract(this.getGraph(), ModelFactory.get(Group.class), group));
 	}
 
 	
@@ -65,44 +69,23 @@ public class Group extends BaseStandard {
 	 */
 	
 	public List<Group> getChildGroup() {
-		return this.getEdgesByClassesNames(ModelFactory.get(Group.class), RelationType.PARENT, false, TraverseInGroup.class);
+		return this.getEdgesByClassesNames(ModelFactory.get(Group.class), DirectionType.PARENT, false, TraverseInGroup.class);
 	}
 	
-	/*
-	public void addChildGroup(final Group group) {
-		this.addEdge(group, RelationType.PARENT, TraverseInGroup.class);
-	}
-	
-	public void removeChildGroup(final Group group) {
-		this.removeEdge(group, RelationType.PARENT, TraverseInGroup.class);
-	}
-	*/
-
-	
-	public void putChildGroup(List<Group> list) {
-		setEdges(this.getGraph(), ModelFactory.get(Group.class), this, list, RelationType.PARENT, TraverseInGroup.class, false);
+	public void setChildGroup(List<Group> list) {
+		setEdges(this.getGraph(), ModelFactory.get(Group.class), this, list, DirectionType.PARENT, TraverseInGroup.class, false);
 	}
 
-	private void putChildGroupJBaseLight(List<JBaseLight> childGroup) {
+	private void setChildGroupJBL(List<JBaseLight> list) {
 		
-		long tStart = System.currentTimeMillis();
+		if(list == null) 
+			list = new ArrayList<JBaseLight>();
 
+		// Optimization
+		ModelClass<Group> mc = ModelFactory.get(Group.class);
+		OrientBaseGraph graph = this.getGraph();
 		
-		if(childGroup == null) {
-			childGroup = new ArrayList<JBaseLight>();
-		}
-		
-		List<Group> groups = new ArrayList<Group>();
-		
-		for(JBaseLight child : childGroup) {
-			groups.add(getBaseAbstract(this.getGraph(), ModelFactory.get(Group.class), child));
-		}
-		
-		putChildGroup(groups);
-		
-		long elapsedSeconds = (System.currentTimeMillis() - tStart);
-		System.out.println(String.format("Query executed in %d ms", elapsedSeconds));
-
+		setChildGroup(list.stream().map(e -> getBaseAbstract(graph, mc, e)).collect(Collectors.toList())); 
 	}
 
 	
@@ -295,8 +278,8 @@ public class Group extends BaseStandard {
 		this.commit();
 		this.reload();
 		
-		this.setParentGroupJBaseLight(j.getParentGroup());
-		this.putChildGroupJBaseLight(j.getChildGroups());
+		this.setParentGroupJBL(j.getParentGroup());
+		this.setChildGroupJBL(j.getChildGroups());
 
 		if(f)
 			this.setEnable(Boolean.TRUE);
@@ -350,10 +333,10 @@ public class Group extends BaseStandard {
 		
 		
 		if(jgroup.isPresentParentGroup())
-			this.setParentGroupJBaseLight(jgroup.getParentGroup());
+			this.setParentGroupJBL(jgroup.getParentGroup());
 
 		if(jgroup.isChildGroups())
-			this.putChildGroupJBaseLight(jgroup.getChildGroups());
+			this.setChildGroupJBL(jgroup.getChildGroups());
 		
 	}
 }

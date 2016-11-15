@@ -159,7 +159,7 @@ public abstract class Base extends BaseAbstract {
 	public static <T extends BaseAbstract> T getByName(OrientBaseGraph graph, final ModelClass<T> target,
 			final String name, boolean isInstanceof) {
 
-		String cmdSql = "SELECT FROM " + target.getClassName() + " WHERE " + BaseUtils.WhereClause.enable() + " AND " + BaseUtils.WhereClause.classIsntanceOf(target, isInstanceof) + " AND " + JBase.NAME
+		String cmdSql = "SELECT FROM " + target.getClassName() + " WHERE " + BaseUtils.WhereClause.WHERE_CLAUSE__ENABLE_IS_TRUE + " AND " + BaseUtils.WhereClause.classIsntanceOf(target, isInstanceof) + " AND " + JBase.NAME
 				+ ".toLowerCase() = ?";
 
 		List<OrientVertex> list = CommonOrientVertex.command(graph, cmdSql, name.toLowerCase());
@@ -222,7 +222,7 @@ public abstract class Base extends BaseAbstract {
 		
 		request.append("SELECT FROM " + target.getClassName() + " ");
 		request.append("WHERE ");
-		BaseUtils.WhereClause.enable(request);
+		request.append(BaseUtils.WhereClause.WHERE_CLAUSE__ENABLE_IS_TRUE);
 		request.append(" AND ");
 		BaseUtils.WhereClause.classIsntanceOf(target, isInstanceof, request);
 
@@ -314,7 +314,7 @@ public abstract class Base extends BaseAbstract {
 
 		
 		String cmdSql = "SELECT FROM " + target.getClassName() + " WHERE "
-				+ BaseUtils.WhereClause.enable() + " AND " + JBase.GUID  + " = ?";
+				+ BaseUtils.WhereClause.WHERE_CLAUSE__ENABLE_IS_TRUE + " AND " + JBase.GUID  + " = ?";
 
 		List<OrientVertex> list = CommonOrientVertex.command(graph, cmdSql, guid.toString());
 

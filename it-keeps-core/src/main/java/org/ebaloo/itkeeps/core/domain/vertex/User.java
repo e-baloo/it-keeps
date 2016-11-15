@@ -16,7 +16,7 @@ import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.BaseUtils;
 import org.ebaloo.itkeeps.core.domain.ModelFactory;
 import org.ebaloo.itkeeps.core.domain.annotation.ModelClassAnnotation;
-import org.ebaloo.itkeeps.core.domain.edge.RelationType;
+import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
 import org.ebaloo.itkeeps.core.domain.edge.TraverseInGroup;
 import org.ebaloo.itkeeps.core.restapp.authentication.ApplicationRolesAllowed.SecurityRole;
 import org.ebaloo.itkeeps.core.tools.SecurityFactory;
@@ -73,25 +73,14 @@ public class User extends BaseStandard {
 	 */
 	
 	public List<Group> getInGroup() {
-		return this.getEdgesByClassesNames(ModelFactory.get(Group.class), RelationType.CHILD, false, TraverseInGroup.class);
+		return this.getEdgesByClassesNames(ModelFactory.get(Group.class), DirectionType.CHILD, false, TraverseInGroup.class);
 	}
 	
-	/*
-	public void addInGroup(final Group group) {
-		this.addEdge(group, RelationType.CHILD, TraverseInGroup.class);
-	}
-	
-	public void removeInGroup(final Group group) {
-		this.removeEdge(group, RelationType.CHILD, TraverseInGroup.class);
-	}
-	*/
-
-	
-	public void putInGroup(List<Group> list) {
-		setEdges(this.getGraph(), ModelFactory.get(Group.class), this, list, RelationType.CHILD, TraverseInGroup.class, false);
+	public void setInGroup(List<Group> list) {
+		setEdges(this.getGraph(), ModelFactory.get(Group.class), this, list, DirectionType.CHILD, TraverseInGroup.class, false);
 	}
 
-	private void putInGroupJBaseLight(List<JBaseLight> inGroup) {
+	private void setInGroupJBL(List<JBaseLight> inGroup) {
 		
 		if(inGroup == null) {
 			inGroup = new ArrayList<JBaseLight>();
@@ -103,22 +92,12 @@ public class User extends BaseStandard {
 			groups.add( getBaseAbstract(this.getGraph(), ModelFactory.get(Group.class), child));
 		}
 		
-		putInGroup(groups);
+		setInGroup(groups);
 	}
 
 	
-
-	
 	/*
-	 * 
-	 * 
-	 */
-	
-	
-	
-	
-	/*
-	 *   ID
+	 *  ID
 	 */
 	
 
@@ -156,7 +135,7 @@ public class User extends BaseStandard {
 			throw new RuntimeException("TODO"); //TODO
 		
 		
-		String cmdSql = "SELECT FROM " + User.class.getSimpleName() + " WHERE " + BaseUtils.WhereClause.enable() + " AND " + JUser.USER_ID
+		String cmdSql = "SELECT FROM " + User.class.getSimpleName() + " WHERE " + BaseUtils.WhereClause.WHERE_CLAUSE__ENABLE_IS_TRUE + " AND " + JUser.USER_ID
 				+ ".toLowerCase() = ?";
 
 		List<OrientVertex> list = CommonOrientVertex.command(graph, cmdSql, id.toLowerCase());
@@ -320,7 +299,7 @@ public class User extends BaseStandard {
 			
 			
 			if(juser.isChildGroups()) {
-				this.putInGroupJBaseLight(juser.getInGroups());
+				this.setInGroupJBL(juser.getInGroups());
 			}
 
 			
