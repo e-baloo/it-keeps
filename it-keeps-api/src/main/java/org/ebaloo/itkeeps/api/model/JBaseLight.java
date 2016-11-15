@@ -2,6 +2,7 @@ package org.ebaloo.itkeeps.api.model;
 
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ebaloo.itkeeps.Guid;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -28,16 +29,26 @@ public class JBaseLight {
 	@JsonIgnore
 	private Optional<Guid> guid = Optional.empty();
 	
-	@JsonProperty(GUID)
+	@JsonIgnore
 	public final Guid getGuid() {
 		return this.guid.orElse(null);
 	}
 
 	@JsonProperty(GUID)
+	private final String _getGuid() {
+		return guid.isPresent() ?  guid.get().toString() : null;
+	}
+
+	@JsonIgnore
 	public final void setGuid(Guid guid) {
 		this.guid = Optional.of(guid);
 	}
-	
+
+	@JsonProperty(GUID)
+	private final void _setGuid(String guid) {
+		this.guid = StringUtils.isEmpty(guid) ? Optional.of(null) : Optional.of(new Guid(guid));
+	}
+
 	@JsonIgnore
 	public final boolean isPresentGuid() {
 		return this.guid.isPresent();

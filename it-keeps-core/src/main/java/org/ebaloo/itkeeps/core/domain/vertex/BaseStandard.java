@@ -234,8 +234,8 @@ public abstract class BaseStandard extends Base {
 		cmdSQL += "    UNWIND " + JBaseStandard.OTHER_NAME + " ) ";
 		cmdSQL += "  WHERE " + JBaseStandard.OTHER_NAME + ".toLowerCase() = '" + value + "') ";
 		
-		BaseQuery bq = new BaseQuery();
-		List<BaseAbstract> list = bq.commandBaseAbstract(cmdSQL);
+		//BaseQuery bq = new BaseQuery();
+		List<BaseAbstract> list = BaseAbstract.commandBaseAbstract(cmdSQL);
         
 		if(list.isEmpty()) {
 			return null;

@@ -225,8 +225,8 @@ public abstract class Base extends BaseAbstract {
 		request.append(" AND ");
 		BaseUtils.WhereClause.classIsntanceOf(target, isInstanceof, request);
 
-		BaseQuery bq = new BaseQuery();
-        return bq.commandBaseAbstract(request.toString());
+		//BaseQuery bq = new BaseQuery();
+        return BaseAbstract.commandBaseAbstract(request.toString());
         
 	}
 	

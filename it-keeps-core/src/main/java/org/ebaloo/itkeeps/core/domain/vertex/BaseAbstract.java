@@ -6,34 +6,27 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import com.orientechnologies.orient.core.command.OCommandPredicate;
-import com.orientechnologies.orient.core.db.record.OIdentifiable;
+
 import com.orientechnologies.orient.core.metadata.schema.OType;
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
-import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
 import org.apache.commons.lang.StringUtils;
 import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.model.JBase;
 import org.ebaloo.itkeeps.api.model.JBaseLight;
 import org.ebaloo.itkeeps.core.database.GraphFactory;
-import org.ebaloo.itkeeps.core.database.TraverseField;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.domain.BaseUtils;
 import org.ebaloo.itkeeps.core.domain.ModelFactory;
-import org.ebaloo.itkeeps.core.domain.edge.Relation;
+import org.ebaloo.itkeeps.core.domain.ModelFactory.ModelClass;
 import org.ebaloo.itkeeps.core.domain.edge.RelationInterface;
 import org.ebaloo.itkeeps.core.domain.edge.RelationTools;
 import org.ebaloo.itkeeps.core.domain.edge.RelationType;
 import org.ebaloo.itkeeps.core.domain.edge.Traverse;
-import org.ebaloo.itkeeps.core.tools.MetricsFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.codahale.metrics.Timer;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 import com.tinkerpop.blueprints.impls.orient.OrientVertexType;
 
@@ -47,98 +40,31 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 
 	
 	
-	public static class BaseQuery {
-
-		private OrientBaseGraph graph;
-
-		private Map<String, BaseAbstract> objects = new HashMap<>();
-
-		public BaseQuery() {
-			this(null);
-		}
-
-		public BaseQuery(OrientBaseGraph graph) {
-			this.graph = graph;
-		}
-
-		public final List<BaseAbstract> commandBaseAbstract(final String cmdSQL, final Object... args) {
-
-			return parse(BaseAbstract.command(cmdSQL, args));
-		}
-
-		private OrientBaseGraph getGraph() {
-			if (graph == null) {
-				graph = GraphFactory.getOrientBaseGraph();
-			}
-			return graph;
-		}
-
-		public final List<BaseAbstract> parse(Iterable<?> ref) {
-			
-			List<BaseAbstract> list = new ArrayList<>();
-
-			for(Object obj : ref) {
-				OrientVertex ov;
-				if(obj instanceof OrientVertex) {
-					ov = (OrientVertex) obj;
-				} else if(obj instanceof OIdentifiable) {
-					ov = new OrientVertex(getGraph(), ((OIdentifiable) obj).getRecord());
-				} else {
-					logger.error("BaseQuery.parse: Unable to cast '" + obj.getClass().getName() + "' to OrientVertex");
-					continue;
-				}
-				String guid = ov.getProperty(JBase.GUID);
-
-				if (!objects.containsKey(guid)) {
-					try {
-						BaseAbstract baseAbstract;
-						baseAbstract = ModelFactory.get(ov.getType().getName()).newInstance();
-						baseAbstract.setOrientVertex(ov);
-						baseAbstract.setBaseQuery(this);
-						objects.put(ov.getProperty(JBase.GUID), baseAbstract);
-
-//                            System.out.println("StoreCache: " + ov.getProperty(Base.GUID));
-					} catch (Exception e) {
-						logger.error(ov.getType().getName());
-						throw new RuntimeException(e);
-					}
-//					} else {
-//						System.out.println("UseCache: " + ov.getProperty(Base.GUID));
-				}
-
-				list.add(objects.get(guid));
-			}
-
-			return list;
-		}
-
-	}
-
-//	protected final static ObjectMapper JMapper = new ObjectMapper();
-
-
-	
-	/*
-	static {
-		JMapper.enable(SerializationFeature.INDENT_OUTPUT);
-		JMapper.setSerializationInclusion(Include.NON_NULL);
-	}
-	*/
-
-	
 	private static Logger logger = LoggerFactory.getLogger(BaseAbstract.class);
 	
-	public static final Timer TIMER_DATABASE_REQUEST_CODE = MetricsFactory.getMetricRegistry().timer("database.request.code");	
-	
 	public final static List<BaseAbstract> commandBaseAbstract(final String cmdSQL, Object... args) {
-        return (new BaseQuery()).commandBaseAbstract(cmdSQL, args);
+        
+		try {
+		
+		List<OrientVertex> listOV = GraphFactory.command(cmdSQL, args);
+		List<BaseAbstract> listBA = new ArrayList<>();
+		
+		
+		for(OrientVertex ov : listOV) {
+			
+			ModelClass<?> mc = ModelFactory.get(ov.getType().getName());
+			BaseAbstract ba = mc.newInstance();
+			ba.setOrientVertex(ov);
+			listBA.add(ba);
+		}
+		
+		return listBA;
+		} catch (Exception e) {
+		throw new RuntimeException(cmdSQL, e);
+	}
+		
 	}
 
-	public static BaseQuery createBaseQuery() {
-		return new BaseQuery();
-	}
-	
-    // Imported from IBase //
 	
     public static BaseAbstract getBaseAbstract(final JBaseLight baselight)  
 	{
@@ -178,22 +104,8 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 		return list.get(0);
 	}
     
-    private BaseAbstract _objParent = null;
-
-    private boolean _objParentInit = false;
-    
-	private BaseQuery baseQuery;
-    
-
-    // -----------------------------------------------------------------
-
 	protected Guid guid = null; 
 	
-	public boolean loadRelationshipOnce = false;
-	
-	private final Map<RelationType, List<BaseAbstract>> objectCache = new HashMap<>();
-
-
 	
 	public BaseAbstract() {
 		;
@@ -331,160 +243,22 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 	}
 		
 
-	
-	/*
-	 * 
-	 * TAG
-	 * 
-	 */
-	
 
-	/* TODO
-	public final List<Tag> getTags() {
-		this.checkOrientVertex();
-		
-		List<Tag> list = new ArrayList<Tag>();
-
-		for (OrientVertex myOv : VertexUtils.getVertexByClassesNames(this.getOrientVertex(), Tag.class.getSimpleName(), Direction.IN)) {
-			try {
-				
-				Tag t = new Tag(myOv);
-				list.add(t);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		return list;
-	}
-	
-	
-	
-	public final void addTag(Tag tag) {
-		tag.add(this);
-	}
-
-	public final void removeTag(Tag tag) {
-		tag.remove(this);
-	}
-	
-	*/
 	
 	@Override
     public final boolean equals(Object obj) {
           try {
-                // Verrifie par Guid si l'objet est du type Base
                 return (obj instanceof BaseAbstract) && this.getGuid().equals(((BaseAbstract)obj).getGuid());
           } catch (Throwable e) {
                 return false;
           }
     }
 
-	public Map<String, List<BaseStandard>>  getAllLink(RelationType relationShip) {
-		return this.getAllLink(relationShip, Traverse.class);
-	}
 
-	
-	public Map<String, List<BaseStandard>>  getAllLink(RelationType relationship, Class <? extends Relation> relation)  {
-		
-		if(relationship == null) {
-			// TODO
-			throw new RuntimeException("TODO");
-		}
-					
-		HashMap<String, List<BaseStandard>> map = new HashMap<>();
-		
-		StringBuilder request = new StringBuilder();
-		
-		request.append("SELECT FROM ");
-		request.append("(TRAVERSE " + relationship.getDirection().toString() + "('" + relation.getSimpleName() + "') FROM " + this.getORID() + " WHILE $depth <= 1)");
-		request.append(" WHERE ");
-		BaseUtils.WhereClause.enable(request);
-		request.append(" AND ");
-		BaseUtils.WhereClause.classIsntanceOf(BaseStandard.class, true, request);
-		request.append(" AND ");
-		request.append("(@rid <> " + this.getORID() + ")");
-				
-		for(BaseAbstract ba : this.getBaseQuery().commandBaseAbstract(request.toString())) {
-			
-			if(!map.containsKey(ba.getType())) {
-				map.put(ba.getType(), new ArrayList<>());
-			}
-			
-			map.get(ba.getType()).add((BaseStandard) ba);
-			
-		}
-
-		return map;
-	}
-	
-	
-
-	protected BaseQuery getBaseQuery() {
-		
-		if(baseQuery == null) {
-			this.baseQuery = new BaseQuery();
-		}
-		
-		return this.baseQuery;
-	}
-	
-	/*
-	protected final <T extends BaseAbstract> List<T> getChainEdge(final UserContextInterface context, final Class<T> targetClass, final ERelationship relationship, final boolean isInstanceof) {
-		return getChainEdge(context, targetClass, relationship, isInstanceof, false);
-	}
-	*/
-	
-
-	protected final <T extends BaseAbstract> List<T> getChainEdge(final Class<T> targetClass, final RelationType relationship, final boolean isInstanceof, final boolean revers) {
-		
-		if((targetClass == null) || (relationship == null)) {
-			// TODO
-			throw new RuntimeException(new Exception("TODO"));
-		}
-
-		this.checkOrientVertex();
-
-		StringBuilder request = new StringBuilder();
-
-		request.append("SELECT FROM ");
-		request.append("(TRAVERSE " + relationship.getDirection().toString() + "('" + Traverse.class.getSimpleName() + "') FROM " + this.getORID() + ")");
-		request.append(" WHERE ");
-		BaseUtils.WhereClause.enable(request);
-		request.append(" AND ");
-		request.append("(@class " + (isInstanceof ? "INSTANCEOF" : "=") + " '" + targetClass.getSimpleName() + "')");
-
-		List<T> list = this.baseQuery.commandBaseAbstract(request.toString()).stream().map(targetClass::cast).collect(Collectors.toList());
-
-		if(revers) {
-			java.util.Collections.reverse(list);
-		}
-
-		return list;
-		
-	}
-
-	
-	
-
-	/**
-	 * 
-	 * @param targetClass
-	 * @param relationship
-	 * @return
-	 * @throws Exception
-	 */
 
 	protected final <T extends BaseAbstract> T getEdgeByClassesNames(final Class<T> targetClass, final RelationType relationship, final boolean isInstanceof) {
 		return getEdgeByClassesNames(targetClass, relationship, isInstanceof, Traverse.class) ;
 	}
-
-	/* MDO 2016-01-15
-	protected final <T> T getProperty(String property) {
-		return this.getOrientVertex().getProperty(property);
- 	}
-	*/
-
 
 	
 	protected final <T extends BaseAbstract> T getEdgeByClassesNames(final Class<T> targetClass, final RelationType relationship, final boolean isInstanceof, Class<? extends RelationInterface> relation) {
@@ -514,30 +288,26 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 	@SuppressWarnings("unchecked")
 	protected final <T extends BaseAbstract> List<T> getEdgesByClassesNames(final Class<T> targetClass, final RelationType relationship, final boolean isInstanceof, Class<? extends RelationInterface> relation) {
 
-		final Timer.Context timerContext = TIMER_DATABASE_REQUEST_CODE.time();
-		
-		try {
 			if((targetClass == null) || (relationship == null)) {
-				throw new RuntimeException(new Exception("TODO"));
+				throw new RuntimeException("TODO"); //TODO
 			}
 	
-			if(loadRelationshipOnce) { //TODO /!\ Ne prend pas en compte relation (Mettre un cache plus bas (this.getVertices))
-				if(!objectCache.containsKey(relationship)) {
-					loadAllRelationship(relationship);
-				}
-				return (List<T>) objectCache.get(relationship).stream().filter(e -> (isInstanceof ? targetClass.isInstance(e) : targetClass.equals(e.getClass()))).collect(Collectors.toList());
-			}
-	        if(logger.isTraceEnabled()) {
-				logger.trace(String.format("[getEdgesByClassesNames] Get edges of %s '%s' (target: %s, direction: %s, instanceOf: %b, relation: %s)",
-						this.getGuid(), this.getName(), targetClass, relationship, isInstanceof, relation));
-			}
-			return (List<T>) this.getVertices(relationship, relation)
-						.filter(BaseUtils.WhereClause.enableFilter())
-						.filter(BaseUtils.WhereClause.classInstanceOf(targetClass, isInstanceof))
-						.collect(Collectors.toList());
-		} finally {
-			timerContext.stop();
-		}
+			
+			StringBuilder request = new StringBuilder();
+			
+			request.append("SELECT FROM ");
+			request.append("(TRAVERSE " + relationship.getDirection().toString() + "('" + (relation != null ? relation.getSimpleName() : "") + "') FROM " + this.getORID() + " WHILE $depth <= 1)");
+			request.append(" WHERE ");
+			BaseUtils.WhereClause.enable(request);
+			request.append(" AND ");
+			BaseUtils.WhereClause.classIsntanceOf(BaseStandard.class, true, request);
+			request.append(" AND ");
+			request.append("(@rid <> " + this.getORID() + ")");
+			
+			
+			
+			return  (List<T>) (List<?>) BaseAbstract.commandBaseAbstract(request.toString());
+			
     }
 
 	protected final List<String> getEmbeddedListString(final String property) {
@@ -587,26 +357,6 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 	}
 	
 
-	 
-	 
-		// TODO: GetParent() existe déjà //
-		// Utilisait avant la fonction : getChainEdge() et donc faisait un Traverse (normalement pas d'impact)
-		public BaseAbstract getObjectParent() {
-		    if(!_objParentInit) {
-		        _objParentInit = true;
-				if(logger.isTraceEnabled()) {
-//	            System.out.println("Load parent of " + this.getGuid() + " " + this.getName() + " " + this.getClass().getSimpleName() + " " + this.baseQuery.hashCode());
-					logger.trace(this.baseQuery.hashCode() + " - Load parent of " + this.getGuid());
-				}
-		        //TODO: Si passage sur des lightweight edges, a voir l'implementation d'un cache InternalId sur BaseQuery
-		        _objParent = this.getVertices(RelationType.PARENT, Traverse.class)
-						.filter(BaseUtils.WhereClause.enableFilter())
-						.filter(BaseUtils.WhereClause.classInstanceOf(this.getClass(), false))
-						.findFirst().orElse(null);
-		    }
-		    return _objParent;
-		}
-		
 		
 	public final Map<String, Object> getProperties() {
 		return this.getOrientVertex().getProperties();
@@ -629,19 +379,6 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 
 	
 	
-	
-		protected Stream<BaseAbstract> getVertices(final RelationType direction, final Class<? extends RelationInterface> relation) {
-			if(logger.isTraceEnabled()) {
-				logger.trace(String.format("getVertices - Object: %s '%s' (%s) ; Direction: %s ; Relation: %s",
-						this.getGuid(), this.getName(), this.getORID(), direction, relation));
-			}
-			return this.getBaseQuery().parse(this.getOrientVertex().getVertices(direction.getDirection(), relation.getSimpleName())).stream();
-		}
-
-		protected List<BaseAbstract> getVerticesList(final RelationType direction, final Class<? extends RelationInterface> relation) {
-			return this.getVertices(direction, relation).collect(Collectors.toList());
-		}
-
 		public boolean hasGuid() {
 			
 			if(guid != null) {
@@ -658,32 +395,17 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 			
 		}
 
-		public boolean hasParent() {
-		    return getObjectParent() != null;
-		}
 
 		public boolean isInstanceOf(Class<?> clazz) {
 			return clazz.isInstance(this);
 		}
 
-		public void loadAllRelationship(final RelationType relationship) {
-		    //TODO /!\ Ne prend pas en compte relation (label)
-			objectCache.put(relationship, this.getBaseQuery().parse(this.getOrientVertex().getVertices(relationship.getDirection())));
-		}
-
-		public void loadRelationshipOnce() {
-			loadRelationshipOnce = true;
-		}
-		
-		
 
 
 		/*
 		 * 
 		 */
 		
-		// TODO celan 
-		// DELETE EDGE FROM (SELECT FROM BASE WHERE guid = 'd56e7480-31bb-4d71-bb68-ab4fcc72e2d4') TO (SELECT FROM VersionDatabase)
 
 	public void newOrientVertex() {
 
@@ -753,44 +475,7 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 
 		}
 
-		/*
-		 * 
-		 * if(!this.getOrientVertex().getEdges(oldBaseAbstract.getOrientVertex()
-		 * , relationship.getDirection()).iterator().hasNext()) { logger.trace(
-		 * "Link not exist! [@" + this.toString() + "] " +
-		 * DirectionUtils.toLogger(relationship.getDirection()) + " [@" +
-		 * oldBaseAbstract.toString() + "]"); return; }
-		 * 
-		 * Iterable<Edge> iterable = null;
-		 * 
-		 * if(relation == null) { iterable =
-		 * this.getOrientVertex().getEdges(oldBaseAbstract.getOrientVertex(),
-		 * relationship.getDirection()); } else { iterable =
-		 * this.getOrientVertex().getEdges(oldBaseAbstract.getOrientVertex(),
-		 * relationship.getDirection(), relation.getSimpleName()); }
-		 * 
-		 * for(Edge e : iterable) { String comment = "Remove link ! [@" +
-		 * this.toString() + "] " +
-		 * DirectionUtils.toLogger(relationship.getDirection()) + " [@" +
-		 * oldBaseAbstract.toString() + "]";
-		 * 
-		 * /* this.setUpdateDate(); this.commit();
-		 * this.addUserUpdate(COMMENT_LINK, null, comment); this.commit();
-		 * 
-		 * 
-		 * if(!(oldBaseAbstract instanceof Referential || oldBaseAbstract
-		 * instanceof Organization)) { oldBaseAbstract.setUpdateDate();
-		 * oldBaseAbstract.commit(); oldBaseAbstract.addUserUpdate(COMMENT_LINK,
-		 * null, comment); oldBaseAbstract.commit(); }
-		 */
-
-		// e.remove();
-		// this.reload();
-
-		// }
-
-		// this.commit();
-		// oldBaseAbstract.commit();
+	
 	}
 
     protected final void removeEmbeddedListString(final String property, final String value) {
@@ -818,32 +503,7 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 		}
 	}
 
-    /*
-    protected final <T> void setBaseProperty(String property, T newValue) {
-
-		T oldValue = this.getProperty(property);
-
-		if(oldValue == null && newValue == null) {
-			return;
-		}
-		
-		if(oldValue != null && newValue != null) {
-			 if(newValue.equals(oldValue)) {
-				 return;
-			 }
-		}
-
-		this.setProperty(property, newValue);
- 	}
- 	*/
-
-    protected void setBaseQuery(BaseQuery obj) {
-		
-		if(obj != null) {
-			this.baseQuery = obj;
-		}
-	}
-
+ 
     protected final <T extends BaseAbstract> void setEdge(
 			final Class<? extends T> targetClass, final RelationType relationship, final boolean isInstanceof, final  T newParent, final Class<? extends RelationInterface> relation) {
 		
@@ -872,8 +532,6 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 		
     	addEdge(newParent, relationship, relation);
     	
-    	//this.commit();
-    	
     	if(oldParnet != null) {
     		oldParnet.commit();
     	}
@@ -885,16 +543,6 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
     
 
     
-	/*
-	 * 
-	 */
-	
-	// Usage Specifique //
-    public void setObjectParent(BaseAbstract obj) {
-        _objParentInit = true;
-        _objParent = obj;
-    }
-	
 
 	public String toString() {
 		
@@ -914,30 +562,7 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 		return sb.toString();
 	}
 
-	/*
-	 * GUID
-	 */
-	
-	protected Stream<BaseAbstract> traverse(final RelationType direction, final Class<? extends RelationInterface> relation) {
-		return this.traverse(direction, relation, null);
-	}
-	
-	protected Stream<BaseAbstract> traverse(final RelationType direction, final Class<? extends RelationInterface> relation, OCommandPredicate predicate) {
-		if(logger.isTraceEnabled()) {
-			logger.trace(String.format("Traverse - Object: %s '%s' (%s) ; Direction: %s ; Relation: %s ; Predicate: %s",
-					this.getGuid(), this.getName(), this.getORID(), direction, relation, predicate));
-		}
-		return this.getBaseQuery().parse(this.getOrientVertex().traverse().field(new TraverseField(getGraph(), direction.getDirection(), relation.getSimpleName()))
-				.predicate(predicate))
-				.stream();
-	}
 
-	
-	protected List<BaseAbstract> traverseList(final RelationType direction, final Class<? extends RelationInterface> relation) {
-		return this.traverse(direction, relation).collect(Collectors.toList());
-	}
-	
-	
 	/*
 	 * NAME
 	 */

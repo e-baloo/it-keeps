@@ -81,7 +81,7 @@ public class JBase {
 
 	@JsonProperty(GUID)
 	private final String _getGuid() {
-		return guid.isPresent() ?  guid.toString() : null;
+		return guid.isPresent() ?  guid.get().toString() : null;
 	}
 
 	@JsonIgnore
