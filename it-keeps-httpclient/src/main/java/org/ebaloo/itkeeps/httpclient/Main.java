@@ -20,7 +20,6 @@ import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.model.JCredential;
 import org.ebaloo.itkeeps.api.model.JGroup;
 import org.ebaloo.itkeeps.api.model.JUser;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;

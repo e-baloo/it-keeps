@@ -12,7 +12,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.ebaloo.itkeeps.core.database.GraphFactory;
-import org.ebaloo.itkeeps.core.domain.edge.RelationInterface;
+//import org.ebaloo.itkeeps.core.domain.edge.RelationInterface;
 import org.ebaloo.itkeeps.core.domain.edge.RelationTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -170,6 +170,7 @@ public abstract class CommonOrientVertex {
 		return ret;
 	}
 
+	/*
 	protected final OrientVertex getEdgeByClassesNames(final String targetClass, final Direction direction,
 			final boolean isInstanceof) {
 
@@ -186,6 +187,7 @@ public abstract class CommonOrientVertex {
 
 		return list.get(0);
 	}
+	*/
 
 	/*
 	protected final Iterable<Edge> getEdges(CommonOrientVertex cov, Direction direction) {
@@ -193,6 +195,7 @@ public abstract class CommonOrientVertex {
 	}
 	*/
 
+	/*
 	protected final List<OrientVertex> getEdgesByClassesNames(final String targetClass, final Direction direction,
 			final boolean isInstanceof) {
 
@@ -211,7 +214,7 @@ public abstract class CommonOrientVertex {
 
 		return command(request.toString());
 
-	}
+	}*/
 
 	protected final OrientBaseGraph getGraph() {
 
@@ -343,6 +346,7 @@ public abstract class CommonOrientVertex {
 		}
 	}
 
+	/*
 	@SuppressWarnings("unused")
 	protected final void setEdge(CommonOrientVertex newCommonOrientVertex, Direction direction, String relation) {
 
@@ -381,6 +385,7 @@ public abstract class CommonOrientVertex {
 			newCommonOrientVertex.commit();
 		}
 	}
+	*/
 
 	protected final void setOrientVertex(CommonOrientVertex commonOrientVertrex) {
 
