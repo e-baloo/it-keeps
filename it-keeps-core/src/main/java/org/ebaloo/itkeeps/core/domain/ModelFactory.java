@@ -114,6 +114,7 @@ public class ModelFactory {
 		return mapIBaseClass.get(key);
 	}
 
+	/*
 	public static BaseAbstract getBaseAbstract(final String guid) {
 		return getBaseAbstract(new Guid(guid));
 	}
@@ -122,8 +123,10 @@ public class ModelFactory {
 		return BaseAbstract.getBaseAbstract(guid);
 
 	}
+*/
 
 	// Sorti non trié par rapport au guid //
+	/*
 	public static List<BaseAbstract> getBaseAbstract(final List<Guid> guid) {
 		String cmdSQL = "SELECT FROM " + Base.class.getSimpleName() + " WHERE " + BaseUtils.WhereClause.enable()
 				+ " AND (guid IN [" + guid.stream().map(e -> "'" + e.toString() + "'").collect(Collectors.joining(","))
@@ -132,5 +135,6 @@ public class ModelFactory {
 		return BaseAbstract.commandBaseAbstract(cmdSQL).stream().filter(Objects::nonNull)
 				.sorted((a, b) -> guid.indexOf(a.getGuid()) - guid.indexOf(b.getGuid())).collect(Collectors.toList());
 	}
+	*/
 
 }

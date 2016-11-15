@@ -70,7 +70,7 @@ public class UserEndpoint {
 		User user;
 		
 		if(Guid.isGuid(id)) {
-			user = (User) User.getBaseAbstract(new Guid(id));
+			user = User.getBaseAbstract(ModelFactory.get(User.class), new Guid(id));
 		} else {
 			user = User.getById(id);
 		}
@@ -93,12 +93,12 @@ public class UserEndpoint {
     	
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
     	
-    	User user = (User) User.getBaseAbstract(juser.getGuid());
+    	User user = User.getBaseAbstract(ModelFactory.get(User.class),  juser.getGuid());
 
     	user.apiUpdate(juser, requesteurGuid);
 
     	JUser newjuser = new JUser();
-    	((User) User.getBaseAbstract(juser.getGuid())).apiFill(newjuser, requesteurGuid);
+    	User.getBaseAbstract(ModelFactory.get(User.class), juser.getGuid()).apiFill(newjuser, requesteurGuid);
 
     	return Response.ok().entity(newjuser).build();
     }

@@ -73,7 +73,7 @@ public class GroupEndpoint {
 		Group group = null;
 		
 		if(Guid.isGuid(id))
-			group = (Group) Group.getBaseAbstract(new Guid(id));
+			group = Group.getBaseAbstract(ModelFactory.get(Group.class), new Guid(id));
 		
 		if(group == null)
 			throw new RuntimeException("TODO"); // TODO
@@ -97,7 +97,7 @@ public class GroupEndpoint {
     	
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
     	
-    	Group group = (Group) Group.getBaseAbstract(j.getGuid());
+    	Group group = Group.getBaseAbstract(ModelFactory.get(Group.class), j.getGuid());
 
     	group.apiUpdate(j, requesteurGuid);
 

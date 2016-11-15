@@ -86,8 +86,8 @@ public class Main {
 		jg_n1 = MAPPER.treeToValue(callJsonCreat("/api/group", jg_n1), JGroup.class);
 		jg_n2 = MAPPER.treeToValue(callJsonCreat("/api/group", jg_n2), JGroup.class);
 		
-		jg_r.getChildGroup().add(jg_n1.getJBaseLight());
-		jg_r.getChildGroup().add(jg_n2.getJBaseLight());
+		jg_r.getChildGroups().add(jg_n1.getJBaseLight());
+		jg_r.getChildGroups().add(jg_n2.getJBaseLight());
 
 		long tStart = System.currentTimeMillis();
 		
@@ -97,9 +97,9 @@ public class Main {
 		LOGGER.info(String.format("Query executed in %d ms", elapsedSeconds));
 		
 
-		testUser.getInGroup().add(jg_n1.getJBaseLight());
-		testUser.getInGroup().add(jg_n2.getJBaseLight());
-		testUser.getInGroup().add(jg_r.getJBaseLight());
+		testUser.getInGroups().add(jg_n1.getJBaseLight());
+		testUser.getInGroups().add(jg_n2.getJBaseLight());
+		testUser.getInGroups().add(jg_r.getJBaseLight());
 		JsonNode user = callJsonUpdate("/api/user", testUser);
 		LOGGER.info(MAPPER.writeValueAsString(user));
 		

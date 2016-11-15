@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class JGroup extends JBaseStandard{
 
 	public static final String PARENT_GROUP = "parentGroup";
-	public static final String CHILD_GROUP = "childGroup";
+	public static final String CHILD_GROUPS = "childGroups";
 
 	
 	public JGroup() {
@@ -45,27 +45,27 @@ public class JGroup extends JBaseStandard{
 	}
 	
 	
-	// CHILD_GROUP
+	// CHILD_GROUPS
 	
 	@JsonIgnore
-	private Optional<List<JBaseLight>> childGroup = Optional.empty();
+	private Optional<List<JBaseLight>> childGroups = Optional.empty();
 	
-	@JsonProperty(CHILD_GROUP)
-	public final List<JBaseLight> getChildGroup() {
-		return this.childGroup.orElse(new ArrayList<JBaseLight>());
+	@JsonProperty(CHILD_GROUPS)
+	public final List<JBaseLight> getChildGroups() {
+		return this.childGroups.orElse(new ArrayList<JBaseLight>());
 	}
 
-	@JsonProperty(CHILD_GROUP)
-	public final void setChildGroup(List<JBaseLight> value) {
+	@JsonProperty(CHILD_GROUPS)
+	public final void setChildGroups(List<JBaseLight> value) {
 		if(value == null)
-			childGroup = Optional.of(new ArrayList<JBaseLight>());
+			childGroups = Optional.of(new ArrayList<JBaseLight>());
 		else
-			childGroup = Optional.of(value);
+			childGroups = Optional.of(value);
 	}
 
 	@JsonIgnore
-	public final boolean isChildGroup() {
-		return this.childGroup.isPresent();
+	public final boolean isChildGroups() {
+		return this.childGroups.isPresent();
 	}
 	
 }

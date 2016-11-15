@@ -48,7 +48,7 @@ public class Group extends BaseStandard {
 	 */
 	
 	public Group getParentGroup() {
-		return this.getEdgeByClassesNames(Group.class, RelationType.CHILD, false, TraverseInGroup.class);
+		return this.getEdgeByClassesNames(ModelFactory.get(Group.class), RelationType.CHILD, false, TraverseInGroup.class);
 	}
 	
 	public void setParentGroup(final Group group) {
@@ -56,7 +56,7 @@ public class Group extends BaseStandard {
 	}
 
 	private void setParentGroupJBaseLight(JBaseLight parentGroup) {
-		this.setParentGroup((Group) getBaseAbstract(parentGroup));
+		this.setParentGroup(getBaseAbstract(ModelFactory.get(Group.class), parentGroup));
 	}
 
 	
@@ -67,7 +67,7 @@ public class Group extends BaseStandard {
 	 */
 	
 	public List<Group> getChildGroup() {
-		return this.getEdgesByClassesNames(Group.class, RelationType.PARENT, false, TraverseInGroup.class);
+		return this.getEdgesByClassesNames(ModelFactory.get(Group.class), RelationType.PARENT, false, TraverseInGroup.class);
 	}
 	
 	public void addChildGroup(final Group group) {
@@ -107,7 +107,7 @@ public class Group extends BaseStandard {
 		List<Group> groups = new ArrayList<Group>();
 		
 		for(JBaseLight child : childGroup) {
-			groups.add((Group) getBaseAbstract(child));
+			groups.add(getBaseAbstract(ModelFactory.get(Group.class), child));
 		}
 		
 		putChildGroup(groups);
@@ -301,7 +301,7 @@ public class Group extends BaseStandard {
 		super(j, false);
 		
 		this.setParentGroupJBaseLight(j.getParentGroup());
-		this.putChildGroupJBaseLight(j.getChildGroup());
+		this.putChildGroupJBaseLight(j.getChildGroups());
 
 		if(f)
 			this.setEnable(Boolean.TRUE);
@@ -320,7 +320,7 @@ public class Group extends BaseStandard {
 		JGroup jgroup = (JGroup) obj;
 		
 		jgroup.setParentGroup(getJBaseLight(this.getParentGroup()));
-		jgroup.setChildGroup(this.getChildGroup().stream().map(e -> getJBaseLight(e)).collect(Collectors.toList()));
+		jgroup.setChildGroups(this.getChildGroup().stream().map(e -> getJBaseLight(e)).collect(Collectors.toList()));
 		
 	}
 	
@@ -357,8 +357,8 @@ public class Group extends BaseStandard {
 		if(jgroup.isPresentParentGroup())
 			this.setParentGroupJBaseLight(jgroup.getParentGroup());
 
-		if(jgroup.isChildGroup())
-			this.putChildGroupJBaseLight(jgroup.getChildGroup());
+		if(jgroup.isChildGroups())
+			this.putChildGroupJBaseLight(jgroup.getChildGroups());
 		
 	}
 }

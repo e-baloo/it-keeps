@@ -8,6 +8,27 @@ import org.ebaloo.itkeeps.core.domain.vertex.BaseAbstract;
 
 public class BaseUtils {
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	public static class WhereClause {
 		
 		public static String WHERE_CLAUSE__TRUE = " (true) ";

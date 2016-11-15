@@ -14,7 +14,7 @@ public class JUser extends JBaseStandard{
 	public static final String USER_ID = "userId";
 	public static final String PASSWORD = "password";
 	public static final String ROLE = "role";
-	public static final String IN_GROUP = "inGroup";
+	public static final String IN_GROUPS = "inGroups";
 
 	
 	public JUser() {
@@ -83,26 +83,26 @@ public class JUser extends JBaseStandard{
 		return this.password.isPresent();
 	}
 
-	// CHILD_GROUP
+	// IN_GROUPS
 	
 	@JsonIgnore
-	private Optional<List<JBaseLight>> inGroup = Optional.empty();
+	private Optional<List<JBaseLight>> inGroups = Optional.empty();
 	
-	@JsonProperty(IN_GROUP)
-	public final List<JBaseLight> getInGroup() {
-		return this.inGroup.orElse(new ArrayList<JBaseLight>());
+	@JsonProperty(IN_GROUPS)
+	public final List<JBaseLight> getInGroups() {
+		return this.inGroups.orElse(new ArrayList<JBaseLight>());
 	}
 
-	@JsonProperty(IN_GROUP)
-	public final void setInGroup(List<JBaseLight> value) {
+	@JsonProperty(IN_GROUPS)
+	public final void setInGroups(List<JBaseLight> value) {
 		if(value == null)
-			inGroup = Optional.of(new ArrayList<JBaseLight>());
+			inGroups = Optional.of(new ArrayList<JBaseLight>());
 		else
-			inGroup = Optional.of(value);
+			inGroups = Optional.of(value);
 	}
 
 	@JsonIgnore
-	public final boolean isChildGroup() {
-		return this.inGroup.isPresent();
+	public final boolean isChildGroups() {
+		return this.inGroups.isPresent();
 	}
 }

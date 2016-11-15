@@ -72,7 +72,7 @@ public class User extends BaseStandard {
 	 */
 	
 	public List<Group> getInGroup() {
-		return this.getEdgesByClassesNames(Group.class, RelationType.CHILD, false, TraverseInGroup.class);
+		return this.getEdgesByClassesNames(ModelFactory.get(Group.class), RelationType.CHILD, false, TraverseInGroup.class);
 	}
 	
 	public void addInGroup(final Group group) {
@@ -112,7 +112,7 @@ public class User extends BaseStandard {
 		List<Group> groups = new ArrayList<Group>();
 		
 		for(JBaseLight child : inGroup) {
-			groups.add((Group) getBaseAbstract(child));
+			groups.add( getBaseAbstract(ModelFactory.get(Group.class), child));
 		}
 		
 		putInGroup(groups);
@@ -266,7 +266,7 @@ public class User extends BaseStandard {
 		
 		juser.setUserId(this.getUserId());
 		juser.setRole(this.getRole().toString());
-		juser.setInGroup(this.getInGroup().stream().map(e -> Base.getJBaseLight(e)).collect(Collectors.toList()));
+		juser.setInGroups(this.getInGroup().stream().map(e -> Base.getJBaseLight(e)).collect(Collectors.toList()));
 		
 	}
 	
@@ -323,13 +323,13 @@ public class User extends BaseStandard {
 			this.setIcon(juser.getIcon());
 
 		
-		// AMIN & ROOT
+		// ADMIN & ROOT
 		
 		if(requesterUser.getRole().isAdmin()) {
 			
 			
-			if(juser.isChildGroup()) {
-				this.putInGroupJBaseLight(juser.getInGroup());
+			if(juser.isChildGroups()) {
+				this.putInGroupJBaseLight(juser.getInGroups());
 			}
 
 			

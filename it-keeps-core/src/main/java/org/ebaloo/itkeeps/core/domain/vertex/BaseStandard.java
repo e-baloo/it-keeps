@@ -53,10 +53,10 @@ public abstract class BaseStandard extends Base {
 		super(j, f);
 		
 		if(j.isPresentExternalRef())
-			this.putExternalRef(j.getExternalRef());
+			this.setExternalRef(j.getExternalRef());
 		
 		if(j.isPresentOtherName())
-			this.putOtherName(j.getOtherName());
+			this.setOtherName(j.getOtherName());
 
 		if(j.isPresentIcon()) {
 			this.setIcon(j.getIcon());
@@ -81,27 +81,19 @@ public abstract class BaseStandard extends Base {
 		return getExternalRef().get(key);
 	}
 	
-	public void putExternalRef( Map<String, String> map) {
-		this.putEmbeddedMapString(JBaseStandard.EXTERNAL_REF, map);
+	
+	public void setExternalRef( Map<String, String> map) {
+		this.setEmbeddedMapString(JBaseStandard.EXTERNAL_REF, map);
 	}
 
-	public void addExternalRef(final String key, final String value) {
-		this.addEmbeddedMapString(JBaseStandard.EXTERNAL_REF, key, value);
-	}
-
-	public void removeExternalRef(final String key) {
-		this.removeEmbeddedMapString(JBaseStandard.EXTERNAL_REF, key);
-	}
-	
-
 	
 	
-	
-	
+	/*
 	public static <T extends BaseAbstract> T getByExternalRef(final ModelClass<T> target,
 			final String key, final String value) {
 		return getByExternalRef(target, key, value, false);
 	}
+	*/
 	
 	public static <T extends BaseAbstract> T getByExternalRef(final ModelClass<T> target,
 			final String key, final String value, final boolean instanceOf) {
@@ -125,8 +117,11 @@ public abstract class BaseStandard extends Base {
 			throw new RuntimeException("To many obejct for [k,v]: " + key + "," + value + " [" + cmdSql + "]");
 		}
 
+		
 		OrientVertex ov = list.get(0);
+		T baseAbstract = BaseAbstract.newInstance(target, ov);
 
+		/*
 		@SuppressWarnings("unchecked")
 		ModelClass<T> modelClass = (ModelClass<T>) ModelFactory.get(ov.getType().getName());
 
@@ -137,6 +132,7 @@ public abstract class BaseStandard extends Base {
 			throw new RuntimeException(e);
 		}
 		baseAbstract.setOrientVertex(ov);
+		*/
 
 		if (logger.isTraceEnabled())
 			logger.trace("OrientVertex found for [k,v]: " + key + "," + value + " @" + ov.getType().getName() + " #"
@@ -145,15 +141,6 @@ public abstract class BaseStandard extends Base {
 		return baseAbstract;
 	}
 	
-	
-	/*
-	@Deprecated
-	public static <T extends BaseAbstract> T getByExternalRef(final Class<T> target,
-															  final String key, final String value) {
-		return getByExternalRef(ModelFactory.get(target), key, value);
-	}
-	*/
-
 	
 	/*
 	 * OTHER_NAME 
@@ -178,6 +165,7 @@ public abstract class BaseStandard extends Base {
 		return this.getEmbeddedListString(JBaseStandard.OTHER_NAME);
 	}
 
+	/*
 	public final void addOtherName(String value) {
 		
 		if(StringUtils.isBlank(value)) {
@@ -186,17 +174,19 @@ public abstract class BaseStandard extends Base {
 		
 		this.addEmbeddedListString(JBaseStandard.OTHER_NAME, stripOtherName(value));
 	}
+	*/
 
-	public final void putOtherName(List<String> list) {
+	public final void setOtherName(List<String> list) {
 		
 		if(list == null)
 			list = new ArrayList<String>();
 		
 		list = list.stream().map(e -> stripOtherName(e)).collect(Collectors.toList());
 		
-		this.putEmbeddedListString(JBaseStandard.OTHER_NAME, list);
+		this.setEmbeddedListString(JBaseStandard.OTHER_NAME, list);
 	}
 
+	/*
 	public final void removeOtherName(String value) {
 
 		if(StringUtils.isBlank(value)) {
@@ -205,6 +195,11 @@ public abstract class BaseStandard extends Base {
 
 		this.removeEmbeddedListString(JBaseStandard.OTHER_NAME, value);
 	}
+	*/
+	
+	
+	
+	
 	
 	public static final <T extends BaseAbstract> T getByOtherName(ModelClass<T> target, final String iValue) {
 		return getByOtherName(target, iValue, false);
@@ -235,7 +230,7 @@ public abstract class BaseStandard extends Base {
 		cmdSQL += "  WHERE " + JBaseStandard.OTHER_NAME + ".toLowerCase() = '" + value + "') ";
 		
 		//BaseQuery bq = new BaseQuery();
-		List<BaseAbstract> list = BaseAbstract.commandBaseAbstract(cmdSQL);
+		List<T> list = BaseAbstract.commandBaseAbstract(target, cmdSQL);
         
 		if(list.isEmpty()) {
 			return null;
@@ -266,7 +261,7 @@ public abstract class BaseStandard extends Base {
 		
 		if(Guid.isGuid(tofinde)) {
 			
-			BaseAbstract ab = BaseAbstract.getBaseAbstract(new Guid(tofinde));
+			BaseAbstract ab = BaseAbstract.getBaseAbstract(target, new Guid(tofinde));
 
 			if(ab == null) {
 				return null;
@@ -363,10 +358,10 @@ public abstract class BaseStandard extends Base {
 			this.setIcon(jBaseStandard.getIcon());
 
 		if(jBaseStandard.isPresentExternalRef())
-			this.putExternalRef(jBaseStandard.getExternalRef());
+			this.setExternalRef(jBaseStandard.getExternalRef());
 
 		if(jBaseStandard.isPresentOtherName())
-			this.putOtherName(jBaseStandard.getOtherName());
+			this.setOtherName(jBaseStandard.getOtherName());
 
 
 	}

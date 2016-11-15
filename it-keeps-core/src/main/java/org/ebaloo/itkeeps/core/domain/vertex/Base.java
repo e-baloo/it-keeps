@@ -211,11 +211,11 @@ public abstract class Base extends BaseAbstract {
 	 */
 	
 
-	public final static List<BaseAbstract> getAllBase(final ModelClass<? extends BaseAbstract> target) {
+	public final static <T extends BaseAbstract> List<T> getAllBase(final ModelClass<T> target) {
 		return getAllBase(target, true);
 	}
 	
-	public final static List<BaseAbstract> getAllBase(final ModelClass<? extends BaseAbstract> target, final boolean isInstanceof) {
+	public final static <T extends BaseAbstract> List<T> getAllBase(final ModelClass<T> target, final boolean isInstanceof) {
 
 		StringBuilder request = new StringBuilder();
 		
@@ -226,7 +226,7 @@ public abstract class Base extends BaseAbstract {
 		BaseUtils.WhereClause.classIsntanceOf(target, isInstanceof, request);
 
 		//BaseQuery bq = new BaseQuery();
-        return BaseAbstract.commandBaseAbstract(request.toString());
+        return BaseAbstract.commandBaseAbstract(target, request.toString());
         
 	}
 	
