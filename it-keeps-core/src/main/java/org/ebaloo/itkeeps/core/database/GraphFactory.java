@@ -7,9 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.orientechnologies.common.log.OLogManager;
-import com.orientechnologies.orient.core.Orient;
-import com.orientechnologies.orient.core.cache.*;
-import com.orientechnologies.orient.core.config.OGlobalConfiguration;
 
 import org.ebaloo.itkeeps.core.ConfigFactory;
 import org.ebaloo.itkeeps.core.tools.MetricsFactory;
@@ -90,11 +87,12 @@ public final class GraphFactory {
 	    	
 	//    	orientGraphType = config.getString(DATABASE_DEFAULT_TYPE, orientGraphType);
 			
+	    	/*
 	    	if(Orient.instance().getLocalRecordCache() instanceof OLocalRecordCacheFactoryImpl) {
 				((OLocalRecordCacheFactoryImpl) Orient.instance().getLocalRecordCache()).register(RecordCache.class.getName(), RecordCache.class);
 				OGlobalConfiguration.CACHE_LOCAL_IMPL.setValue(RecordCache.class.getName());
 			}
-			
+			*/
 			
 			return new OrientGraphFactory(databaseUri, databaseUser, databasePassword).setupPool(poolMin, poolMax);
 

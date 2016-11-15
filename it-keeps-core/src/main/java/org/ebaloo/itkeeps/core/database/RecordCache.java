@@ -1,5 +1,6 @@
 package org.ebaloo.itkeeps.core.database;
 
+/*
 import com.orientechnologies.orient.core.cache.ORecordCache;
 import com.orientechnologies.orient.core.db.record.ridbag.ORidBag;
 import com.orientechnologies.orient.core.id.ORID;
@@ -12,7 +13,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.WeakHashMap;
+*/
 
+/*
 public class RecordCache implements ORecordCache {
 
     private static boolean enabled = true;
@@ -128,3 +131,4 @@ public class RecordCache implements ORecordCache {
     }
 
 }
+*/
