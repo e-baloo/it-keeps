@@ -1,7 +1,7 @@
-package org.ebaloo.itkeeps.core.restapp.test;
+package org.ebaloo.itkeeps.restapp.test;
 
 
-import org.ebaloo.itkeeps.core.restapp.InterfaceApplicationConfig;
+import org.ebaloo.itkeeps.restapp.InterfaceApplicationConfig;
 
 public class TestConfig {
 	

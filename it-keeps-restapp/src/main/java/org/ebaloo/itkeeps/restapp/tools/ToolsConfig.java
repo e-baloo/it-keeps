@@ -1,7 +1,7 @@
-package org.ebaloo.itkeeps.core.restapp.tools;
+package org.ebaloo.itkeeps.restapp.tools;
 
 
-import org.ebaloo.itkeeps.core.restapp.InterfaceApplicationConfig;
+import org.ebaloo.itkeeps.restapp.InterfaceApplicationConfig;
 
 
 public class ToolsConfig {

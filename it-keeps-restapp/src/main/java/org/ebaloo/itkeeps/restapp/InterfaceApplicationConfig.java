@@ -1,4 +1,4 @@
-package org.ebaloo.itkeeps.core.restapp;
+package org.ebaloo.itkeeps.restapp;
 
 import org.glassfish.jersey.server.ResourceConfig;
 

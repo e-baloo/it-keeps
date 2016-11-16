@@ -1,5 +1,5 @@
 
-package org.ebaloo.itkeeps.core.restapp.tools;
+package org.ebaloo.itkeeps.restapp.tools;
 
 import java.net.InetAddress;
 import java.util.ArrayList;

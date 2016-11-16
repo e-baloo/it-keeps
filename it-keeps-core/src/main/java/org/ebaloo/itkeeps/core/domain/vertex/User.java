@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ebaloo.itkeeps.Guid;
+import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed.SecurityRole;
 import org.ebaloo.itkeeps.api.model.JBase;
 import org.ebaloo.itkeeps.api.model.JBaseLight;
 import org.ebaloo.itkeeps.api.model.JCredential;
@@ -19,7 +20,6 @@ import org.ebaloo.itkeeps.core.domain.ModelFactory.ModelClass;
 import org.ebaloo.itkeeps.core.domain.annotation.ModelClassAnnotation;
 import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
 import org.ebaloo.itkeeps.core.domain.edge.TraverseInGroup;
-import org.ebaloo.itkeeps.core.restapp.authentication.ApplicationRolesAllowed.SecurityRole;
 import org.ebaloo.itkeeps.core.tools.SecurityFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

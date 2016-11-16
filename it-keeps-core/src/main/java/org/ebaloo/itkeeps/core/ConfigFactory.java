@@ -54,7 +54,7 @@ public final class ConfigFactory {
 		SLF4JBridgeHandler.removeHandlersForRootLogger();
 		SLF4JBridgeHandler.install();
 		
-		mainLogger = LoggerFactory.getLogger(App.class.getName());
+		mainLogger = LoggerFactory.getLogger("main");
 		
 		mainLogger.info("mainlog start : " + logLevel);
 		mainLogger.info("version       : " + getManifestInfo());

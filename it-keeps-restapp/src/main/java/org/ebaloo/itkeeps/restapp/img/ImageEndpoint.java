@@ -1,4 +1,4 @@
-package org.ebaloo.itkeeps.core.restapp.image;
+package org.ebaloo.itkeeps.restapp.img;
 
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.GET;

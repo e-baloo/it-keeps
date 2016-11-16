@@ -39,11 +39,10 @@
 		
 	</properties>
 
-<!-- 
 	<modules>
 		<module>it-keeps-core</module>
 		<module>it-keeps-api</module>
 		<module>it-keeps-httpclient</module>
+		<module>it-keeps-restapp</module>
 	</modules>
--->
 </project>

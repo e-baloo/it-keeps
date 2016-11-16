@@ -1,4 +1,4 @@
-package org.ebaloo.itkeeps.core.restapp.authentication;
+package org.ebaloo.itkeeps.restapp.auth;
 
 
 import javax.security.auth.Subject;
@@ -6,7 +6,7 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.lang3.StringUtils;
-import org.ebaloo.itkeeps.core.restapp.authentication.ApplicationRolesAllowed.SecurityRole;
+import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed.SecurityRole;
 
 import java.security.Principal;
 

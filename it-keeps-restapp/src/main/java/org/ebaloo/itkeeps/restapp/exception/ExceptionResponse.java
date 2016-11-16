@@ -1,4 +1,4 @@
-package org.ebaloo.itkeeps.core.restapp.exception;
+package org.ebaloo.itkeeps.restapp.exception;
 
 import java.time.Instant;
 

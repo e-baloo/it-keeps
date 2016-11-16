@@ -1,11 +1,11 @@
-package org.ebaloo.itkeeps.core.restapp.image;
+package org.ebaloo.itkeeps.restapp.img;
 
-import org.ebaloo.itkeeps.core.restapp.InterfaceApplicationConfig;
+import org.ebaloo.itkeeps.restapp.InterfaceApplicationConfig;
 
 
 public class ImageConfig {
 
-	public static final String PATH_IMAGE = "image";
+	public static final String PATH_IMAGE = "img";
 
 
 	

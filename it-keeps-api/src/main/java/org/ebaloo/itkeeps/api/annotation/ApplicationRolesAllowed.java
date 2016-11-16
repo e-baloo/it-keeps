@@ -1,5 +1,5 @@
 
-package org.ebaloo.itkeeps.core.restapp.authentication;
+package org.ebaloo.itkeeps.api.annotation;
 
 import java.lang.annotation.*;
 

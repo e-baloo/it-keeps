@@ -1,4 +1,4 @@
-package org.ebaloo.itkeeps.core.restapp.authentication;
+package org.ebaloo.itkeeps.restapp.auth;
 
 
 import javax.annotation.security.PermitAll;

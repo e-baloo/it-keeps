@@ -1,6 +1,6 @@
-package org.ebaloo.itkeeps.core.restapp.api;
+package org.ebaloo.itkeeps.restapp.api;
 
-import org.ebaloo.itkeeps.core.restapp.InterfaceApplicationConfig;
+import org.ebaloo.itkeeps.restapp.InterfaceApplicationConfig;
 
 
 public class ApiConfig {

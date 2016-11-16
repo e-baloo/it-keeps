@@ -1,4 +1,4 @@
-package org.ebaloo.itkeeps.core.restapp.api;
+package org.ebaloo.itkeeps.restapp.api;
 
 
 import java.util.ArrayList;
@@ -15,12 +15,12 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 import org.ebaloo.itkeeps.Guid;
+import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed;
+import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed.SecurityRole;
 import org.ebaloo.itkeeps.api.model.JImage;
 import org.ebaloo.itkeeps.core.domain.ModelFactory;
 import org.ebaloo.itkeeps.core.domain.vertex.BaseAbstract;
 import org.ebaloo.itkeeps.core.domain.vertex.Image;
-import org.ebaloo.itkeeps.core.restapp.authentication.ApplicationRolesAllowed;
-import org.ebaloo.itkeeps.core.restapp.authentication.ApplicationRolesAllowed.SecurityRole;
 
 import com.codahale.metrics.annotation.Timed;
 

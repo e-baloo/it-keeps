@@ -1,4 +1,4 @@
-package org.ebaloo.itkeeps.core.restapp.authentication;
+package org.ebaloo.itkeeps.restapp.auth;
 
 import java.security.SecureRandom;
 import java.util.HashMap;
@@ -6,10 +6,10 @@ import java.util.Map;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed.SecurityRole;
 import org.ebaloo.itkeeps.api.model.JBase;
 import org.ebaloo.itkeeps.core.ConfigFactory;
 import org.ebaloo.itkeeps.core.domain.vertex.User;
-import org.ebaloo.itkeeps.core.restapp.authentication.ApplicationRolesAllowed.SecurityRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

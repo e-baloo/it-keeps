@@ -1,11 +1,11 @@
-package org.ebaloo.itkeeps.core.restapp.exception;
+package org.ebaloo.itkeeps.restapp.exception;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-import org.ebaloo.itkeeps.core.restapp.authentication.JwtFactory;
+import org.ebaloo.itkeeps.restapp.auth.JwtFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

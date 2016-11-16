@@ -1,4 +1,4 @@
-package org.ebaloo.itkeeps.core.restapp;
+package org.ebaloo.itkeeps.restapp;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -7,13 +7,13 @@ import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Provider;
 
-import org.ebaloo.itkeeps.core.restapp.api.ApiConfig;
-import org.ebaloo.itkeeps.core.restapp.authentication.AuthenticationConfig;
-import org.ebaloo.itkeeps.core.restapp.exception.ApplicationExceptionMapper;
-import org.ebaloo.itkeeps.core.restapp.image.ImageConfig;
-import org.ebaloo.itkeeps.core.restapp.test.TestConfig;
-import org.ebaloo.itkeeps.core.restapp.tools.ToolsConfig;
 import org.ebaloo.itkeeps.core.tools.MetricsFactory;
+import org.ebaloo.itkeeps.restapp.api.ApiConfig;
+import org.ebaloo.itkeeps.restapp.auth.AuthenticationConfig;
+import org.ebaloo.itkeeps.restapp.exception.ApplicationExceptionMapper;
+import org.ebaloo.itkeeps.restapp.img.ImageConfig;
+import org.ebaloo.itkeeps.restapp.test.TestConfig;
+import org.ebaloo.itkeeps.restapp.tools.ToolsConfig;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.media.sse.SseFeature;
 import org.glassfish.jersey.server.ResourceConfig;

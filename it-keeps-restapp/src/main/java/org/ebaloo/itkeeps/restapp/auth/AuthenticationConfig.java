@@ -1,6 +1,6 @@
-package org.ebaloo.itkeeps.core.restapp.authentication;
+package org.ebaloo.itkeeps.restapp.auth;
 
-import org.ebaloo.itkeeps.core.restapp.InterfaceApplicationConfig;
+import org.ebaloo.itkeeps.restapp.InterfaceApplicationConfig;
 
 
 public class AuthenticationConfig {

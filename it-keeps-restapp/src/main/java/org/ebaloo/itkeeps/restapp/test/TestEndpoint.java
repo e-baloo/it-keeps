@@ -1,5 +1,5 @@
 
-package org.ebaloo.itkeeps.core.restapp.test;
+package org.ebaloo.itkeeps.restapp.test;
 
 import java.time.Instant;
 
@@ -17,8 +17,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
-import org.ebaloo.itkeeps.core.restapp.authentication.ApplicationRolesAllowed;
-import org.ebaloo.itkeeps.core.restapp.authentication.ApplicationRolesAllowed.SecurityRole;
+import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed;
+import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed.SecurityRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

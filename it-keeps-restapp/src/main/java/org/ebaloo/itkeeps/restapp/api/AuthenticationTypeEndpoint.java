@@ -1,4 +1,4 @@
-package org.ebaloo.itkeeps.core.restapp.api;
+package org.ebaloo.itkeeps.restapp.api;
 
 
 import java.util.ArrayList;
@@ -11,8 +11,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.ebaloo.itkeeps.api.AuthenticationType;
-import org.ebaloo.itkeeps.core.restapp.authentication.ApplicationRolesAllowed;
-import org.ebaloo.itkeeps.core.restapp.authentication.ApplicationRolesAllowed.SecurityRole;
+import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed;
+import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed.SecurityRole;
 
 import com.codahale.metrics.annotation.Timed;
 

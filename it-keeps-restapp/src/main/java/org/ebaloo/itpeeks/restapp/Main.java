@@ -1,11 +1,12 @@
-package org.ebaloo.itkeeps.core;
+package org.ebaloo.itpeeks.restapp;
 
 import java.net.URI;
 
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
+import org.ebaloo.itkeeps.core.ConfigFactory;
 import org.ebaloo.itkeeps.core.database.DatabaseFactory;
 import org.ebaloo.itkeeps.core.domain.ModelFactory;
-import org.ebaloo.itkeeps.core.restapp.ApplicationConfig;
+import org.ebaloo.itkeeps.restapp.ApplicationConfig;
 import org.glassfish.grizzly.http.server.HttpServer;
 
 
@@ -14,7 +15,7 @@ import org.glassfish.grizzly.http.server.HttpServer;
  * @author Marc Donval
  *
  */
-public class App {
+public class Main {
 
 
 	
