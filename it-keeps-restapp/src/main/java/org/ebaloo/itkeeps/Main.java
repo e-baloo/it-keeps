@@ -1,4 +1,4 @@
-package org.ebaloo.itpeeks.restapp;
+package org.ebaloo.itkeeps;
 
 import java.net.URI;
 
