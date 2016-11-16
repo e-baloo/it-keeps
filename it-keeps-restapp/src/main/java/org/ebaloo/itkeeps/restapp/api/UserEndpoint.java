@@ -40,7 +40,7 @@ public class UserEndpoint {
     @Produces({MediaType.APPLICATION_JSON})
 	@ApplicationRolesAllowed(SecurityRole.ADMIN)
     @Timed
-    public Response read() {
+    public Response readAll() {
 		
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
 
@@ -69,7 +69,7 @@ public class UserEndpoint {
 		User user;
 		
 		if(Guid.isGuid(id)) {
-			user = User.getBaseAbstract(null, ModelFactory.get(User.class), new Guid(id));
+			user = User.get(null, ModelFactory.get(User.class), new Guid(id), false);
 		} else {
 			user = User.getById(null, id);
 		}
@@ -91,12 +91,12 @@ public class UserEndpoint {
     	
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
     	
-    	User user = User.getBaseAbstract(null, ModelFactory.get(User.class),  juser.getGuid());
+    	User user = User.get(null, ModelFactory.get(User.class),  juser.getGuid(), false);
 
     	user.apiUpdate(juser, requesteurGuid);
 
     	JUser newjuser = new JUser();
-    	User.getBaseAbstract(null, ModelFactory.get(User.class), juser.getGuid()).apiFill(newjuser, requesteurGuid);
+    	User.get(null, ModelFactory.get(User.class), juser.getGuid(), false).apiFill(newjuser, requesteurGuid);
 
     	return Response.ok().entity(newjuser).build();
     }

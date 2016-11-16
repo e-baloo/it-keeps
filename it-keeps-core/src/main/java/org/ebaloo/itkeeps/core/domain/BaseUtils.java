@@ -69,10 +69,13 @@ public class BaseUtils {
 			sb.append(classIsntanceOf(targetClass, instanceOf));
 		}
 
+		/*
 		public static final Predicate<? super BaseAbstract> classInstanceOf(final Class<? extends BaseAbstract> targetClass, final boolean instanceOf) {
 			return classInstanceOf(targetClass.getSimpleName(), instanceOf);
 		}
+		*/
 
+		/*
 		public static final Predicate<? super BaseAbstract> classInstanceOf(final String targetClass, final boolean instanceOf) {
 			if(instanceOf) {
 				//targetClass.isInstance(baseAbstract) si targetClass => Class<? extends BaseAbstract>
@@ -81,6 +84,7 @@ public class BaseUtils {
 				return orientVertex -> orientVertex.getOrientVertex().getType().getName().equals(targetClass);
 			}
 		}
+		*/
 		
 		
 		

@@ -61,10 +61,18 @@ public class Main {
 
 		JsonNode node = callJsonCreat("/auth/login", cred);
 		LogFactory.getMain().info(MAPPER.writeValueAsString(node));
-		
+
 		token = node.get("token").asText();
 		httpJsonClient = null;
 
+
+		
+		{
+			JUser testUser =  MAPPER.treeToValue(callJsonRead("/api/user/marc"), JUser.class);
+			LogFactory.getMain().info(MAPPER.writeValueAsString(testUser));
+
+		}
+		
 		
 		
 		JUser neuwjuser = new JUser();

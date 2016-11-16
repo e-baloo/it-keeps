@@ -38,14 +38,14 @@ public abstract class Base extends BaseAbstract {
 
 
 
-	public Base() {
+	protected Base() {
 	}
 
-	public Base(final BaseAbstract abase) {
+	protected Base(final BaseAbstract abase) {
 		super(abase);
 	}
 
-	public Base(final String name) {
+	protected Base(final String name) {
 		super(true);
 
 		this.defaultSetting(GuidFactory.getGuid());
@@ -150,11 +150,14 @@ public abstract class Base extends BaseAbstract {
 	 * GetByName
 	 */
 
+	/*
 	public static <T extends BaseAbstract> T getByName(OrientBaseGraph graph, final ModelClass<T> target,
 			final String name) {
 		return getByName(graph, target, name, false);
 	}
+	*/
 
+	/*
 	@SuppressWarnings("unchecked")
 	public static <T extends BaseAbstract> T getByName(OrientBaseGraph graph, final ModelClass<T> target,
 			final String name, boolean isInstanceof) {
@@ -193,6 +196,7 @@ public abstract class Base extends BaseAbstract {
 
 		return baseAbstract;
 	}
+	*/
 
 
 
@@ -212,9 +216,11 @@ public abstract class Base extends BaseAbstract {
 	 */
 	
 
+	/*
 	public final static <T extends BaseAbstract> List<T> getAllBase(OrientBaseGraph graph, final ModelClass<T> target) {
 		return getAllBase(graph, target, true);
 	}
+	*/
 	
 	public final static <T extends BaseAbstract> List<T> getAllBase(OrientBaseGraph graph, final ModelClass<T> target, final boolean isInstanceof) {
 
@@ -308,7 +314,7 @@ public abstract class Base extends BaseAbstract {
 
 	
 	
-	
+	/*
 	public static <T extends BaseAbstract> T getByGuid(OrientBaseGraph graph, final ModelClass<T> target,
 			final Guid guid) {
 
@@ -348,7 +354,7 @@ public abstract class Base extends BaseAbstract {
 
 		return baseAbstract;
 	}
-	
+	*/
 	
 	
     public static JBaseLight getJBaseLight (final BaseAbstract ba)  

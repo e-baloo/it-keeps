@@ -58,7 +58,7 @@ public class Group extends BaseStandard {
 	}
 
 	private void setParentGroupJBL(JBaseLight group) {
-		this.setParentGroup(getBaseAbstract(this.getGraph(), ModelFactory.get(Group.class), group));
+		this.setParentGroup(get(this.getGraph(), ModelFactory.get(Group.class), group, false));
 	}
 
 	
@@ -85,7 +85,7 @@ public class Group extends BaseStandard {
 		ModelClass<Group> mc = ModelFactory.get(Group.class);
 		OrientBaseGraph graph = this.getGraph();
 		
-		setChildGroup(list.stream().map(e -> getBaseAbstract(graph, mc, e)).collect(Collectors.toList())); 
+		setChildGroup(list.stream().map(e -> get(graph, mc, e, false)).collect(Collectors.toList())); 
 	}
 
 	
@@ -311,7 +311,7 @@ public class Group extends BaseStandard {
 
 		super.apiUpdate(obj, requesteurGuid);
 		
-		User requesterUser = User.getByGuid(this.getGraph(), ModelFactory.get(User.class), requesteurGuid);
+		User requesterUser = User.get(this.getGraph(), ModelFactory.get(User.class), requesteurGuid, false);
 
 		switch(requesterUser.getRole()) {
 

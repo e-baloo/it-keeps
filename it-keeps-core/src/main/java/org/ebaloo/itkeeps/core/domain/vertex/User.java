@@ -91,7 +91,7 @@ public class User extends BaseStandard {
 		ModelClass<Group> mc = ModelFactory.get(Group.class);
 		OrientBaseGraph graph = this.getGraph();
 		
-		setInGroup(list.stream().map(e -> getBaseAbstract(graph, mc, e)).collect(Collectors.toList())); 
+		setInGroup(list.stream().map(e -> get(graph, mc, e, false)).collect(Collectors.toList())); 
 	}
 
 	
@@ -249,7 +249,7 @@ public class User extends BaseStandard {
 		super.apiUpdate(obj, requesteurGuid);
 		
 		
-		User requesterUser = User.getByGuid(this.getGraph(), ModelFactory.get(User.class), requesteurGuid);
+		User requesterUser = User.get(this.getGraph(), ModelFactory.get(User.class), requesteurGuid, false);
 
 		switch(requesterUser.getRole()) {
 

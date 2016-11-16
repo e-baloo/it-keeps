@@ -210,6 +210,7 @@ public abstract class BaseStandard extends Base {
 	 * Find
 	 */
 
+	/*
 	public static <T extends BaseAbstract> T findByGuidOrName(OrientBaseGraph graph, final ModelClass<T> target, final String tofinde) {
 		return findByGuidOrName(graph, target, tofinde, false);
 	}
@@ -222,7 +223,7 @@ public abstract class BaseStandard extends Base {
 		
 		if(Guid.isGuid(tofinde)) {
 			
-			BaseAbstract ab = BaseAbstract.getBaseAbstract(graph, target, new Guid(tofinde));
+			BaseAbstract ab = BaseAbstract.get(graph, target, new Guid(tofinde), isntanceof);
 
 			if(ab == null) {
 				return null;
@@ -254,7 +255,7 @@ public abstract class BaseStandard extends Base {
 		return null;
 
 	}
-	
+	*/
 
 
 	

@@ -40,28 +40,28 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 	private static Logger logger = LoggerFactory.getLogger(BaseAbstract.class);
 	
 
-	public final static <T extends BaseAbstract> List<T> commandBaseAbstract(OrientBaseGraph graph, final ModelClass<T> target, final String cmdSQL, Object... args) {
+	protected final static <T extends BaseAbstract> List<T> commandBaseAbstract(OrientBaseGraph graph, final ModelClass<T> target, final String cmdSQL, Object... args) {
 		return GraphFactory.command(graph, cmdSQL, args).stream().map(e -> (T) BaseAbstract.newInstance(target, e)).collect(Collectors.toList());
 	}
 
 	
-	public static <T extends BaseAbstract> T getBaseAbstract(OrientBaseGraph graph, final ModelClass<T> target, final JBaseLight baselight)  
+	public static final <T extends BaseAbstract> T get(OrientBaseGraph graph, final ModelClass<T> target, final JBaseLight baselight, boolean isInstanceof)  
  	{
     	if(baselight == null || !baselight.isPresentGuid())
     		return null;
     	
-		return getBaseAbstract(graph, target, baselight.getGuid());
+		return get(graph, target, baselight.getGuid(), isInstanceof);
 	}
 	
 	
-    
+   
 
-    public static  <T extends BaseAbstract> T getBaseAbstract(OrientBaseGraph graph, final ModelClass<T> target, final Guid guid)  
+	public static final <T extends BaseAbstract> T get(final OrientBaseGraph graph, final ModelClass<T> target, final Guid guid, boolean isInstanceof)  
 	{
     	if(guid == null)
     		return null;
 		
-		String cmdSQL = "SELECT FROM " + Base.class.getSimpleName() + " WHERE " + BaseUtils.WhereClause.WHERE_CLAUSE__ENABLE_IS_TRUE + " AND (guid = ?)";
+		String cmdSQL = "SELECT FROM " + target.getClassName() + " WHERE " + BaseUtils.WhereClause.WHERE_CLAUSE__ENABLE_IS_TRUE + " AND " + BaseUtils.WhereClause.classIsntanceOf(target, isInstanceof) + " AND (" + JBase.GUID + "= ?)";
 		
 		List<T> list = BaseAbstract.commandBaseAbstract(graph, target, cmdSQL, guid.toString());
 		
@@ -75,8 +75,35 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 		
 		return list.get(0);
 	}
+	
+	
+	public static final <T extends BaseAbstract> T get(final OrientBaseGraph graph, final ModelClass<T> target, final String name, boolean isInstanceof)  
+	{
+    	if(StringUtils.isEmpty(name))
+    		return null;
+		
+    	if(Guid.isGuid(name))
+    		return get(graph, target, new Guid(name), isInstanceof); 
+    	
+		String cmdSQL = "SELECT FROM " + target.getClassName() + " WHERE " + BaseUtils.WhereClause.WHERE_CLAUSE__ENABLE_IS_TRUE + " AND " + BaseUtils.WhereClause.classIsntanceOf(target, isInstanceof) + " AND (" + JBase.NAME + "= ?)";
+		
+		List<T> list = BaseAbstract.commandBaseAbstract(graph, target, cmdSQL, name);
+		
+		if(list.size() == 0) {
+			return null;
+		}
+		
+		if(list.size() > 1) {
+			throw new RuntimeException(String.format("name is not unique : %s @class:%s", name, target.getClassName()));
+		}
+		
+		return list.get(0);
+	}
+
+	
+	
     
-	public static <T extends BaseAbstract> List<T> getListBaseAbstract(OrientBaseGraph graph, final ModelClass<T> target, final List<Guid> guid) {
+    protected static <T extends BaseAbstract> List<T> getListBaseAbstract(OrientBaseGraph graph, final ModelClass<T> target, final List<Guid> guid) {
 
 		String cmdSQL = "SELECT FROM " + Base.class.getSimpleName() + " WHERE " + BaseUtils.WhereClause.WHERE_CLAUSE__ENABLE_IS_TRUE
 				+ " AND (guid IN [" + guid.stream().map(e -> "'" + e.toString() + "'").collect(Collectors.joining(","))
@@ -88,10 +115,10 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
     
 	
 	
-	public BaseAbstract() {
+	protected BaseAbstract() {
 		;
 	}
-	public BaseAbstract(final BaseAbstract abase) {
+	protected BaseAbstract(final BaseAbstract abase) {
 		this.setOrientVertex(abase.getOrientVertex());
 	}
 	
@@ -395,7 +422,7 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 	
 
 	
-	public ModelFactory.ModelClass<BaseAbstract> getModelClass() {
+	protected ModelFactory.ModelClass<BaseAbstract> getModelClass() {
 		return ModelFactory.get(this.getClass());
 	}
 	
@@ -439,7 +466,7 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 		}
 
 
-		public boolean isInstanceOf(Class<?> clazz) {
+		protected boolean isInstanceOf(Class<?> clazz) {
 			return clazz.isInstance(this);
 		}
 
@@ -450,7 +477,7 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 		 */
 		
 
-	public void newOrientVertex() {
+		protected void newOrientVertex() {
 
 		if(!this.hasOrientVertex()) {
 			OrientVertexType ovt = this.getVertexType();
@@ -593,7 +620,7 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 		return this.name;
 	}
 
-	public void setName(String value) {
+	protected void setName(String value) {
 		
 		this.name = value;
 		this.setProperty(JBase.NAME, this.name);

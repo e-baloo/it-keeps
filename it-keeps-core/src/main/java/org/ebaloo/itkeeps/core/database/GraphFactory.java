@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.orientechnologies.common.log.OLogManager;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ebaloo.itkeeps.commons.ConfigFactory;
 import org.ebaloo.itkeeps.core.tools.MetricsFactory;
 import org.slf4j.Logger;
@@ -49,8 +50,13 @@ public final class GraphFactory {
 	private static OrientGraphFactory singleton = null;
 
 	
+	private static OrientBaseGraph memoryGraph = null;
+	
 	public synchronized static OrientBaseGraph getOrientBaseGraph() {
 
+		if(memoryGraph != null)
+			return memoryGraph;
+		
         if (singleton == null) {
             singleton = getOrientGraphFactory();
         }
@@ -58,7 +64,10 @@ public final class GraphFactory {
 		return getOrientGraphNoTx();
 	}
 	
-    public synchronized static OrientGraphNoTx getOrientGraphNoTx() {
+    public synchronized static OrientBaseGraph getOrientGraphNoTx() {
+    	
+		if(memoryGraph != null)
+			return memoryGraph;
     	
         if (singleton == null) {
             singleton = getOrientGraphFactory();
@@ -94,6 +103,11 @@ public final class GraphFactory {
 			}
 			*/
 			
+	    	if(StringUtils.startsWithIgnoreCase(databaseUri, "memory:")) {
+	    		memoryGraph = (new OrientGraphFactory(databaseUri, databaseUser, databasePassword)).getNoTx();
+	    		
+	    	}
+	    	
 			return new OrientGraphFactory(databaseUri, databaseUser, databasePassword).setupPool(poolMin, poolMax);
 
 		} catch (Throwable e) {

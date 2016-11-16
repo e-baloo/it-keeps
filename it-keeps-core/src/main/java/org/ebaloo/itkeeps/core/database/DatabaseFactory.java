@@ -46,7 +46,7 @@ public class DatabaseFactory {
 		if (init)
 			return;
 			
-			OrientGraphNoTx graph = GraphFactory.getOrientGraphNoTx();
+			OrientGraphNoTx graph = (OrientGraphNoTx) GraphFactory.getOrientGraphNoTx();
 
 			logger.info("Start init database schema!");
 			graph.commit();

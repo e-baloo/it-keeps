@@ -5,8 +5,8 @@ import java.util.UUID;
 
 import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.model.JBase;
+import org.ebaloo.itkeeps.core.database.GraphFactory;
 import org.ebaloo.itkeeps.core.domain.vertex.Base;
-import org.ebaloo.itkeeps.core.domain.vertex.CommonOrientVertex;
 
 
 public class GuidFactory {
@@ -16,7 +16,7 @@ public class GuidFactory {
 	{
 		String cmdSql = "SELECT FROM " + Base.class.getSimpleName() + " WHERE " + JBase.GUID + " = ?";
 		
-		return CommonOrientVertex.command(null, cmdSql, guid.toString()).size() > 0;
+		return GraphFactory.command(null, cmdSql, guid.toString()).size() > 0;
 	}
 
 	

@@ -24,7 +24,7 @@ public abstract class CommonOrientVertex {
 
 	private static Logger logger = LoggerFactory.getLogger(CommonOrientVertex.class);
 
-	public static List<OrientVertex> command(OrientBaseGraph graph, String cmdSQL, Object... args) {
+	protected static List<OrientVertex> command(OrientBaseGraph graph, String cmdSQL, Object... args) {
 		return GraphFactory.command(graph, cmdSQL, args);
 	}
 
@@ -36,7 +36,7 @@ public abstract class CommonOrientVertex {
 		GraphFactory.executeNoReturn(graph, cmdSQL, args);
 	}
 
-	public static final List<String> getAllSuperClassesNames(OrientVertex ov) {
+	protected static final List<String> getAllSuperClassesNames(OrientVertex ov) {
 		List<String> list = new ArrayList<String>();
 
 		for (OClass oc : ov.getType().getAllSuperClasses()) {
@@ -68,7 +68,7 @@ public abstract class CommonOrientVertex {
 		}
 	}
 
-	public final void commit() {
+	protected final void commit() {
 
 		this.getOrientVertex().getGraph().commit();
 
@@ -122,7 +122,7 @@ public abstract class CommonOrientVertex {
 	
 	private String orid = null;
 
-	public final String getORID() {
+	protected final String getORID() {
 
 		if (StringUtils.isBlank(orid))
 			this.orid = this.getOrientVertex().getIdentity().toString();
@@ -133,13 +133,13 @@ public abstract class CommonOrientVertex {
 	
 	
 	
-	public final int getObjectVersion() {
+	protected final int getObjectVersion() {
 
 		return this.getProperty("@version");
 	}
 
 
-	public final OrientVertex getOrientVertex() {
+	protected final OrientVertex getOrientVertex() {
 		this.checkOrientVertex();
 		return this.orientVertex;
 	}
@@ -148,7 +148,7 @@ public abstract class CommonOrientVertex {
 		return this.getOrientVertex().getType().getName();
 	}
 
-	public final <T> T getProperty(final String key) {
+	protected final <T> T getProperty(final String key) {
 		return this.getOrientVertex().getProperty(key);
 	}
 
@@ -170,11 +170,11 @@ public abstract class CommonOrientVertex {
 
 	}
 
-	public final String OrientVertexToJson() {
+	protected final String OrientVertexToJson() {
 		return this.getOrientVertex().getRecord().toJSON();
 	}
 
-	public final void reload() {
+	protected final void reload() {
 
 		String cmdSQL = "SELECT FROM " + this.getORID();
 
