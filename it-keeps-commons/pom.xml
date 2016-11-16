@@ -3,15 +3,15 @@
   <parent>
     <groupId>org.e-ballo</groupId>
     <artifactId>it-keeps</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>it-keeps-core</artifactId>
+  <artifactId>it-keeps-commons</artifactId>
   
-  
-  
+
   	<dependencies>
 
 		<!-- Jackson -->
+		<!-- 
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-annotations</artifactId>
@@ -42,6 +42,7 @@
 		    <artifactId>jackson-datatype-joda</artifactId>
 			<version>${version.jackson}</version>
 		</dependency>
+		 -->
 		
 		<!-- SLF4J -->
 		<dependency>
@@ -54,12 +55,13 @@
 		    <artifactId>slf4j-simple</artifactId>
 		    <version>${version.slf4j}</version>
 		</dependency>
+		<!-- 
 		<dependency>
 		    <groupId>org.slf4j</groupId>
 		    <artifactId>jcl-over-slf4j</artifactId>
 		    <version>${version.slf4j}</version>
 		</dependency>
-		
+		 -->
 		
 		<!-- Typesafe / Config -->
 		<dependency>
@@ -67,30 +69,6 @@
 		    <artifactId>config</artifactId>
 		    <version>${version.typesafe-config}</version>
 		</dependency>
-		
-		
-		<!-- JWT -->
-		<!-- 
-		<dependency>
-		    <groupId>com.auth0</groupId>
-		    <artifactId>java-jwt</artifactId>
-		    <version>${version.java-jwt}</version>
-		</dependency>
-		-->
-				
-		<!-- Shiro  -->
-		<!-- 
-		<dependency>
-		    <groupId>org.apache.shiro</groupId>
-		    <artifactId>shiro-core</artifactId>
-		    <version>${version.shiro}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.shiro</groupId>
-			<artifactId>shiro-web</artifactId>
-		    <version>${version.shiro}</version>
-		</dependency>
-		-->		
 
 		<!-- Commons  -->		
 		<dependency>
@@ -98,16 +76,6 @@
 		    <artifactId>commons-lang3</artifactId>
 		    <version>${version.commons-lang3}</version>
 		</dependency>
-		<!-- <dependency>
-		    <groupId>org.apache.commons</groupId>
-		    <artifactId>commons-collections4</artifactId>
-		    <version>${version.commons-collections4}</version>
-		</dependency>  -->
-		<!--  <dependency>
-		    <groupId>com.google.collections</groupId>
-		    <artifactId>google-collections</artifactId>
-		    <version>${version.google-collections}</version>
-		</dependency> -->
 		<dependency>
 	    <groupId>commons-codec</groupId>
 		    <artifactId>commons-codec</artifactId>
@@ -127,11 +95,6 @@
 		<!-- Metrics -->
 		<dependency>
 		    <groupId>io.dropwizard.metrics</groupId>
-		    <artifactId>metrics-json</artifactId>
-		    <version>${version.metrics}</version>
-		</dependency>
-		<dependency>
-		    <groupId>io.dropwizard.metrics</groupId>
 		    <artifactId>metrics-jvm</artifactId>
 		    <version>${version.metrics}</version>
 		</dependency>
@@ -142,15 +105,6 @@
 		    <version>${version.metrics}</version>
 		</dependency>
 		-->
-
-
-		<!-- OrientDB -->
-		<dependency>
-			<groupId>com.orientechnologies</groupId>
-			<artifactId>orientdb-graphdb</artifactId>
-			<version>${version.orientdb}</version>
-		</dependency>
-
 		
 		<!-- Reflexion -->
 		<dependency>
@@ -180,14 +134,6 @@
 			<artifactId>it-keeps-api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		
-		<dependency>
-			<groupId>org.e-ballo</groupId>
-			<artifactId>it-keeps-commons</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		
-		
   	</dependencies>  
 	
 	<build>
@@ -243,7 +189,7 @@
 		</plugins>
 	</build>	
   
-
   
-	<name>IT-Keeps : Core</name>
+  
+	<name>IT-Keeps : Commons</name>
 </project>

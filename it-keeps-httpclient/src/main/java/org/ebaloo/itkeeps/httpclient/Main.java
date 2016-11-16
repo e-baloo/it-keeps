@@ -20,9 +20,8 @@ import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.model.JCredential;
 import org.ebaloo.itkeeps.api.model.JGroup;
 import org.ebaloo.itkeeps.api.model.JUser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.bridge.SLF4JBridgeHandler;
+import org.ebaloo.itkeeps.commons.ConfigFactory;
+import org.ebaloo.itkeeps.commons.LogFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -30,17 +29,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 
 public class Main {
-
-	public static Logger LOGGER = null;
+	
+	
+	
 
 	public static final ObjectMapper MAPPER = new ObjectMapper();
 
 	static {
-		SLF4JBridgeHandler.removeHandlersForRootLogger();
-		SLF4JBridgeHandler.install();
-		LOGGER = LoggerFactory.getLogger("Main");
-		
-		
 		MAPPER.registerModule(new JodaModule());
 		MAPPER.configure(com.fasterxml.jackson.databind.SerializationFeature.
 	    	    WRITE_DATES_AS_TIMESTAMPS , false);
@@ -51,7 +46,13 @@ public class Main {
 	public static void main(String[] args) throws JsonProcessingException {
 		// TODO Auto-generated method stub
 
-		LOGGER.info("START");
+		ConfigFactory.init();
+		LogFactory.init(Main.class);
+		
+		
+
+		
+		LogFactory.getMain().info("START");
 
 		
 		JCredential cred = new JCredential();
@@ -59,7 +60,7 @@ public class Main {
 		cred.setPassword("test45");
 
 		JsonNode node = callJsonCreat("/auth/login", cred);
-		LOGGER.info(MAPPER.writeValueAsString(node));
+		LogFactory.getMain().info(MAPPER.writeValueAsString(node));
 		
 		token = node.get("token").asText();
 		httpJsonClient = null;
@@ -93,23 +94,23 @@ public class Main {
 		jg_r = MAPPER.treeToValue(callJsonUpdate("/api/group", jg_r), JGroup.class);
 		
 		long elapsedSeconds = (System.currentTimeMillis() - tStart);
-		LOGGER.info(String.format("Query executed in %d ms", elapsedSeconds));
+		LogFactory.getMain().info(String.format("Query executed in %d ms", elapsedSeconds));
 		
 
 		testUser.getInGroups().add(jg_n1.getJBaseLight());
 		testUser.getInGroups().add(jg_n2.getJBaseLight());
 		testUser.getInGroups().add(jg_r.getJBaseLight());
 		JsonNode user = callJsonUpdate("/api/user", testUser);
-		LOGGER.info(MAPPER.writeValueAsString(user));
+		LogFactory.getMain().info(MAPPER.writeValueAsString(user));
 		
 		user = callJsonRead("/api/user/" + testUser.getGuid());
 		
-		LOGGER.info(MAPPER.writeValueAsString(user));
+		LogFactory.getMain().info(MAPPER.writeValueAsString(user));
 
 		
 		
 		
-		LOGGER.info("END");
+		LogFactory.getMain().info("END");
 
 	}
 
@@ -230,7 +231,7 @@ public class Main {
 			long elapsedSeconds = (System.currentTimeMillis() - tStart);
 			
 			//if(LOGGER.isTraceEnabled())
-				LOGGER.info(String.format("Query executed in %d ms", elapsedSeconds));
+				LogFactory.getMain().info(String.format("Query executed in %d ms", elapsedSeconds));
 			
 			return node;
 

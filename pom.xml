@@ -44,5 +44,6 @@
 		<module>it-keeps-api</module>
 		<module>it-keeps-httpclient</module>
 		<module>it-keeps-restapp</module>
+		<module>it-keeps-commons</module>
 	</modules>
 </project>

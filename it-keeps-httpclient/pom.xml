@@ -16,54 +16,6 @@
 		</dependency>
 		
 
-		<!-- SLF4J -->
-		<dependency>
-		    <groupId>org.slf4j</groupId>
-		    <artifactId>jul-to-slf4j</artifactId>
-		    <version>${version.slf4j}</version>
-		</dependency>
-		<dependency>
-		    <groupId>org.slf4j</groupId>
-		    <artifactId>slf4j-simple</artifactId>
-		    <version>${version.slf4j}</version>
-		</dependency>
-
-		<!-- Typesafe Config -->
-		<dependency>
-		    <groupId>com.typesafe</groupId>
-		    <artifactId>config</artifactId>
-		    <version>${version.typesafe-config}</version>
-		</dependency>
-
-		<!-- Commons -->
-		<dependency>
-		    <groupId>org.apache.commons</groupId>
-		    <artifactId>commons-lang3</artifactId>
-		    <version>${version.commons-lang3}</version>
-		</dependency>
-		<!-- <dependency>
-		    <groupId>org.apache.commons</groupId>
-		    <artifactId>commons-collections4</artifactId>
-		    <version>${version.commons-collections4}</version>
-		</dependency>  -->
-		<!-- <dependency>
-		    <groupId>com.google.collections</groupId>
-		    <artifactId>google-collections</artifactId>
-		    <version>${version.google-collections}</version>
-		</dependency> -->
-		<dependency>
-	    <groupId>commons-codec</groupId>
-		    <artifactId>commons-codec</artifactId>
-		    <version>${version.commons-codec}</version>
-		</dependency>
-
-		<!-- JodaTime -->
-		<dependency>
-		    <groupId>joda-time</groupId>
-		    <artifactId>joda-time</artifactId>
-		    <version>${version.joda-time}</version>
-		</dependency>
-
 
 		<!-- Json -->
 		<dependency>
@@ -94,6 +46,13 @@
 			<artifactId>it-keeps-api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.e-ballo</groupId>
+			<artifactId>it-keeps-commons</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
     </dependencies>
   
   

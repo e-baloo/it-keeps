@@ -3,7 +3,8 @@ package org.ebaloo.itkeeps;
 import java.net.URI;
 
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
-import org.ebaloo.itkeeps.core.ConfigFactory;
+import org.ebaloo.itkeeps.commons.ConfigFactory;
+import org.ebaloo.itkeeps.commons.LogFactory;
 import org.ebaloo.itkeeps.core.database.DatabaseFactory;
 import org.ebaloo.itkeeps.core.domain.ModelFactory;
 import org.ebaloo.itkeeps.restapp.ApplicationConfig;
@@ -30,6 +31,7 @@ public class Main {
     	try {
     		
     		ConfigFactory.init();
+    		LogFactory.init(Main.class);
     		
     		DatabaseFactory.init();
     		
@@ -43,7 +45,7 @@ public class Main {
     		
     		
     		
-    		baseUriPort = ConfigFactory.getString(ConfigFactory.CONF_HTTP_PORT, baseUriPort);
+    		baseUriPort = ConfigFactory.getString("http.port", baseUriPort);
     		
     		baseUri = URI.create("http://localhost:" + baseUriPort + "/");
     		ConfigFactory.getManiLogger().trace(baseUri.toString());

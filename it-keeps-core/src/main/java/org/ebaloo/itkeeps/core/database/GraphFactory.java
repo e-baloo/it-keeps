@@ -8,7 +8,7 @@ import java.util.List;
 
 import com.orientechnologies.common.log.OLogManager;
 
-import org.ebaloo.itkeeps.core.ConfigFactory;
+import org.ebaloo.itkeeps.commons.ConfigFactory;
 import org.ebaloo.itkeeps.core.tools.MetricsFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
