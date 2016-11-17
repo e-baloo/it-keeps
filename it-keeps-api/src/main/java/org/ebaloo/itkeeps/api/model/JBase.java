@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class JBase {
+public class JBase extends JObject {
 
 	public static final String ENABLE = "enable";
 	public static final String CREATION_DATE = "creationDate";

@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 
 /**
@@ -17,7 +18,19 @@ public final class Guid {
 
 	public static final String GUID = "guid";
 
+	@JsonIgnore
 	private UUID uuid = null;
+
+	@JsonValue
+	public final String getUuid() {
+		return this.toString();
+	}
+
+	@JsonValue
+	public final void setUuid(String uuid) {
+		this.uuid = UUID.fromString(uuid);
+	}
+
 
 	public Guid() {
 		this.uuid =  UUID.randomUUID();

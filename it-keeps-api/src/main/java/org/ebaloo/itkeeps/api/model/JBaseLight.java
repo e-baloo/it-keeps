@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class JBaseLight {
+public class JBaseLight extends JObject {
 
 	public static final String NAME = "name";
 	public static final String CLASS_TYPE = "classType";

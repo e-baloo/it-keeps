@@ -68,7 +68,7 @@ public abstract class CommonOrientVertex {
 		}
 	}
 
-	protected final void commit() {
+	public final void commit() {
 
 		this.getOrientVertex().getGraph().commit();
 
@@ -234,9 +234,8 @@ public abstract class CommonOrientVertex {
 		Object value = iValue;
 
 		if (value instanceof String) {
-			value = StringUtils.strip((String) value);
+			value = value == null ? "" : StringUtils.strip((String) value);
 		}
-
 		this.getOrientVertex().setProperty(key, value);
 
 		this.commit();

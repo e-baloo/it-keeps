@@ -107,9 +107,13 @@ public final class ConfigFactory {
 	
 	public static String getManifestInfoVersion(Class<?> clasz) {
 		
+		try {
 		if(clasz == null)
 			return "?";
 		
 		return clasz.getPackage().getImplementationVersion();
+		} catch(Exception e) {
+			return "?*";
+		}
 	}
 }

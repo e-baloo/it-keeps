@@ -16,23 +16,18 @@ import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
-import org.ebaloo.itkeeps.Guid;
+import org.ebaloo.itkeeps.api.model.JObject;
 import org.ebaloo.itkeeps.api.model.JCredential;
-import org.ebaloo.itkeeps.api.model.JGroup;
-import org.ebaloo.itkeeps.api.model.JUser;
+import org.ebaloo.itkeeps.api.model.JToken;
 import org.ebaloo.itkeeps.commons.ConfigFactory;
 import org.ebaloo.itkeeps.commons.LogFactory;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 
-public class Main {
+public class ItkeepsHttpClient {
 	
-	
-	
-
 	public static final ObjectMapper MAPPER = new ObjectMapper();
 
 	static {
@@ -41,92 +36,34 @@ public class Main {
 	    	    WRITE_DATES_AS_TIMESTAMPS , false);
 	}
 
-	public static final String URL = "http://localhost:8080";
-
-	public static void main(String[] args) throws JsonProcessingException {
-		// TODO Auto-generated method stub
-
-		ConfigFactory.init();
-		LogFactory.init(Main.class);
+	
+	private static String apiUrl = null;
+	
+	private static final String getApiUrl() {
 		
+		if(apiUrl == null)
+			apiUrl = ConfigFactory.getString("client.url");
 		
-
-		
-		LogFactory.getMain().info("START");
-
-		
-		JCredential cred = new JCredential();
-		cred.setId("marc");
-		cred.setPassword("test45");
-
-		JsonNode node = callJsonCreat("/auth/login", cred);
-		LogFactory.getMain().info(MAPPER.writeValueAsString(node));
-
-		token = node.get("token").asText();
-		httpJsonClient = null;
-
-
-		
-		{
-			JUser testUser =  MAPPER.treeToValue(callJsonRead("/api/user/marc"), JUser.class);
-			LogFactory.getMain().info(MAPPER.writeValueAsString(testUser));
-
-		}
-		
-		
-		
-		JUser neuwjuser = new JUser();
-		Guid nguid = new Guid();
-		neuwjuser.setUserId("ID : " + nguid.toString());
-		neuwjuser.setPassword("password");
-		neuwjuser.setName("NAME : " + nguid.toString());	
-		JUser testUser =  MAPPER.treeToValue(callJsonCreat("/api/user", neuwjuser), JUser.class);
-		
-		
-		JGroup jg_r = new JGroup();
-		jg_r.setName("root");
-		JGroup jg_n1 = new JGroup();
-		JGroup jg_n2 = new JGroup();
-		jg_n1.setName("node 1");
-		jg_n2.setName("node 2");
-		
-		jg_r = MAPPER.treeToValue(callJsonCreat("/api/group", jg_r), JGroup.class);
-		jg_n1 = MAPPER.treeToValue(callJsonCreat("/api/group", jg_n1), JGroup.class);
-		jg_n2 = MAPPER.treeToValue(callJsonCreat("/api/group", jg_n2), JGroup.class);
-		
-		jg_r.getChildGroups().add(jg_n1.getJBaseLight());
-		jg_r.getChildGroups().add(jg_n2.getJBaseLight());
-
-		long tStart = System.currentTimeMillis();
-		
-		jg_r = MAPPER.treeToValue(callJsonUpdate("/api/group", jg_r), JGroup.class);
-		
-		long elapsedSeconds = (System.currentTimeMillis() - tStart);
-		LogFactory.getMain().info(String.format("Query executed in %d ms", elapsedSeconds));
-		
-
-		testUser.getInGroups().add(jg_n1.getJBaseLight());
-		testUser.getInGroups().add(jg_n2.getJBaseLight());
-		testUser.getInGroups().add(jg_r.getJBaseLight());
-		JsonNode user = callJsonUpdate("/api/user", testUser);
-		LogFactory.getMain().info(MAPPER.writeValueAsString(user));
-		
-		user = callJsonRead("/api/user/" + testUser.getGuid());
-		
-		LogFactory.getMain().info(MAPPER.writeValueAsString(user));
-
-		
-		
-		
-		LogFactory.getMain().info("END");
+		return apiUrl;
 
 	}
-
-	private static HttpClient httpJsonClient = null;
 	
-	private static String token = null;
+	
+	
+	public ItkeepsHttpClient(JCredential jcredential) {
+		
+		JToken _token = callJsonCreat("/auth/login", jcredential, JToken.class);
+		token = _token.getToken();
+		httpJsonClient = null;
+		
+	}
+	
+	
+	
+	private HttpClient httpJsonClient = null;
+	private String token = null;
 
-	private static HttpClient getHttpJsonClient() {
+	private HttpClient getHttpJsonClient() {
 
 		if (httpJsonClient == null) {
 			HttpClientBuilder builder = HttpClientBuilder.create();
@@ -147,13 +84,13 @@ public class Main {
 		return httpJsonClient;
 	}
 
-	public static final String urlFormat(String url) {
+	public final String urlFormat(String url) {
 
-		if (!StringUtils.startsWithIgnoreCase(url, URL)) {
+		if (!StringUtils.startsWithIgnoreCase(url, getApiUrl())) {
 			if (!StringUtils.startsWithIgnoreCase(url, "/")) {
 				url = "/" + url;
 			}
-			url = URL + url;
+			url = getApiUrl() + url;
 		}
 
 		return url;
@@ -164,20 +101,20 @@ public class Main {
 		CREATE, READ, UPDATE, PATCH, DELETE 
 	}
 
-	public static final JsonNode callJsonCreat(String url, Object data) {
-		return callJsonCRUD(CRUD.CREATE, url, data);
+	public final <T extends JObject> T callJsonCreat(String url, Object data, Class<T> target) {
+		return callJsonCRUD(CRUD.CREATE, url, data, target);
 	}
 
-	public static final JsonNode callJsonRead(String url) {
-		return callJsonCRUD(CRUD.READ, url, null);
+	public final <T extends JObject> T callJsonRead(String url, Class<T> target) {
+		return callJsonCRUD(CRUD.READ, url, null, target);
 	}
 
-	public static final JsonNode callJsonUpdate(String url, Object data) {
-		return callJsonCRUD(CRUD.UPDATE, url, data);
+	public final <T extends JObject> T callJsonUpdate(String url, Object data, Class<T> target) {
+		return callJsonCRUD(CRUD.UPDATE, url, data, target);
 	}
 
 
-	public static final JsonNode callJsonCRUD(CRUD command, String url, Object data) {
+	public final <T extends JObject> T callJsonCRUD(CRUD command, String url, Object data, Class<T> target) {
 
 		long tStart = System.currentTimeMillis();
 		
@@ -241,7 +178,7 @@ public class Main {
 			//if(LOGGER.isTraceEnabled())
 				LogFactory.getMain().info(String.format("Query executed in %d ms", elapsedSeconds));
 			
-			return node;
+			return MAPPER.treeToValue(node, target);
 
 		} catch (Exception e) {
 			throw new RuntimeException(e);

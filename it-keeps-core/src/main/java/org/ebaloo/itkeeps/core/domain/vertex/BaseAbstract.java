@@ -18,7 +18,7 @@ import org.ebaloo.itkeeps.core.database.GraphFactory;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.domain.BaseUtils;
 import org.ebaloo.itkeeps.core.domain.ModelFactory;
-import org.ebaloo.itkeeps.core.domain.ModelFactory.ModelClass;
+import org.ebaloo.itkeeps.core.domain.annotation.ModelClassAnnotation;
 import org.ebaloo.itkeeps.core.domain.edge.RelationInterface;
 import org.ebaloo.itkeeps.core.domain.edge.RelationTools;
 import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
@@ -41,7 +41,18 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 	
 
 	protected final static <T extends BaseAbstract> List<T> commandBaseAbstract(OrientBaseGraph graph, final ModelClass<T> target, final String cmdSQL, Object... args) {
-		return GraphFactory.command(graph, cmdSQL, args).stream().map(e -> (T) BaseAbstract.newInstance(target, e)).collect(Collectors.toList());
+
+		/*
+		List<T> list = new ArrayList<T>();
+		
+		for(OrientVertex ov   : GraphFactory.command(graph, cmdSQL, args)) {
+			list.add(newInstance(target, ov));
+		}
+		
+		return list;
+		*/
+		
+		return GraphFactory.command(graph, cmdSQL, args).stream().map(e -> BaseAbstract.getInstance(target, e)).collect(Collectors.toList());
 	}
 
 	
@@ -422,7 +433,7 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 	
 
 	
-	protected ModelFactory.ModelClass<BaseAbstract> getModelClass() {
+	protected ModelClass<BaseAbstract> getModelClass() {
 		return ModelFactory.get(this.getClass());
 	}
 	
@@ -660,7 +671,7 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 	 */
 	
 	
-	protected final static <T extends BaseAbstract> T newInstance(final ModelClass<T> target, final OrientVertex ov){
+	public final static <T extends BaseAbstract> T getInstance(final ModelClass<T> target, final OrientVertex ov){
 		
 		try {
 			
@@ -679,6 +690,38 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 		}
 		
 	}
-	
+
+	public static class ModelClass<T extends BaseAbstract> {
+
+		private final Class<T> clasz;
+		private final ModelClassAnnotation modelClassAnnotation;
+
+		public ModelClass(Class<T> clasz) {
+
+			this.clasz = clasz;
+			this.modelClassAnnotation = this.clasz.getAnnotation(ModelClassAnnotation.class);
+		}
+
+		public String getClassName() {
+			return this.clasz.getSimpleName();
+		}
+
+		public Class<T> getClasz() {
+			return this.clasz;
+		}
+
+		public T newInstance() throws IllegalAccessException, InstantiationException {
+			return this.clasz.newInstance();
+		}
+
+		public boolean isAbstract() {
+			return this.modelClassAnnotation.isAbstract();
+		}
+
+		public boolean isInstance(BaseAbstract baseAbstract) {
+			return this.clasz.isInstance(baseAbstract);
+		}
+
+	}
 }
 

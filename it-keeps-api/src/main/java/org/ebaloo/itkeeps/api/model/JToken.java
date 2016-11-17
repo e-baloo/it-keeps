@@ -3,7 +3,7 @@ package org.ebaloo.itkeeps.api.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class JToken  {
+public class JToken extends JObject  {
 	
 	
 	public JToken() {

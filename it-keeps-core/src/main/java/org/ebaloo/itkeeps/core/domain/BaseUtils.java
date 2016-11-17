@@ -5,6 +5,7 @@ import java.util.function.Predicate;
 
 import org.ebaloo.itkeeps.api.model.JBase;
 import org.ebaloo.itkeeps.core.domain.vertex.BaseAbstract;
+import org.ebaloo.itkeeps.core.domain.vertex.BaseAbstract.ModelClass;
 
 public class BaseUtils {
 	
@@ -57,7 +58,7 @@ public class BaseUtils {
 			return classIsntanceOf(targetClass.getSimpleName(), instanceOf);
 		}
 		
-		public final static String classIsntanceOf(final ModelFactory.ModelClass<? extends BaseAbstract> targetClass, final boolean instanceOf) {
+		public final static String classIsntanceOf(final ModelClass<? extends BaseAbstract> targetClass, final boolean instanceOf) {
 			return classIsntanceOf(targetClass.getClassName(), instanceOf);
 		}
 
@@ -65,7 +66,7 @@ public class BaseUtils {
 			sb.append(classIsntanceOf(targetClass, instanceOf));
 		}
 
-		public final static void classIsntanceOf(final ModelFactory.ModelClass<? extends BaseAbstract> targetClass, final boolean instanceOf, final StringBuilder sb) {
+		public final static void classIsntanceOf(final ModelClass<? extends BaseAbstract> targetClass, final boolean instanceOf, final StringBuilder sb) {
 			sb.append(classIsntanceOf(targetClass, instanceOf));
 		}
 

@@ -12,10 +12,9 @@ import org.ebaloo.itkeeps.api.model.JBaseLight;
 import org.ebaloo.itkeeps.api.model.JGroup;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.ModelFactory;
-import org.ebaloo.itkeeps.core.domain.ModelFactory.ModelClass;
 import org.ebaloo.itkeeps.core.domain.annotation.ModelClassAnnotation;
 import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
-import org.ebaloo.itkeeps.core.domain.edge.TraverseInGroup;
+import org.ebaloo.itkeeps.core.domain.edge.traverse.InGroup;
 
 import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
 
@@ -50,11 +49,11 @@ public class Group extends BaseStandard {
 	 */
 	
 	public Group getParentGroup() {
-		return this.getEdgeByClassesNames(ModelFactory.get(Group.class), DirectionType.CHILD, false, TraverseInGroup.class);
+		return this.getEdgeByClassesNames(ModelFactory.get(Group.class), DirectionType.CHILD, false, InGroup.class);
 	}
 	
 	public void setParentGroup(final Group group) {
-		setEdges(this.getGraph(), ModelFactory.get(Group.class), this, group, DirectionType.CHILD, TraverseInGroup.class, false);
+		setEdges(this.getGraph(), ModelFactory.get(Group.class), this, group, DirectionType.CHILD, InGroup.class, false);
 	}
 
 	private void setParentGroupJBL(JBaseLight group) {
@@ -69,11 +68,11 @@ public class Group extends BaseStandard {
 	 */
 	
 	public List<Group> getChildGroup() {
-		return this.getEdgesByClassesNames(ModelFactory.get(Group.class), DirectionType.PARENT, false, TraverseInGroup.class);
+		return this.getEdgesByClassesNames(ModelFactory.get(Group.class), DirectionType.PARENT, false, InGroup.class);
 	}
 	
 	public void setChildGroup(List<Group> list) {
-		setEdges(this.getGraph(), ModelFactory.get(Group.class), this, list, DirectionType.PARENT, TraverseInGroup.class, false);
+		setEdges(this.getGraph(), ModelFactory.get(Group.class), this, list, DirectionType.PARENT, InGroup.class, false);
 	}
 
 	private void setChildGroupJBL(List<JBaseLight> list) {

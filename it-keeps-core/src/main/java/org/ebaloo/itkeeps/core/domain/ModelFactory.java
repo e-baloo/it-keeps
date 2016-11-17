@@ -5,6 +5,7 @@ import java.util.*;
 
 import org.ebaloo.itkeeps.core.domain.annotation.ModelClassAnnotation;
 import org.ebaloo.itkeeps.core.domain.vertex.BaseAbstract;
+import org.ebaloo.itkeeps.core.domain.vertex.BaseAbstract.ModelClass;
 import org.ebaloo.itkeeps.core.tools.ReflectionsFactory;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
@@ -53,38 +54,7 @@ public class ModelFactory {
 	private static Map<String, ModelClass<BaseAbstract>> mapName = new HashMap<>();
 	private static Map<Class<? extends BaseAbstract>, ModelClass<BaseAbstract>> mapClass = new HashMap<>();
 
-	public static class ModelClass<T extends BaseAbstract> {
 
-		private final Class<T> clasz;
-		private final ModelClassAnnotation modelClassAnnotation;
-
-		protected ModelClass(Class<T> clasz) {
-
-			this.clasz = clasz;
-			this.modelClassAnnotation = this.clasz.getAnnotation(ModelClassAnnotation.class);
-		}
-
-		public String getClassName() {
-			return this.clasz.getSimpleName();
-		}
-
-		public Class<T> getClasz() {
-			return this.clasz;
-		}
-
-		public T newInstance() throws IllegalAccessException, InstantiationException {
-			return this.clasz.newInstance();
-		}
-
-		public boolean isAbstract() {
-			return this.modelClassAnnotation.isAbstract();
-		}
-
-		public boolean isInstance(BaseAbstract baseAbstract) {
-			return this.clasz.isInstance(baseAbstract);
-		}
-
-	}
 
 	@SuppressWarnings("unchecked")
 	public static <T extends BaseAbstract> ModelClass<T> get(Class<? extends T> clazz) {

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed.SecurityRole;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,8 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class JUser extends JBaseStandard{
 
-	public static final String USER_ID = "userId";
-	public static final String PASSWORD = "password";
+//	public static final String USER_ID = "userId";
 	public static final String ROLE = "role";
 	public static final String IN_GROUPS = "inGroups";
 
@@ -22,6 +23,7 @@ public class JUser extends JBaseStandard{
 	}
 	
 	
+	/*
 	// ID
 	
 	@JsonIgnore
@@ -41,21 +43,34 @@ public class JUser extends JBaseStandard{
 	public boolean isPresentUserId() {
 		return this.userId.isPresent();
 	}
-	
+	*/
 	
 	// ROLE
 	
 	@JsonIgnore
-	private Optional<String> role = Optional.empty();
+	private Optional<SecurityRole> role = Optional.empty();
 	
-	@JsonProperty(ROLE)
-	public final String getRole() {
+	@JsonIgnore
+	public final SecurityRole getRole() {
 		return this.role.orElse(null);
 	}
 
-	@JsonProperty(ROLE)
-	public final void setRole(String value) {
+	@JsonIgnore
+	public final void setRole(SecurityRole value) {
 		role = Optional.of(value);
+	}
+
+	@JsonProperty(ROLE)
+	public final String _getRole() {
+		if(isPresentRole())
+			return this.role.get().toString();
+		else
+			return null;
+	}
+
+	@JsonProperty(ROLE)
+	public final void _setRole(String value) {
+		role = Optional.of(SecurityRole.valueOf(value));
 	}
 
 	@JsonIgnore
@@ -63,6 +78,7 @@ public class JUser extends JBaseStandard{
 		return this.role.isPresent();
 	}
 
+	/*
 	// PASSWORD
 	
 	@JsonIgnore
@@ -82,6 +98,7 @@ public class JUser extends JBaseStandard{
 	public final boolean isPresentPassword() {
 		return this.password.isPresent();
 	}
+	*/
 
 	// IN_GROUPS
 	
@@ -102,7 +119,7 @@ public class JUser extends JBaseStandard{
 	}
 
 	@JsonIgnore
-	public final boolean isChildGroups() {
+	public final boolean isPresentInGroup() {
 		return this.inGroups.isPresent();
 	}
 }

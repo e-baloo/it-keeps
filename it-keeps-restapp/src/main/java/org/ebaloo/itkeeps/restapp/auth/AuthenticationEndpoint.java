@@ -11,6 +11,8 @@ import javax.ws.rs.core.Response;
 
 import org.ebaloo.itkeeps.api.model.JCredential;
 import org.ebaloo.itkeeps.api.model.JToken;
+import org.ebaloo.itkeeps.core.domain.ModelFactory;
+import org.ebaloo.itkeeps.core.domain.vertex.Credential;
 import org.ebaloo.itkeeps.core.domain.vertex.User;
 import org.ebaloo.itkeeps.core.tools.SecurityFactory;
 import org.slf4j.Logger;
@@ -53,6 +55,7 @@ public class AuthenticationEndpoint {
             return Response.ok(new JToken(token)).build();
 
         } catch (Exception e) {
+        	e.printStackTrace();
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }      
     }
@@ -60,17 +63,21 @@ public class AuthenticationEndpoint {
 
 
     
-    private User authenticate(JCredential credentials) throws Exception {
+    private User authenticate(JCredential jcredential) throws Exception {
     	
     	if(logger.isTraceEnabled())
     		logger.trace("authenticate()");
     	
-    	SecurityFactory.validateCredential(credentials);
+    	SecurityFactory.validateCredential(jcredential);
     	
-    	User user = User.getByCredentials(null, credentials);
+    	Credential credential = Credential.get(null, ModelFactory.get(Credential.class), jcredential.getId(), false);
+    	if(credential == null) 
+    		throw new RuntimeException("credential is null!");
+    	
+    	User user = credential.getUser();
     	
     	if(user == null) 
-    		throw new RuntimeException("user '" + credentials.getId() + "' not definde!");
+    		throw new RuntimeException("user is null!");
 
     	
     	return user;

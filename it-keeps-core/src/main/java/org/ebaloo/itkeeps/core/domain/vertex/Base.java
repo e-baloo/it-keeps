@@ -14,7 +14,6 @@ import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.BaseUtils;
 import org.ebaloo.itkeeps.core.domain.GuidFactory;
 import org.ebaloo.itkeeps.core.domain.ModelFactory;
-import org.ebaloo.itkeeps.core.domain.ModelFactory.ModelClass;
 import org.ebaloo.itkeeps.core.domain.annotation.ModelClassAnnotation;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;

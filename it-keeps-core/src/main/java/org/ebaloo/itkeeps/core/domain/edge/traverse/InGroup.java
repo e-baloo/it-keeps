@@ -1,18 +1,18 @@
 
-package org.ebaloo.itkeeps.core.domain.edge;
+package org.ebaloo.itkeeps.core.domain.edge.traverse;
 
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseEdge;
 
 import com.tinkerpop.blueprints.impls.orient.OrientEdge;
 
 @DatabaseEdge()
-public class TraverseInGroup extends Traverse {
+public class InGroup extends Traverse {
 
-	public TraverseInGroup(OrientEdge oe) throws Exception {
+	public InGroup(OrientEdge oe) throws Exception {
 		super(oe);
 	}
 	
-	public TraverseInGroup() {
+	public InGroup() {
 		super();
 	}
 

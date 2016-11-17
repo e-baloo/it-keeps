@@ -14,7 +14,6 @@ import org.ebaloo.itkeeps.api.model.JBaseStandard;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.BaseUtils;
-import org.ebaloo.itkeeps.core.domain.ModelFactory.ModelClass;
 import org.ebaloo.itkeeps.core.domain.annotation.ModelClassAnnotation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -117,7 +116,7 @@ public abstract class BaseStandard extends Base {
 
 		
 		OrientVertex ov = list.get(0);
-		T baseAbstract = BaseAbstract.newInstance(target, ov);
+		T baseAbstract = BaseAbstract.getInstance(target, ov);
 
 		if (logger.isTraceEnabled())
 			logger.trace("OrientVertex found for [k,v]: " + key + "," + value + " @" + ov.getType().getName() + " #"

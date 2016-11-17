@@ -3,36 +3,24 @@
   <parent>
     <groupId>org.e-ballo</groupId>
     <artifactId>it-keeps</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
   </parent>
-
-  <artifactId>it-keeps-httpclient</artifactId>
+  <artifactId>it-keeps-test</artifactId>
+  
   
     <dependencies>
-		<dependency>
-		    <groupId>org.apache.httpcomponents</groupId>
-		    <artifactId>httpclient</artifactId>
-		    <version>${version.httpclient}</version>
-		</dependency>
-		
 
 
-
-		
-		
-
-		<dependency>
-			<groupId>org.e-ballo</groupId>
-			<artifactId>it-keeps-api</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.e-ballo</groupId>
-			<artifactId>it-keeps-commons</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		
+    <dependency>
+    	<groupId>org.e-ballo</groupId>
+    	<artifactId>it-keeps-httpclient</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.e-ballo</groupId>
+    	<artifactId>it-keeps-restapp</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+    </dependency>
     </dependencies>
   
   
@@ -49,6 +37,5 @@
 			</plugin>
 		</plugins>
 	</build>	
-  
-  	<name>IT-Keeps : Http Client</name>
+    
 </project>

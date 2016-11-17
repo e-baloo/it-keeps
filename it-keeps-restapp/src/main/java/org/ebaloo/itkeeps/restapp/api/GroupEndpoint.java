@@ -62,18 +62,15 @@ public class GroupEndpoint {
 	
     @GET 
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/{id}")
+    @Path("/{guid}")
 	@ApplicationRolesAllowed(SecurityRole.USER)
     @Timed
-    public Response read(@PathParam("id") String id) {
+    public Response read(@PathParam("guid") Guid guid) {
 
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
 
 		JGroup j = new JGroup();
-		Group group = null;
-		
-		if(Guid.isGuid(id))
-			group = Group.get(null, ModelFactory.get(Group.class), new Guid(id), false);
+		Group group = Group.get(null, ModelFactory.get(Group.class), guid, false);
 		
 		if(group == null)
 			throw new RuntimeException("TODO"); // TODO

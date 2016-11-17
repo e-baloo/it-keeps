@@ -16,10 +16,10 @@ import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.BaseUtils;
 import org.ebaloo.itkeeps.core.domain.ModelFactory;
-import org.ebaloo.itkeeps.core.domain.ModelFactory.ModelClass;
 import org.ebaloo.itkeeps.core.domain.annotation.ModelClassAnnotation;
 import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
-import org.ebaloo.itkeeps.core.domain.edge.TraverseInGroup;
+import org.ebaloo.itkeeps.core.domain.edge.notraverse.CredentialToUser;
+import org.ebaloo.itkeeps.core.domain.edge.traverse.InGroup;
 import org.ebaloo.itkeeps.core.tools.SecurityFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +46,7 @@ public class User extends BaseStandard {
 	}
 
 
-	
+	/*
 	public User(final JCredential j) {
 		super(j.getUserName());
 		
@@ -66,7 +66,7 @@ public class User extends BaseStandard {
 		this.setEnable(Boolean.TRUE);
 		
 	}
-	
+	*/
 	
 
 	/*
@@ -74,11 +74,11 @@ public class User extends BaseStandard {
 	 */
 	
 	public List<Group> getInGroup() {
-		return this.getEdgesByClassesNames(ModelFactory.get(Group.class), DirectionType.CHILD, false, TraverseInGroup.class);
+		return this.getEdgesByClassesNames(ModelFactory.get(Group.class), DirectionType.CHILD, false, InGroup.class);
 	}
 	
 	public void setInGroup(List<Group> list) {
-		setEdges(this.getGraph(), ModelFactory.get(Group.class), this, list, DirectionType.CHILD, TraverseInGroup.class, false);
+		setEdges(this.getGraph(), ModelFactory.get(Group.class), this, list, DirectionType.CHILD, InGroup.class, false);
 	}
 
 	private void setInGroupJBL(List<JBaseLight> list) {
@@ -94,11 +94,36 @@ public class User extends BaseStandard {
 		setInGroup(list.stream().map(e -> get(graph, mc, e, false)).collect(Collectors.toList())); 
 	}
 
+	/*
+	 * IN_GROUP
+	 */
+	
+	public List<Credential> getCredentials() {
+		return this.getEdgesByClassesNames(ModelFactory.get(Credential.class), DirectionType.CHILD, false, CredentialToUser.class);
+	}
+	
+	private void _setCredentials(List<Credential> list) {
+		setEdges(this.getGraph(), ModelFactory.get(Credential.class), this, list, DirectionType.CHILD, CredentialToUser.class, false);
+	}
+
+	public void setCredentials(List<JBaseLight> list) {
+		
+		if(list == null) {
+			list = new ArrayList<JBaseLight>();
+		}
+		
+		// Optimization
+		ModelClass<Credential> mc = ModelFactory.get(Credential.class);
+		OrientBaseGraph graph = this.getGraph();
+		
+		this._setCredentials(list.stream().map(e -> get(graph, mc, e, false)).collect(Collectors.toList())); 
+	}
+	
 	
 	/*
 	 *  ID
 	 */
-	
+	/*
 
 	@DatabaseProperty(name = JUser.USER_ID, isNotNull = true)
 	public String getUserId()  {
@@ -126,6 +151,7 @@ public class User extends BaseStandard {
 
 		return user;
 	}
+	
 
 	
 	public static User getById(OrientBaseGraph graph, final String id) {
@@ -160,13 +186,13 @@ public class User extends BaseStandard {
 		
 		return user;
 	}
-	
+	*/
 	
 	/*
 	 *   PASSWORD
 	 */
 	
-
+/*
 	@DatabaseProperty(name = JUser.PASSWORD)
 	public String getPassword()  {
 		return this.getProperty(JUser.PASSWORD);
@@ -177,7 +203,7 @@ public class User extends BaseStandard {
 		this.setProperty(JUser.PASSWORD, value);
 	}
 	
-	
+	*/
 	
 
 	/*
@@ -209,14 +235,18 @@ public class User extends BaseStandard {
 		this.commit();
 		this.reload();
 
+		/*
 		if(User.getById(this.getGraph(), j.getUserId()) != null)
 			throw new RuntimeException("TODO"); //TODO
+			
 
 		if(StringUtils.isEmpty(j.getRole()))
 				j.setRole(SecurityRole.GUEST.toString());
+		*/
 		
-		this.setUserId(j.getUserId());
-		this.setRole(j.getRole());
+		//this.setUserId(j.getUserId());
+		if(j.isPresentRole())
+			this.setRole(j.getRole());
 
 		if(f)
 			this.setEnable(Boolean.TRUE);
@@ -233,9 +263,12 @@ public class User extends BaseStandard {
 
 		JUser juser = (JUser) j;
 		
-		juser.setUserId(this.getUserId());
-		juser.setRole(this.getRole().toString());
-		juser.setInGroups(this.getInGroup().stream().map(e -> Base.getJBaseLight(e)).collect(Collectors.toList()));
+		//juser.setUserId(this.getUserId());
+		if(juser.isPresentRole())
+			juser.setRole(this.getRole());
+		
+		if(juser.isPresentInGroup())
+			juser.setInGroups(this.getInGroup().stream().map(e -> Base.getJBaseLight(e)).collect(Collectors.toList()));
 		
 		return j;
 	}
@@ -278,7 +311,7 @@ public class User extends BaseStandard {
 		if(juser.isPresentRole()) {
 			
 			SecurityRole requesterRole = requesterUser.getRole();
-			SecurityRole jRole = SecurityRole.valueOf(juser.getRole());
+			SecurityRole jRole = juser.getRole();
 			
 			if(requesterRole.isRoot()) {
 				this.setRole(jRole);
@@ -289,16 +322,17 @@ public class User extends BaseStandard {
 			}
 		}
 
+		/*
 		if(juser.isPresentUserId())
 			this.setIcon(juser.getIcon());
-
+		 */
 		
 		// ADMIN & ROOT
 		
 		if(requesterUser.getRole().isAdmin()) {
 			
 			
-			if(juser.isChildGroups()) {
+			if(juser.isPresentInGroup()) {
 				this.setInGroupJBL(juser.getInGroups());
 			}
 

@@ -117,8 +117,7 @@ public final class JwtFactory {
 		
 		
 		claims.put(JBase.GUID, user.getGuid().toString());
-		claims.put(USER_ID, user.getUserId());
-		claims.put(USER_NAME, user.getName());
+		claims.put(JBase.NAME, user.getName());
 		
 		//claims.put(USER_ROLE, user.getRole().toString());
 		claims.put(USER_ROLE, SecurityRole.ROOT.toString());
@@ -170,6 +169,7 @@ public final class JwtFactory {
 	}
 	*/
 
+	/*
 	public static final String getUserId(Map<String, Object> claims) {
 
 		if (logger.isTraceEnabled())
@@ -177,6 +177,7 @@ public final class JwtFactory {
 
 		return claims.get(USER_ID).toString();
 	}
+	*/
 
 	public static final String getGuid(Map<String, Object> claims) {
 

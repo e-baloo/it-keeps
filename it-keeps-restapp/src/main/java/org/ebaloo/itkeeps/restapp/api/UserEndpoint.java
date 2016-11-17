@@ -22,6 +22,7 @@ import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed.SecurityRole;
 import org.ebaloo.itkeeps.api.model.JUser;
 import org.ebaloo.itkeeps.core.domain.ModelFactory;
 import org.ebaloo.itkeeps.core.domain.vertex.BaseAbstract;
+import org.ebaloo.itkeeps.core.domain.vertex.Credential;
 import org.ebaloo.itkeeps.core.domain.vertex.Image;
 import org.ebaloo.itkeeps.core.domain.vertex.User;
 
@@ -40,6 +41,7 @@ public class UserEndpoint {
     @Produces({MediaType.APPLICATION_JSON})
 	@ApplicationRolesAllowed(SecurityRole.ADMIN)
     @Timed
+    @Path("/all}")
     public Response readAll() {
 		
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
@@ -59,28 +61,39 @@ public class UserEndpoint {
 	
     @GET //READ
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/{id}")
+    @Path("/id/{id}")
 	@ApplicationRolesAllowed(SecurityRole.USER)
     @Timed
     public Response readId(@PathParam("id") String id) {
 
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
 
-		User user;
-		
-		if(Guid.isGuid(id)) {
-			user = User.get(null, ModelFactory.get(User.class), new Guid(id), false);
-		} else {
-			user = User.getById(null, id);
-		}
+		User user = User.get(null, ModelFactory.get(User.class), id, false);
 		
 		if(user == null)
-			throw new RuntimeException("TODO"); // TODO
+			throw new RuntimeException("readId(" + id + ") is null" );
 		
 		
     	return Response.ok().entity(user.apiFill(new JUser(), requesteurGuid)).build();
     }
 	
+    @GET //READ
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/credid/{id}")
+	@ApplicationRolesAllowed(SecurityRole.USER)
+    @Timed
+    public Response readCredId(@PathParam("id") String id) {
+
+    	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
+
+    	Credential cred = Credential.get(null, ModelFactory.get(Credential.class), id, false);
+		
+		if(cred == null)
+			throw new RuntimeException("readId(" + id + ") is null" );
+		
+		
+    	return Response.ok().entity(cred.getUser().apiFill(new JUser(), requesteurGuid)).build();
+    }
 
     @PUT // UPDATE
     @Produces({MediaType.APPLICATION_JSON})
