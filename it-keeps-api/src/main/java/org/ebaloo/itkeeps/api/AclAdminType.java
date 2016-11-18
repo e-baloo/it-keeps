@@ -1,11 +1,10 @@
 package org.ebaloo.itkeeps.api;
 
-public enum AclType {
+public enum AclAdminType {
 	
 	CREATE,
 	UPDATE,
 	READ,
-	NONE
-	
+	DENY
 
 }
