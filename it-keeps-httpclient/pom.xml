@@ -9,6 +9,8 @@
   <artifactId>it-keeps-httpclient</artifactId>
   
     <dependencies>
+    
+    
 		<dependency>
 		    <groupId>org.apache.httpcomponents</groupId>
 		    <artifactId>httpclient</artifactId>

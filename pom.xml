@@ -40,11 +40,11 @@
 	</properties>
 
 	<modules>
-		<module>it-keeps-core</module>
 		<module>it-keeps-api</module>
+		<module>it-keeps-commons</module>
+		<module>it-keeps-core</module>
 		<module>it-keeps-httpclient</module>
 		<module>it-keeps-restapp</module>
-		<module>it-keeps-commons</module>
 		<module>it-keeps-test</module>
 	</modules>
 </project>
