@@ -1,12 +1,7 @@
 
 
 import java.net.URI;
-import java.util.ArrayList;
 
-import org.apache.http.Header;
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicHeader;
 import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.enumeration.AuthenticationType;
 import org.ebaloo.itkeeps.api.model.JCredential;
@@ -17,16 +12,12 @@ import org.ebaloo.itkeeps.commons.LogFactory;
 import org.ebaloo.itkeeps.core.database.DatabaseFactory;
 import org.ebaloo.itkeeps.core.database.GraphFactory;
 import org.ebaloo.itkeeps.core.domain.ModelFactory;
-import org.ebaloo.itkeeps.core.domain.vertex.EnumAbstractClass;
 import org.ebaloo.itkeeps.httpclient.ItkeepsHttpClient;
 import org.ebaloo.itkeeps.restapp.ApplicationConfig;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 public class Main {
