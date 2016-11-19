@@ -1,7 +1,6 @@
 
 package org.ebaloo.itkeeps.core.database;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,9 +12,15 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ebaloo.itkeeps.Guid;
+import org.ebaloo.itkeeps.api.AclAdminType;
+import org.ebaloo.itkeeps.api.AclDataType;
+import org.ebaloo.itkeeps.api.AuthenticationType;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseEdge;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
+import org.ebaloo.itkeeps.core.domain.vertex.AclAdminTypeClass;
+import org.ebaloo.itkeeps.core.domain.vertex.AclDataTypeClass;
+import org.ebaloo.itkeeps.core.domain.vertex.AuthenticationTypeClass;
 import org.ebaloo.itkeeps.core.tools.ReflectionsFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,14 +38,6 @@ public class DatabaseFactory {
 	
 	private static boolean init = false;
 	
-	
-	//private static Map<String, Map<String, DatabaseProperty>> mapSchema = new HashMap<String, Map<String, DatabaseProperty>>();
-	
-	/*
-	public static  Map<String, Map<String, DatabaseProperty>> getMapSchema() {
-		return mapSchema;
-	}
-*/
 	public static void init() {
 
 		if (init)
@@ -63,15 +60,19 @@ public class DatabaseFactory {
 			
 			GraphFactory.executeNoReturn(null, "ALTER DATABASE DATETIMEFORMAT \"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\"");
 
-			
-			
-			
-			
-			
-			//AuthAccessLevelClass.init();
-//			AuthAccessLevelClass.init();
-//			logger.info(" - init AuthAccessLevelClass done.");
 
+			AuthenticationTypeClass.init(AuthenticationType.class, AuthenticationTypeClass.class);
+			logger.info(" - init AuthenticationTypeClass done.");
+
+			AclDataTypeClass.init(AclDataType.class, AclDataTypeClass.class);
+			logger.info(" - init AclDataTypeClass done.");
+
+			AclAdminTypeClass.init(AclAdminType.class, AclAdminTypeClass.class);
+			logger.info(" - init AclAdminTypeClass done.");
+			
+
+			
+			
 			init = true;
 	}
 	
@@ -207,11 +208,13 @@ public class DatabaseFactory {
 
 				ArrayList<DatabaseProperty> listDatabaseProperty = new ArrayList<DatabaseProperty>();
 
+				/*
 				for (Field field : clasz.getFields()) {
 					if (field.isAnnotationPresent(DatabaseProperty.class)) {
 						listDatabaseProperty.add(field.getAnnotation(DatabaseProperty.class));
 					}
 				}
+				*/
 
 				for (Method method : clasz.getMethods()) {
 					if (method.isAnnotationPresent(DatabaseProperty.class)) {

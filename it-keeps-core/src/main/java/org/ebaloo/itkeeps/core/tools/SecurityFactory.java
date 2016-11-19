@@ -1,5 +1,6 @@
 package org.ebaloo.itkeeps.core.tools;
 
+import org.ebaloo.itkeeps.api.AuthenticationType;
 import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed.SecurityRole;
 import org.ebaloo.itkeeps.api.model.JCredential;
 import org.ebaloo.itkeeps.api.model.JUser;
@@ -26,17 +27,10 @@ public final class SecurityFactory {
 		if(!user.equals(credential.getUser()))
 			throw new RuntimeException("TODO"); //TODO
 		
-		switch(credential.getAuthenticationType()) {
-		
-		case BASIC:
-			
-			break;
-		case LDAP:
-		case TOKEN:
-		case ACTIVE_DIRECTORY:
-		default:
+		if(credential.getAuthenticationType().equals(AuthenticationType.BASIC)) {
+			;
+		} else {
 			throw new RuntimeException("TODO"); //TODO
-		
 		}
 		
 		

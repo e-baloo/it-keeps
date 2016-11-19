@@ -6,34 +6,30 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed.SecurityRole;
 import org.ebaloo.itkeeps.api.model.JBase;
 import org.ebaloo.itkeeps.api.model.JBaseLight;
-import org.ebaloo.itkeeps.api.model.JCredential;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
-import org.ebaloo.itkeeps.core.domain.BaseUtils;
 import org.ebaloo.itkeeps.core.domain.ModelFactory;
 import org.ebaloo.itkeeps.core.domain.annotation.ModelClassAnnotation;
 import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
 import org.ebaloo.itkeeps.core.domain.edge.notraverse.CredentialToUser;
 import org.ebaloo.itkeeps.core.domain.edge.traverse.InGroup;
-import org.ebaloo.itkeeps.core.tools.SecurityFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import  org.ebaloo.itkeeps.api.model.JUser;
 
 import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
-import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 
 @ModelClassAnnotation()
 @DatabaseVertrex()
 public class User extends BaseStandard {
 
+	@SuppressWarnings("unused")
 	private static Logger logger = LoggerFactory.getLogger(User.class);
 
 	

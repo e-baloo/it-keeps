@@ -5,8 +5,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.ebaloo.itkeeps.api.AclAdminType;
 import org.ebaloo.itkeeps.api.AclDataType;
+import org.ebaloo.itkeeps.api.AclAdminType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -43,7 +43,7 @@ public class JAcl extends JBase {
 		if(StringUtils.isEmpty(value))
 			this.aclDataType = Optional.empty();
 		else 
-			aclDataType = Optional.of(AclDataType.valueOf(value));
+			aclDataType = Optional.of((AclDataType) AclDataType.valueOf(value));
 	}
 	
 	@JsonIgnore
@@ -104,7 +104,7 @@ public class JAcl extends JBase {
 		if(value.isEmpty())
 			this.aclAdminType = Optional.empty();
 		else 
-			aclAdminType = Optional.of(value.stream().map(e-> AclAdminType.valueOf(e)).collect(Collectors.toList()));
+			aclAdminType = Optional.of(value.stream().map(e-> (AclAdminType) AclAdminType.valueOf(e)).collect(Collectors.toList()));
 	}
 	
 	@JsonIgnore

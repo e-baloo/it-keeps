@@ -80,16 +80,26 @@ public class JCredential {
 	@JsonIgnore
 	private AuthenticationType authenticationType = AuthenticationType.BASIC;
 	
-	@JsonProperty(AUTHENTICATION_TYPE)
+	@JsonIgnore
 	public final AuthenticationType getAuthenticationType() {
 		return this.authenticationType;
 	}
 
-	@JsonProperty(AUTHENTICATION_TYPE)
+	@JsonIgnore
 	public final void setAuthenticationType(AuthenticationType value) {
 		authenticationType = value;
 	}
 
+	@JsonProperty(AUTHENTICATION_TYPE)
+	public final String _getAuthenticationType() {
+		return this.authenticationType.name();
+	}
+
+	@JsonProperty(AUTHENTICATION_TYPE)
+	public final void _setAuthenticationType(String name) {
+		authenticationType = (AuthenticationType) AuthenticationType.valueOf(name);
+	}
+	
 
 
 }

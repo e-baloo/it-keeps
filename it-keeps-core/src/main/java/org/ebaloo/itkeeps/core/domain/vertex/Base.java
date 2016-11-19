@@ -13,7 +13,6 @@ import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.BaseUtils;
 import org.ebaloo.itkeeps.core.domain.GuidFactory;
-import org.ebaloo.itkeeps.core.domain.ModelFactory;
 import org.ebaloo.itkeeps.core.domain.annotation.ModelClassAnnotation;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -21,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
-import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 import com.orientechnologies.orient.core.metadata.schema.OType;
 
@@ -33,6 +31,7 @@ import com.orientechnologies.orient.core.metadata.schema.OType;
 @DatabaseVertrex(isAbstract = true)
 public abstract class Base extends BaseAbstract {
 
+	@SuppressWarnings("unused")
 	private static Logger logger = LoggerFactory.getLogger(Base.class);
 
 

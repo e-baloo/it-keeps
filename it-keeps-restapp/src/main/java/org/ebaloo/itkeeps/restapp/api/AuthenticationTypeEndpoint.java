@@ -13,6 +13,7 @@ import javax.ws.rs.core.Response;
 import org.ebaloo.itkeeps.api.AuthenticationType;
 import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed.SecurityRole;
+import org.ebaloo.itkeeps.api.annotation.EnumAbstract;
 
 import com.codahale.metrics.annotation.Timed;
 
@@ -28,7 +29,7 @@ public class AuthenticationTypeEndpoint {
 
 		List<String> list = new ArrayList<String>();
 		
-		for(AuthenticationType at : AuthenticationType.values()) {
+		for(EnumAbstract<?> at : AuthenticationType.values()) {
 		    	list.add(at.toString());
 		}
 		

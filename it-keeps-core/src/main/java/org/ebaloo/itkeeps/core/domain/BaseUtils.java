@@ -1,7 +1,6 @@
 package org.ebaloo.itkeeps.core.domain;
 
 
-import java.util.function.Predicate;
 
 import org.ebaloo.itkeeps.api.model.JBase;
 import org.ebaloo.itkeeps.core.domain.vertex.BaseAbstract;

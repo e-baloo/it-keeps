@@ -53,16 +53,10 @@ public final class Credential extends Base {
 		}
 		
 		
-		switch(j.getAuthenticationType()) {
-		case TOKEN:
-		case BASIC:
-			this.setPassowrd(j.getPassword());;
-
-		case ACTIVE_DIRECTORY:
-		case LDAP:
-			break;
+		if(j.getAuthenticationType().equals(AuthenticationType.BASIC) || j.getAuthenticationType().equals(AuthenticationType.TOKEN) ) {
+			this.setPassowrd(j.getPassword());
 		}
-
+	
 		this.setAuthenticationType(j.getAuthenticationType());
 		
 		if((jblUser == null) || jblUser.getGuid() == null) {
@@ -126,7 +120,7 @@ public final class Credential extends Base {
 	
 	@DatabaseProperty(name = JCredential.AUTHENTICATION_TYPE)
 	public AuthenticationType getAuthenticationType() {
-		return AuthenticationType.valueOf(this.getProperty(JCredential.AUTHENTICATION_TYPE));
+		return (AuthenticationType) AuthenticationType.valueOf(this.getProperty(JCredential.AUTHENTICATION_TYPE));
 	}
 	
 	private void setAuthenticationType(AuthenticationType authType) {
