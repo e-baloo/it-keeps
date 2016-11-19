@@ -1,9 +1,7 @@
-package org.ebaloo.itkeeps.api;
+package org.ebaloo.itkeeps.api.enumeration;
 
 import java.util.Collection;
 import java.util.HashMap;
-
-import org.ebaloo.itkeeps.api.annotation.EnumAbstract;
 
 public class AclDataType extends EnumAbstract<String> {
 

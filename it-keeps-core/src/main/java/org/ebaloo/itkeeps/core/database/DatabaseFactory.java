@@ -12,9 +12,9 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ebaloo.itkeeps.Guid;
-import org.ebaloo.itkeeps.api.AclAdminType;
-import org.ebaloo.itkeeps.api.AclDataType;
-import org.ebaloo.itkeeps.api.AuthenticationType;
+import org.ebaloo.itkeeps.api.enumeration.AclAdminType;
+import org.ebaloo.itkeeps.api.enumeration.AclDataType;
+import org.ebaloo.itkeeps.api.enumeration.AuthenticationType;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseEdge;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;

@@ -1,7 +1,7 @@
 
 package org.ebaloo.itkeeps.core.domain.vertex;
 
-import org.ebaloo.itkeeps.api.AclAdminType;
+import org.ebaloo.itkeeps.api.enumeration.AclAdminType;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 
 /**

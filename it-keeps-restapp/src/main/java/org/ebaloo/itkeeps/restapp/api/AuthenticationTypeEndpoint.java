@@ -10,10 +10,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.ebaloo.itkeeps.api.AuthenticationType;
 import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed.SecurityRole;
-import org.ebaloo.itkeeps.api.annotation.EnumAbstract;
+import org.ebaloo.itkeeps.api.enumeration.AuthenticationType;
+import org.ebaloo.itkeeps.api.enumeration.EnumAbstract;
 
 import com.codahale.metrics.annotation.Timed;
 

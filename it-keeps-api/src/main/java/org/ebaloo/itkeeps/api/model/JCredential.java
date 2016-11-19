@@ -3,7 +3,7 @@ package org.ebaloo.itkeeps.api.model;
 
 import java.util.Optional;
 
-import org.ebaloo.itkeeps.api.AuthenticationType;
+import org.ebaloo.itkeeps.api.enumeration.AuthenticationType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;

@@ -1,7 +1,7 @@
 package org.ebaloo.itkeeps.core.tools;
 
-import org.ebaloo.itkeeps.api.AuthenticationType;
 import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed.SecurityRole;
+import org.ebaloo.itkeeps.api.enumeration.AuthenticationType;
 import org.ebaloo.itkeeps.api.model.JCredential;
 import org.ebaloo.itkeeps.api.model.JUser;
 import org.ebaloo.itkeeps.core.database.GraphFactory;

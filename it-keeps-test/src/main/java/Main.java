@@ -8,7 +8,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.ebaloo.itkeeps.Guid;
-import org.ebaloo.itkeeps.api.AuthenticationType;
+import org.ebaloo.itkeeps.api.enumeration.AuthenticationType;
 import org.ebaloo.itkeeps.api.model.JCredential;
 import org.ebaloo.itkeeps.api.model.JGroup;
 import org.ebaloo.itkeeps.api.model.JUser;
@@ -51,7 +51,6 @@ public class Main {
 			System.out.println(ov.getRecord().toJSON());
 		}
 
-		System.exit(0);
 		
 		
 

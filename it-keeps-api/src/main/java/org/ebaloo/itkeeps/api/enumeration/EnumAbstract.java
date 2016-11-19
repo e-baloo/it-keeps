@@ -1,4 +1,4 @@
-package org.ebaloo.itkeeps.api.annotation;
+package org.ebaloo.itkeeps.api.enumeration;
 
 public abstract class EnumAbstract<K> {
 

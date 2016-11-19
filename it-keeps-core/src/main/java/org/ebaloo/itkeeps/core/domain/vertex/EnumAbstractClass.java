@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.orientechnologies.orient.core.metadata.schema.OType;
 import org.apache.commons.lang.StringUtils;
-import org.ebaloo.itkeeps.api.annotation.EnumAbstract;
+import org.ebaloo.itkeeps.api.enumeration.EnumAbstract;
 import org.ebaloo.itkeeps.core.database.GraphFactory;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;

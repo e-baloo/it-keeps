@@ -4,8 +4,8 @@ package org.ebaloo.itkeeps.core.domain.vertex;
 
 
 import org.apache.commons.lang3.StringUtils;
-import org.ebaloo.itkeeps.api.AuthenticationType;
 import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed.SecurityRole;
+import org.ebaloo.itkeeps.api.enumeration.AuthenticationType;
 import org.ebaloo.itkeeps.api.model.JBaseLight;
 import org.ebaloo.itkeeps.api.model.JCredential;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
