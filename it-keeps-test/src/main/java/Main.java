@@ -47,9 +47,6 @@ public class Main {
 		LogFactory.init(Main.class);
 		
 
-		for(OrientVertex ov : GraphFactory.command(null, "SELECT FROM V" /*+ EnumAbstractClass.class.getSimpleName()*/)) {
-			System.out.println(ov.getRecord().toJSON());
-		}
 
 		
 		
@@ -120,7 +117,10 @@ public class Main {
 		
 		
 		
-		
+		for(OrientVertex ov : GraphFactory.command(null, "SELECT FROM V" /*+ EnumAbstractClass.class.getSimpleName()*/)) {
+			System.out.println(ov.getRecord().toJSON());
+		}
+
 		
 		
 		
