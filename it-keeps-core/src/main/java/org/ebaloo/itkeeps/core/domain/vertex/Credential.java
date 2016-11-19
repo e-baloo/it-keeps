@@ -14,7 +14,6 @@ import org.ebaloo.itkeeps.core.domain.ModelFactory;
 import org.ebaloo.itkeeps.core.domain.annotation.ModelClassAnnotation;
 import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
 import org.ebaloo.itkeeps.core.domain.edge.notraverse.CredentialToUser;
-import org.ebaloo.itkeeps.core.domain.edge.traverse.InGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,9 +32,11 @@ public final class Credential extends Base {
 		super();
 	}
 	
+	/*
 	protected Credential(final BaseAbstract abase) {
 		super(abase);
 	}
+	*/
 
 	
 	public Credential(final JCredential j, final JBaseLight jblUser) {

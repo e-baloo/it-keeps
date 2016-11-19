@@ -13,6 +13,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class JBase extends JObject {
 
+	public static final String PARENT = "parent";
+	public static final String CHILDS = "childs";
+	
+	
+	
+	//----------------------------
+	
 	public static final String ENABLE = "enable";
 	public static final String CREATION_DATE = "creationDate";
 	public static final String DESCRIPTION = "description";

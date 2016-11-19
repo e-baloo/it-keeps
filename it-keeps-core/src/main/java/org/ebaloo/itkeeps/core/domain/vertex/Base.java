@@ -39,9 +39,11 @@ public abstract class Base extends BaseAbstract {
 	protected Base() {
 	}
 
+	/*
 	protected Base(final BaseAbstract abase) {
 		super(abase);
 	}
+	*/
 
 	protected Base(final String name) {
 		super(true);
@@ -376,7 +378,11 @@ public abstract class Base extends BaseAbstract {
 	// API Methose
 	
 	
-	public <T extends JBase> T apiFill(T j, Guid requesteurGuid) {
+    
+    
+    
+    
+	public <T extends JBase> T read(T j, Guid requesteurGuid) {
 		
 		j.getJObject().setType(this.getType());
 		j.getJObject().setVersion(this.getObjectVersion());
@@ -387,29 +393,28 @@ public abstract class Base extends BaseAbstract {
 		j.setName(this.getName());
 		j.setDescription(this.getDescription());
 		
-		return j;
+		return null;
 	}
 	
 	
-	public <T extends JBase> void apiUpdate(T obj, Guid requesteurGuid) {
+	public <T extends JBase> T update(T obj, Guid requesteurGuid) {
 		
 		if(!obj.isPresentJObject())
 			throw new RuntimeException(); //TODO
-		
 
-		if(!obj.getJObject().isPresentVersion()) {
+		if(!obj.getJObject().isPresentVersion())
 			throw new RuntimeException(); //TODO
-		}
 
-		if(obj.getJObject().getVersion() != this.getObjectVersion()) {
+		if(obj.getJObject().getVersion() != this.getObjectVersion()) 
 			throw new RuntimeException(); //TODO
-		}
 		
 		if(obj.isPresentName())
 			this.setName(obj.getName());
 
 		if(obj.isPresentDescription())
 			this.setDescription(obj.getDescription());
+		
+		return null;
 
 	}
 

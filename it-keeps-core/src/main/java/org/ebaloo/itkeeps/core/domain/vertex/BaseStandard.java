@@ -35,9 +35,11 @@ public abstract class BaseStandard extends Base {
 		super();
 	}
 	
+	/*
 	public BaseStandard(final BaseAbstract abase) {
 		super(abase);
 	}
+	*/
 
 	public BaseStandard(
 			final String name
@@ -289,12 +291,12 @@ public abstract class BaseStandard extends Base {
 	// API
 	
 	@Override
-	public <T extends JBase> T apiFill(T j, Guid requesteurGuid) {
+	public <T extends JBase> T read(T j, Guid requesteurGuid) {
 		
 		if(!(j instanceof JBaseStandard))
 			throw new RuntimeException("TODO"); //TODO
 		
-		super.apiFill(j, requesteurGuid);
+		super.read(j, requesteurGuid);
 		
 		JBaseStandard jBaseStandard = (JBaseStandard) j;
 		
@@ -302,17 +304,17 @@ public abstract class BaseStandard extends Base {
 		jBaseStandard.setOtherName(this.getOtherName());
 		jBaseStandard.setExternalRef(this.getExternalRef());
 		
-		return j;
+		return null;
 	}
 	
 	
 	@Override
-	public <T extends JBase> void apiUpdate(T j, Guid requesteurGuid) {
+	public <T extends JBase> T update(T j, Guid requesteurGuid) {
 		
 		if(!(j instanceof JBaseStandard))
 			throw new RuntimeException("TODO"); //TODO
 
-		super.apiUpdate(j, requesteurGuid);
+		super.update(j, requesteurGuid);
 
 		JBaseStandard jBaseStandard = (JBaseStandard) j;
 
@@ -326,6 +328,7 @@ public abstract class BaseStandard extends Base {
 			this.setOtherName(jBaseStandard.getOtherName());
 
 
+		return null;
 	}
 
 

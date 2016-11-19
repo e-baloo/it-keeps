@@ -129,9 +129,12 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 	protected BaseAbstract() {
 		;
 	}
+	
+	/*
 	protected BaseAbstract(final BaseAbstract abase) {
 		this.setOrientVertex(abase.getOrientVertex());
 	}
+	*/
 	
 	protected BaseAbstract(boolean bool) {
 		

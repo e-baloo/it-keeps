@@ -50,7 +50,7 @@ public class UserEndpoint {
 		
 		for(BaseAbstract ba : Image.getAllBase(null, ModelFactory.get(User.class), false)) {
 			JUser juser = new JUser();
-			((User) ba).apiFill(juser, new Guid(securityContext.getUserPrincipal().getName()));
+			((User) ba).read(juser, new Guid(securityContext.getUserPrincipal().getName()));
 	    	list.add(juser);
 		}
 		
@@ -74,7 +74,7 @@ public class UserEndpoint {
 			throw new RuntimeException("readId(" + id + ") is null" );
 		
 		
-    	return Response.ok().entity(user.apiFill(new JUser(), requesteurGuid)).build();
+    	return Response.ok().entity(user.read(new JUser(), requesteurGuid)).build();
     }
 	
     @GET //READ
@@ -92,7 +92,7 @@ public class UserEndpoint {
 			throw new RuntimeException("readId(" + id + ") is null" );
 		
 		
-    	return Response.ok().entity(cred.getUser().apiFill(new JUser(), requesteurGuid)).build();
+    	return Response.ok().entity(cred.getUser().read(new JUser(), requesteurGuid)).build();
     }
 
     @PUT // UPDATE
@@ -106,10 +106,10 @@ public class UserEndpoint {
     	
     	User user = User.get(null, ModelFactory.get(User.class),  juser.getGuid(), false);
 
-    	user.apiUpdate(juser, requesteurGuid);
+    	user.update(juser, requesteurGuid);
 
     	JUser newjuser = new JUser();
-    	User.get(null, ModelFactory.get(User.class), juser.getGuid(), false).apiFill(newjuser, requesteurGuid);
+    	User.get(null, ModelFactory.get(User.class), juser.getGuid(), false).read(newjuser, requesteurGuid);
 
     	return Response.ok().entity(newjuser).build();
     }
@@ -125,7 +125,7 @@ public class UserEndpoint {
 
     	User user = new User(juser);
     	JUser newjuser = new JUser();
-    	user.apiFill(newjuser, requesteurGuid);
+    	user.read(newjuser, requesteurGuid);
 
     	return Response.ok().entity(newjuser).build();
     }

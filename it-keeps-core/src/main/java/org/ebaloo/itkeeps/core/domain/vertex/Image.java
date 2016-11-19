@@ -28,13 +28,15 @@ import net.sf.ehcache.store.MemoryStoreEvictionPolicy;
 public class Image extends BaseSysteme {
 
 	
-	public Image() {}
+	protected Image() {}
 
+	/*
 	public Image(final BaseAbstract abase) {
 		super(abase);
 	}
+	*/
 
-	public Image(final String name) {
+	protected Image(final String name) {
 		super(name);
 	}
 	
@@ -218,17 +220,21 @@ public class Image extends BaseSysteme {
 	// API
 	
 	@Override
-	public <T extends JBase> T apiFill(T j, Guid requesteurGuid) {
-		return apiFill(j, requesteurGuid, true);
+	public <T extends JBase> T read(T j, Guid requesteurGuid) {
+		return read(j, requesteurGuid, true);
 	}
 
 	
-	public <T extends JBase> T apiFill(T j, Guid requesteurGuid, final boolean full) {
+	@SuppressWarnings("unchecked")
+	public <T extends JBase> T read(T j, Guid requesteurGuid, final boolean full) {
 
+		if(j == null)
+			j = (T) new JImage();
+		
 		if(!(j instanceof JImage))
 			throw new RuntimeException("TODO"); //TODO
 
-		super.apiFill(j, requesteurGuid);
+		super.read(j, requesteurGuid);
 		
 		JImage jimage = (JImage) j;
 		
@@ -242,12 +248,12 @@ public class Image extends BaseSysteme {
 
 	
 	@Override
-	public <T extends JBase> void apiUpdate(T j, Guid requesteurGuid) {
+	public <T extends JBase> T update(T j, Guid requesteurGuid) {
 		
 		if(!(j instanceof JImage))
 			throw new RuntimeException("TODO"); //TODO
 
-		super.apiUpdate(j, requesteurGuid);
+		super.update(j, requesteurGuid);
 		
 		JImage jimage = (JImage) j;
 		
@@ -259,6 +265,7 @@ public class Image extends BaseSysteme {
 			this.setBase64(this.getBase64());
 		
 		
+		return read(null, requesteurGuid);
 	}
 	
 	

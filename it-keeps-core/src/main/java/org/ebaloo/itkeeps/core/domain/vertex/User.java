@@ -33,13 +33,15 @@ public class User extends BaseStandard {
 	private static Logger logger = LoggerFactory.getLogger(User.class);
 
 	
-	public User() {
+	protected User() {
 		super();
 	}
 	
+	/*
 	public User(final BaseAbstract abase) {
 		super(abase);
 	}
+	*/
 
 
 	/*
@@ -69,15 +71,15 @@ public class User extends BaseStandard {
 	 * IN_GROUP
 	 */
 	
-	public List<Group> getInGroup() {
+	public List<Group> getGroups() {
 		return this.getEdgesByClassesNames(ModelFactory.get(Group.class), DirectionType.PARENT, false, InGroup.class);
 	}
 	
-	public void setInGroup(List<Group> list) {
+	public void setGroups(List<Group> list) {
 		setEdges(this.getGraph(), ModelFactory.get(Group.class), this, list, DirectionType.PARENT, InGroup.class, false);
 	}
 
-	private void setInGroupJBL(List<JBaseLight> list) {
+	private void setGroupsJBL(List<JBaseLight> list) {
 		
 		if(list == null) {
 			list = new ArrayList<JBaseLight>();
@@ -87,7 +89,7 @@ public class User extends BaseStandard {
 		ModelClass<Group> mc = ModelFactory.get(Group.class);
 		OrientBaseGraph graph = this.getGraph();
 		
-		setInGroup(list.stream().map(e -> get(graph, mc, e, false)).collect(Collectors.toList())); 
+		setGroups(list.stream().map(e -> get(graph, mc, e, false)).collect(Collectors.toList())); 
 	}
 
 	/*
@@ -249,13 +251,17 @@ public class User extends BaseStandard {
 	}
 
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends JBase> T apiFill(T j, Guid requesteurGuid) {
+	public <T extends JBase> T read(T j, Guid requesteurGuid) {
+		
+		if(j == null)
+			j = (T) new JUser();
 		
 		if(!(j instanceof JUser))
 			throw new RuntimeException("TODO"); //TODO
 		
-		super.apiFill(j, requesteurGuid);
+		super.read(j, requesteurGuid);
 
 		JUser juser = (JUser) j;
 		
@@ -264,18 +270,18 @@ public class User extends BaseStandard {
 			juser.setRole(this.getRole());
 		
 		if(juser.isPresentInGroup())
-			juser.setInGroups(this.getInGroup().stream().map(e -> Base.getJBaseLight(e)).collect(Collectors.toList()));
+			juser.setInGroups(this.getGroups().stream().map(e -> Base.getJBaseLight(e)).collect(Collectors.toList()));
 		
 		return j;
 	}
 	
 	@Override
-	public <T extends JBase> void apiUpdate(T obj, Guid requesteurGuid) {
+	public <T extends JBase> T update(T obj, Guid requesteurGuid) {
 		
 		if(!(obj instanceof JUser))
 			throw new RuntimeException("TODO"); //TODO
 
-		super.apiUpdate(obj, requesteurGuid);
+		super.update(obj, requesteurGuid);
 		
 		
 		User requesterUser = User.get(this.getGraph(), ModelFactory.get(User.class), requesteurGuid, false);
@@ -327,14 +333,15 @@ public class User extends BaseStandard {
 		
 		if(requesterUser.getRole().isAdmin()) {
 			
-			
 			if(juser.isPresentInGroup()) {
-				this.setInGroupJBL(juser.getInGroups());
+				this.setGroupsJBL(juser.getInGroups());
 			}
 
 			
 		}
 		
+		
+		return read(null, requesteurGuid);
 		
 	}
 

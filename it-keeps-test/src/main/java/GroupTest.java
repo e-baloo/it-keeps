@@ -49,19 +49,19 @@ public class GroupTest {
 		
 		
 		
-		jg_r.getChildGroups().add(jg_n1.getJBaseLight());
-		jg_r.getChildGroups().add(jg_n2.getJBaseLight());
+		jg_r.getChilds().add(jg_n1.getJBaseLight());
+		jg_r.getChilds().add(jg_n2.getJBaseLight());
 		jg_r = client.callJsonUpdate("/api/group", jg_r, JGroup.class);
 		
 		
 		reload(client);
 		
-		jg_n1.getChildGroups().add(jg_n1_1.getJBaseLight());
-		jg_n1.getChildGroups().add(jg_n1_2.getJBaseLight());
+		jg_n1.getChilds().add(jg_n1_1.getJBaseLight());
+		jg_n1.getChilds().add(jg_n1_2.getJBaseLight());
 		jg_n1 = client.callJsonUpdate("/api/group", jg_n1, JGroup.class);
 
-		jg_n2.getChildGroups().add(jg_n2_1.getJBaseLight());
-		jg_n2.getChildGroups().add(jg_n2_2.getJBaseLight());
+		jg_n2.getChilds().add(jg_n2_1.getJBaseLight());
+		jg_n2.getChilds().add(jg_n2_2.getJBaseLight());
 		jg_n2 = client.callJsonUpdate("/api/group", jg_n2, JGroup.class);
 
 		reload(client);

@@ -44,7 +44,7 @@ public class ImageEndpoint {
 		for(BaseAbstract ba : Image.getAllBase(null, ModelFactory.get(Image.class), false)) {
 			
 			JImage jimage = new JImage();
-			((Image) ba).apiFill(jimage, new Guid(securityContext.getUserPrincipal().getName()), false);
+			((Image) ba).read(jimage, new Guid(securityContext.getUserPrincipal().getName()), false);
 			
 			
 		    	list.add(jimage);
@@ -63,7 +63,7 @@ public class ImageEndpoint {
     @Timed
     public Response getImage(@PathParam("id") String id) {
     	
-		JImage jimage = Image.getImage(id).apiFill(new JImage(), new Guid(securityContext.getUserPrincipal().getName()), false);
+		JImage jimage = Image.getImage(id).read(new JImage(), new Guid(securityContext.getUserPrincipal().getName()), false);
     	
     	return Response.ok().entity(jimage).build();
     }

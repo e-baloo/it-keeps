@@ -29,15 +29,17 @@ import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
 @ModelClassAnnotation()
 public class Group extends BaseStandard {
 
-	public Group() {
+	protected Group() {
 		super();
 	}
 	
+	/*
 	public Group(final BaseAbstract abase) {
 		super(abase);
 	}
+	*/
 	
-	public Group(String name) {
+	protected Group(String name) {
 		super(name);
 		
 	}
@@ -48,16 +50,16 @@ public class Group extends BaseStandard {
 	 * PARENT GROUP
 	 */
 	
-	public Group getParentGroup() {
+	public Group getParent() {
 		return this.getEdgeByClassesNames(ModelFactory.get(Group.class), DirectionType.CHILD, false, InGroup.class);
 	}
 	
-	public void setParentGroup(final Group group) {
+	public void setParent(final Group group) {
 		setEdges(this.getGraph(), ModelFactory.get(Group.class), this, group, DirectionType.CHILD, InGroup.class, false);
 	}
 
-	private void setParentGroupJBL(JBaseLight group) {
-		this.setParentGroup(get(this.getGraph(), ModelFactory.get(Group.class), group, false));
+	private void setParent(final JBaseLight group) {
+		this.setParent(get(this.getGraph(), ModelFactory.get(Group.class), group, false));
 	}
 
 	
@@ -67,15 +69,15 @@ public class Group extends BaseStandard {
 	 * CHILD GROUP
 	 */
 	
-	public List<Group> getChildGroup() {
+	public List<Group> getChilds() {
 		return this.getEdgesByClassesNames(ModelFactory.get(Group.class), DirectionType.PARENT, false, InGroup.class);
 	}
 	
-	public void setChildGroup(List<Group> list) {
+	public void setChilds(List<Group> list) {
 		setEdges(this.getGraph(), ModelFactory.get(Group.class), this, list, DirectionType.PARENT, InGroup.class, false);
 	}
 
-	private void setChildGroupJBL(List<JBaseLight> list) {
+	private void setChildsJBL(List<JBaseLight> list) {
 		
 		if(list == null) 
 			list = new ArrayList<JBaseLight>();
@@ -84,7 +86,7 @@ public class Group extends BaseStandard {
 		ModelClass<Group> mc = ModelFactory.get(Group.class);
 		OrientBaseGraph graph = this.getGraph();
 		
-		setChildGroup(list.stream().map(e -> get(graph, mc, e, false)).collect(Collectors.toList())); 
+		setChilds(list.stream().map(e -> get(graph, mc, e, false)).collect(Collectors.toList())); 
 	}
 
 	
@@ -277,8 +279,8 @@ public class Group extends BaseStandard {
 		this.commit();
 		this.reload();
 		
-		this.setParentGroupJBL(j.getParentGroup());
-		this.setChildGroupJBL(j.getChildGroups());
+		this.setParent(j.getParent());
+		this.setChildsJBL(j.getChilds());
 
 		if(f)
 			this.setEnable(Boolean.TRUE);
@@ -287,28 +289,31 @@ public class Group extends BaseStandard {
 	
 
 	@Override
-	public <T extends JBase> T apiFill(T j, Guid requesteurGuid) {
+	public <T extends JBase> T read(T j, Guid requesteurGuid) {
+		
+		if(j == null)
+			j = (T) new JGroup();
 		
 		if(!(j instanceof JGroup))
 			throw new RuntimeException("TODO"); //TODO
 		
-		super.apiFill(j, requesteurGuid);
+		super.read(j, requesteurGuid);
 
 		JGroup jgroup = (JGroup) j;
 		
-		jgroup.setParentGroup(getJBaseLight(this.getParentGroup()));
-		jgroup.setChildGroups(this.getChildGroup().stream().map(e -> getJBaseLight(e)).collect(Collectors.toList()));
+		jgroup.setParent(getJBaseLight(this.getParent()));
+		jgroup.setChilds(this.getChilds().stream().map(e -> getJBaseLight(e)).collect(Collectors.toList()));
 		
 		return j;
 	}
 	
 	@Override
-	public <T extends JBase> void apiUpdate(T obj, Guid requesteurGuid) {
+	public <T extends JBase> T update(T j, Guid requesteurGuid) {
 		
-		if(!(obj instanceof JGroup))
+		if(!(j instanceof JGroup))
 			throw new RuntimeException("TODO"); //TODO
 
-		super.apiUpdate(obj, requesteurGuid);
+		super.update(j, requesteurGuid);
 		
 		User requesterUser = User.get(this.getGraph(), ModelFactory.get(User.class), requesteurGuid, false);
 
@@ -329,14 +334,17 @@ public class Group extends BaseStandard {
 		}
 		
 
-		JGroup jgroup = (JGroup) obj;
+		JGroup jgroup = (JGroup) j;
 		
 		
-		if(jgroup.isPresentParentGroup())
-			this.setParentGroupJBL(jgroup.getParentGroup());
+		if(jgroup.isPresentParent())
+			this.setParent(jgroup.getParent());
 
-		if(jgroup.isChildGroups())
-			this.setChildGroupJBL(jgroup.getChildGroups());
+		if(jgroup.isPresentChilds())
+			this.setChildsJBL(jgroup.getChilds());
+	
+		
+		return read(null, requesteurGuid);
 		
 	}
 }

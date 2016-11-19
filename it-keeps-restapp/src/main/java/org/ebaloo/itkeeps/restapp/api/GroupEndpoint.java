@@ -51,7 +51,7 @@ public class GroupEndpoint {
 		
 		for(BaseAbstract ba : Image.getAllBase(null, ModelFactory.get(Group.class), false)) {
 			JGroup j = new JGroup();
-			((Group) ba).apiFill(j, requesteurGuid);
+			((Group) ba).read(j, requesteurGuid);
 	    	jl.add(j);
 		}
 		
@@ -69,13 +69,12 @@ public class GroupEndpoint {
 
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
 
-		JGroup j = new JGroup();
 		Group group = Group.get(null, ModelFactory.get(Group.class), guid, false);
 		
 		if(group == null)
 			throw new RuntimeException("TODO"); // TODO
 		
-		group.apiFill(j, requesteurGuid);
+		JGroup j = group.read(null, requesteurGuid);
 		
     	return Response.ok().entity(j).build();
     }
@@ -96,9 +95,9 @@ public class GroupEndpoint {
     	
     	Group group = Group.get(null, ModelFactory.get(Group.class), j.getGuid(), false);
 
-    	group.apiUpdate(j, requesteurGuid);
+    	JGroup nj = group.update(j, requesteurGuid);
 
-    	return Response.ok().entity(group.apiFill(new JGroup(), requesteurGuid)).build();
+    	return Response.ok().entity(nj).build();
     }
 
     @POST 
@@ -112,7 +111,7 @@ public class GroupEndpoint {
 
     	Group group = new Group(j);
     	JGroup nj = new JGroup();
-    	group.apiFill(nj, requesteurGuid);
+    	group.read(nj, requesteurGuid);
 
     	return Response.ok().entity(nj).build();
     }

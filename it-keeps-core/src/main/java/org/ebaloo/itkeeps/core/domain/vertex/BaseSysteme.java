@@ -12,9 +12,11 @@ public abstract class BaseSysteme extends Base {
 		super();
 	}
 	
+	/*
 	public BaseSysteme(final BaseAbstract abase) {
 		super(abase);
 	}
+	*/
 
 	public BaseSysteme(
 			final String name

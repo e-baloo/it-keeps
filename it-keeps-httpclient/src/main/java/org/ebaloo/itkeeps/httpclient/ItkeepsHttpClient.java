@@ -21,12 +21,18 @@ import org.ebaloo.itkeeps.api.model.JCredential;
 import org.ebaloo.itkeeps.api.model.JToken;
 import org.ebaloo.itkeeps.commons.ConfigFactory;
 import org.ebaloo.itkeeps.commons.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 
 public class ItkeepsHttpClient {
+	
+	
+	private static final Logger logger = LoggerFactory.getLogger(ItkeepsHttpClient.class.getName());
+
 	
 	public static final ObjectMapper MAPPER = new ObjectMapper();
 
@@ -176,7 +182,7 @@ public class ItkeepsHttpClient {
 			long elapsedSeconds = (System.currentTimeMillis() - tStart);
 			
 			//if(LOGGER.isTraceEnabled())
-				LogFactory.getMain().info(String.format("Query executed in %d ms", elapsedSeconds));
+			logger.debug(String.format("==> Query executed in %d ms", elapsedSeconds));
 			
 			return MAPPER.treeToValue(node, target);
 
