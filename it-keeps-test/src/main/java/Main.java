@@ -5,7 +5,6 @@ import java.net.URI;
 import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.enumeration.AuthenticationType;
 import org.ebaloo.itkeeps.api.model.JCredential;
-import org.ebaloo.itkeeps.api.model.JGroup;
 import org.ebaloo.itkeeps.api.model.JUser;
 import org.ebaloo.itkeeps.commons.ConfigFactory;
 import org.ebaloo.itkeeps.commons.LogFactory;
@@ -72,32 +71,18 @@ public class Main {
 		
 		
 		
-		JGroup jg_r = new JGroup();
-		jg_r.setName("root");
-		JGroup jg_n1 = new JGroup();
-		JGroup jg_n2 = new JGroup();
-		jg_n1.setName("node 1");
-		jg_n2.setName("node 2");
+		GroupTest.run(client);
 		
-		jg_r = client.callJsonCreat("/api/group", jg_r, JGroup.class);
-		jg_n1 = client.callJsonCreat("/api/group", jg_n1, JGroup.class);
-		jg_n2 = client.callJsonCreat("/api/group", jg_n2, JGroup.class);
 		
-		jg_r.getChildGroups().add(jg_n1.getJBaseLight());
-		jg_r.getChildGroups().add(jg_n2.getJBaseLight());
-
-		long tStart = System.currentTimeMillis();
 		
-		jg_r = client.callJsonUpdate("/api/group", jg_r, JGroup.class);
 		
-		long elapsedSeconds = (System.currentTimeMillis() - tStart);
-		LogFactory.getMain().info(String.format("Query executed in %d ms", elapsedSeconds));
-		
-
-		testUser.getInGroups().add(jg_n1.getJBaseLight());
-		testUser.getInGroups().add(jg_n2.getJBaseLight());
-		testUser.getInGroups().add(jg_r.getJBaseLight());
+		testUser.getInGroups().add(GroupTest.jg_n1.getJBaseLight());
+		testUser.getInGroups().add(GroupTest.jg_n2_1.getJBaseLight());
+		//testUser.getInGroups().add(jg_r.getJBaseLight());
 		JUser user = client.callJsonUpdate("/api/user", testUser, JUser.class);
+		
+		GroupTest.reload(client);
+		
 		LogFactory.getMain().info(user.toString());
 		
 		user = client.callJsonRead("/api/user/id/" + testUser.getGuid(), JUser.class);

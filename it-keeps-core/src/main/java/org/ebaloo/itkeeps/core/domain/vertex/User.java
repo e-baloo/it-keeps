@@ -70,11 +70,11 @@ public class User extends BaseStandard {
 	 */
 	
 	public List<Group> getInGroup() {
-		return this.getEdgesByClassesNames(ModelFactory.get(Group.class), DirectionType.CHILD, false, InGroup.class);
+		return this.getEdgesByClassesNames(ModelFactory.get(Group.class), DirectionType.PARENT, false, InGroup.class);
 	}
 	
 	public void setInGroup(List<Group> list) {
-		setEdges(this.getGraph(), ModelFactory.get(Group.class), this, list, DirectionType.CHILD, InGroup.class, false);
+		setEdges(this.getGraph(), ModelFactory.get(Group.class), this, list, DirectionType.PARENT, InGroup.class, false);
 	}
 
 	private void setInGroupJBL(List<JBaseLight> list) {
@@ -91,7 +91,7 @@ public class User extends BaseStandard {
 	}
 
 	/*
-	 * IN_GROUP
+	 * CREDENTIALS
 	 */
 	
 	public List<Credential> getCredentials() {

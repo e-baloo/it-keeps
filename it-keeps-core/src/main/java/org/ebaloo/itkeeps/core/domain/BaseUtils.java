@@ -53,17 +53,21 @@ public class BaseUtils {
 			return String.format("(@class %s '%s')", instanceOf ? "INSTANCEOF" : "=", targetClass);
 		}
 		
+		/*
 		public final static String classIsntanceOf(final Class<? extends BaseAbstract> targetClass, final boolean instanceOf) {
 			return classIsntanceOf(targetClass.getSimpleName(), instanceOf);
 		}
+		*/
 		
 		public final static String classIsntanceOf(final ModelClass<? extends BaseAbstract> targetClass, final boolean instanceOf) {
 			return classIsntanceOf(targetClass.getClassName(), instanceOf);
 		}
 
+		/*
 		public final static void classIsntanceOf(final Class<? extends BaseAbstract> targetClass, final boolean instanceOf, final StringBuilder sb) {
 			sb.append(classIsntanceOf(targetClass, instanceOf));
 		}
+		*/
 
 		public final static void classIsntanceOf(final ModelClass<? extends BaseAbstract> targetClass, final boolean instanceOf, final StringBuilder sb) {
 			sb.append(classIsntanceOf(targetClass, instanceOf));

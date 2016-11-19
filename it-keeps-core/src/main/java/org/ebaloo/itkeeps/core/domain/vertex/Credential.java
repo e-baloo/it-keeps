@@ -13,6 +13,7 @@ import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.ModelFactory;
 import org.ebaloo.itkeeps.core.domain.annotation.ModelClassAnnotation;
 import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
+import org.ebaloo.itkeeps.core.domain.edge.notraverse.CredentialToUser;
 import org.ebaloo.itkeeps.core.domain.edge.traverse.InGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,11 +85,11 @@ public final class Credential extends Base {
 	 */
 	
 	public User getUser() {
-		return this.getEdgeByClassesNames(ModelFactory.get(User.class), DirectionType.PARENT, false, InGroup.class);
+		return this.getEdgeByClassesNames(ModelFactory.get(User.class), DirectionType.PARENT, false, CredentialToUser.class);
 	}
 	
 	private void setUser(final User user) {
-		setEdges(this.getGraph(), ModelFactory.get(Group.class), this, user, DirectionType.PARENT, InGroup.class, false);
+		setEdges(this.getGraph(), ModelFactory.get(Group.class), this, user, DirectionType.PARENT, CredentialToUser.class, false);
 	}
 
 	public void setUser(JBaseLight user) {

@@ -6,13 +6,13 @@ import org.ebaloo.itkeeps.core.database.annotation.DatabaseEdge;
 import com.tinkerpop.blueprints.impls.orient.OrientEdge;
 
 @DatabaseEdge()
-public class InGroup extends AclRelation {
+public class AclRelation extends Traverse {
 
-	public InGroup(OrientEdge oe) throws Exception {
+	public AclRelation(OrientEdge oe) throws Exception {
 		super(oe);
 	}
 	
-	public InGroup() {
+	public AclRelation() {
 		super();
 	}
 

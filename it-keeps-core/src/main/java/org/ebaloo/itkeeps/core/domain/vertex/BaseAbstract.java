@@ -388,7 +388,7 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 			request.append(" WHERE ");
 			request.append(BaseUtils.WhereClause.WHERE_CLAUSE__ENABLE_IS_TRUE);
 			request.append(" AND ");
-			BaseUtils.WhereClause.classIsntanceOf(BaseStandard.class, true, request);
+			BaseUtils.WhereClause.classIsntanceOf(target, isInstanceof, request);
 			request.append(" AND ");
 			request.append("(@rid <> " + this.getORID() + ")");
 			
@@ -645,6 +645,8 @@ public abstract class BaseAbstract extends CommonOrientVertex implements Compara
 	
 	@DatabaseProperty(name = JBase.ENABLE, type = OType.BOOLEAN)
 	protected void setEnable(Boolean enable) {
+		
+		this.reload();
 		this.setProperty(JBase.ENABLE, enable);
 	}
 
