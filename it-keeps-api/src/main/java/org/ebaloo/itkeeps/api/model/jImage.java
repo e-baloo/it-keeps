@@ -26,8 +26,8 @@ public class jImage extends jBase {
 	}
 
 	@JsonProperty(IMAGE_TYPE)
-	public final void setImageType(String imageType) {
-		this.imageType = Optional.of(imageType == null ? "" : imageType);
+	public final void setImageType(String value) {
+		this.imageType = Optional.ofNullable(value);
 	}
 
 	@JsonIgnore
@@ -47,8 +47,8 @@ public class jImage extends jBase {
 	}
 
 	@JsonProperty(BASE64)
-	public final void setBase64(String base64) {
-		this.base64 = Optional.of(base64 == null ? "" : base64);
+	public final void setBase64(String value) {
+		this.base64 = Optional.ofNullable(value);
 	}
 
 	@JsonIgnore

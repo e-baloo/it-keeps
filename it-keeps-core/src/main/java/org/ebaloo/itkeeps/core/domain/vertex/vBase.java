@@ -225,9 +225,9 @@ public abstract class vBase extends vBaseAbstract {
 		
 		request.append("SELECT FROM " + target.getSimpleName() + " ");
 		request.append("WHERE ");
-		request.append(WhereClause.WHERE_CLAUSE__ENABLE_IS_TRUE);
+		request.append(WhereClause.ENABLE_IS_TRUE);
 		request.append(" AND ");
-		WhereClause.classIsntanceOf(target, isInstanceof, request);
+		request.append(WhereClause.IsntanceOf(target, isInstanceof));
 
 		//BaseQuery bq = new BaseQuery();
         return vBaseAbstract.commandBaseAbstract(graph, target, request.toString());

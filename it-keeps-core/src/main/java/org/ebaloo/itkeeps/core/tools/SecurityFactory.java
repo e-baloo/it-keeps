@@ -56,7 +56,7 @@ public final class SecurityFactory {
 
 		// TODO Add CONF "Create Root User"
 		try {
-		String sql = "SELECT COUNT(*) FROM " + vUser.class.getSimpleName() + " WHERE " + vBase.WhereClause.WHERE_CLAUSE__ENABLE_IS_TRUE + " AND (" +jUser.ROLE + "='" + enSecurityRole.ROOT.toString() +"')" ;   
+		String sql = "SELECT COUNT(*) FROM " + vUser.class.getSimpleName() + " WHERE " + vBase.WhereClause.ENABLE_IS_TRUE + " AND (" +jUser.ROLE + "='" + enSecurityRole.ROOT.toString() +"')" ;   
 		
 		
 		Long rootUserCount = GraphFactory.command(null,  sql).get(0).getProperty("COUNT");

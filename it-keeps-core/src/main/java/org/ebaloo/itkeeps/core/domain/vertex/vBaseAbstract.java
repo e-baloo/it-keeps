@@ -57,7 +57,7 @@ abstract class vBaseAbstract extends vCommon implements Comparable<vBaseAbstract
     	if(guid == null)
     		return null;
 		
-		String cmdSQL = "SELECT FROM " + target.getSimpleName() + " WHERE " + WhereClause.WHERE_CLAUSE__ENABLE_IS_TRUE + " AND " + WhereClause.classIsntanceOf(target.getSimpleName(), isInstanceof) + " AND (" + jBase.GUID + "= ?)";
+		String cmdSQL = "SELECT FROM " + target.getSimpleName() + " WHERE " + WhereClause.ENABLE_IS_TRUE + " AND " + WhereClause.IsntanceOf(target, isInstanceof) + " AND (" + jBase.GUID + "= ?)";
 		
 		List<T> list = vBaseAbstract.commandBaseAbstract(graph, target, cmdSQL, guid.toString());
 		
@@ -81,7 +81,7 @@ abstract class vBaseAbstract extends vCommon implements Comparable<vBaseAbstract
     	if(Guid.isGuid(name))
     		return get(graph, target, new Guid(name), isInstanceof); 
     	
-		String cmdSQL = "SELECT FROM " + target.getSimpleName() + " WHERE " + WhereClause.WHERE_CLAUSE__ENABLE_IS_TRUE + " AND " + WhereClause.classIsntanceOf(target, isInstanceof) + " AND (" + jBase.NAME + "= ?)";
+		String cmdSQL = "SELECT FROM " + target.getSimpleName() + " WHERE " + WhereClause.ENABLE_IS_TRUE + " AND " + WhereClause.IsntanceOf(target, isInstanceof) + " AND (" + jBase.NAME + "= ?)";
 		
 		List<T> list = vBaseAbstract.commandBaseAbstract(graph, target, cmdSQL, name);
 		
@@ -101,7 +101,7 @@ abstract class vBaseAbstract extends vCommon implements Comparable<vBaseAbstract
     
     protected static <T extends vBaseAbstract> List<T> getListBaseAbstract(OrientBaseGraph graph, final Class<T> target, final List<Guid> guid) {
 
-		String cmdSQL = "SELECT FROM " + vBase.class.getSimpleName() + " WHERE " + WhereClause.WHERE_CLAUSE__ENABLE_IS_TRUE
+		String cmdSQL = "SELECT FROM " + vBase.class.getSimpleName() + " WHERE " + WhereClause.ENABLE_IS_TRUE
 				+ " AND (guid IN [" + guid.stream().map(e -> "'" + e.toString() + "'").collect(Collectors.joining(","))
 				+ "])";
 
@@ -179,10 +179,10 @@ abstract class vBaseAbstract extends vCommon implements Comparable<vBaseAbstract
 					+ "     WHILE $depth <= 1) "
 					+ "WHERE @rid NOT IN [" + StringUtils.join(srcOrid, ", ") + "]";
 
-			cmdSQL = cmdSQL + " AND " + WhereClause.WHERE_CLAUSE__ENABLE_IS_TRUE;  
+			cmdSQL = cmdSQL + " AND " + WhereClause.ENABLE_IS_TRUE;  
 
 			if(target != null)
-				cmdSQL = cmdSQL + " AND " + WhereClause.classIsntanceOf(target, instanceOf);  
+				cmdSQL = cmdSQL + " AND " + WhereClause.IsntanceOf(target, instanceOf);  
 			
 			
 			ovDstBck = command(graph, cmdSQL).stream().map(e -> e.getIdentity().toString()).collect(Collectors.toList());
@@ -390,9 +390,9 @@ abstract class vBaseAbstract extends vCommon implements Comparable<vBaseAbstract
 			request.append("SELECT FROM ");
 			request.append("(TRAVERSE " + relationship.getDirection().toString() + "('" + (relation != null ? relation.getSimpleName() : "") + "') FROM " + this.getORID() + " WHILE $depth <= 1)");
 			request.append(" WHERE ");
-			request.append(WhereClause.WHERE_CLAUSE__ENABLE_IS_TRUE);
+			request.append(WhereClause.ENABLE_IS_TRUE);
 			request.append(" AND ");
-			WhereClause.classIsntanceOf(target, isInstanceof, request);
+			request.append(WhereClause.IsntanceOf(target, isInstanceof));
 			request.append(" AND ");
 			request.append("(@rid <> " + this.getORID() + ")");
 			
@@ -628,66 +628,12 @@ abstract class vBaseAbstract extends vCommon implements Comparable<vBaseAbstract
 	
 	public static class WhereClause {
 		
-		public static String WHERE_CLAUSE__TRUE = " (true) ";
-		public static String WHERE_CLAUSE__ENABLE_IS_TRUE = " (" + jBase.ENABLE + "=true) ";
+		public static String ENABLE_IS_TRUE = " (" + jBase.ENABLE + " = true) ";
 		
-		/*
-		public static final String enable() {
-			return WHERE_CLAUSE__ENABLE_IS_TRUE;
-		}
-		
-		public static final void enable(final StringBuilder sb) {
-			sb.append(enable());
-		}
 
-		public static final Predicate<? super BaseAbstract> enableFilter() {
-			return e -> e.getProperty(JBase.ENABLE) != null && (boolean)e.getProperty(JBase.ENABLE);
+		public final static <T extends vBaseAbstract> String IsntanceOf(final Class<T> target, final boolean instanceOf) {
+			return String.format(" (@class %s '%s') ", instanceOf ? "INSTANCEOF" : "=", target.getSimpleName());
 		}
-		*/
-		//-------------------
-		
-		public final static String classIsntanceOf(final String targetClass, final boolean instanceOf) {
-			return String.format("(@class %s '%s')", instanceOf ? "INSTANCEOF" : "=", targetClass);
-		}
-
-		/*
-		public final static String classIsntanceOf(final Class<? extends BaseAbstract> targetClass, final boolean instanceOf) {
-			return classIsntanceOf(targetClass.getSimpleName(), instanceOf);
-		}
-		*/
-		
-		public final static <T extends vBaseAbstract> String classIsntanceOf(final Class<T> target, final boolean instanceOf) {
-			return classIsntanceOf(target.getSimpleName(), instanceOf);
-		}
-
-		/*
-		public final static void classIsntanceOf(final Class<? extends BaseAbstract> targetClass, final boolean instanceOf, final StringBuilder sb) {
-			sb.append(classIsntanceOf(targetClass, instanceOf));
-		}
-		*/
-
-		public final static <T extends vBaseAbstract> void classIsntanceOf(final Class<T> target, final boolean instanceOf, final StringBuilder sb) {
-			sb.append(classIsntanceOf(target, instanceOf));
-		}
-
-		/*
-		public static final Predicate<? super BaseAbstract> classInstanceOf(final Class<? extends BaseAbstract> targetClass, final boolean instanceOf) {
-			return classInstanceOf(targetClass.getSimpleName(), instanceOf);
-		}
-		*/
-
-		/*
-		public static final Predicate<? super BaseAbstract> classInstanceOf(final String targetClass, final boolean instanceOf) {
-			if(instanceOf) {
-				//targetClass.isInstance(baseAbstract) si targetClass => Class<? extends BaseAbstract>
-				return orientVertex -> orientVertex.getOrientVertex().getType().getName().equals(targetClass) || orientVertex.getOrientVertex().getType().getAllSuperClasses().stream().anyMatch(e -> e.getName().equals(targetClass));
-			} else {
-				return orientVertex -> orientVertex.getOrientVertex().getType().getName().equals(targetClass);
-			}
-		}
-		*/
-		
-		
 		
 	}
 }

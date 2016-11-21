@@ -1,7 +1,5 @@
 package org.ebaloo.itkeeps.api.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -37,7 +35,7 @@ public class jBaseStandard extends jBase{
 
 	@JsonProperty(ICON)
 	public void setIcon(String value) {
-		this.icon = Optional.of(value == null ? "" : value);
+		this.icon = Optional.ofNullable(value);
 	}
 
 	@JsonIgnore
@@ -58,7 +56,7 @@ public class jBaseStandard extends jBase{
 
 	@JsonProperty(OTHER_NAME)
 	public void setOtherName(List<String> value) {
-		this.otherName = Optional.of(value == null ? new ArrayList<String>() : value);
+		this.otherName = Optional.ofNullable(value);
 	}
 
 	@JsonIgnore
@@ -79,7 +77,7 @@ public class jBaseStandard extends jBase{
 
 	@JsonProperty(EXTERNAL_REF)
 	public void setExternalRef(Map<String, String> value) {
-		this.externalRef = Optional.of(value == null ? new HashMap<String, String>() : value);
+		this.externalRef = Optional.ofNullable(value);
 	}
 
 	@JsonIgnore

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enSecurityRole;
 import org.ebaloo.itkeeps.api.model.jBase;
@@ -34,36 +35,6 @@ public class vUser extends vBaseStandard {
 		super();
 	}
 	
-	/*
-	public User(final BaseAbstract abase) {
-		super(abase);
-	}
-	*/
-
-
-	/*
-	public User(final JCredential j) {
-		super(j.getUserName());
-		
-		if(User.getById(this.getGraph(), j.getId()) != null) {
-			this.disable();
-			throw new RuntimeException("TODO"); //TODO
-		}
-		
-		if(StringUtils.isEmpty(j.getId())) {
-			this.disable();
-			throw new RuntimeException("TODO"); //TODO
-		}
-
-		this.setUserId(j.getId());
-		this.setRole(SecurityRole.GUEST);
-		
-		this.setEnable(Boolean.TRUE);
-		
-	}
-	*/
-	
-
 	/*
 	 * IN_GROUP
 	 */
@@ -113,98 +84,18 @@ public class vUser extends vBaseStandard {
 	
 	
 	/*
-	 *  ID
-	 */
-	/*
-
-	@DatabaseProperty(name = JUser.USER_ID, isNotNull = true)
-	public String getUserId()  {
-		return this.getProperty(JUser.USER_ID);
-	}
-
-	public void setUserId(final String id) {
-		
-		if(StringUtils.isEmpty(id))
-			throw new RuntimeException("TODO"); //TODO
-		
-		this.setProperty(JUser.USER_ID, id);
-	}
-
-	
-	
-	public static User getByCredentials(OrientBaseGraph graph, final JCredential credentials) {
-
-		if(credentials == null) 
-			throw new RuntimeException("TODO"); //TODO
-		
-		User user = getById(graph, credentials.getId());
-		
-		SecurityFactory.validateCredential(user, credentials);
-
-		return user;
-	}
-	
-
-	
-	public static User getById(OrientBaseGraph graph, final String id) {
-
-		if(StringUtils.isEmpty(id))
-			throw new RuntimeException("TODO"); //TODO
-		
-		
-		String cmdSql = "SELECT FROM " + User.class.getSimpleName() + " WHERE " + BaseUtils.WhereClause.WHERE_CLAUSE__ENABLE_IS_TRUE + " AND " + JUser.USER_ID
-				+ ".toLowerCase() = ?";
-
-		List<OrientVertex> list = CommonOrientVertex.command(graph, cmdSql, id.toLowerCase());
-
-		if (list.isEmpty()) {
-			if (logger.isTraceEnabled())
-				logger.trace("OrientVertex not found for 'id':" + id);
-			return null;
-		}
-
-		if (list.size() > 1) {
-			throw new RuntimeException("To many obejct for 'id': " + id);
-		}
-
-		OrientVertex ov = list.get(0);
-
-		User user = new User();
-		user.setOrientVertex(ov);
-		
-		if (logger.isTraceEnabled())
-			logger.trace("User found for 'id':" +  id + " @" + ov.getType().getName() + " "
-					+ ov.getIdentity().toString());
-		
-		return user;
-	}
-	*/
-	
-	/*
-	 *   PASSWORD
-	 */
-	
-/*
-	@DatabaseProperty(name = JUser.PASSWORD)
-	public String getPassword()  {
-		return this.getProperty(JUser.PASSWORD);
-	}
-
-	public void setPassowrd(final String value) {
-		
-		this.setProperty(JUser.PASSWORD, value);
-	}
-	
-	*/
-	
-
-	/*
 	 * ROLE
 	 */
 	
 	@DatabaseProperty(name = jUser.ROLE)
 	public enSecurityRole getRole() {
-		return enSecurityRole.valueOf(this.getProperty(jUser.ROLE));
+		
+		String role = this.getProperty(jUser.ROLE);
+		
+		if(StringUtils.isEmpty(role))
+			role = enSecurityRole.GUEST.name();
+		
+		return enSecurityRole.valueOf(role);
 	}
 	
 	public void setRole(String role) {
@@ -215,6 +106,7 @@ public class vUser extends vBaseStandard {
 		this.setProperty(jUser.ROLE, role.toString());
 	}
 
+	
 	// API
 	
 	public vUser(final jUser j) {
@@ -227,16 +119,6 @@ public class vUser extends vBaseStandard {
 		this.commit();
 		this.reload();
 
-		/*
-		if(User.getById(this.getGraph(), j.getUserId()) != null)
-			throw new RuntimeException("TODO"); //TODO
-			
-
-		if(StringUtils.isEmpty(j.getRole()))
-				j.setRole(SecurityRole.GUEST.toString());
-		*/
-		
-		//this.setUserId(j.getUserId());
 		if(j.isPresentRole())
 			this.setRole(j.getRole());
 
@@ -259,12 +141,9 @@ public class vUser extends vBaseStandard {
 
 		jUser juser = (jUser) j;
 		
-		//juser.setUserId(this.getUserId());
-		if(juser.isPresentRole())
-			juser.setRole(this.getRole());
+		juser.setRole(this.getRole());
 		
-		if(juser.isPresentInGroup())
-			juser.setInGroups(this.getGroups().stream().map(e -> vBase.getJBaseLight(e)).collect(Collectors.toList()));
+		juser.setInGroups(this.getGroups().stream().map(e -> getJBaseLight(e)).collect(Collectors.toList()));
 		
 		return j;
 	}
@@ -275,9 +154,6 @@ public class vUser extends vBaseStandard {
 		if(!(obj instanceof jUser))
 			throw new RuntimeException("TODO"); //TODO
 
-		super.update(obj, requesteurGuid);
-		
-		
 		vUser requesterUser = vUser.get(this.getGraph(), vUser.class, requesteurGuid, false);
 
 		switch(requesterUser.getRole()) {
@@ -300,7 +176,8 @@ public class vUser extends vBaseStandard {
 		default:
 			throw new RuntimeException("TODO"); //TODO
 		}
-		
+
+		super.update(obj, requesteurGuid);
 
 		jUser juser = (jUser) obj;
 		
@@ -318,22 +195,13 @@ public class vUser extends vBaseStandard {
 			}
 		}
 
-		/*
-		if(juser.isPresentUserId())
-			this.setIcon(juser.getIcon());
-		 */
-		
 		// ADMIN & ROOT
 		
 		if(requesterUser.getRole().isAdmin()) {
-			
 			if(juser.isPresentInGroup()) {
 				this.setGroupsJBL(juser.getInGroups());
 			}
-
-			
 		}
-		
 		
 		return read(null, requesteurGuid);
 		

@@ -92,8 +92,8 @@ public abstract class vBaseStandard extends vBase {
 
 		
 		String cmdSql = "SELECT FROM " + target.getSimpleName() + " WHERE "
-				+ WhereClause.WHERE_CLAUSE__ENABLE_IS_TRUE + " AND "
-				+ WhereClause.classIsntanceOf(target.getSimpleName(), instanceOf) + " AND "
+				+ WhereClause.ENABLE_IS_TRUE + " AND "
+				+ WhereClause.IsntanceOf(target, instanceOf) + " AND "
 				+ jBaseStandard.EXTERNAL_REF + "['"+ key + "'] = ?";
 
 		List<OrientVertex> list = vCommon.command(graph, cmdSql, value);
@@ -177,9 +177,9 @@ public abstract class vBaseStandard extends vBase {
 		cmdSQL += "    (SELECT @rid as myRid, " + jBaseStandard.OTHER_NAME + " FROM " + target.getSimpleName() + "";
 		cmdSQL += "    WHERE " + jBaseStandard.OTHER_NAME + " IS NOT NULL ";
 		cmdSQL +=        "AND "; 
-		cmdSQL +=      WhereClause.WHERE_CLAUSE__ENABLE_IS_TRUE;
+		cmdSQL +=      WhereClause.ENABLE_IS_TRUE;
 		cmdSQL +=        "AND "; 
-		cmdSQL +=      WhereClause.classIsntanceOf(target, isInstanceOf);
+		cmdSQL +=      WhereClause.IsntanceOf(target, isInstanceOf);
 		cmdSQL += "    UNWIND " + jBaseStandard.OTHER_NAME + " ) ";
 		cmdSQL += "  WHERE " + jBaseStandard.OTHER_NAME + ".toLowerCase() = '" + value + "') ";
 		

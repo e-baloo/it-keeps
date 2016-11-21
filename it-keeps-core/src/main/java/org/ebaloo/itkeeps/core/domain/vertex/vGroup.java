@@ -28,26 +28,19 @@ public class vGroup extends vBaseStandard {
 		super();
 	}
 	
-	protected vGroup(String name) {
-		super(name);
-		
-	}
-
-	
-	
 	/*
 	 * PARENT GROUP
 	 */
 	
-	public vGroup getParent() {
+	protected vGroup getParent() {
 		return this.getEdgeByClassesNames(vGroup.class, DirectionType.CHILD, false, eInGroup.class);
 	}
 	
-	public void setParent(final vGroup group) {
+	protected void setParent(final vGroup group) {
 		setEdges(this.getGraph(), vGroup.class, this, group, DirectionType.CHILD, eInGroup.class, false);
 	}
 
-	private void setParent(final jBaseLight group) {
+	protected void setParent(final jBaseLight group) {
 		this.setParent(get(this.getGraph(), vGroup.class, group, false));
 	}
 	
@@ -56,15 +49,15 @@ public class vGroup extends vBaseStandard {
 	 * CHILD GROUP
 	 */
 	
-	public List<vGroup> getChilds() {
+	protected List<vGroup> getChilds() {
 		return this.getEdgesByClassesNames(vGroup.class, DirectionType.PARENT, false, eInGroup.class);
 	}
 	
-	public void setChilds(List<vGroup> list) {
+	protected void setChilds(List<vGroup> list) {
 		setEdges(this.getGraph(), vGroup.class, this, list, DirectionType.PARENT, eInGroup.class, false);
 	}
 
-	private void setChildsJBL(List<jBaseLight> list) {
+	protected void setChildsJBL(List<jBaseLight> list) {
 		
 		if(list == null) 
 			list = new ArrayList<jBaseLight>();
@@ -284,6 +277,10 @@ public class vGroup extends vBaseStandard {
 		if(!(j instanceof jGroup))
 			throw new RuntimeException("TODO"); //TODO
 		
+		
+		// TODO SECURITY
+		
+		
 		super.read(j, requesteurGuid);
 
 		jGroup jgroup = (jGroup) j;
@@ -300,8 +297,6 @@ public class vGroup extends vBaseStandard {
 		if(!(j instanceof jGroup))
 			throw new RuntimeException("TODO"); //TODO
 
-		super.update(j, requesteurGuid);
-		
 		vUser requesterUser = vUser.get(this.getGraph(), vUser.class, requesteurGuid, false);
 
 		switch(requesterUser.getRole()) {
@@ -321,8 +316,9 @@ public class vGroup extends vBaseStandard {
 		}
 		
 
-		jGroup jgroup = (jGroup) j;
+		super.update(j, requesteurGuid);
 		
+		jGroup jgroup = (jGroup) j;
 		
 		if(jgroup.isPresentParent())
 			this.setParent(jgroup.getParent());

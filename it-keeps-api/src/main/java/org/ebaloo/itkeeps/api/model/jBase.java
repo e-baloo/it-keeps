@@ -93,12 +93,12 @@ public class jBase extends jObject {
 
 	@JsonIgnore
 	public final void setGuid(Guid guid) {
-		this.guid = Optional.of(guid);
+		this.guid = Optional.ofNullable(guid);
 	}
 
 	@JsonProperty(GUID)
 	private final void _setGuid(String guid) {
-		this.guid = StringUtils.isEmpty(guid) ? Optional.of(null) : Optional.of(new Guid(guid));
+		this.guid = StringUtils.isEmpty(guid) ? Optional.empty() : Optional.of(new Guid(guid));
 	}
 
 	@JsonIgnore
@@ -119,7 +119,7 @@ public class jBase extends jObject {
 
 	@JsonProperty(NAME)
 	public final void setName(String name) {
-		this.name = Optional.of(name == null ? "" : name);
+		this.name = Optional.ofNullable(name);
 	}
 
 	@JsonIgnore
@@ -149,7 +149,7 @@ public class jBase extends jObject {
 
 		@JsonProperty(CLASS_TYPE)
 		public final void setType(String value) {
-			this.type = Optional.of(value == null ? "" : value);
+			this.type = Optional.ofNullable(value);
 		}
 
 		@JsonIgnore
@@ -171,11 +171,7 @@ public class jBase extends jObject {
 
 		@JsonProperty(VERSION)
 		public final void setVersion(Integer value) {
-			
-			if(value == null)
-				this.version = Optional.empty();
-			else
-				this.version = Optional.of(value);
+			this.version = Optional.ofNullable(value);
 		}
 
 		@JsonIgnore
@@ -196,11 +192,7 @@ public class jBase extends jObject {
 
 		@JsonProperty(ENABLE)
 		public final void setEnable(Boolean value) {
-			
-			if(value == null)
-				this.enable = Optional.empty();
-			else
-				this.enable = Optional.of(value);
+			this.enable = Optional.ofNullable(value);
 		}
 
 		@JsonIgnore
@@ -221,11 +213,7 @@ public class jBase extends jObject {
 
 		@JsonProperty(CREATION_DATE)
 		public final void setCreationDate(DateTime value) {
-			
-			if(value == null)
-				this.creationDate = Optional.empty();
-			else
-				this.creationDate = Optional.of(value);
+			this.creationDate = Optional.ofNullable(value);
 		}
 	}
 
@@ -242,7 +230,7 @@ public class jBase extends jObject {
 
 	@JsonProperty(DESCRIPTION)
 	public void setDescription(String value) {
-		this.description = Optional.of(value == null ? "" : value);
+		this.description = Optional.ofNullable(value);
 	}
 
 	@JsonIgnore

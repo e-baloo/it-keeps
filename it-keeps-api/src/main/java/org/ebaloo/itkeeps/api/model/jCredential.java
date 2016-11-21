@@ -61,11 +61,7 @@ public class jCredential {
 
 	@JsonProperty(USER_NAME)
 	public final void setUserName(String value) {
-		
-		if(value == null)
-			this.userName = Optional.of("");
-		else
-			this.userName = Optional.of(value);
+		this.userName = Optional.ofNullable(value);
 	}
 
 	@JsonIgnore

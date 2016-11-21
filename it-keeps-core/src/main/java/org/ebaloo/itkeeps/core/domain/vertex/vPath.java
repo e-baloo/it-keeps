@@ -30,17 +30,6 @@ public class vPath extends vBaseStandard {
 		super();
 	}
 	
-	/*
-	public Path(final BaseAbstract abase) {
-		super(abase);
-	}
-	*/
-	
-	protected vPath(String name) {
-		super(name);
-		
-	}
-
 	
 	
 	/*
@@ -66,11 +55,11 @@ public class vPath extends vBaseStandard {
 	 * CHILD GROUP
 	 */
 	
-	public List<vPath> getChildGroup() {
+	protected List<vPath> getChildsGroup() {
 		return this.getEdgesByClassesNames(vPath.class, DirectionType.CHILD, false, eInGroup.class);
 	}
 	
-	public void setChildGroup(List<vPath> list) {
+	protected void setChildsGroup(List<vPath> list) {
 		setEdges(this.getGraph(), vPath.class, this, list, DirectionType.CHILD, eInGroup.class, false);
 	}
 
@@ -82,7 +71,7 @@ public class vPath extends vBaseStandard {
 		// Optimization
 		OrientBaseGraph graph = this.getGraph();
 		
-		setChildGroup(list.stream().map(e -> get(graph, vPath.class, e, false)).collect(Collectors.toList())); 
+		setChildsGroup(list.stream().map(e -> get(graph, vPath.class, e, false)).collect(Collectors.toList())); 
 	}
 
 	
@@ -127,7 +116,7 @@ public class vPath extends vBaseStandard {
 		jPath jpath = (jPath) j;
 		
 		jpath.setParent(getJBaseLight(this.getParent()));
-		jpath.setChilds(this.getChildGroup().stream().map(e -> getJBaseLight(e)).collect(Collectors.toList()));
+		jpath.setChilds(this.getChildsGroup().stream().map(e -> getJBaseLight(e)).collect(Collectors.toList()));
 		
 		return j;
 	}
@@ -138,8 +127,6 @@ public class vPath extends vBaseStandard {
 		if(!(j instanceof jPath))
 			throw new RuntimeException("TODO"); //TODO
 
-		super.update(j, requesteurGuid);
-		
 		vUser requesterUser = vUser.get(this.getGraph(), vUser.class, requesteurGuid, false);
 
 		switch(requesterUser.getRole()) {
@@ -158,16 +145,15 @@ public class vPath extends vBaseStandard {
 			throw new RuntimeException("TODO"); //TODO
 		}
 		
+		super.update(j, requesteurGuid);
 
 		jPath jpath = (jPath) j;
-		
 		
 		if(jpath.isPresentParent())
 			this.setParent(jpath.getParent());
 
 		if(jpath.isPresentChilds())
 			this.setChildsJBL(jpath.getChilds());
-		
 		
 		return read(null, requesteurGuid);
 	}

@@ -13,7 +13,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class jUser extends jBaseStandard{
 
-//	public static final String USER_ID = "userId";
 	public static final String ROLE = "role";
 	public static final String IN_GROUPS = "inGroups";
 
@@ -23,27 +22,6 @@ public class jUser extends jBaseStandard{
 	}
 	
 	
-	/*
-	// ID
-	
-	@JsonIgnore
-	private Optional<String> userId = Optional.empty();
-	
-	@JsonProperty(USER_ID)
-	public String getUserId() {
-		return userId.orElse(null);
-	}
-
-	@JsonProperty(USER_ID)
-	public void setUserId(String value) {
-		this.userId = Optional.of(value == null ? "" : value);
-	}
-
-	@JsonIgnore
-	public boolean isPresentUserId() {
-		return this.userId.isPresent();
-	}
-	*/
 	
 	// ROLE
 	
@@ -57,7 +35,7 @@ public class jUser extends jBaseStandard{
 
 	@JsonIgnore
 	public final void setRole(enSecurityRole value) {
-		role = Optional.of(value);
+		role = Optional.ofNullable(value);
 	}
 
 	@JsonProperty(ROLE)
@@ -78,27 +56,6 @@ public class jUser extends jBaseStandard{
 		return this.role.isPresent();
 	}
 
-	/*
-	// PASSWORD
-	
-	@JsonIgnore
-	private Optional<String> password = Optional.empty();
-	
-	@JsonProperty(PASSWORD)
-	public final String getPassword() {
-		return this.password.orElse(null);
-	}
-
-	@JsonProperty(PASSWORD)
-	public final void setPassword(String value) {
-		password = Optional.of(value);
-	}
-
-	@JsonIgnore
-	public final boolean isPresentPassword() {
-		return this.password.isPresent();
-	}
-	*/
 
 	// IN_GROUPS
 	
@@ -112,10 +69,7 @@ public class jUser extends jBaseStandard{
 
 	@JsonProperty(IN_GROUPS)
 	public final void setInGroups(List<jBaseLight> value) {
-		if(value == null)
-			inGroups = Optional.of(new ArrayList<jBaseLight>());
-		else
-			inGroups = Optional.of(value);
+		inGroups = Optional.ofNullable(value);
 	}
 
 	@JsonIgnore

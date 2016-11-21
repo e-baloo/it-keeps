@@ -27,16 +27,6 @@ public class vImage extends vBaseSysteme {
 	
 	protected vImage() {}
 
-	/*
-	public Image(final BaseAbstract abase) {
-		super(abase);
-	}
-	*/
-
-	protected vImage(final String name) {
-		super(name);
-	}
-	
 	public vImage(final String name, final String imageType, final String base64) {
 		super(name);
 		
@@ -51,13 +41,12 @@ public class vImage extends vBaseSysteme {
 	protected vImage(final jImage j, final boolean f) {
 		super(j, false);
 		
-		if(vImage.getImage(j.getName()) == null)
-			throw new RuntimeException("TODO"); //
-		
+		this.commit();
+		this.reload();
+
 		if(StringUtils.isEmpty(j.getImageType()) || StringUtils.isEmpty(j.getBase64()))
 				throw new RuntimeException("TODO"); //
 				
-		
 		this.setImageType(j.getImageType());
 		this.setBase64(j.getBase64());
 		
@@ -67,11 +56,7 @@ public class vImage extends vBaseSysteme {
 	
 
 	
-	
-	
-//	public static String ICON = "ico:";
 	public static String DEFAULT_ICON = ICON_NAME_PREFIX + "default";
-	
 	
 
 	/*

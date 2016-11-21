@@ -32,11 +32,7 @@ public class jPath extends jBaseStandard{
 
 	@JsonProperty(PARENT_PATH)
 	public void setParent(jBaseLight value) {
-		
-		if(value == null)
-			value = new jBaseLight();
-		
-		this.parent = Optional.of(value);
+		this.parent = Optional.ofNullable(value);
 	}
 
 	@JsonIgnore
@@ -57,10 +53,7 @@ public class jPath extends jBaseStandard{
 
 	@JsonProperty(CHILDS_PATHS)
 	public final void setChilds(List<jBaseLight> value) {
-		if(value == null)
-			childs = Optional.of(new ArrayList<jBaseLight>());
-		else
-			childs = Optional.of(value);
+		childs = Optional.ofNullable(value);
 	}
 
 	@JsonIgnore

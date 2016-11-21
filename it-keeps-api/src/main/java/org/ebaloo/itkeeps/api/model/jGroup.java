@@ -32,11 +32,7 @@ public class jGroup extends jBaseStandard{
 
 	@JsonProperty(PARENT_GROUP)
 	public void setParent(jBaseLight value) {
-		
-		if(value == null)
-			value = new jBaseLight();
-		
-		this.parentGroup = Optional.of(value);
+		this.parentGroup = Optional.ofNullable(value);
 	}
 
 	@JsonIgnore
@@ -57,10 +53,7 @@ public class jGroup extends jBaseStandard{
 
 	@JsonProperty(CHILDS_GROUPS)
 	public final void setChilds(List<jBaseLight> value) {
-		if(value == null)
-			childGroups = Optional.of(new ArrayList<jBaseLight>());
-		else
-			childGroups = Optional.of(value);
+		childGroups = Optional.ofNullable(value);
 	}
 
 	@JsonIgnore
