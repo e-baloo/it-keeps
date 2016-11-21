@@ -20,7 +20,6 @@ import org.ebaloo.itkeeps.api.model.jObject;
 import org.ebaloo.itkeeps.api.model.jCredential;
 import org.ebaloo.itkeeps.api.model.jToken;
 import org.ebaloo.itkeeps.commons.ConfigFactory;
-import org.ebaloo.itkeeps.commons.LogFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
