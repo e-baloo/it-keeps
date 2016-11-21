@@ -3,9 +3,9 @@
 import java.net.URI;
 
 import org.ebaloo.itkeeps.Guid;
-import org.ebaloo.itkeeps.api.enumeration.AuthenticationType;
-import org.ebaloo.itkeeps.api.model.JCredential;
-import org.ebaloo.itkeeps.api.model.JUser;
+import org.ebaloo.itkeeps.api.enumeration.enAuthentication;
+import org.ebaloo.itkeeps.api.model.jCredential;
+import org.ebaloo.itkeeps.api.model.jUser;
 import org.ebaloo.itkeeps.commons.ConfigFactory;
 import org.ebaloo.itkeeps.commons.LogFactory;
 import org.ebaloo.itkeeps.core.database.DatabaseFactory;
@@ -44,10 +44,10 @@ public class Main {
 		LogFactory.getMain().info("START");
 
 		
-		JCredential cred = new JCredential();
+		jCredential cred = new jCredential();
 		cred.setId("marc");
 		cred.setPassword("marc");
-		cred.setAuthenticationType(AuthenticationType.BASIC);
+		cred.setAuthenticationType(enAuthentication.BASIC);
 		cred.setUserName("Marc DONVAL");
 
 		ItkeepsHttpClient client = new ItkeepsHttpClient(cred);
@@ -56,17 +56,17 @@ public class Main {
 		
 		{
 			
-			JUser rootUser =  client.callJsonRead("/api/user/credid/marc", JUser.class);
+			jUser rootUser =  client.callJsonRead("/api/user/credid/marc", jUser.class);
 			LogFactory.getMain().info(rootUser.toString());
 
 		}
 		
 		
 		
-		JUser neuwjuser = new JUser();
+		jUser neuwjuser = new jUser();
 		Guid nguid = new Guid();
 		neuwjuser.setName("NAME : " + nguid.toString());	
-		JUser testUser =  client.callJsonCreat("/api/user", neuwjuser, JUser.class);
+		jUser testUser =  client.callJsonCreat("/api/user", neuwjuser, jUser.class);
 		
 		
 		
@@ -78,13 +78,13 @@ public class Main {
 		testUser.getInGroups().add(GroupTest.jg_n1.getJBaseLight());
 		testUser.getInGroups().add(GroupTest.jg_n2_1.getJBaseLight());
 		//testUser.getInGroups().add(jg_r.getJBaseLight());
-		JUser user = client.callJsonUpdate("/api/user", testUser, JUser.class);
+		jUser user = client.callJsonUpdate("/api/user", testUser, jUser.class);
 		
 		GroupTest.reload(client);
 		
 		LogFactory.getMain().info(user.toString());
 		
-		user = client.callJsonRead("/api/user/id/" + testUser.getGuid(), JUser.class);
+		user = client.callJsonRead("/api/user/id/" + testUser.getGuid(), jUser.class);
 		
 		LogFactory.getMain().info(user.toString());
 

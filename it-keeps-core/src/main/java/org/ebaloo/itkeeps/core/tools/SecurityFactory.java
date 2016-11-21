@@ -1,13 +1,13 @@
 package org.ebaloo.itkeeps.core.tools;
 
-import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed.SecurityRole;
-import org.ebaloo.itkeeps.api.enumeration.AuthenticationType;
-import org.ebaloo.itkeeps.api.model.JCredential;
-import org.ebaloo.itkeeps.api.model.JUser;
+import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enSecurityRole;
+import org.ebaloo.itkeeps.api.enumeration.enAuthentication;
+import org.ebaloo.itkeeps.api.model.jCredential;
+import org.ebaloo.itkeeps.api.model.jUser;
 import org.ebaloo.itkeeps.core.database.GraphFactory;
-import org.ebaloo.itkeeps.core.domain.BaseUtils;
-import org.ebaloo.itkeeps.core.domain.vertex.Credential;
-import org.ebaloo.itkeeps.core.domain.vertex.User;
+import org.ebaloo.itkeeps.core.domain.vertex.vBase;
+import org.ebaloo.itkeeps.core.domain.vertex.vCredential;
+import org.ebaloo.itkeeps.core.domain.vertex.vUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,18 +15,18 @@ public final class SecurityFactory {
 
 	private static final Logger logger = LoggerFactory.getLogger(SecurityFactory.class.getName());
 	
-	public static void validateCredential(User user, JCredential jcredential) {
+	public static void validateCredential(vUser user, jCredential jcredential) {
 		
     	if(logger.isTraceEnabled())
     		logger.trace("validateCredential()");
 
 		
-    	Credential credential = Credential.get(null, Credential.class, jcredential.getId(), false);
+    	vCredential credential = vCredential.get(null, vCredential.class, jcredential.getId(), false);
     	
 		if(!user.equals(credential.getUser()))
 			throw new RuntimeException("TODO"); //TODO
 		
-		if(credential.getAuthenticationType().equals(AuthenticationType.BASIC)) {
+		if(credential.getAuthenticationType().equals(enAuthentication.BASIC)) {
 			;
 		} else {
 			throw new RuntimeException("TODO"); //TODO
@@ -37,7 +37,7 @@ public final class SecurityFactory {
 	}
 	
 
-	public static final void validateCredential(JCredential credential) {
+	public static final void validateCredential(jCredential credential) {
 
 		if(logger.isTraceEnabled())
     		logger.trace("validateCredential()");
@@ -49,25 +49,25 @@ public final class SecurityFactory {
 	
 	
 	
-	private static final void checkRootUserExist(JCredential jcredential) {
+	private static final void checkRootUserExist(jCredential jcredential) {
 
 		if(logger.isTraceEnabled())
     		logger.trace("checkRootUserExist()");
 
 		// TODO Add CONF "Create Root User"
 		try {
-		String sql = "SELECT COUNT(*) FROM " + User.class.getSimpleName() + " WHERE " + BaseUtils.WhereClause.WHERE_CLAUSE__ENABLE_IS_TRUE + " AND (" +JUser.ROLE + "='" + SecurityRole.ROOT.toString() +"')" ;   
+		String sql = "SELECT COUNT(*) FROM " + vUser.class.getSimpleName() + " WHERE " + vBase.WhereClause.WHERE_CLAUSE__ENABLE_IS_TRUE + " AND (" +jUser.ROLE + "='" + enSecurityRole.ROOT.toString() +"')" ;   
 		
 		
 		Long rootUserCount = GraphFactory.command(null,  sql).get(0).getProperty("COUNT");
 		logger.trace("rootUserCount : " + rootUserCount.toString());
 		
 		if(rootUserCount == 0) {
-			Credential cred = new Credential(jcredential, null);
+			vCredential cred = new vCredential(jcredential, null);
 			cred.commit();
-			User user = cred.getUser();
+			vUser user = cred.getUser();
 			user.commit();
-			user.setRole(SecurityRole.ROOT);
+			user.setRole(enSecurityRole.ROOT);
 			
 			logger.trace("checkRootUserExist() cred :" + cred.toString());
 			logger.trace("checkRootUserExist() user :" + user.toString());

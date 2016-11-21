@@ -9,10 +9,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.ebaloo.itkeeps.api.model.JCredential;
-import org.ebaloo.itkeeps.api.model.JToken;
-import org.ebaloo.itkeeps.core.domain.vertex.Credential;
-import org.ebaloo.itkeeps.core.domain.vertex.User;
+import org.ebaloo.itkeeps.api.model.jCredential;
+import org.ebaloo.itkeeps.api.model.jToken;
+import org.ebaloo.itkeeps.core.domain.vertex.vCredential;
+import org.ebaloo.itkeeps.core.domain.vertex.vUser;
 import org.ebaloo.itkeeps.core.tools.SecurityFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ public class AuthenticationEndpoint {
     @Consumes({MediaType.APPLICATION_JSON})
     @PermitAll
     @Path("login")
-    public Response authenticateUser(JCredential credentials) {
+    public Response authenticateUser(jCredential credentials) {
 
 
     	System.out.println(credentials.getId() + " / " + credentials.getPassword());
@@ -43,7 +43,7 @@ public class AuthenticationEndpoint {
         try {
 
             // Authenticate the user using the credentials provided
-            User user = authenticate(credentials);
+            vUser user = authenticate(credentials);
 
             
             // TODO
@@ -51,7 +51,7 @@ public class AuthenticationEndpoint {
             
             String token = issueToken(user);
             
-            return Response.ok(new JToken(token)).build();
+            return Response.ok(new jToken(token)).build();
 
         } catch (Exception e) {
         	e.printStackTrace();
@@ -62,18 +62,18 @@ public class AuthenticationEndpoint {
 
 
     
-    private User authenticate(JCredential jcredential) throws Exception {
+    private vUser authenticate(jCredential jcredential) throws Exception {
     	
     	if(logger.isTraceEnabled())
     		logger.trace("authenticate()");
     	
     	SecurityFactory.validateCredential(jcredential);
     	
-    	Credential credential = Credential.get(null, Credential.class, jcredential.getId(), false);
+    	vCredential credential = vCredential.get(null, vCredential.class, jcredential.getId(), false);
     	if(credential == null) 
     		throw new RuntimeException("credential is null!");
     	
-    	User user = credential.getUser();
+    	vUser user = credential.getUser();
     	
     	if(user == null) 
     		throw new RuntimeException("user is null!");
@@ -83,7 +83,7 @@ public class AuthenticationEndpoint {
     }
 
     
-    private String issueToken(User user) {
+    private String issueToken(vUser user) {
     	
     	if(logger.isTraceEnabled())
     		logger.trace("issueToken()");

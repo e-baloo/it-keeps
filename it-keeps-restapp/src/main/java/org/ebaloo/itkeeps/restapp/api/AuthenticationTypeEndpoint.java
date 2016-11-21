@@ -10,10 +10,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed;
-import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed.SecurityRole;
-import org.ebaloo.itkeeps.api.enumeration.AuthenticationType;
-import org.ebaloo.itkeeps.api.enumeration.EnumAbstract;
+import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
+import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enSecurityRole;
+import org.ebaloo.itkeeps.api.enumeration.enAuthentication;
+import org.ebaloo.itkeeps.api.enumeration.enAbstract;
 
 import com.codahale.metrics.annotation.Timed;
 
@@ -23,13 +23,13 @@ public class AuthenticationTypeEndpoint {
 
 	@GET
     @Produces({MediaType.APPLICATION_JSON})
-	@ApplicationRolesAllowed(SecurityRole.ROOT)
+	@aApplicationRolesAllowed(enSecurityRole.ROOT)
     @Timed
     public Response get() {
 
 		List<String> list = new ArrayList<String>();
 		
-		for(EnumAbstract<?> at : AuthenticationType.values()) {
+		for(enAbstract<?> at : enAuthentication.values()) {
 		    	list.add(at.toString());
 		}
 		

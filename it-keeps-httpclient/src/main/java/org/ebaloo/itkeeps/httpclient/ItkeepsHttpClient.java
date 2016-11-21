@@ -16,9 +16,9 @@ import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
-import org.ebaloo.itkeeps.api.model.JObject;
-import org.ebaloo.itkeeps.api.model.JCredential;
-import org.ebaloo.itkeeps.api.model.JToken;
+import org.ebaloo.itkeeps.api.model.jObject;
+import org.ebaloo.itkeeps.api.model.jCredential;
+import org.ebaloo.itkeeps.api.model.jToken;
 import org.ebaloo.itkeeps.commons.ConfigFactory;
 import org.ebaloo.itkeeps.commons.LogFactory;
 import org.slf4j.Logger;
@@ -56,9 +56,9 @@ public class ItkeepsHttpClient {
 	
 	
 	
-	public ItkeepsHttpClient(JCredential jcredential) {
+	public ItkeepsHttpClient(jCredential jcredential) {
 		
-		JToken _token = callJsonCreat("/auth/login", jcredential, JToken.class);
+		jToken _token = callJsonCreat("/auth/login", jcredential, jToken.class);
 		token = _token.getToken();
 		httpJsonClient = null;
 		
@@ -107,20 +107,20 @@ public class ItkeepsHttpClient {
 		CREATE, READ, UPDATE, PATCH, DELETE 
 	}
 
-	public final <T extends JObject> T callJsonCreat(String url, Object data, Class<T> target) {
+	public final <T extends jObject> T callJsonCreat(String url, Object data, Class<T> target) {
 		return callJsonCRUD(CRUD.CREATE, url, data, target);
 	}
 
-	public final <T extends JObject> T callJsonRead(String url, Class<T> target) {
+	public final <T extends jObject> T callJsonRead(String url, Class<T> target) {
 		return callJsonCRUD(CRUD.READ, url, null, target);
 	}
 
-	public final <T extends JObject> T callJsonUpdate(String url, Object data, Class<T> target) {
+	public final <T extends jObject> T callJsonUpdate(String url, Object data, Class<T> target) {
 		return callJsonCRUD(CRUD.UPDATE, url, data, target);
 	}
 
 
-	public final <T extends JObject> T callJsonCRUD(CRUD command, String url, Object data, Class<T> target) {
+	public final <T extends jObject> T callJsonCRUD(CRUD command, String url, Object data, Class<T> target) {
 
 		long tStart = System.currentTimeMillis();
 		

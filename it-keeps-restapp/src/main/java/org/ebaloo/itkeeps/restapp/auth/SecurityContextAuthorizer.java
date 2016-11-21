@@ -6,7 +6,7 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.lang3.StringUtils;
-import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed.SecurityRole;
+import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enSecurityRole;
 
 import java.security.Principal;
 
@@ -14,9 +14,9 @@ public class SecurityContextAuthorizer implements SecurityContext {
 
     private Principal principal;
     private javax.inject.Provider<UriInfo> uriInfo;
-    private SecurityRole role = null;
+    private enSecurityRole role = null;
 
-    public SecurityContextAuthorizer(javax.inject.Provider<UriInfo> uriInfo, String guid, SecurityRole role) {
+    public SecurityContextAuthorizer(javax.inject.Provider<UriInfo> uriInfo, String guid, enSecurityRole role) {
 
         if (StringUtils.isEmpty(guid)) {
             this.principal = new Principal() {
@@ -31,7 +31,7 @@ public class SecurityContextAuthorizer implements SecurityContext {
                 }
             };
 
-            this.role = SecurityRole.GUEST;
+            this.role = enSecurityRole.GUEST;
             
             
         } else {
@@ -64,10 +64,10 @@ public class SecurityContextAuthorizer implements SecurityContext {
 
 	@Override
 	public boolean isUserInRole(String role) {
-		return isUserInRole(SecurityRole.valueOf(role));
+		return isUserInRole(enSecurityRole.valueOf(role));
 	}
 
-    public boolean isUserInRole(SecurityRole role) {
+    public boolean isUserInRole(enSecurityRole role) {
         return  this.role.isInRole(role);
     }
 

@@ -19,18 +19,18 @@ import javax.ws.rs.core.SecurityContext;
 import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enSecurityRole;
-import org.ebaloo.itkeeps.api.model.jGroup;
-import org.ebaloo.itkeeps.core.domain.vertex.vGroup;
+import org.ebaloo.itkeeps.api.model.jPath;
+import org.ebaloo.itkeeps.core.domain.vertex.vPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.codahale.metrics.annotation.Timed;
 
 
-@Path(ApiConfig.PATH + "/group")
-public class GroupEndpoint {
+@Path(ApiConfig.PATH + "/path")
+public class PathEndpoint {
 
-	private static final Logger logger = LoggerFactory.getLogger(GroupEndpoint.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(PathEndpoint.class.getName());
 
     @Context
     SecurityContext securityContext;
@@ -38,16 +38,18 @@ public class GroupEndpoint {
 	
 	@GET 
     @Produces({MediaType.APPLICATION_JSON})
-	@aApplicationRolesAllowed(enSecurityRole.ADMIN)
+	@aApplicationRolesAllowed(enSecurityRole.USER)
     @Timed
     public Response read() {
 		
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
 
-		List<jGroup> jl = new ArrayList<jGroup>();
+		List<jPath> jl = new ArrayList<jPath>();
 		
-		for(vGroup group : vGroup.getAllBase(null, vGroup.class, false)) {
-	    	jl.add(group.read(null, requesteurGuid));
+		for(vPath ba : vPath.getAllBase(null, vPath.class, false)) {
+			jPath j = new jPath();
+			((vPath) ba).read(j, requesteurGuid);
+	    	jl.add(j);
 		}
 		
     	return Response.ok().entity(jl).build();
@@ -64,12 +66,12 @@ public class GroupEndpoint {
 
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
 
-		vGroup group = vGroup.get(null, vGroup.class, guid, false);
+		vPath group = vPath.get(null, vPath.class, guid, false);
 		
 		if(group == null)
 			throw new RuntimeException("TODO"); // TODO
 		
-		jGroup j = group.read(null, requesteurGuid);
+		jPath j = group.read(null, requesteurGuid);
 		
     	return Response.ok().entity(j).build();
     }
@@ -80,7 +82,7 @@ public class GroupEndpoint {
     @Consumes({MediaType.APPLICATION_JSON})
 	@aApplicationRolesAllowed(enSecurityRole.ADMIN)
     @Timed
-    public Response update(final jGroup j) {
+    public Response update(final jPath j) {
     	
 		if (logger.isTraceEnabled())
 			logger.trace("updateGroup()");
@@ -88,9 +90,9 @@ public class GroupEndpoint {
     	
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
     	
-    	vGroup group = vGroup.get(null, vGroup.class, j.getGuid(), false);
+    	vPath group = vPath.get(null, vPath.class, j.getGuid(), false);
 
-    	jGroup nj = group.update(j, requesteurGuid);
+    	jPath nj = group.update(j, requesteurGuid);
 
     	return Response.ok().entity(nj).build();
     }
@@ -100,12 +102,12 @@ public class GroupEndpoint {
     @Consumes({MediaType.APPLICATION_JSON})
 	@aApplicationRolesAllowed(enSecurityRole.ADMIN)
     @Timed
-    public Response create(final jGroup j) {
+    public Response create(final jPath j) {
 
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
 
-    	vGroup group = new vGroup(j);
-    	jGroup nj = new jGroup();
+    	vPath group = new vPath(j);
+    	jPath nj = new jPath();
     	group.read(nj, requesteurGuid);
 
     	return Response.ok().entity(nj).build();

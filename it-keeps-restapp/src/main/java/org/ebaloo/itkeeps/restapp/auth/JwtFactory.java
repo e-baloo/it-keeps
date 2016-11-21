@@ -6,10 +6,10 @@ import java.util.Map;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed.SecurityRole;
-import org.ebaloo.itkeeps.api.model.JBase;
+import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enSecurityRole;
+import org.ebaloo.itkeeps.api.model.jBase;
 import org.ebaloo.itkeeps.commons.ConfigFactory;
-import org.ebaloo.itkeeps.core.domain.vertex.User;
+import org.ebaloo.itkeeps.core.domain.vertex.vUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,14 +58,8 @@ public final class JwtFactory {
 	}
 	
 	
-	
-	
-
-	
-	private static final String USER_ID = "user.id";
 	private static final String USER_NAME = "user.name";
 	private static final String USER_ROLE = "user.role";
-	
 	
 	
 	private static long DEFAULT_TIMEOUT = 10;
@@ -89,23 +83,12 @@ public final class JwtFactory {
 		return timeout;
 	}
 
-	/*
-	public static void setTimeout(long timeout) {
-		
-	}
-	*/
-
-	public static String getJwtString(final User user) {
+	public static String getJwtString(final vUser user) {
 
 		if (logger.isTraceEnabled())
 			logger.trace("getJwtString()");
 		
-		
-
-		
 		final JWTSigner signer = new JWTSigner(getKey());
-
-		
 
 		final long iat = System.currentTimeMillis() / 1000L; // issued at claim 
 		final long exp = iat + 60L * getTimeout(); // expires claim. In this case the token expires in 60 seconds
@@ -116,11 +99,11 @@ public final class JwtFactory {
 		claims.put("iss", "IT-Keeps");		
 		
 		
-		claims.put(JBase.GUID, user.getGuid().toString());
-		claims.put(JBase.NAME, user.getName());
+		claims.put(jBase.GUID, user.getGuid().toString());
+		claims.put(jBase.NAME, user.getName());
 		
 		//claims.put(USER_ROLE, user.getRole().toString());
-		claims.put(USER_ROLE, SecurityRole.ROOT.toString());
+		claims.put(USER_ROLE, enSecurityRole.ROOT.toString());
 		
 		
 		return signer.sign(claims);
@@ -185,14 +168,14 @@ public final class JwtFactory {
 			logger.trace("getGuid()");
 
 
-		return claims.get(JBase.GUID).toString(); 
+		return claims.get(jBase.GUID).toString(); 
 	}
 
-	public static SecurityRole getRole(Map<String, Object> claims) {
+	public static enSecurityRole getRole(Map<String, Object> claims) {
 		
 		String role = claims.get(USER_ROLE).toString();
 
-		return SecurityRole.valueOf(role);
+		return enSecurityRole.valueOf(role);
 	}
 
 	

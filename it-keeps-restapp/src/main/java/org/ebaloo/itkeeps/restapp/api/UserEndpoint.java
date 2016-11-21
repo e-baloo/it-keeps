@@ -17,13 +17,11 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 import org.ebaloo.itkeeps.Guid;
-import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed;
-import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed.SecurityRole;
-import org.ebaloo.itkeeps.api.model.JUser;
-import org.ebaloo.itkeeps.core.domain.vertex.BaseAbstract;
-import org.ebaloo.itkeeps.core.domain.vertex.Credential;
-import org.ebaloo.itkeeps.core.domain.vertex.Image;
-import org.ebaloo.itkeeps.core.domain.vertex.User;
+import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
+import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enSecurityRole;
+import org.ebaloo.itkeeps.api.model.jUser;
+import org.ebaloo.itkeeps.core.domain.vertex.vCredential;
+import org.ebaloo.itkeeps.core.domain.vertex.vUser;
 
 import com.codahale.metrics.annotation.Timed;
 
@@ -38,18 +36,18 @@ public class UserEndpoint {
 	@SuppressWarnings("unused")
 	@GET // LIST
     @Produces({MediaType.APPLICATION_JSON})
-	@ApplicationRolesAllowed(SecurityRole.ADMIN)
+	@aApplicationRolesAllowed(enSecurityRole.ADMIN)
     @Timed
     @Path("/all}")
     public Response readAll() {
 		
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
 
-		List<JUser> list = new ArrayList<JUser>();
+		List<jUser> list = new ArrayList<jUser>();
 		
-		for(BaseAbstract ba : Image.getAllBase(null, User.class, false)) {
-			JUser juser = new JUser();
-			((User) ba).read(juser, new Guid(securityContext.getUserPrincipal().getName()));
+		for(vUser ba : vUser.getAllBase(null, vUser.class, false)) {
+			jUser juser = new jUser();
+			((vUser) ba).read(juser, new Guid(securityContext.getUserPrincipal().getName()));
 	    	list.add(juser);
 		}
 		
@@ -61,54 +59,54 @@ public class UserEndpoint {
     @GET //READ
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/id/{id}")
-	@ApplicationRolesAllowed(SecurityRole.USER)
+	@aApplicationRolesAllowed(enSecurityRole.USER)
     @Timed
     public Response readId(@PathParam("id") String id) {
 
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
 
-		User user = User.get(null, User.class, id, false);
+		vUser user = vUser.get(null, vUser.class, id, false);
 		
 		if(user == null)
 			throw new RuntimeException("readId(" + id + ") is null" );
 		
 		
-    	return Response.ok().entity(user.read(new JUser(), requesteurGuid)).build();
+    	return Response.ok().entity(user.read(new jUser(), requesteurGuid)).build();
     }
 	
     @GET //READ
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/credid/{id}")
-	@ApplicationRolesAllowed(SecurityRole.USER)
+	@aApplicationRolesAllowed(enSecurityRole.USER)
     @Timed
     public Response readCredId(@PathParam("id") String id) {
 
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
 
-    	Credential cred = Credential.get(null, Credential.class, id, false);
+    	vCredential cred = vCredential.get(null, vCredential.class, id, false);
 		
 		if(cred == null)
 			throw new RuntimeException("readId(" + id + ") is null" );
 		
 		
-    	return Response.ok().entity(cred.getUser().read(new JUser(), requesteurGuid)).build();
+    	return Response.ok().entity(cred.getUser().read(new jUser(), requesteurGuid)).build();
     }
 
     @PUT // UPDATE
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-	@ApplicationRolesAllowed(SecurityRole.USER)
+	@aApplicationRolesAllowed(enSecurityRole.USER)
     @Timed
-    public Response update(final JUser juser) {
+    public Response update(final jUser juser) {
     	
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
     	
-    	User user = User.get(null, User.class,  juser.getGuid(), false);
+    	vUser user = vUser.get(null, vUser.class,  juser.getGuid(), false);
 
     	user.update(juser, requesteurGuid);
 
-    	JUser newjuser = new JUser();
-    	User.get(null, User.class, juser.getGuid(), false).read(newjuser, requesteurGuid);
+    	jUser newjuser = new jUser();
+    	vUser.get(null, vUser.class, juser.getGuid(), false).read(newjuser, requesteurGuid);
 
     	return Response.ok().entity(newjuser).build();
     }
@@ -116,14 +114,14 @@ public class UserEndpoint {
     @POST // CREATE
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-	@ApplicationRolesAllowed(SecurityRole.ADMIN)
+	@aApplicationRolesAllowed(enSecurityRole.ADMIN)
     @Timed
-    public Response create(final JUser juser) {
+    public Response create(final jUser juser) {
 
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
 
-    	User user = new User(juser);
-    	JUser newjuser = new JUser();
+    	vUser user = new vUser(juser);
+    	jUser newjuser = new jUser();
     	user.read(newjuser, requesteurGuid);
 
     	return Response.ok().entity(newjuser).build();

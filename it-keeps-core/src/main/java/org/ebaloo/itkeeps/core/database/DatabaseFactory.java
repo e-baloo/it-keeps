@@ -12,15 +12,16 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ebaloo.itkeeps.Guid;
-import org.ebaloo.itkeeps.api.enumeration.AclAdminType;
-import org.ebaloo.itkeeps.api.enumeration.AclDataType;
-import org.ebaloo.itkeeps.api.enumeration.AuthenticationType;
+import org.ebaloo.itkeeps.api.enumeration.enAclAdmin;
+import org.ebaloo.itkeeps.api.enumeration.enAclData;
+import org.ebaloo.itkeeps.api.enumeration.enAuthentication;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseEdge;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
-import org.ebaloo.itkeeps.core.domain.vertex.AclAdminTypeClass;
-import org.ebaloo.itkeeps.core.domain.vertex.AclDataTypeClass;
-import org.ebaloo.itkeeps.core.domain.vertex.AuthenticationTypeClass;
+import org.ebaloo.itkeeps.core.domain.vertex.vAclAdmin;
+import org.ebaloo.itkeeps.core.domain.vertex.vAclData;
+import org.ebaloo.itkeeps.core.domain.vertex.vAuthentication;
+import org.ebaloo.itkeeps.core.domain.vertex.vBase;
 import org.ebaloo.itkeeps.core.tools.ReflectionsFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,13 +62,13 @@ public class DatabaseFactory {
 			GraphFactory.executeNoReturn(null, "ALTER DATABASE DATETIMEFORMAT \"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\"");
 
 
-			AuthenticationTypeClass.init(AuthenticationType.class, AuthenticationTypeClass.class);
+			vAuthentication.init(enAuthentication.class, vAuthentication.class);
 			logger.info(" - init AuthenticationTypeClass done.");
 
-			AclDataTypeClass.init(AclDataType.class, AclDataTypeClass.class);
+			vAclData.init(enAclData.class, vAclData.class);
 			logger.info(" - init AclDataTypeClass done.");
 
-			AclAdminTypeClass.init(AclAdminType.class, AclAdminTypeClass.class);
+			vAclAdmin.init(enAclAdmin.class, vAclAdmin.class);
 			logger.info(" - init AclAdminTypeClass done.");
 			
 
@@ -101,8 +102,8 @@ public class DatabaseFactory {
 
 			Map<String, Class<?>> map = new TreeMap<String, Class<?>>();
 
-			for (Class<?> clasz : ReflectionsFactory.getReflections(Guid.class).getTypesAnnotatedWith(DatabaseVertrex.class)) {
-				if (clasz.getSuperclass() != null) {
+			for (Class<?> clasz : ReflectionsFactory.getReflections(vBase.class).getTypesAnnotatedWith(DatabaseVertrex.class)) {
+				if (clasz != null && clasz.getSuperclass() != null) {
 					map.put(getAllSuperclass(clasz), (Class<?>) clasz);
 				}
 			}

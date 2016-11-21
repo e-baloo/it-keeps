@@ -7,7 +7,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
-import org.ebaloo.itkeeps.core.domain.vertex.Image;
+import org.ebaloo.itkeeps.core.domain.vertex.vImage;
 
 import com.codahale.metrics.annotation.Timed;
 
@@ -16,7 +16,7 @@ import com.codahale.metrics.annotation.Timed;
 public class ImageEndpoint {
 
 	
-	private static Image defaultIcon = null;
+	private static vImage defaultIcon = null;
 	
     @GET
     @Produces()
@@ -25,12 +25,12 @@ public class ImageEndpoint {
     @Timed
     public Response getImage(@PathParam("id") String id) {
     	
-        Image img = Image.getImage(id);
+        vImage img = vImage.getImage(id);
 
         if(img == null) {
-            if(id.startsWith(Image.ICON_NAME_PREFIX)) {
+            if(id.startsWith(vImage.ICON_NAME_PREFIX)) {
                 if(defaultIcon == null) {
-                    defaultIcon = Image.getImage(Image.DEFAULT_ICON);
+                    defaultIcon = vImage.getImage(vImage.DEFAULT_ICON);
                 }
                 img = defaultIcon;
             } else {

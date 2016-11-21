@@ -15,11 +15,10 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 import org.ebaloo.itkeeps.Guid;
-import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed;
-import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed.SecurityRole;
-import org.ebaloo.itkeeps.api.model.JImage;
-import org.ebaloo.itkeeps.core.domain.vertex.BaseAbstract;
-import org.ebaloo.itkeeps.core.domain.vertex.Image;
+import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
+import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enSecurityRole;
+import org.ebaloo.itkeeps.api.model.jImage;
+import org.ebaloo.itkeeps.core.domain.vertex.vImage;
 
 import com.codahale.metrics.annotation.Timed;
 
@@ -34,19 +33,14 @@ public class ImageEndpoint {
 	@GET
     @Produces({MediaType.APPLICATION_JSON})
     @PermitAll
-    @ApplicationRolesAllowed(SecurityRole.ADMIN)
+    @aApplicationRolesAllowed(enSecurityRole.ADMIN)
     @Timed
     public Response get() {
 
-		List<JImage> list = new ArrayList<JImage>();
+		List<jImage> list = new ArrayList<jImage>();
 		
-		for(BaseAbstract ba : Image.getAllBase(null, Image.class, false)) {
-			
-			JImage jimage = new JImage();
-			((Image) ba).read(jimage, new Guid(securityContext.getUserPrincipal().getName()), false);
-			
-			
-		    	list.add(jimage);
+		for(vImage image : vImage.getAllBase(null, vImage.class, false)) {
+		    	list.add(image.read(null, new Guid(securityContext.getUserPrincipal().getName()), false));
 		}
 		
     	return Response.ok().entity(list).build();
@@ -58,11 +52,11 @@ public class ImageEndpoint {
     @Produces({MediaType.APPLICATION_JSON})
     @PermitAll
     @Path("/{id}")
-    @ApplicationRolesAllowed(SecurityRole.ADMIN)
+    @aApplicationRolesAllowed(enSecurityRole.ADMIN)
     @Timed
     public Response getImage(@PathParam("id") String id) {
     	
-		JImage jimage = Image.getImage(id).read(new JImage(), new Guid(securityContext.getUserPrincipal().getName()), false);
+		jImage jimage = vImage.getImage(id).read(new jImage(), new Guid(securityContext.getUserPrincipal().getName()), false);
     	
     	return Response.ok().entity(jimage).build();
     }
