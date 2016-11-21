@@ -12,7 +12,6 @@ import org.ebaloo.itkeeps.api.model.JBase;
 import org.ebaloo.itkeeps.api.model.JBaseLight;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
-import org.ebaloo.itkeeps.core.domain.ModelFactory;
 import org.ebaloo.itkeeps.core.domain.annotation.ModelClassAnnotation;
 import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
 import org.ebaloo.itkeeps.core.domain.edge.notraverse.CredentialToUser;
@@ -72,11 +71,11 @@ public class User extends BaseStandard {
 	 */
 	
 	public List<Group> getGroups() {
-		return this.getEdgesByClassesNames(ModelFactory.get(Group.class), DirectionType.PARENT, false, InGroup.class);
+		return this.getEdgesByClassesNames(Group.class, DirectionType.PARENT, false, InGroup.class);
 	}
 	
 	public void setGroups(List<Group> list) {
-		setEdges(this.getGraph(), ModelFactory.get(Group.class), this, list, DirectionType.PARENT, InGroup.class, false);
+		setEdges(this.getGraph(), User.class, this, list, DirectionType.PARENT, InGroup.class, false);
 	}
 
 	private void setGroupsJBL(List<JBaseLight> list) {
@@ -86,10 +85,8 @@ public class User extends BaseStandard {
 		}
 		
 		// Optimization
-		ModelClass<Group> mc = ModelFactory.get(Group.class);
 		OrientBaseGraph graph = this.getGraph();
-		
-		setGroups(list.stream().map(e -> get(graph, mc, e, false)).collect(Collectors.toList())); 
+		setGroups(list.stream().map(e -> get(graph, Group.class, e, false)).collect(Collectors.toList())); 
 	}
 
 	/*
@@ -97,11 +94,11 @@ public class User extends BaseStandard {
 	 */
 	
 	public List<Credential> getCredentials() {
-		return this.getEdgesByClassesNames(ModelFactory.get(Credential.class), DirectionType.CHILD, false, CredentialToUser.class);
+		return this.getEdgesByClassesNames(Credential.class, DirectionType.CHILD, false, CredentialToUser.class);
 	}
 	
 	private void _setCredentials(List<Credential> list) {
-		setEdges(this.getGraph(), ModelFactory.get(Credential.class), this, list, DirectionType.CHILD, CredentialToUser.class, false);
+		setEdges(this.getGraph(), User.class, this, list, DirectionType.CHILD, CredentialToUser.class, false);
 	}
 
 	public void setCredentials(List<JBaseLight> list) {
@@ -111,10 +108,9 @@ public class User extends BaseStandard {
 		}
 		
 		// Optimization
-		ModelClass<Credential> mc = ModelFactory.get(Credential.class);
 		OrientBaseGraph graph = this.getGraph();
 		
-		this._setCredentials(list.stream().map(e -> get(graph, mc, e, false)).collect(Collectors.toList())); 
+		this._setCredentials(list.stream().map(e -> get(graph, Credential.class, e, false)).collect(Collectors.toList())); 
 	}
 	
 	
@@ -284,7 +280,7 @@ public class User extends BaseStandard {
 		super.update(obj, requesteurGuid);
 		
 		
-		User requesterUser = User.get(this.getGraph(), ModelFactory.get(User.class), requesteurGuid, false);
+		User requesterUser = User.get(this.getGraph(), User.class, requesteurGuid, false);
 
 		switch(requesterUser.getRole()) {
 

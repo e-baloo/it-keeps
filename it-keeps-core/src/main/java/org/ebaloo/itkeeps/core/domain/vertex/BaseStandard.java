@@ -95,13 +95,15 @@ public abstract class BaseStandard extends Base {
 	}
 	*/
 	
-	public static <T extends BaseAbstract> T getByExternalRef(OrientBaseGraph graph, final ModelClass<T> target,
+	
+	
+	public static <T extends BaseAbstract> T getByExternalRef(OrientBaseGraph graph, final Class<T> target,
 			final String key, final String value, final boolean instanceOf) {
 
 		
-		String cmdSql = "SELECT FROM " + target.getClassName() + " WHERE "
+		String cmdSql = "SELECT FROM " + target.getSimpleName() + " WHERE "
 				+ BaseUtils.WhereClause.WHERE_CLAUSE__ENABLE_IS_TRUE + " AND "
-				+ BaseUtils.WhereClause.classIsntanceOf(target.getClassName(), instanceOf) + " AND "
+				+ BaseUtils.WhereClause.classIsntanceOf(target.getSimpleName(), instanceOf) + " AND "
 				+ JBaseStandard.EXTERNAL_REF + "['"+ key + "'] = ?";
 
 		List<OrientVertex> list = CommonOrientVertex.command(graph, cmdSql, value);
@@ -164,11 +166,11 @@ public abstract class BaseStandard extends Base {
 	
 	
 	
-	public static final <T extends BaseAbstract> T getByOtherName(OrientBaseGraph graph, ModelClass<T> target, final String iValue) {
+	public static final <T extends BaseAbstract> T getByOtherName(OrientBaseGraph graph, Class<T> target, final String iValue) {
 		return getByOtherName(graph, target, iValue, false);
 	}
 
-	public static final <T extends BaseAbstract> T getByOtherName(OrientBaseGraph graph, ModelClass<T> target, final String iValue, final boolean isInstanceOf) {
+	public static final <T extends BaseAbstract> T getByOtherName(OrientBaseGraph graph, Class<T> target, final String iValue, final boolean isInstanceOf) {
 		
 		if(StringUtils.isBlank(iValue)) {
 			return null;
@@ -180,9 +182,9 @@ public abstract class BaseStandard extends Base {
 		// TODO Injection SQL
 		
 		String cmdSQL = "";
-		cmdSQL += "SELECT FROM " + target.getClassName() + " WHERE @rid in ";
+		cmdSQL += "SELECT FROM " + target.getSimpleName() + " WHERE @rid in ";
 		cmdSQL += "  (SELECT myRid FROM ";
-		cmdSQL += "    (SELECT @rid as myRid, " + JBaseStandard.OTHER_NAME + " FROM " + target.getClassName() + "";
+		cmdSQL += "    (SELECT @rid as myRid, " + JBaseStandard.OTHER_NAME + " FROM " + target.getSimpleName() + "";
 		cmdSQL += "    WHERE " + JBaseStandard.OTHER_NAME + " IS NOT NULL ";
 		cmdSQL +=        "AND "; 
 		cmdSQL +=      BaseUtils.WhereClause.WHERE_CLAUSE__ENABLE_IS_TRUE;
@@ -231,11 +233,11 @@ public abstract class BaseStandard extends Base {
 			}
 
 			if(!(isntanceof && target.isInstance(ab))) {
-				throw new RuntimeException("the '" + JBase.GUID + "' ("+tofinde+") is not instance @" + target.getClassName());
+				throw new RuntimeException("the '" + JBase.GUID + "' ("+tofinde+") is not instance @" + target.getSimpleName());
 			}
 
-			if(!isntanceof && !ab.getType().equals(target.getClassName())) {
-				throw new RuntimeException("the '" + JBase.GUID + "' ("+tofinde+") is not @" + target.getClassName());
+			if(!isntanceof && !ab.getType().equals(target.getSimpleName())) {
+				throw new RuntimeException("the '" + JBase.GUID + "' ("+tofinde+") is not @" + target.getSimpleName());
 			}
 
 			retTarget = (T) ab;

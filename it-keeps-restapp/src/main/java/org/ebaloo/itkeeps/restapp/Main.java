@@ -6,7 +6,6 @@ import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.ebaloo.itkeeps.commons.ConfigFactory;
 import org.ebaloo.itkeeps.commons.LogFactory;
 import org.ebaloo.itkeeps.core.database.DatabaseFactory;
-import org.ebaloo.itkeeps.core.domain.ModelFactory;
 import org.ebaloo.itkeeps.restapp.ApplicationConfig;
 import org.glassfish.grizzly.http.server.HttpServer;
 
@@ -35,7 +34,6 @@ public class Main {
     		
     		DatabaseFactory.init();
     		
-    		ModelFactory.init();
     		
     		
     		

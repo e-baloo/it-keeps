@@ -4,7 +4,6 @@ package org.ebaloo.itkeeps.core.domain;
 
 import org.ebaloo.itkeeps.api.model.JBase;
 import org.ebaloo.itkeeps.core.domain.vertex.BaseAbstract;
-import org.ebaloo.itkeeps.core.domain.vertex.BaseAbstract.ModelClass;
 
 public class BaseUtils {
 	
@@ -52,15 +51,15 @@ public class BaseUtils {
 		public final static String classIsntanceOf(final String targetClass, final boolean instanceOf) {
 			return String.format("(@class %s '%s')", instanceOf ? "INSTANCEOF" : "=", targetClass);
 		}
-		
+
 		/*
 		public final static String classIsntanceOf(final Class<? extends BaseAbstract> targetClass, final boolean instanceOf) {
 			return classIsntanceOf(targetClass.getSimpleName(), instanceOf);
 		}
 		*/
 		
-		public final static String classIsntanceOf(final ModelClass<? extends BaseAbstract> targetClass, final boolean instanceOf) {
-			return classIsntanceOf(targetClass.getClassName(), instanceOf);
+		public final static <T extends BaseAbstract> String classIsntanceOf(final Class<T> target, final boolean instanceOf) {
+			return classIsntanceOf(target.getSimpleName(), instanceOf);
 		}
 
 		/*
@@ -69,8 +68,8 @@ public class BaseUtils {
 		}
 		*/
 
-		public final static void classIsntanceOf(final ModelClass<? extends BaseAbstract> targetClass, final boolean instanceOf, final StringBuilder sb) {
-			sb.append(classIsntanceOf(targetClass, instanceOf));
+		public final static <T extends BaseAbstract> void classIsntanceOf(final Class<T> target, final boolean instanceOf, final StringBuilder sb) {
+			sb.append(classIsntanceOf(target, instanceOf));
 		}
 
 		/*

@@ -18,7 +18,6 @@ import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed.SecurityRole;
 import org.ebaloo.itkeeps.api.model.JImage;
-import org.ebaloo.itkeeps.core.domain.ModelFactory;
 import org.ebaloo.itkeeps.core.domain.vertex.BaseAbstract;
 import org.ebaloo.itkeeps.core.domain.vertex.Image;
 
@@ -41,7 +40,7 @@ public class ImageEndpoint {
 
 		List<JImage> list = new ArrayList<JImage>();
 		
-		for(BaseAbstract ba : Image.getAllBase(null, ModelFactory.get(Image.class), false)) {
+		for(BaseAbstract ba : Image.getAllBase(null, Image.class, false)) {
 			
 			JImage jimage = new JImage();
 			((Image) ba).read(jimage, new Guid(securityContext.getUserPrincipal().getName()), false);

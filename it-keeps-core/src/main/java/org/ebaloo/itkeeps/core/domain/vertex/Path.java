@@ -11,7 +11,6 @@ import org.ebaloo.itkeeps.api.model.JBase;
 import org.ebaloo.itkeeps.api.model.JBaseLight;
 import org.ebaloo.itkeeps.api.model.JPath;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
-import org.ebaloo.itkeeps.core.domain.ModelFactory;
 import org.ebaloo.itkeeps.core.domain.annotation.ModelClassAnnotation;
 import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
 import org.ebaloo.itkeeps.core.domain.edge.traverse.InGroup;
@@ -51,15 +50,15 @@ public class Path extends BaseStandard {
 	 */
 	
 	public Path getParent() {
-		return this.getEdgeByClassesNames(ModelFactory.get(Path.class), DirectionType.PARENT, false, InGroup.class);
+		return this.getEdgeByClassesNames(Path.class, DirectionType.PARENT, false, InGroup.class);
 	}
 	
 	public void setParent(final Path group) {
-		setEdges(this.getGraph(), ModelFactory.get(Path.class), this, group, DirectionType.PARENT, InGroup.class, false);
+		setEdges(this.getGraph(), Path.class, this, group, DirectionType.PARENT, InGroup.class, false);
 	}
 
-	private void setParent(final JBaseLight group) {
-		setParent(get(this.getGraph(), ModelFactory.get(Path.class), group, false));
+	private void setParent(final JBaseLight path) {
+		setParent(get(this.getGraph(), Path.class, path, false));
 	}
 
 	
@@ -70,11 +69,11 @@ public class Path extends BaseStandard {
 	 */
 	
 	public List<Path> getChildGroup() {
-		return this.getEdgesByClassesNames(ModelFactory.get(Path.class), DirectionType.CHILD, false, InGroup.class);
+		return this.getEdgesByClassesNames(Path.class, DirectionType.CHILD, false, InGroup.class);
 	}
 	
 	public void setChildGroup(List<Path> list) {
-		setEdges(this.getGraph(), ModelFactory.get(Path.class), this, list, DirectionType.CHILD, InGroup.class, false);
+		setEdges(this.getGraph(), Path.class, this, list, DirectionType.CHILD, InGroup.class, false);
 	}
 
 	private void setChildsJBL(List<JBaseLight> list) {
@@ -83,10 +82,9 @@ public class Path extends BaseStandard {
 			list = new ArrayList<JBaseLight>();
 
 		// Optimization
-		ModelClass<Path> mc = ModelFactory.get(Path.class);
 		OrientBaseGraph graph = this.getGraph();
 		
-		setChildGroup(list.stream().map(e -> get(graph, mc, e, false)).collect(Collectors.toList())); 
+		setChildGroup(list.stream().map(e -> get(graph, Path.class, e, false)).collect(Collectors.toList())); 
 	}
 
 	
@@ -144,7 +142,7 @@ public class Path extends BaseStandard {
 
 		super.update(j, requesteurGuid);
 		
-		User requesterUser = User.get(this.getGraph(), ModelFactory.get(User.class), requesteurGuid, false);
+		User requesterUser = User.get(this.getGraph(), User.class, requesteurGuid, false);
 
 		switch(requesterUser.getRole()) {
 

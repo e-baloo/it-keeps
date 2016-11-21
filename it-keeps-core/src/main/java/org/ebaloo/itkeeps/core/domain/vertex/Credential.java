@@ -10,7 +10,6 @@ import org.ebaloo.itkeeps.api.model.JBaseLight;
 import org.ebaloo.itkeeps.api.model.JCredential;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
-import org.ebaloo.itkeeps.core.domain.ModelFactory;
 import org.ebaloo.itkeeps.core.domain.annotation.ModelClassAnnotation;
 import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
 import org.ebaloo.itkeeps.core.domain.edge.notraverse.CredentialToUser;
@@ -32,12 +31,6 @@ public final class Credential extends Base {
 		super();
 	}
 	
-	/*
-	protected Credential(final BaseAbstract abase) {
-		super(abase);
-	}
-	*/
-
 	
 	public Credential(final JCredential j, final JBaseLight jblUser) {
 		super(j.getId());
@@ -48,7 +41,7 @@ public final class Credential extends Base {
 		}
 		
 		if(jblUser != null) {
-			if(Credential.get(this.getGraph(), this.getModelClass(), j.getId(), false) != null) {
+			if(Credential.get(this.getGraph(), this.getClass(), j.getId(), false) != null) {
 				this.disable();
 				throw new RuntimeException("TODO"); //TODO
 			}
@@ -81,20 +74,21 @@ public final class Credential extends Base {
 		
 	}
 	
+	
 	/*
 	 * PARENT USER
 	 */
 	
 	public User getUser() {
-		return this.getEdgeByClassesNames(ModelFactory.get(User.class), DirectionType.PARENT, false, CredentialToUser.class);
+		return this.getEdgeByClassesNames(User.class, DirectionType.PARENT, false, CredentialToUser.class);
 	}
 	
 	private void setUser(final User user) {
-		setEdges(this.getGraph(), ModelFactory.get(Group.class), this, user, DirectionType.PARENT, CredentialToUser.class, false);
+		setEdges(this.getGraph(), Credential.class, this, user, DirectionType.PARENT, CredentialToUser.class, false);
 	}
 
 	public void setUser(JBaseLight user) {
-		this.setUser(get(this.getGraph(), ModelFactory.get(User.class), user, false));
+		this.setUser(get(this.getGraph(), User.class, user, false));
 	}
 	
 
@@ -113,11 +107,9 @@ public final class Credential extends Base {
 		this.setProperty(JCredential.PASSWORD, value == null ? "" : value);
 	}
 	
-	
-	
-	
+
 	/*
-	 * ROLE
+	 * AUTHENTICATION_TYPE
 	 */
 	
 	@DatabaseProperty(name = JCredential.AUTHENTICATION_TYPE)
@@ -126,7 +118,7 @@ public final class Credential extends Base {
 	}
 	
 	private void setAuthenticationType(AuthenticationType authType) {
-		this.setProperty(JCredential.AUTHENTICATION_TYPE, authType.toString());
+		this.setProperty(JCredential.AUTHENTICATION_TYPE, authType.name());
 	}
 
 	// API

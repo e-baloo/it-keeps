@@ -222,11 +222,11 @@ public abstract class Base extends BaseAbstract {
 	}
 	*/
 	
-	public final static <T extends BaseAbstract> List<T> getAllBase(OrientBaseGraph graph, final ModelClass<T> target, final boolean isInstanceof) {
+	public final static <T extends BaseAbstract> List<T> getAllBase(OrientBaseGraph graph, final Class<T> target, final boolean isInstanceof) {
 
 		StringBuilder request = new StringBuilder();
 		
-		request.append("SELECT FROM " + target.getClassName() + " ");
+		request.append("SELECT FROM " + target.getSimpleName() + " ");
 		request.append("WHERE ");
 		request.append(BaseUtils.WhereClause.WHERE_CLAUSE__ENABLE_IS_TRUE);
 		request.append(" AND ");

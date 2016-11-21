@@ -11,14 +11,11 @@ import org.ebaloo.itkeeps.api.model.JBase;
 import org.ebaloo.itkeeps.api.model.JBaseLight;
 import org.ebaloo.itkeeps.api.model.JGroup;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
-import org.ebaloo.itkeeps.core.domain.ModelFactory;
 import org.ebaloo.itkeeps.core.domain.annotation.ModelClassAnnotation;
 import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
 import org.ebaloo.itkeeps.core.domain.edge.traverse.InGroup;
 
 import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
-
-
 
 
 /**
@@ -33,12 +30,6 @@ public class Group extends BaseStandard {
 		super();
 	}
 	
-	/*
-	public Group(final BaseAbstract abase) {
-		super(abase);
-	}
-	*/
-	
 	protected Group(String name) {
 		super(name);
 		
@@ -51,18 +42,16 @@ public class Group extends BaseStandard {
 	 */
 	
 	public Group getParent() {
-		return this.getEdgeByClassesNames(ModelFactory.get(Group.class), DirectionType.CHILD, false, InGroup.class);
+		return this.getEdgeByClassesNames(Group.class, DirectionType.CHILD, false, InGroup.class);
 	}
 	
 	public void setParent(final Group group) {
-		setEdges(this.getGraph(), ModelFactory.get(Group.class), this, group, DirectionType.CHILD, InGroup.class, false);
+		setEdges(this.getGraph(), Group.class, this, group, DirectionType.CHILD, InGroup.class, false);
 	}
 
 	private void setParent(final JBaseLight group) {
-		this.setParent(get(this.getGraph(), ModelFactory.get(Group.class), group, false));
+		this.setParent(get(this.getGraph(), Group.class, group, false));
 	}
-
-	
 	
 	
 	/*
@@ -70,11 +59,11 @@ public class Group extends BaseStandard {
 	 */
 	
 	public List<Group> getChilds() {
-		return this.getEdgesByClassesNames(ModelFactory.get(Group.class), DirectionType.PARENT, false, InGroup.class);
+		return this.getEdgesByClassesNames(Group.class, DirectionType.PARENT, false, InGroup.class);
 	}
 	
 	public void setChilds(List<Group> list) {
-		setEdges(this.getGraph(), ModelFactory.get(Group.class), this, list, DirectionType.PARENT, InGroup.class, false);
+		setEdges(this.getGraph(), Group.class, this, list, DirectionType.PARENT, InGroup.class, false);
 	}
 
 	private void setChildsJBL(List<JBaseLight> list) {
@@ -83,10 +72,9 @@ public class Group extends BaseStandard {
 			list = new ArrayList<JBaseLight>();
 
 		// Optimization
-		ModelClass<Group> mc = ModelFactory.get(Group.class);
 		OrientBaseGraph graph = this.getGraph();
 		
-		setChilds(list.stream().map(e -> get(graph, mc, e, false)).collect(Collectors.toList())); 
+		setChilds(list.stream().map(e -> get(graph, Group.class, e, false)).collect(Collectors.toList())); 
 	}
 
 	
@@ -288,6 +276,7 @@ public class Group extends BaseStandard {
 
 	
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends JBase> T read(T j, Guid requesteurGuid) {
 		
@@ -315,7 +304,7 @@ public class Group extends BaseStandard {
 
 		super.update(j, requesteurGuid);
 		
-		User requesterUser = User.get(this.getGraph(), ModelFactory.get(User.class), requesteurGuid, false);
+		User requesterUser = User.get(this.getGraph(), User.class, requesteurGuid, false);
 
 		switch(requesterUser.getRole()) {
 

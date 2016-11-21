@@ -20,7 +20,6 @@ import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed.SecurityRole;
 import org.ebaloo.itkeeps.api.model.JGroup;
-import org.ebaloo.itkeeps.core.domain.ModelFactory;
 import org.ebaloo.itkeeps.core.domain.vertex.BaseAbstract;
 import org.ebaloo.itkeeps.core.domain.vertex.Image;
 import org.ebaloo.itkeeps.core.domain.vertex.Group;
@@ -49,7 +48,7 @@ public class GroupEndpoint {
 
 		List<JGroup> jl = new ArrayList<JGroup>();
 		
-		for(BaseAbstract ba : Image.getAllBase(null, ModelFactory.get(Group.class), false)) {
+		for(BaseAbstract ba : Image.getAllBase(null, Group.class, false)) {
 			JGroup j = new JGroup();
 			((Group) ba).read(j, requesteurGuid);
 	    	jl.add(j);
@@ -69,7 +68,7 @@ public class GroupEndpoint {
 
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
 
-		Group group = Group.get(null, ModelFactory.get(Group.class), guid, false);
+		Group group = Group.get(null, Group.class, guid, false);
 		
 		if(group == null)
 			throw new RuntimeException("TODO"); // TODO
@@ -93,7 +92,7 @@ public class GroupEndpoint {
     	
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
     	
-    	Group group = Group.get(null, ModelFactory.get(Group.class), j.getGuid(), false);
+    	Group group = Group.get(null, Group.class, j.getGuid(), false);
 
     	JGroup nj = group.update(j, requesteurGuid);
 

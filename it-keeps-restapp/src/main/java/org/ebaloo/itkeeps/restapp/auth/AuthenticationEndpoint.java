@@ -11,7 +11,6 @@ import javax.ws.rs.core.Response;
 
 import org.ebaloo.itkeeps.api.model.JCredential;
 import org.ebaloo.itkeeps.api.model.JToken;
-import org.ebaloo.itkeeps.core.domain.ModelFactory;
 import org.ebaloo.itkeeps.core.domain.vertex.Credential;
 import org.ebaloo.itkeeps.core.domain.vertex.User;
 import org.ebaloo.itkeeps.core.tools.SecurityFactory;
@@ -70,7 +69,7 @@ public class AuthenticationEndpoint {
     	
     	SecurityFactory.validateCredential(jcredential);
     	
-    	Credential credential = Credential.get(null, ModelFactory.get(Credential.class), jcredential.getId(), false);
+    	Credential credential = Credential.get(null, Credential.class, jcredential.getId(), false);
     	if(credential == null) 
     		throw new RuntimeException("credential is null!");
     	

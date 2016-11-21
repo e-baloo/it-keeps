@@ -20,7 +20,6 @@ import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.ApplicationRolesAllowed.SecurityRole;
 import org.ebaloo.itkeeps.api.model.JUser;
-import org.ebaloo.itkeeps.core.domain.ModelFactory;
 import org.ebaloo.itkeeps.core.domain.vertex.BaseAbstract;
 import org.ebaloo.itkeeps.core.domain.vertex.Credential;
 import org.ebaloo.itkeeps.core.domain.vertex.Image;
@@ -48,7 +47,7 @@ public class UserEndpoint {
 
 		List<JUser> list = new ArrayList<JUser>();
 		
-		for(BaseAbstract ba : Image.getAllBase(null, ModelFactory.get(User.class), false)) {
+		for(BaseAbstract ba : Image.getAllBase(null, User.class, false)) {
 			JUser juser = new JUser();
 			((User) ba).read(juser, new Guid(securityContext.getUserPrincipal().getName()));
 	    	list.add(juser);
@@ -68,7 +67,7 @@ public class UserEndpoint {
 
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
 
-		User user = User.get(null, ModelFactory.get(User.class), id, false);
+		User user = User.get(null, User.class, id, false);
 		
 		if(user == null)
 			throw new RuntimeException("readId(" + id + ") is null" );
@@ -86,7 +85,7 @@ public class UserEndpoint {
 
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
 
-    	Credential cred = Credential.get(null, ModelFactory.get(Credential.class), id, false);
+    	Credential cred = Credential.get(null, Credential.class, id, false);
 		
 		if(cred == null)
 			throw new RuntimeException("readId(" + id + ") is null" );
@@ -104,12 +103,12 @@ public class UserEndpoint {
     	
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
     	
-    	User user = User.get(null, ModelFactory.get(User.class),  juser.getGuid(), false);
+    	User user = User.get(null, User.class,  juser.getGuid(), false);
 
     	user.update(juser, requesteurGuid);
 
     	JUser newjuser = new JUser();
-    	User.get(null, ModelFactory.get(User.class), juser.getGuid(), false).read(newjuser, requesteurGuid);
+    	User.get(null, User.class, juser.getGuid(), false).read(newjuser, requesteurGuid);
 
     	return Response.ok().entity(newjuser).build();
     }

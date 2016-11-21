@@ -9,7 +9,6 @@ import org.ebaloo.itkeeps.api.model.JBase;
 import org.ebaloo.itkeeps.api.model.JImage;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
-import org.ebaloo.itkeeps.core.domain.ModelFactory;
 import org.ebaloo.itkeeps.core.domain.annotation.ModelClassAnnotation;
 import org.ebaloo.itkeeps.core.tools.MetricsFactory;
 
@@ -160,7 +159,7 @@ public class Image extends BaseSysteme {
 		}
 		
 		
-		image = BaseAbstract.get(null, ModelFactory.get(Image.class), id, false);
+		image = BaseAbstract.get(null, Image.class, id, false);
 
 		if(image != null) {
 			

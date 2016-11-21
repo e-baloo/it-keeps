@@ -6,7 +6,6 @@ import org.ebaloo.itkeeps.api.model.JCredential;
 import org.ebaloo.itkeeps.api.model.JUser;
 import org.ebaloo.itkeeps.core.database.GraphFactory;
 import org.ebaloo.itkeeps.core.domain.BaseUtils;
-import org.ebaloo.itkeeps.core.domain.ModelFactory;
 import org.ebaloo.itkeeps.core.domain.vertex.Credential;
 import org.ebaloo.itkeeps.core.domain.vertex.User;
 import org.slf4j.Logger;
@@ -22,7 +21,7 @@ public final class SecurityFactory {
     		logger.trace("validateCredential()");
 
 		
-    	Credential credential = Credential.get(null, ModelFactory.get(Credential.class), jcredential.getId(), false);
+    	Credential credential = Credential.get(null, Credential.class, jcredential.getId(), false);
     	
 		if(!user.equals(credential.getUser()))
 			throw new RuntimeException("TODO"); //TODO
