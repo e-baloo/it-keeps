@@ -63,30 +63,12 @@ public class Main {
 		
 		
 		
-		jUser neuwjuser = new jUser();
-		Guid nguid = new Guid();
-		neuwjuser.setName("NAME : " + nguid.toString());	
-		jUser testUser =  client.callJsonCreat("/api/user", neuwjuser, jUser.class);
-		
-		
-		
 		GroupTest.run(client);
+		PathTest.run(client);
+		UserTest.run(client);
 		
 		
 		
-		
-		testUser.getInGroups().add(GroupTest.jg_n1.getJBaseLight());
-		testUser.getInGroups().add(GroupTest.jg_n2_1.getJBaseLight());
-		//testUser.getInGroups().add(jg_r.getJBaseLight());
-		jUser user = client.callJsonUpdate("/api/user", testUser, jUser.class);
-		
-		GroupTest.reload(client);
-		
-		LogFactory.getMain().info(user.toString());
-		
-		user = client.callJsonRead("/api/user/id/" + testUser.getGuid(), jUser.class);
-		
-		LogFactory.getMain().info(user.toString());
 
 		
 		

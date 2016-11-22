@@ -12,7 +12,7 @@ import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.model.jPath;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
-import org.ebaloo.itkeeps.core.domain.edge.traverse.eInGroup;
+import org.ebaloo.itkeeps.core.domain.edge.traverse.eInPath;
 
 import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
 
@@ -37,11 +37,11 @@ public class vPath extends vBaseStandard {
 	 */
 	
 	public vPath getParent() {
-		return this.getEdgeByClassesNames(vPath.class, DirectionType.PARENT, false, eInGroup.class);
+		return this.getEdgeByClassesNames(vPath.class, DirectionType.PARENT, false, eInPath.class);
 	}
 	
 	public void setParent(final vPath group) {
-		setEdges(this.getGraph(), vPath.class, this, group, DirectionType.PARENT, eInGroup.class, false);
+		setEdges(this.getGraph(), vPath.class, this, group, DirectionType.PARENT, eInPath.class, false);
 	}
 
 	private void setParent(final jBaseLight path) {
@@ -56,11 +56,11 @@ public class vPath extends vBaseStandard {
 	 */
 	
 	protected List<vPath> getChildsGroup() {
-		return this.getEdgesByClassesNames(vPath.class, DirectionType.CHILD, false, eInGroup.class);
+		return this.getEdgesByClassesNames(vPath.class, DirectionType.CHILD, false, eInPath.class);
 	}
 	
 	protected void setChildsGroup(List<vPath> list) {
-		setEdges(this.getGraph(), vPath.class, this, list, DirectionType.CHILD, eInGroup.class, false);
+		setEdges(this.getGraph(), vPath.class, this, list, DirectionType.CHILD, eInPath.class, false);
 	}
 
 	private void setChildsJBL(List<jBaseLight> list) {
