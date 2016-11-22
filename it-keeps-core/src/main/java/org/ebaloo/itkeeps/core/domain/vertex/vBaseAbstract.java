@@ -8,14 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.orientechnologies.orient.core.metadata.schema.OType;
 import com.tinkerpop.blueprints.Direction;
 import org.apache.commons.lang.StringUtils;
 import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.model.jBase;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.core.database.GraphFactory;
-import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.domain.edge.eRelation;
 import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
 import org.slf4j.Logger;
@@ -31,7 +29,7 @@ import com.tinkerpop.blueprints.impls.orient.OrientVertexType;
  */
 
 
-abstract class vBaseAbstract extends vCommon implements Comparable<vBaseAbstract> {
+abstract class vBaseAbstract extends vCommon {
 
 	private static Logger logger = LoggerFactory.getLogger(vBaseAbstract.class);
 	
@@ -293,23 +291,7 @@ abstract class vBaseAbstract extends vCommon implements Comparable<vBaseAbstract
 	 */
 	
 
-	@Override
-	public int compareTo(vBaseAbstract obj) {
-		if(obj == null) {
-			return 0;
-		}
 
-		if(StringUtils.isBlank(obj.getName())) {
-			return 0;
-		}
-		
-		if(StringUtils.isBlank(this.getName())) {
-			return 0;
-		}
-
-		// Tri en fonction du Name //
-		return this.getName().compareTo(((vBaseAbstract)obj).getName());
-	}
 		
 
 
@@ -423,22 +405,6 @@ abstract class vBaseAbstract extends vCommon implements Comparable<vBaseAbstract
 	}
 
 	
-	
-		public boolean hasGuid() {
-			
-			if(guid != null) {
-				return true;
-			}
-			
-			Object obj = this.getProperty(jBase.GUID);
-			
-			if(obj == null) {
-				return false;
-			}
-			
-			return Guid.isGuid(this.getProperty(jBase.GUID).toString());
-			
-		}
 
 
 		protected boolean isInstanceOf(Class<?> clazz) {
@@ -514,93 +480,8 @@ abstract class vBaseAbstract extends vCommon implements Comparable<vBaseAbstract
 */
     
 
-	public String toString() {
-		
-		StringBuilder sb = new StringBuilder();
-		
-		try {
-			sb.append(this.getType());
-			sb.append("/");
-			sb.append(this.getGuid());
-			sb.append("/");
-			sb.append(this.getName());
-		} catch ( Throwable e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return sb.toString();
-	}
-
-	/*
-	 * GUID 
-	 */
-	
-	private Guid guid = null; 
-
-	
-	@DatabaseProperty(name = jBase.GUID, isNotNull = true, isReadOnly = true)
-	public final Guid getGuid() {
-		
-		if(this.guid == null) {
-			guid = new Guid(this.getProperty(jBase.GUID).toString());
-		}
-		
-		return guid;
-	}
 
 
-	/*
-	 * NAME
-	 */
-	
-	private String name = null;
-	
-	@DatabaseProperty(name = jBase.NAME, isNotNull = true)
-	public String getName() {
-		
-		if(this.name == null) {
-			this.name = this.getProperty(jBase.NAME);
-		}
-		
-		return this.name;
-	}
-
-	protected void setName(String value) {
-		
-		this.name = value;
-		this.setProperty(jBase.NAME, this.name);
-		
-	}
-
-	/*
-	 * ENABLE
-	 */
-
-	
-	@DatabaseProperty(name = jBase.ENABLE, type = OType.BOOLEAN)
-	protected void setEnable(Boolean enable) {
-		
-		this.reload();
-		this.setProperty(jBase.ENABLE, enable);
-	}
-
-	public Boolean isEnable() {
-		return (Boolean) this.getProperty(jBase.ENABLE);
-	}
-
-	/*
-	 * DISABLE
-	 */
-
-	public boolean disable() {
-		
-		this.deleteAllEdges(Direction.IN);
-		this.deleteAllEdges(Direction.OUT);
-		this.setProperty(jBase.ENABLE, false);
-		this.commit();
-		return true;
-	}
 	
 	
 	/*
@@ -620,6 +501,9 @@ abstract class vBaseAbstract extends vCommon implements Comparable<vBaseAbstract
 			return baseAbstract;
 
 		} catch (Exception e) {
+			
+			if(logger.isDebugEnabled())
+				e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 		
@@ -636,5 +520,7 @@ abstract class vBaseAbstract extends vCommon implements Comparable<vBaseAbstract
 		}
 		
 	}
+
+
 }
 

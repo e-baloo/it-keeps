@@ -15,7 +15,6 @@ public class jUser extends jBaseStandard{
 
 	public static final String ROLE = "role";
 	public static final String IN_GROUPS = "inGroups";
-
 	
 	public jUser() {
 		super();

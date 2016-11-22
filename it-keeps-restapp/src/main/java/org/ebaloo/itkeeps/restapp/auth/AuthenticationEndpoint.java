@@ -49,7 +49,7 @@ public class AuthenticationEndpoint {
             // TODO
             
             
-            String token = issueToken(user);
+            String token = JwtFactory.getJwtString(user);
             
             return Response.ok(new jToken(token)).build();
 
@@ -80,21 +80,5 @@ public class AuthenticationEndpoint {
 
     	
     	return user;
-    }
-
-    
-    private String issueToken(vUser user) {
-    	
-    	if(logger.isTraceEnabled())
-    		logger.trace("issueToken()");
-
-    	// TODO
-    	
-        // Issue a token (can be a random String persisted to a database or a JWT token)
-        // The issued token must be associated to a user
-        // Return the issued token
-    	
-    	return JwtFactory.getJwtString(user);
-    	
     }
 }

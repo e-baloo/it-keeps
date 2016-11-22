@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 
 @DatabaseVertrex()
-public class vEntry extends vBaseStandard {
+public class vEntry extends vBaseChildAcl {
 
 	@SuppressWarnings("unused")
 	private static Logger logger = LoggerFactory.getLogger(vEntry.class);

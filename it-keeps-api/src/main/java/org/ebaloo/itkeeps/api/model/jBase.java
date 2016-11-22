@@ -14,7 +14,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class jBase extends jObject {
 
 	public static final String PARENT = "parent";
+	public static final String PARENTS = "parents";
 	public static final String CHILDS = "childs";
+	public static final String CHILD = "child";
 	
 	
 	

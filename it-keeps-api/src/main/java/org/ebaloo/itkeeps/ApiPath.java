@@ -25,6 +25,20 @@ public final class ApiPath {
 	public  static final String API_USER_CREATE = API_USER + CREATE;
 	public  static final String API_USER_DELETE = API_USER + DELETE;
 
+	private static final String API_GROUP = API + "group/";
+	public  static final String API_GROUP_GET_ALL = API_GROUP + ALL;
+	public  static final String API_GROUP_GET_ID = API_GROUP + ID;
+	public  static final String API_GROUP_UPDATE = API_GROUP + UPDATE;
+	public  static final String API_GROUP_CREATE = API_GROUP + CREATE;
+	public  static final String API_GROUP_DELETE = API_GROUP + DELETE;
+
+	private static final String API_ACL = API + "acl/";
+	public  static final String API_ACL_GET_ALL = API_ACL + ALL;
+	public  static final String API_ACL_GET_ID = API_ACL + ID;
+	public  static final String API_ACL_UPDATE = API_ACL + UPDATE;
+	public  static final String API_ACL_CREATE = API_ACL + CREATE;
+	public  static final String API_ACL_DELETE = API_ACL + DELETE;
+
 	private static final String API_PATH = API + "path/";
 	public  static final String API_PATH_GET_ALL = API_PATH + ALL;
 	public  static final String API_PATH_GET_ID = API_PATH + ID;
@@ -39,12 +53,6 @@ public final class ApiPath {
 	public  static final String API_ENTRY_CREATE = API_ENTRY + CREATE;
 	public  static final String API_ENTRY_DELETE = API_ENTRY + DELETE;
 
-	private static final String API_GROUP = API + "group/";
-	public  static final String API_GROUP_GET_ALL = API_GROUP + ALL;
-	public  static final String API_GROUP_GET_ID = API_GROUP + ID;
-	public  static final String API_GROUP_UPDATE = API_GROUP + UPDATE;
-	public  static final String API_GROUP_CREATE = API_GROUP + CREATE;
-	public  static final String API_GROUP_DELETE = API_GROUP + DELETE;
 
 	private static final String API_IMAGE = API + "image/";
 	public  static final String API_IMAGE_GET_ALL = API_IMAGE + ALL;

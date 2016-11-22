@@ -66,6 +66,7 @@ public class Main {
 		PathTest.run(client);
 		UserTest.run(client);
 		EntryTest.run(client);
+		AclTest.run(client);
 		
 		
 		

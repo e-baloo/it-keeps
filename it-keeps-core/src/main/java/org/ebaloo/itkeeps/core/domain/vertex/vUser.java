@@ -25,7 +25,7 @@ import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
 
 
 @DatabaseVertrex()
-public class vUser extends vBaseStandard {
+public class vUser extends vBaseChildAcl {
 
 	@SuppressWarnings("unused")
 	private static Logger logger = LoggerFactory.getLogger(vUser.class);

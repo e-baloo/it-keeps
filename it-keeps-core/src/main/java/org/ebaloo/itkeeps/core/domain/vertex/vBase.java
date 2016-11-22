@@ -17,6 +17,7 @@ import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
 
 import com.orientechnologies.orient.core.metadata.schema.OType;
@@ -26,7 +27,7 @@ import com.orientechnologies.orient.core.metadata.schema.OType;
  *
  */
 @DatabaseVertrex(isAbstract = true)
-public abstract class vBase extends vBaseAbstract {
+public class vBase extends vBaseAbstract {
 
 	@SuppressWarnings("unused")
 	private static Logger logger = LoggerFactory.getLogger(vBase.class);
@@ -354,17 +355,17 @@ public abstract class vBase extends vBaseAbstract {
 	*/
 	
 	
-    public static jBaseLight getJBaseLight (final vBaseAbstract ba)  
+    public static jBaseLight getJBaseLight (final vBase base)  
     {
-    	if(ba == null)
+    	if(base == null)
     		return null;
     	
     	jBaseLight j = new jBaseLight();
     	
-    	j.setGuid(ba.getGuid());
-    	j.setName(ba.getName());
-    	j.setType(ba.getType());
-    	j.setVersion(ba.getObjectVersion());
+    	j.setGuid(base.getGuid());
+    	j.setName(base.getName());
+    	j.setType(base.getType());
+    	j.setVersion(base.getObjectVersion());
 
     	return j;
 	}
@@ -416,6 +417,128 @@ public abstract class vBase extends vBaseAbstract {
 	}
 
 	
+	/*
+	 * GUID 
+	 */
+	
+	private Guid guid = null; 
+
+	
+	@DatabaseProperty(name = jBase.GUID, isNotNull = true, isReadOnly = true)
+	public final Guid getGuid() {
+		
+		if(this.guid == null) {
+			guid = new Guid(this.getProperty(jBase.GUID).toString());
+		}
+		
+		return guid;
+	}
 
 
+	/*
+	 * NAME
+	 */
+	
+	private String name = null;
+	
+	@DatabaseProperty(name = jBase.NAME, isNotNull = true)
+	public String getName() {
+		
+		if(this.name == null) {
+			this.name = this.getProperty(jBase.NAME);
+		}
+		
+		return this.name;
+	}
+
+	protected void setName(String value) {
+		
+		this.name = value;
+		this.setProperty(jBase.NAME, this.name);
+		
+	}
+
+	/*
+	 * ENABLE
+	 */
+
+	
+	@DatabaseProperty(name = jBase.ENABLE, type = OType.BOOLEAN)
+	protected void setEnable(Boolean enable) {
+		
+		this.reload();
+		this.setProperty(jBase.ENABLE, enable);
+	}
+
+	public Boolean isEnable() {
+		return (Boolean) this.getProperty(jBase.ENABLE);
+	}
+
+	/*
+	 * DISABLE
+	 */
+
+	public boolean disable() {
+		
+		this.deleteAllEdges(Direction.IN);
+		this.deleteAllEdges(Direction.OUT);
+		this.setProperty(jBase.ENABLE, false);
+		this.commit();
+		return true;
+	}
+
+	public int compareTo(vBase obj) {
+		if(obj == null) {
+			return 0;
+		}
+
+		if(StringUtils.isBlank(obj.getName())) {
+			return 0;
+		}
+		
+		if(StringUtils.isBlank(this.getName())) {
+			return 0;
+		}
+
+		// Tri en fonction du Name //
+		return this.getName().compareTo(((vBase)obj).getName());
+	}
+	
+
+	
+	public boolean hasGuid() {
+		
+		if(guid != null) {
+			return true;
+		}
+		
+		Object obj = this.getProperty(jBase.GUID);
+		
+		if(obj == null) {
+			return false;
+		}
+		
+		return Guid.isGuid(this.getProperty(jBase.GUID).toString());
+		
+	}
+	
+
+	public String toString() {
+		
+		StringBuilder sb = new StringBuilder();
+		
+		try {
+			sb.append(this.getType());
+			sb.append("/");
+			sb.append(this.getGuid());
+			sb.append("/");
+			sb.append(this.getName());
+		} catch ( Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return sb.toString();
+	}
+	
 }

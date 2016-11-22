@@ -22,7 +22,7 @@ import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
  *
  */
 @DatabaseVertrex()
-public class vGroup extends vBaseStandard {
+public class vGroup extends vBaseChildAcl {
 
 	protected vGroup() {
 		super();

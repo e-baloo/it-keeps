@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 
 import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
-import com.tinkerpop.blueprints.impls.orient.OrientVertexType;
 
 /**
  * 
@@ -26,7 +25,7 @@ import com.tinkerpop.blueprints.impls.orient.OrientVertexType;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 @DatabaseVertrex()
-abstract class vEnumAbstract<K extends enAbstract> extends vCommon {
+abstract class vEnumAbstract<K extends enAbstract> extends vBaseAbstract {
 
 	private static Logger logger = LoggerFactory.getLogger(vEnumAbstract.class);
 	
@@ -72,61 +71,16 @@ abstract class vEnumAbstract<K extends enAbstract> extends vCommon {
 	}
 	
 	
-	@Override
-    public final boolean equals(Object obj) {
 
-		if(obj == null)
-			return false;
-			
-		if(!(obj instanceof vEnumAbstract))
-			return false;
-		
-		return this.getORID().equals(((vEnumAbstract)obj).getORID());
-    }
-		
-	protected final String getType() {
-		
-		OrientVertexType type;
-		try {
-			type = this.getOrientVertex().getType();
-		} catch (Exception e) {
-			logger.trace("getType() is null -> 2nd chance! [" + e.getMessage() + "]");
-			this.reload();
-			type = this.getOrientVertex().getType();
-		}
-		
-		
-		return type.getName();
-	}
 
 	
 	
-
-
-		protected boolean isInstanceOf(Class<?> clazz) {
-			return clazz.isInstance(this);
-		}
-
 
 
 		/*
 		 * 
 		 */
 		
-
-		protected void newOrientVertex() {
-
-		if(!this.hasOrientVertex()) {
-			OrientVertexType ovt = this.getVertexType();
-	
-			if (ovt == null) {
-				throw new RuntimeException("The class \"" + this.getClass().getSimpleName() + "\" is note defined in the database");
-			}
-			
-			this.setOrientVertex(this.getGraph().addVertex("class:" + ovt.getName()));
-		}
-			
-	}
 
 
 
@@ -209,6 +163,7 @@ abstract class vEnumAbstract<K extends enAbstract> extends vCommon {
 	 */
 	
 	
+	/*
 	public final static <T extends vEnumAbstract> T getInstance(final Class<T> target, final OrientVertex ov) {
 		
 		try {
@@ -223,7 +178,7 @@ abstract class vEnumAbstract<K extends enAbstract> extends vCommon {
 		}
 		
 	}
-
+*/
 	
 	public static <T extends enAbstract, U extends vEnumAbstract> void init(Class<T> targetEnum, Class<U> targetClass) {
 
