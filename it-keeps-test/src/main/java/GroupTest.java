@@ -1,3 +1,4 @@
+import org.ebaloo.itkeeps.ApiPath;
 import org.ebaloo.itkeeps.api.model.jGroup;
 import org.ebaloo.itkeeps.httpclient.ItkeepsHttpClient;
 
@@ -15,13 +16,13 @@ public class GroupTest {
 	
 	public static final void reload(ItkeepsHttpClient client) {
 		
-		jg_r = client.callJsonRead("/api/group/" + jg_r.getGuid(), jGroup.class);
-		jg_n1 = client.callJsonRead("/api/group/" + jg_n1.getGuid(), jGroup.class);
-		jg_n1_1 = client.callJsonRead("/api/group/" + jg_n1_1.getGuid(), jGroup.class);
-		jg_n1_2 = client.callJsonRead("/api/group/" + jg_n1_2.getGuid(), jGroup.class);
-		jg_n2 = client.callJsonRead("/api/group/" + jg_n2.getGuid(), jGroup.class);
-		jg_n2_1 = client.callJsonRead("/api/group/" + jg_n2_1.getGuid(), jGroup.class);
-		jg_n2_2 = client.callJsonRead("/api/group/" + jg_n2_2.getGuid(), jGroup.class);
+		jg_r = client.callJsonRead(ApiPath.API_GROUP_GET_ID + jg_r.getGuid(), jGroup.class);
+		jg_n1 = client.callJsonRead(ApiPath.API_GROUP_GET_ID + jg_n1.getGuid(), jGroup.class);
+		jg_n1_1 = client.callJsonRead(ApiPath.API_GROUP_GET_ID + jg_n1_1.getGuid(), jGroup.class);
+		jg_n1_2 = client.callJsonRead(ApiPath.API_GROUP_GET_ID + jg_n1_2.getGuid(), jGroup.class);
+		jg_n2 = client.callJsonRead(ApiPath.API_GROUP_GET_ID + jg_n2.getGuid(), jGroup.class);
+		jg_n2_1 = client.callJsonRead(ApiPath.API_GROUP_GET_ID + jg_n2_1.getGuid(), jGroup.class);
+		jg_n2_2 = client.callJsonRead(ApiPath.API_GROUP_GET_ID + jg_n2_2.getGuid(), jGroup.class);
 		
 	}	
 	
@@ -39,27 +40,27 @@ public class GroupTest {
 
 		/* Create */
 		
-		jg_r = client.callJsonCreat("/api/group", jg_r, jGroup.class);
-		jg_n1 = client.callJsonCreat("/api/group", jg_n1, jGroup.class);
-		jg_n2 = client.callJsonCreat("/api/group", jg_n2, jGroup.class);
-		jg_n1_1 = client.callJsonCreat("/api/group", jg_n1_1, jGroup.class);
-		jg_n1_2 = client.callJsonCreat("/api/group", jg_n1_2, jGroup.class);
-		jg_n2_1 = client.callJsonCreat("/api/group", jg_n2_1, jGroup.class);
-		jg_n2_2 = client.callJsonCreat("/api/group", jg_n2_2, jGroup.class);
+		jg_r = client.callJsonCreat(ApiPath.API_GROUP_CREATE, jg_r, jGroup.class);
+		jg_n1 = client.callJsonCreat(ApiPath.API_GROUP_CREATE, jg_n1, jGroup.class);
+		jg_n2 = client.callJsonCreat(ApiPath.API_GROUP_CREATE, jg_n2, jGroup.class);
+		jg_n1_1 = client.callJsonCreat(ApiPath.API_GROUP_CREATE, jg_n1_1, jGroup.class);
+		jg_n1_2 = client.callJsonCreat(ApiPath.API_GROUP_CREATE, jg_n1_2, jGroup.class);
+		jg_n2_1 = client.callJsonCreat(ApiPath.API_GROUP_CREATE, jg_n2_1, jGroup.class);
+		jg_n2_2 = client.callJsonCreat(ApiPath.API_GROUP_CREATE, jg_n2_2, jGroup.class);
 		
 		
 		jg_n1.getChilds().add(jg_n1_1.getJBaseLight());
 		jg_n1.getChilds().add(jg_n1_2.getJBaseLight());
-		jg_n1 = client.callJsonUpdate("/api/group", jg_n1, jGroup.class);
+		jg_n1 = client.callJsonUpdate(ApiPath.API_GROUP_UPDATE, jg_n1, jGroup.class);
 
 		jg_n2.getChilds().add(jg_n2_1.getJBaseLight());
 		jg_n2.getChilds().add(jg_n2_2.getJBaseLight());
-		jg_n2 = client.callJsonUpdate("/api/group", jg_n2, jGroup.class);
+		jg_n2 = client.callJsonUpdate(ApiPath.API_GROUP_UPDATE, jg_n2, jGroup.class);
 
 		
 		jg_r.getChilds().add(jg_n1.getJBaseLight());
 		jg_r.getChilds().add(jg_n2.getJBaseLight());
-		jg_r = client.callJsonUpdate("/api/group", jg_r, jGroup.class);
+		jg_r = client.callJsonUpdate(ApiPath.API_GROUP_UPDATE, jg_r, jGroup.class);
 		
 		reload(client);
 	}

@@ -7,12 +7,13 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
+import org.ebaloo.itkeeps.ApiPath;
 import org.ebaloo.itkeeps.core.domain.vertex.vImage;
 
 import com.codahale.metrics.annotation.Timed;
 
 
-@Path(ImageConfig.PATH_IMAGE)
+@Path("")
 public class ImageEndpoint {
 
 	
@@ -21,7 +22,7 @@ public class ImageEndpoint {
     @GET
     @Produces()
     @PermitAll
-    @Path("/{id}")
+    @Path(ApiPath.IMAGE_GET_ID + "{id}")
     @Timed
     public Response getImage(@PathParam("id") String id) {
     	

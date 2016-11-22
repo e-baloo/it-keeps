@@ -15,11 +15,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.ebaloo.itkeeps.ApiPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-@Path(ToolsConfig.PATH)
+@Path("")
 public class PingEndpoint {
 
 	private static final Logger logger = LoggerFactory.getLogger(PingEndpoint.class.getName());
@@ -28,7 +29,7 @@ public class PingEndpoint {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @PermitAll
-    @Path("ping")
+    @Path(ApiPath.TOOLS_PING)
     @Timed
     public Response getPing() {
     	

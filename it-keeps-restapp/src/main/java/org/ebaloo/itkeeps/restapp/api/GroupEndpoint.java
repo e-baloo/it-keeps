@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import org.ebaloo.itkeeps.ApiPath;
 import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enSecurityRole;
@@ -27,7 +28,7 @@ import org.slf4j.LoggerFactory;
 import com.codahale.metrics.annotation.Timed;
 
 
-@Path(ApiConfig.PATH + "/group")
+@Path("/")
 public class GroupEndpoint {
 
 	private static final Logger logger = LoggerFactory.getLogger(GroupEndpoint.class.getName());
@@ -40,7 +41,8 @@ public class GroupEndpoint {
     @Produces({MediaType.APPLICATION_JSON})
 	@aApplicationRolesAllowed(enSecurityRole.ADMIN)
     @Timed
-    public Response read() {
+    @Path(ApiPath.API_GROUP_GET_ALL)
+    public Response readAll() {
 		
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
 
@@ -57,9 +59,9 @@ public class GroupEndpoint {
 	
     @GET 
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/{guid}")
 	@aApplicationRolesAllowed(enSecurityRole.USER)
     @Timed
+    @Path(ApiPath.API_GROUP_GET_ID + "{guid}")
     public Response read(@PathParam("guid") Guid guid) {
 
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
@@ -80,6 +82,7 @@ public class GroupEndpoint {
     @Consumes({MediaType.APPLICATION_JSON})
 	@aApplicationRolesAllowed(enSecurityRole.ADMIN)
     @Timed
+    @Path(ApiPath.API_GROUP_UPDATE)
     public Response update(final jGroup j) {
     	
 		if (logger.isTraceEnabled())
@@ -100,6 +103,7 @@ public class GroupEndpoint {
     @Consumes({MediaType.APPLICATION_JSON})
 	@aApplicationRolesAllowed(enSecurityRole.ADMIN)
     @Timed
+    @Path(ApiPath.API_GROUP_CREATE)
     public Response create(final jGroup j) {
 
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());

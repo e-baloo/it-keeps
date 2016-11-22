@@ -2,7 +2,6 @@
 
 import java.net.URI;
 
-import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.enumeration.enAuthentication;
 import org.ebaloo.itkeeps.api.model.jCredential;
 import org.ebaloo.itkeeps.api.model.jUser;
@@ -56,7 +55,7 @@ public class Main {
 		
 		{
 			
-			jUser rootUser =  client.callJsonRead("/api/user/credid/marc", jUser.class);
+			jUser rootUser =  client.callJsonRead("/api/cred/id/marc", jUser.class);
 			LogFactory.getMain().info(rootUser.toString());
 
 		}
@@ -79,6 +78,9 @@ public class Main {
 			System.out.println(ov.getRecord().toJSON());
 		}
 
+		
+		
+		Thread.sleep(30000);
 		
 		
 		

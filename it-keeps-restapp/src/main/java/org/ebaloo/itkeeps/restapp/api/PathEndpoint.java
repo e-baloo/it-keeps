@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import org.ebaloo.itkeeps.ApiPath;
 import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enSecurityRole;
@@ -27,7 +28,7 @@ import org.slf4j.LoggerFactory;
 import com.codahale.metrics.annotation.Timed;
 
 
-@Path(ApiConfig.PATH + "/path")
+@Path("")
 public class PathEndpoint {
 
 	private static final Logger logger = LoggerFactory.getLogger(PathEndpoint.class.getName());
@@ -40,6 +41,7 @@ public class PathEndpoint {
     @Produces({MediaType.APPLICATION_JSON})
 	@aApplicationRolesAllowed(enSecurityRole.USER)
     @Timed
+    @Path(ApiPath.API_PATH_GET_ALL)
     public Response read() {
 		
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
@@ -59,9 +61,9 @@ public class PathEndpoint {
 	
     @GET 
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/{guid}")
 	@aApplicationRolesAllowed(enSecurityRole.USER)
     @Timed
+    @Path(ApiPath.API_PATH_GET_ID + "{guid}")
     public Response read(@PathParam("guid") Guid guid) {
 
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
@@ -82,6 +84,7 @@ public class PathEndpoint {
     @Consumes({MediaType.APPLICATION_JSON})
 	@aApplicationRolesAllowed(enSecurityRole.ADMIN)
     @Timed
+    @Path(ApiPath.API_PATH_UPDATE)
     public Response update(final jPath j) {
     	
 		if (logger.isTraceEnabled())
@@ -102,6 +105,7 @@ public class PathEndpoint {
     @Consumes({MediaType.APPLICATION_JSON})
 	@aApplicationRolesAllowed(enSecurityRole.ADMIN)
     @Timed
+    @Path(ApiPath.API_PATH_CREATE)
     public Response create(final jPath j) {
 
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());

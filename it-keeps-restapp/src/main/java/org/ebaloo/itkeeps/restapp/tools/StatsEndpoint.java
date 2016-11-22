@@ -25,12 +25,13 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.ebaloo.itkeeps.ApiPath;
 import org.ebaloo.itkeeps.core.tools.MetricsFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-@Path(ToolsConfig.PATH)
+@Path("")
 public class StatsEndpoint {
 
 	private static final Logger logger = LoggerFactory.getLogger(StatsEndpoint.class.getName());
@@ -42,7 +43,7 @@ public class StatsEndpoint {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @PermitAll
-    @Path("stats")
+    @Path(ApiPath.TOOLS_STATS)
     @Timed
     public Response getStat() {
     	

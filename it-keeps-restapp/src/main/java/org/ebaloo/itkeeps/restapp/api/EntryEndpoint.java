@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import org.ebaloo.itkeeps.ApiPath;
 import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enSecurityRole;
@@ -25,7 +26,7 @@ import org.ebaloo.itkeeps.core.domain.vertex.vEntry;
 import com.codahale.metrics.annotation.Timed;
 
 
-@Path(ApiConfig.PATH + "/entry")
+@Path("/")
 public class EntryEndpoint {
 
     @Context
@@ -37,7 +38,7 @@ public class EntryEndpoint {
     @Produces({MediaType.APPLICATION_JSON})
 	@aApplicationRolesAllowed(enSecurityRole.ADMIN)
     @Timed
-    @Path("/all}")
+    @Path(ApiPath.API_ENTRY_GET_ALL)
     public Response readAll() {
 		
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
@@ -57,7 +58,7 @@ public class EntryEndpoint {
 	
     @GET //READ
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/id/{id}")
+    @Path(ApiPath.API_ENTRY_GET_ID + "{id}")
 	@aApplicationRolesAllowed(enSecurityRole.USER)
     @Timed
     public Response readId(@PathParam("id") String id) {
@@ -78,6 +79,7 @@ public class EntryEndpoint {
     @Consumes({MediaType.APPLICATION_JSON})
 	@aApplicationRolesAllowed(enSecurityRole.USER)
     @Timed
+    @Path(ApiPath.API_ENTRY_UPDATE)
     public Response update(final jEntry juser) {
     	
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
@@ -97,6 +99,7 @@ public class EntryEndpoint {
     @Consumes({MediaType.APPLICATION_JSON})
 	@aApplicationRolesAllowed(enSecurityRole.ADMIN)
     @Timed
+    @Path(ApiPath.API_ENTRY_CREATE)
     public Response create(final jEntry juser) {
 
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());

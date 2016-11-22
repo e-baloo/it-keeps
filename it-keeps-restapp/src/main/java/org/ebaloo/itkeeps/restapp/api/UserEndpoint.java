@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import org.ebaloo.itkeeps.ApiPath;
 import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enSecurityRole;
@@ -26,7 +27,7 @@ import org.ebaloo.itkeeps.core.domain.vertex.vUser;
 import com.codahale.metrics.annotation.Timed;
 
 
-@Path(ApiConfig.PATH + "/user")
+@Path("")
 public class UserEndpoint {
 
     @Context
@@ -38,7 +39,7 @@ public class UserEndpoint {
     @Produces({MediaType.APPLICATION_JSON})
 	@aApplicationRolesAllowed(enSecurityRole.ADMIN)
     @Timed
-    @Path("/all}")
+    @Path(ApiPath.API_USER_GET_ALL)
     public Response readAll() {
 		
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
@@ -58,7 +59,7 @@ public class UserEndpoint {
 	
     @GET //READ
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/id/{id}")
+    @Path(ApiPath.API_USER_GET_ID + "{id}")
 	@aApplicationRolesAllowed(enSecurityRole.USER)
     @Timed
     public Response readId(@PathParam("id") String id) {
@@ -76,7 +77,7 @@ public class UserEndpoint {
 	
     @GET //READ
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/credid/{id}")
+    @Path(ApiPath.API_CRED_GET_ID + "{id}")
 	@aApplicationRolesAllowed(enSecurityRole.USER)
     @Timed
     public Response readCredId(@PathParam("id") String id) {
@@ -97,6 +98,7 @@ public class UserEndpoint {
     @Consumes({MediaType.APPLICATION_JSON})
 	@aApplicationRolesAllowed(enSecurityRole.USER)
     @Timed
+    @Path(ApiPath.API_USER_UPDATE)
     public Response update(final jUser juser) {
     	
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
@@ -116,6 +118,7 @@ public class UserEndpoint {
     @Consumes({MediaType.APPLICATION_JSON})
 	@aApplicationRolesAllowed(enSecurityRole.ADMIN)
     @Timed
+    @Path(ApiPath.API_USER_CREATE)
     public Response create(final jUser juser) {
 
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());

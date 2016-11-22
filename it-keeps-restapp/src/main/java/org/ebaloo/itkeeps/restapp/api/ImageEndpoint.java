@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import org.ebaloo.itkeeps.ApiPath;
 import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enSecurityRole;
@@ -23,7 +24,7 @@ import org.ebaloo.itkeeps.core.domain.vertex.vImage;
 import com.codahale.metrics.annotation.Timed;
 
 
-@Path(ApiConfig.PATH + "/image")
+@Path("/")
 public class ImageEndpoint {
 
     @Context
@@ -35,7 +36,8 @@ public class ImageEndpoint {
     @PermitAll
     @aApplicationRolesAllowed(enSecurityRole.ADMIN)
     @Timed
-    public Response get() {
+    @Path(ApiPath.API_IMAGE_GET_ALL)
+    public Response readAll() {
 
 		List<jImage> list = new ArrayList<jImage>();
 		
@@ -51,7 +53,7 @@ public class ImageEndpoint {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @PermitAll
-    @Path("/{id}")
+    @Path(ApiPath.API_IMAGE_GET_ID + "{id}")
     @aApplicationRolesAllowed(enSecurityRole.ADMIN)
     @Timed
     public Response getImage(@PathParam("id") String id) {

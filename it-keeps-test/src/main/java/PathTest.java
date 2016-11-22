@@ -1,3 +1,4 @@
+import org.ebaloo.itkeeps.ApiPath;
 import org.ebaloo.itkeeps.api.model.jPath;
 import org.ebaloo.itkeeps.httpclient.ItkeepsHttpClient;
 
@@ -17,15 +18,15 @@ public class PathTest {
 	
 	public static final void reload(ItkeepsHttpClient client) {
 		
-		jg_r1 = client.callJsonRead("/api/path/" + jg_r1.getGuid(), jPath.class);
-		jg_r2 = client.callJsonRead("/api/path/" + jg_r2.getGuid(), jPath.class);
-		jg_r1_n1 = client.callJsonRead("/api/path/" + jg_r1_n1.getGuid(), jPath.class);
-		jg_r1_n2 = client.callJsonRead("/api/path/" + jg_r1_n2.getGuid(), jPath.class);
-		jg_r1_n1_1 = client.callJsonRead("/api/path/" + jg_r1_n1_1.getGuid(), jPath.class);
-		jg_r1_n1_2 = client.callJsonRead("/api/path/" + jg_r1_n1_2.getGuid(), jPath.class);
-		jg_r2_n1 = client.callJsonRead("/api/path/" + jg_r2_n1.getGuid(), jPath.class);
-		jg_r2_n1_1 = client.callJsonRead("/api/path/" + jg_r2_n1_1.getGuid(), jPath.class);
-		jg_r2_n1_2 = client.callJsonRead("/api/path/" + jg_r2_n1_2.getGuid(), jPath.class);
+		jg_r1 = client.callJsonRead(ApiPath.API_PATH_GET_ID + jg_r1.getGuid(), jPath.class);
+		jg_r2 = client.callJsonRead(ApiPath.API_PATH_GET_ID + jg_r2.getGuid(), jPath.class);
+		jg_r1_n1 = client.callJsonRead(ApiPath.API_PATH_GET_ID + jg_r1_n1.getGuid(), jPath.class);
+		jg_r1_n2 = client.callJsonRead(ApiPath.API_PATH_GET_ID + jg_r1_n2.getGuid(), jPath.class);
+		jg_r1_n1_1 = client.callJsonRead(ApiPath.API_PATH_GET_ID + jg_r1_n1_1.getGuid(), jPath.class);
+		jg_r1_n1_2 = client.callJsonRead(ApiPath.API_PATH_GET_ID + jg_r1_n1_2.getGuid(), jPath.class);
+		jg_r2_n1 = client.callJsonRead(ApiPath.API_PATH_GET_ID + jg_r2_n1.getGuid(), jPath.class);
+		jg_r2_n1_1 = client.callJsonRead(ApiPath.API_PATH_GET_ID + jg_r2_n1_1.getGuid(), jPath.class);
+		jg_r2_n1_2 = client.callJsonRead(ApiPath.API_PATH_GET_ID + jg_r2_n1_2.getGuid(), jPath.class);
 		
 	}	
 	
@@ -45,31 +46,31 @@ public class PathTest {
 
 		/* Create */
 		
-		jg_r1 = client.callJsonCreat("/api/path", jg_r1, jPath.class);
-		jg_r2 = client.callJsonCreat("/api/path", jg_r2, jPath.class);
-		jg_r1_n1 = client.callJsonCreat("/api/path", jg_r1_n1, jPath.class);
-		jg_r1_n2 = client.callJsonCreat("/api/path", jg_r1_n2, jPath.class);
-		jg_r1_n1_1 = client.callJsonCreat("/api/path", jg_r1_n1_1, jPath.class);
-		jg_r1_n1_2 = client.callJsonCreat("/api/path", jg_r1_n1_2, jPath.class);
-		jg_r2_n1 = client.callJsonCreat("/api/path", jg_r2_n1, jPath.class);
-		jg_r2_n1_1 = client.callJsonCreat("/api/path", jg_r2_n1_1, jPath.class);
-		jg_r2_n1_2 = client.callJsonCreat("/api/path", jg_r2_n1_2, jPath.class);
+		jg_r1 = client.callJsonCreat(ApiPath.API_PATH_CREATE, jg_r1, jPath.class);
+		jg_r2 = client.callJsonCreat(ApiPath.API_PATH_CREATE, jg_r2, jPath.class);
+		jg_r1_n1 = client.callJsonCreat(ApiPath.API_PATH_CREATE, jg_r1_n1, jPath.class);
+		jg_r1_n2 = client.callJsonCreat(ApiPath.API_PATH_CREATE, jg_r1_n2, jPath.class);
+		jg_r1_n1_1 = client.callJsonCreat(ApiPath.API_PATH_CREATE, jg_r1_n1_1, jPath.class);
+		jg_r1_n1_2 = client.callJsonCreat(ApiPath.API_PATH_CREATE, jg_r1_n1_2, jPath.class);
+		jg_r2_n1 = client.callJsonCreat(ApiPath.API_PATH_CREATE, jg_r2_n1, jPath.class);
+		jg_r2_n1_1 = client.callJsonCreat(ApiPath.API_PATH_CREATE, jg_r2_n1_1, jPath.class);
+		jg_r2_n1_2 = client.callJsonCreat(ApiPath.API_PATH_CREATE, jg_r2_n1_2, jPath.class);
 		
 		
 		jg_r1_n1.getChilds().add(jg_r1_n1_1.getJBaseLight());
 		jg_r1_n1.getChilds().add(jg_r1_n1_2.getJBaseLight());
-		jg_r1_n1 = client.callJsonUpdate("/api/path", jg_r1_n1, jPath.class);
+		jg_r1_n1 = client.callJsonUpdate(ApiPath.API_PATH_UPDATE, jg_r1_n1, jPath.class);
 		
 		jg_r2_n1.getChilds().add(jg_r2_n1_1.getJBaseLight());
 		jg_r2_n1.getChilds().add(jg_r2_n1_2.getJBaseLight());
-		jg_r2_n1 = client.callJsonUpdate("/api/path", jg_r2_n1, jPath.class);
+		jg_r2_n1 = client.callJsonUpdate(ApiPath.API_PATH_UPDATE, jg_r2_n1, jPath.class);
 		
 		jg_r1.getChilds().add(jg_r1_n1.getJBaseLight());
 		jg_r1.getChilds().add(jg_r1_n2.getJBaseLight());
-		jg_r1 = client.callJsonUpdate("/api/path", jg_r1, jPath.class);
+		jg_r1 = client.callJsonUpdate(ApiPath.API_PATH_UPDATE, jg_r1, jPath.class);
 		
 		jg_r2.getChilds().add(jg_r2_n1.getJBaseLight());
-		jg_r2 = client.callJsonUpdate("/api/path", jg_r2, jPath.class);
+		jg_r2 = client.callJsonUpdate(ApiPath.API_PATH_UPDATE, jg_r2, jPath.class);
 		
 		reload(client);
 		
