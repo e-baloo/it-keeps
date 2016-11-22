@@ -66,6 +66,7 @@ public class Main {
 		GroupTest.run(client);
 		PathTest.run(client);
 		UserTest.run(client);
+		EntryTest.run(client);
 		
 		
 		
