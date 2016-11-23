@@ -70,7 +70,7 @@ public class jAcl extends jBase {
 
 	@JsonIgnore
 	public final void setAclAdmin(List<enAclAdmin> value) {
-		aclAdmin = value == null ? new ArrayList<enAclAdmin>() : value;
+		aclAdmin = (value == null ? new ArrayList<enAclAdmin>() : value);
 	}
 
 	@JsonProperty(ACL_ADMIN)

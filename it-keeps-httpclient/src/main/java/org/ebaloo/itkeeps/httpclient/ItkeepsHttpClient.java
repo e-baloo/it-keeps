@@ -186,6 +186,10 @@ public class ItkeepsHttpClient {
 			return MAPPER.treeToValue(node, target);
 
 		} catch (Exception e) {
+			
+			if(logger.isTraceEnabled())
+				e.printStackTrace();
+			
 			throw new RuntimeException(e);
 		}
 

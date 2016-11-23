@@ -8,12 +8,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.orientechnologies.orient.core.metadata.schema.OType;
 import com.tinkerpop.blueprints.Direction;
 import org.apache.commons.lang.StringUtils;
 import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.model.jBase;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.core.database.GraphFactory;
+import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.domain.edge.eRelation;
 import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
 import org.slf4j.Logger;
@@ -521,6 +523,49 @@ abstract class vBaseAbstract extends vCommon {
 		
 	}
 
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.jcdecaux.itasset.model.domain.BaseAbstract#delete()
+	 */
+	public boolean delete() {
+		
+		if(this.disable()) {
+			this.reload();
+			
+			this.getOrientVertex().remove();
+			this.commit();
+			
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/*
+	 * ENABLE
+	 */
+
+	
+	@DatabaseProperty(name = jBase.ENABLE, type = OType.BOOLEAN)
+	protected void setEnable(Boolean enable) {
+		
+		this.reload();
+		this.setProperty(jBase.ENABLE, enable);
+	}
+
+	public Boolean isEnable() {
+		return (Boolean) this.getProperty(jBase.ENABLE);
+	}
+	
+	public boolean disable() {
+		
+		this.deleteAllEdges(Direction.IN);
+		this.deleteAllEdges(Direction.OUT);
+		this.setProperty(jBase.ENABLE, false);
+		this.commit();
+		return true;
+	}
 
 }
 

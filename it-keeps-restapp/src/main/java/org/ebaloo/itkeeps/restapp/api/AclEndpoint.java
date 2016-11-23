@@ -105,7 +105,7 @@ public class AclEndpoint {
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
 
     	vAcl acl = new vAcl(jacl);
-
+    	
     	return Response.ok().entity(acl.read(null, requesteurGuid)).build();
     }
     

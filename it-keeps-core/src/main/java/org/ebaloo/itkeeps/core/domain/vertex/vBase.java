@@ -17,7 +17,6 @@ import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
 
 import com.orientechnologies.orient.core.metadata.schema.OType;
@@ -289,23 +288,7 @@ public class vBase extends vBaseAbstract {
 
 
 	
-	/*
-	 * (non-Javadoc)
-	 * @see com.jcdecaux.itasset.model.domain.BaseAbstract#delete()
-	 */
-	public boolean delete() {
-		
-		if(this.disable()) {
-			this.reload();
-			
-			this.getOrientVertex().remove();
-			this.commit();
-			
-			return true;
-		}
-		
-		return false;
-	}
+
 
 	public static final String ICON_NAME_PREFIX = "icon:";
 
@@ -458,51 +441,13 @@ public class vBase extends vBaseAbstract {
 		
 	}
 
-	/*
-	 * ENABLE
-	 */
 
-	
-	@DatabaseProperty(name = jBase.ENABLE, type = OType.BOOLEAN)
-	protected void setEnable(Boolean enable) {
-		
-		this.reload();
-		this.setProperty(jBase.ENABLE, enable);
-	}
-
-	public Boolean isEnable() {
-		return (Boolean) this.getProperty(jBase.ENABLE);
-	}
 
 	/*
 	 * DISABLE
 	 */
 
-	public boolean disable() {
-		
-		this.deleteAllEdges(Direction.IN);
-		this.deleteAllEdges(Direction.OUT);
-		this.setProperty(jBase.ENABLE, false);
-		this.commit();
-		return true;
-	}
 
-	public int compareTo(vBase obj) {
-		if(obj == null) {
-			return 0;
-		}
-
-		if(StringUtils.isBlank(obj.getName())) {
-			return 0;
-		}
-		
-		if(StringUtils.isBlank(this.getName())) {
-			return 0;
-		}
-
-		// Tri en fonction du Name //
-		return this.getName().compareTo(((vBase)obj).getName());
-	}
 	
 
 	

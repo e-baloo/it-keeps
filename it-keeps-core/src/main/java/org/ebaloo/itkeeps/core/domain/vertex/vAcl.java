@@ -66,6 +66,10 @@ public class vAcl extends vBase {
 	 */
 	
 	protected enAclData getAclData() {
+		
+		System.out.println(String.format("AclData = %s", this.getEdgeByClassesNames(vAclData.class, DirectionType.PARENT, false, eAclNoTraverse.class)));
+		
+		
 		return enAclData.valueOf(this.getEdgeByClassesNames(vAclData.class, DirectionType.PARENT, false, eAclNoTraverse.class).getName());
 	}
 	
@@ -79,13 +83,12 @@ public class vAcl extends vBase {
 	 */
 	
 	protected List<enAclAdmin> getAclAdmin() {
-		
 		return this.getEdgesByClassesNames(
-				vAclData.class, 
+				vAclAdmin.class, 
 				DirectionType.PARENT, 
 				true, 
 				eAclNoTraverse.class)
-					.stream().map(e -> enAclAdmin.valueOf(getName())).collect(Collectors.toList());
+					.stream().map(e -> enAclAdmin.valueOf(e.getName())).collect(Collectors.toList());
 	}
 	
 	protected void setAclAdmin(List<enAclAdmin> list) {
@@ -109,14 +112,13 @@ public class vAcl extends vBase {
 	 */
 	
 	@DatabaseProperty(name = jAcl.OWNER, type = OType.BOOLEAN)
-	protected void setOwner(Boolean enable) {
-		this.setProperty(jAcl.OWNER, enable);
-	}
-
-	public Boolean isOwner() {
+	protected Boolean getOwner() {
 		return (Boolean) this.getProperty(jAcl.OWNER);
 	}
 
+	protected void setOwner(Boolean enable) {
+		this.setProperty(jAcl.OWNER, enable);
+	}
 	
 	
 	
@@ -136,11 +138,7 @@ public class vAcl extends vBase {
 		this.commit();
 		this.reload();
 		
-		this._setChildObjects(j.getChildObjects());
-		this.setAclData(j.getAclData());
-		this.setAclAdmin(j.getAclAdmin());
-		
-		this.reload();
+		this._update(j);
 
 		if(f)
 			this.setEnable(Boolean.TRUE);
@@ -164,11 +162,12 @@ public class vAcl extends vBase {
 		
 		super.read(j, requesteurGuid);
 
-		jAcl jgroup = (jAcl) j;
+		jAcl jacl = (jAcl) j;
 		
-		jgroup.setChildObjects(this.getChildObjects().stream().map(e -> getJBaseLight(e)).collect(Collectors.toList()));
-		jgroup.setAclData(this.getAclData());
-		jgroup.setAclAdmin(this.getAclAdmin());
+		jacl.setChildObjects(this.getChildObjects().stream().map(e -> getJBaseLight(e)).collect(Collectors.toList()));
+		jacl.setAclData(this.getAclData());
+		jacl.setAclAdmin(this.getAclAdmin());
+		jacl.setOwner(this.getOwner());
 		
 		return j;
 	}
@@ -199,17 +198,19 @@ public class vAcl extends vBase {
 
 		super.update(j, requesteurGuid);
 		
-		jAcl jacl = (jAcl) j;
+		this._update((jAcl) j);
 
-		
+		return read(null, requesteurGuid);
+	}
+	
+	
+	private final void _update(jAcl jacl) {
 		this._setChildObjects(jacl.getChildObjects());
 		this.setAclData(jacl.getAclData());
 		this.setAclAdmin(jacl.getAclAdmin());
-
-		
-		return read(null, requesteurGuid);
-		
+		this.setOwner(jacl.getOwner());
 	}
+	
 }
 
 

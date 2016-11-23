@@ -16,10 +16,6 @@ public class vAclData extends vEnumAbstract<enAclData> {
 		super();
 	}
 	
-
-	
-	
-
 	
 }
 
