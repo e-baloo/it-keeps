@@ -10,6 +10,8 @@ import org.ebaloo.itkeeps.api.model.jEntry;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
 import org.ebaloo.itkeeps.core.domain.edge.traverse.eInPath;
+import org.ebaloo.itkeeps.core.tools.SecurityFactory;
+import org.ebaloo.itkeeps.core.tools.SecurityFactory.SecurityAcl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,6 +73,25 @@ public final class vEntry extends vBaseChildAcl {
 	@Override
 	public <T extends jBase> T read(T j, Guid requesteurGuid) {
 		
+		vUser requesterUser = vUser.get(this.getGraph(), vUser.class, requesteurGuid, false);
+		
+		switch(requesterUser.getRole()) {
+			case ROOT:
+				break;
+	
+			case ADMIN:
+			case USER:
+				SecurityAcl sacl = SecurityFactory.getSecurityAcl(requesterUser, this);
+				if(!sacl.isDataRead())
+					throw new RuntimeException("TODO"); //TODO
+				break;
+	
+			case GUEST:
+			default:
+				throw new RuntimeException("TODO"); //TODO
+		}
+
+		
 		if(j == null)
 			j = (T) new jEntry();
 		
@@ -95,23 +116,20 @@ public final class vEntry extends vBaseChildAcl {
 		vUser requesterUser = vUser.get(this.getGraph(), vUser.class, requesteurGuid, false);
 
 		switch(requesterUser.getRole()) {
-
 		case ROOT:
-			// -> Ok is root
 			break;
 
 		case ADMIN:
-			//TODO Check it requesterUser have the right to update this
-			break;
-			
 		case USER:
-			// Check Role TODO
+			SecurityAcl sacl = SecurityFactory.getSecurityAcl(requesterUser, this);
+			if(!sacl.isDataUpdate())
+				throw new RuntimeException("TODO"); //TODO
 			break;
 
 		case GUEST:
 		default:
 			throw new RuntimeException("TODO"); //TODO
-		}
+	}
 		
 		super.update(obj, requesteurGuid);
 

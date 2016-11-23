@@ -3,7 +3,6 @@ package org.ebaloo.itkeeps.core.tools;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enSecurityRole;
 import org.ebaloo.itkeeps.api.enumeration.enAclAdmin;
 import org.ebaloo.itkeeps.api.enumeration.enAclData;
@@ -108,7 +107,56 @@ public final class SecurityFactory {
 	 */
 	
 	public static class SecurityAcl {
+		
+		public boolean isOwner() {
+			return this.aclOwner.value();
+		}
+		
+		public boolean isDataDeny() {
+			
+			if(this.isOwner())
+				return false;
+			
+			return this.aclData.ordinal() >= enAclData.DENY.ordinal();
+		}
+		
+		public boolean isDataRead() {
+			
+			if(this.isOwner())
+				return true;
+			
+			return this.aclData.ordinal() <= enAclData.READ.ordinal();
+		}
+		
+		public boolean isDataUpdate() {
+			
+			if(this.isOwner())
+				return true;
+			
+			return this.aclData.ordinal() <= enAclData.UPDATE.ordinal();
+		}
+		
+		public boolean isDataCreate() {
+			
+			if(this.isOwner())
+				return true;
+			
+			return this.aclData.ordinal() <= enAclData.CREATE.ordinal();
+		}
 
+
+		public boolean isAdminDeleguat() {
+
+			if(this.isOwner())
+				return true;
+
+			if(this.aclAdmin.contains(enAclAdmin.NO_DELEGATE))
+				return false;
+			
+			return this.aclAdmin.contains(enAclAdmin.DELEGATE);
+		}
+		
+		
 		private enAclOwner aclOwner = enAclOwner.FALSE;
 		private enAclData aclData = null;
 		private Set<enAclAdmin> aclAdmin = new HashSet<enAclAdmin>();
