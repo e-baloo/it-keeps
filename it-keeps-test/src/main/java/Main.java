@@ -2,6 +2,7 @@
 
 import java.net.URI;
 
+import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.enumeration.enAuthentication;
 import org.ebaloo.itkeeps.api.model.jCredential;
 import org.ebaloo.itkeeps.api.model.jUser;
@@ -65,13 +66,13 @@ public class Main {
 		}
 		
 		
-		
+		/*
 		GroupTest.run(client);
 		PathTest.run(client);
 		UserTest.run(client);
 		EntryTest.run(client);
 		AclTest.run(client);
-		
+		*/
 		
 		
 
@@ -88,9 +89,11 @@ public class Main {
 		
 		System.out.println("---------------------------------------------------------");
 
-		vUser user2 = vUser.get(null, vUser.class, UserTest.user_2.getJBaseLight(), false);
-		vEntry entry4 = vEntry.get(null, vEntry.class, EntryTest.entry4.getJBaseLight(), false);
 		
+		
+		vUser user2 = vUser.get(null, vUser.class, new Guid("30142ffb-3a82-465c-a1f0-123d1cbf10fa"), false);
+		vEntry entry4 = vEntry.get(null, vEntry.class, new Guid("fbc909c0-8a69-4adb-b81a-4ff513e99de4"), false);
+		                      
 		
 		SecurityFactory.getSecurityAcl(user2, entry4);
 		

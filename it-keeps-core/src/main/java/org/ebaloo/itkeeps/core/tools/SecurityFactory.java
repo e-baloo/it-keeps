@@ -110,17 +110,18 @@ public final class SecurityFactory {
 	public static class SecurityAcl {
 
 		private enAclOwner aclOwner = enAclOwner.FALSE;
-		private enAclData aclData = enAclData.CREATE;
-		private Set<enAclAdmin> aclAdmin = new HashSet();
+		private enAclData aclData = null;
+		private Set<enAclAdmin> aclAdmin = new HashSet<enAclAdmin>();
+		
+		private static final String V_ACL_OWNER = vAclOwner.class.getSimpleName();
+		
 		
 		
 		private void put(OrientVertex ov) {
 			
 			String type = ov.getType().getName();
 			
-			logger.info("Type = " + type);
-			
-			if(type.equals(vAclOwner.class.getSimpleName())) {
+			if(V_ACL_OWNER.equals(type)) {
 				putAclOwner(ov);
 				return;
 			}
@@ -139,18 +140,29 @@ public final class SecurityFactory {
 		}
 		
 		private void putAclAdmin(OrientVertex ov) {
-			// TODO Auto-generated method stub
-			
+			this.aclAdmin.add(enAclAdmin.valueOf(ov.getProperty(vAclAdmin.NAME)));
 		}
 
 		private void putAclData(OrientVertex ov) {
-			// TODO Auto-generated method stub
 			
+			enAclData tAclData = enAclData.valueOf(ov.getProperty(vAclData.NAME));
+			
+			if(this.aclData == null ) {
+				this.aclData = tAclData;
+				return;
+			}
+			
+			if(this.aclData.ordinal() < tAclData.ordinal()) {
+				this.aclData = tAclData;
+			}
 		}
 
 		private void putAclOwner(OrientVertex ov) {
 			
-			// TODO
+			if(this.aclOwner.value() == Boolean.TRUE)
+				return;
+			
+			this.aclOwner = enAclOwner.valueOf(ov.getProperty(vAclOwner.NAME));
 		}
 		
 		
@@ -158,6 +170,9 @@ public final class SecurityFactory {
 	
 	
 	public static SecurityAcl getSecurityAcl(vBaseChildAcl src, vBaseChildAcl dst) {
+		
+		long time = System.currentTimeMillis();
+		
 
 		if(src == null) 
 			throw new RuntimeException("TODO"); // TODO
@@ -190,6 +205,9 @@ public final class SecurityFactory {
 			sAcl.put(ov);
 		}
 		
+		
+		time = System.currentTimeMillis() - time;
+		logger.info(String.format("Executed in %sms", time));
 		
 		return sAcl;
 	}
