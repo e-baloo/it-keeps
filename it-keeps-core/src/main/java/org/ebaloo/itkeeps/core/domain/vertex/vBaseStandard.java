@@ -42,6 +42,14 @@ public abstract class vBaseStandard extends vBase {
 	protected vBaseStandard(final jBaseStandard j, final boolean f) {
 		super(j, f);
 		
+		this._update(j);
+
+		if(f)
+			this.setEnable(Boolean.TRUE);
+	}
+
+	
+	private void _update(jBaseStandard j) {
 		if(j.isPresentExternalRef())
 			this.setExternalRef(j.getExternalRef());
 		
@@ -51,11 +59,8 @@ public abstract class vBaseStandard extends vBase {
 		if(j.isPresentIcon()) {
 			this.setIcon(j.getIcon());
 		}
-
-		if(f)
-			this.setEnable(Boolean.TRUE);
 	}
-
+	
 	
 	/*
 	 *   EXTERNAL_REF
@@ -63,16 +68,16 @@ public abstract class vBaseStandard extends vBase {
 	
 
 	@DatabaseProperty(name = jBaseStandard.EXTERNAL_REF, type = OType.EMBEDDEDMAP)
-	public Map<String, String> getExternalRef()  {
+	protected Map<String, String> getExternalRef()  {
 		return this.getMapString(jBaseStandard.EXTERNAL_REF);
 	}
 
-	public String getExternalRefValue(String key) {
+	protected String getExternalRefValue(String key) {
 		return getExternalRef().get(key);
 	}
 	
 	
-	public void setExternalRef( Map<String, String> map) {
+	protected void setExternalRef( Map<String, String> map) {
 		this.setMapString(jBaseStandard.EXTERNAL_REF, map);
 	}
 
@@ -87,7 +92,7 @@ public abstract class vBaseStandard extends vBase {
 	
 	
 	
-	public static <T extends vBaseAbstract> T getByExternalRef(OrientBaseGraph graph, final Class<T> target,
+	protected static <T extends vBaseAbstract> T getByExternalRef(OrientBaseGraph graph, final Class<T> target,
 			final String key, final String value, final boolean instanceOf) {
 
 		
@@ -125,7 +130,7 @@ public abstract class vBaseStandard extends vBase {
 	 */
 
 
-	public static final String stripOtherName(String value) {
+	protected static final String stripOtherName(String value) {
 		
 		value = StringUtils.strip(value);
 		value = value.toLowerCase();
@@ -139,11 +144,11 @@ public abstract class vBaseStandard extends vBase {
 			name = jBaseStandard.OTHER_NAME, 
 			type = OType.EMBEDDEDLIST
 			)
-	public final List<String> getOtherName() {
+	protected final List<String> getOtherName() {
 		return this.getListString(jBaseStandard.OTHER_NAME);
 	}
 
-	public final void setOtherName(List<String> list) {
+	protected final void setOtherName(List<String> list) {
 		
 		if(list == null)
 			list = new ArrayList<String>();
@@ -156,11 +161,11 @@ public abstract class vBaseStandard extends vBase {
 	
 	
 	
-	public static final <T extends vBaseAbstract> T getByOtherName(OrientBaseGraph graph, Class<T> target, final String iValue) {
+	protected static final <T extends vBaseAbstract> T getByOtherName(OrientBaseGraph graph, Class<T> target, final String iValue) {
 		return getByOtherName(graph, target, iValue, false);
 	}
 
-	public static final <T extends vBaseAbstract> T getByOtherName(OrientBaseGraph graph, Class<T> target, final String iValue, final boolean isInstanceOf) {
+	protected static final <T extends vBaseAbstract> T getByOtherName(OrientBaseGraph graph, Class<T> target, final String iValue, final boolean isInstanceOf) {
 		
 		if(StringUtils.isBlank(iValue)) {
 			return null;
@@ -253,7 +258,7 @@ public abstract class vBaseStandard extends vBase {
 
 	
 	@DatabaseProperty(name = jBaseStandard.ICON)
-	public String getIcon() {
+	protected String getIcon() {
 		
 		String value = this.getProperty(jBaseStandard.ICON);
 		
@@ -274,7 +279,7 @@ public abstract class vBaseStandard extends vBase {
 		}
 	}
 	
-	public void setIcon(String value) {
+	protected void setIcon(String value) {
 		this.setProperty(jBaseStandard.ICON, value);
 	}
 
@@ -298,7 +303,11 @@ public abstract class vBaseStandard extends vBase {
 		
 		return null;
 	}
-	
+
+	public static <T extends jBase> T create(T j, Guid requesteurGuid) {
+		throw new RuntimeException("Base is Abstract");
+	}
+
 	
 	@Override
 	public <T extends jBase> T update(T j, Guid requesteurGuid) {
@@ -308,18 +317,8 @@ public abstract class vBaseStandard extends vBase {
 
 		super.update(j, requesteurGuid);
 
-		jBaseStandard jBaseStandard = (jBaseStandard) j;
-
-		if(jBaseStandard.isPresentIcon())
-			this.setIcon(jBaseStandard.getIcon());
-
-		if(jBaseStandard.isPresentExternalRef())
-			this.setExternalRef(jBaseStandard.getExternalRef());
-
-		if(jBaseStandard.isPresentOtherName())
-			this.setOtherName(jBaseStandard.getOtherName());
-
-
+		this._update((jBaseStandard) j);
+		
 		return null;
 	}
 

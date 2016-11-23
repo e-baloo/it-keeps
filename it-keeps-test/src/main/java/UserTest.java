@@ -40,7 +40,7 @@ public class UserTest {
 		/* Create */
 		
 		gest_1 = client.callJsonCreat(ApiPath.API_USER_CREATE, gest_1, jUser.class);
-		user_1 = client.callJsonCreat(ApiPath.API_USER_CREATE, user_2, jUser.class);
+		user_1 = client.callJsonCreat(ApiPath.API_USER_CREATE, user_1, jUser.class);
 		user_2 = client.callJsonCreat(ApiPath.API_USER_CREATE, user_2, jUser.class);
 		admin_1 = client.callJsonCreat(ApiPath.API_USER_CREATE, admin_1, jUser.class);
 		

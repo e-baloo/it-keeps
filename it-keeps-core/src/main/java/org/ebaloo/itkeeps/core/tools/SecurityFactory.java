@@ -1,15 +1,32 @@
 package org.ebaloo.itkeeps.core.tools;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.commons.lang.StringUtils;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enSecurityRole;
+import org.ebaloo.itkeeps.api.enumeration.enAclAdmin;
+import org.ebaloo.itkeeps.api.enumeration.enAclData;
+import org.ebaloo.itkeeps.api.enumeration.enAclOwner;
 import org.ebaloo.itkeeps.api.enumeration.enAuthentication;
 import org.ebaloo.itkeeps.api.model.jCredential;
 import org.ebaloo.itkeeps.api.model.jUser;
 import org.ebaloo.itkeeps.core.database.GraphFactory;
+import org.ebaloo.itkeeps.core.domain.edge.notraverse.eAclNoTraverse;
+import org.ebaloo.itkeeps.core.domain.edge.traverse.eAclRelation;
+import org.ebaloo.itkeeps.core.domain.vertex.vAcl;
+import org.ebaloo.itkeeps.core.domain.vertex.vAclAdmin;
+import org.ebaloo.itkeeps.core.domain.vertex.vAclData;
+import org.ebaloo.itkeeps.core.domain.vertex.vAclOwner;
 import org.ebaloo.itkeeps.core.domain.vertex.vBase;
+import org.ebaloo.itkeeps.core.domain.vertex.vBaseChildAcl;
 import org.ebaloo.itkeeps.core.domain.vertex.vCredential;
 import org.ebaloo.itkeeps.core.domain.vertex.vUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.tinkerpop.blueprints.impls.orient.OrientVertex;
+
 
 public final class SecurityFactory {
 
@@ -48,7 +65,6 @@ public final class SecurityFactory {
 	}
 	
 	
-	
 	private static final void checkRootUserExist(jCredential jcredential) {
 
 		if(logger.isTraceEnabled())
@@ -81,6 +97,105 @@ public final class SecurityFactory {
 		
 		
 	}
+	
+	
+	
+	
+	/*
+	 * 
+	 * ACL
+	 * 
+	 */
+	
+	public static class SecurityAcl {
+
+		private enAclOwner aclOwner = enAclOwner.FALSE;
+		private enAclData aclData = enAclData.CREATE;
+		private Set<enAclAdmin> aclAdmin = new HashSet();
+		
+		
+		private void put(OrientVertex ov) {
+			
+			String type = ov.getType().getName();
+			
+			logger.info("Type = " + type);
+			
+			if(type.equals(vAclOwner.class.getSimpleName())) {
+				putAclOwner(ov);
+				return;
+			}
+
+			if(type.equals(vAclData.class.getSimpleName())) {
+				putAclData(ov);
+				return;
+			}
+			
+			if(type.equals(vAclAdmin.class.getSimpleName())) {
+				putAclAdmin(ov);
+				return;
+			}
+
+			throw new RuntimeException("The type : " + type + " is unknow !");
+		}
+		
+		private void putAclAdmin(OrientVertex ov) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		private void putAclData(OrientVertex ov) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		private void putAclOwner(OrientVertex ov) {
+			
+			// TODO
+		}
+		
+		
+	}
+	
+	
+	public static SecurityAcl getSecurityAcl(vBaseChildAcl src, vBaseChildAcl dst) {
+
+		if(src == null) 
+			throw new RuntimeException("TODO"); // TODO
+
+		if(dst == null) 
+			throw new RuntimeException("TODO"); // TODO
+
+		
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("SELECT FROM ( ");
+		sb.append("	 TRAVERSE OUT('" + eAclNoTraverse.class.getSimpleName() + "') FROM ( ");
+		
+		sb.append("    SELECT FROM (TRAVERSE OUT('" + eAclRelation.class.getSimpleName() + "') FROM " + src.getORID() + ") WHERE @rid IN ( ");
+		sb.append("      SELECT @rid FROM ( ");
+		sb.append("        TRAVERSE OUT('" + eAclRelation.class.getSimpleName() + "') FROM " + dst.getORID() + " ");
+		sb.append("          ) ");
+		sb.append("        WHERE @class = '" + vAcl.class.getSimpleName() + "' ");
+		sb.append("      ) ");
+		sb.append("    AND @class = '" + vAcl.class.getSimpleName() + "' ");
+		sb.append("   )");
+		sb.append(" ) WHERE @class IN ['" + vAclAdmin.class.getSimpleName() + "', '" + vAclData.class.getSimpleName() + "', '" + vAclOwner.class.getSimpleName() + "']");
+		
+
+		
+		SecurityAcl sAcl = new SecurityAcl();
+
+		for(OrientVertex ov : GraphFactory.command(null, sb.toString())) {
+
+			sAcl.put(ov);
+		}
+		
+		
+		return sAcl;
+	}
+	
+	
+	
 	
 	
 }

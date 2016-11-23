@@ -11,6 +11,7 @@ import org.ebaloo.itkeeps.api.model.jBase;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.enumeration.enAclAdmin;
 import org.ebaloo.itkeeps.api.enumeration.enAclData;
+import org.ebaloo.itkeeps.api.enumeration.enAclOwner;
 import org.ebaloo.itkeeps.api.model.jAcl;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
@@ -27,7 +28,7 @@ import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
  *
  */
 @DatabaseVertrex()
-public class vAcl extends vBase {
+public final class vAcl extends vBase {
 
 	protected vAcl() {
 		super();
@@ -62,14 +63,22 @@ public class vAcl extends vBase {
 
 	
 	/*
+	 * ACL OWNER
+	 */
+	
+	protected enAclOwner getOwner() {
+		return enAclOwner.valueOf(this.getEdgeByClassesNames(vAclOwner.class, DirectionType.PARENT, false, eAclNoTraverse.class).getName());
+	}
+	
+	protected void setOwner(final enAclOwner aclOwner) {
+		setEdges(this.getGraph(), vAcl.class, this, vAclOwner.get(getGraph(), vAclOwner.class, aclOwner.name()), DirectionType.PARENT, eAclNoTraverse.class, false);
+	}
+	
+	/*
 	 * ACL DATA
 	 */
 	
 	protected enAclData getAclData() {
-		
-		System.out.println(String.format("AclData = %s", this.getEdgeByClassesNames(vAclData.class, DirectionType.PARENT, false, eAclNoTraverse.class)));
-		
-		
 		return enAclData.valueOf(this.getEdgeByClassesNames(vAclData.class, DirectionType.PARENT, false, eAclNoTraverse.class).getName());
 	}
 	
@@ -107,18 +116,6 @@ public class vAcl extends vBase {
 
 	
 	
-	/*
-	 * OWNER
-	 */
-	
-	@DatabaseProperty(name = jAcl.OWNER, type = OType.BOOLEAN)
-	protected Boolean getOwner() {
-		return (Boolean) this.getProperty(jAcl.OWNER);
-	}
-
-	protected void setOwner(Boolean enable) {
-		this.setProperty(jAcl.OWNER, enable);
-	}
 	
 	
 	

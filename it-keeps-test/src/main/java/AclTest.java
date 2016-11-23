@@ -1,6 +1,7 @@
 import org.ebaloo.itkeeps.ApiPath;
 import org.ebaloo.itkeeps.api.enumeration.enAclAdmin;
 import org.ebaloo.itkeeps.api.enumeration.enAclData;
+import org.ebaloo.itkeeps.api.enumeration.enAclOwner;
 import org.ebaloo.itkeeps.api.model.jAcl;
 import org.ebaloo.itkeeps.httpclient.ItkeepsHttpClient;
 
@@ -21,7 +22,7 @@ public class AclTest {
 		/* Set Name */
 		
 		acl1.setName("acl1");
-		acl1.setOwner(true);
+		acl1.setOwner(enAclOwner.TRUE);
 		acl1.setAclData(enAclData.CREATE);
 		acl1.getAclAdmin().add(enAclAdmin.DELEGATE);
 		acl1.getChildObjects().add(GroupTest.jg_n1.getJBaseLight());

@@ -22,7 +22,7 @@ import net.sf.ehcache.config.CacheConfiguration;
 import net.sf.ehcache.store.MemoryStoreEvictionPolicy;
 
 @DatabaseVertrex()
-public class vImage extends vBaseSysteme {
+public final class vImage extends vBaseSysteme {
 
 	
 	protected vImage() {}

@@ -1,7 +1,7 @@
 
 package org.ebaloo.itkeeps.core.domain.vertex;
 
-import org.ebaloo.itkeeps.api.enumeration.enAuthentication;
+import org.ebaloo.itkeeps.api.enumeration.enAclOwner;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 
 /**
@@ -9,17 +9,13 @@ import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
  *
  */
 @DatabaseVertrex()
-public final class vAuthentication extends vEnumAbstract<enAuthentication> {
+public final class vAclOwner extends vEnumAbstract<enAclOwner> {
 
 
-	protected vAuthentication() {
+	protected vAclOwner() {
 		super();
 	}
 	
-
-	
-	
-
 	
 }
 

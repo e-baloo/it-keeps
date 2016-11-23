@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.ebaloo.itkeeps.api.enumeration.enAclAdmin;
 import org.ebaloo.itkeeps.api.enumeration.enAclData;
+import org.ebaloo.itkeeps.api.enumeration.enAclOwner;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -44,16 +45,26 @@ public class jAcl extends jBase {
 	public static final String OWNER = "owner";
 	
 	@JsonIgnore
-	private Boolean owner = false;
+	private enAclOwner owner = enAclOwner.FALSE;
 	
-	@JsonProperty(OWNER)
-	public final Boolean getOwner() {
+	@JsonIgnore
+	public final enAclOwner getOwner() {
 		return this.owner;
 	}
 
+	@JsonIgnore
+	public final void setOwner(enAclOwner value) {
+		owner = value == null ? enAclOwner.FALSE : value;
+	}
+
 	@JsonProperty(OWNER)
-	public final void setOwner(Boolean value) {
-		owner = value == null ? false : value;
+	public final Boolean _getAclOwner() {
+		return this.owner.value();
+	}
+	
+	@JsonProperty(OWNER)
+	public final void _setAclOwner(Boolean value) {
+		this.owner = value == null ? enAclOwner.FALSE : value == Boolean.FALSE ? enAclOwner.FALSE : enAclOwner.TRUE;
 	}
 
 	// ACL_ADMIN_TYPE

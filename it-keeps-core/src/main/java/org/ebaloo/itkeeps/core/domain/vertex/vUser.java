@@ -25,7 +25,7 @@ import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
 
 
 @DatabaseVertrex()
-public class vUser extends vBaseChildAcl {
+public final class vUser extends vBaseChildAcl {
 
 	@SuppressWarnings("unused")
 	private static Logger logger = LoggerFactory.getLogger(vUser.class);
@@ -39,11 +39,11 @@ public class vUser extends vBaseChildAcl {
 	 * IN_GROUP
 	 */
 	
-	public List<vGroup> getGroups() {
+	protected List<vGroup> getGroups() {
 		return this.getEdgesByClassesNames(vGroup.class, DirectionType.PARENT, false, eInGroup.class);
 	}
 	
-	public void setGroups(List<vGroup> list) {
+	protected void setGroups(List<vGroup> list) {
 		setEdges(this.getGraph(), vUser.class, this, list, DirectionType.PARENT, eInGroup.class, false);
 	}
 
@@ -62,15 +62,15 @@ public class vUser extends vBaseChildAcl {
 	 * CREDENTIALS
 	 */
 	
-	public List<vCredential> getCredentials() {
+	protected List<vCredential> getCredentials() {
 		return this.getEdgesByClassesNames(vCredential.class, DirectionType.CHILD, false, eCredentialToUser.class);
 	}
 	
-	private void _setCredentials(List<vCredential> list) {
+	protected void _setCredentials(List<vCredential> list) {
 		setEdges(this.getGraph(), vUser.class, this, list, DirectionType.CHILD, eCredentialToUser.class, false);
 	}
 
-	public void setCredentials(List<jBaseLight> list) {
+	protected void setCredentials(List<jBaseLight> list) {
 		
 		if(list == null) {
 			list = new ArrayList<jBaseLight>();
@@ -88,7 +88,7 @@ public class vUser extends vBaseChildAcl {
 	 */
 	
 	@DatabaseProperty(name = jUser.ROLE)
-	public enSecurityRole getRole() {
+	protected enSecurityRole getRole() {
 		
 		String role = this.getProperty(jUser.ROLE);
 		
@@ -98,7 +98,7 @@ public class vUser extends vBaseChildAcl {
 		return enSecurityRole.valueOf(role);
 	}
 	
-	public void setRole(String role) {
+	protected void setRole(String role) {
 		this.setRole(enSecurityRole.valueOf(role));
 	}
 	
@@ -109,23 +109,60 @@ public class vUser extends vBaseChildAcl {
 	
 	// API
 	
-	public vUser(final jUser j) {
-		this(j, true);
+	/*
+	private vUser(final jUser j, Guid requesteurGuid) {
+		this(j, true, requesteurGuid);
 	}
-	
-	protected vUser(final jUser j, final boolean f) {
+	*/
+	private vUser(final jUser j, Guid requesteurGuid) {
 		super(j, false);
 		
 		this.commit();
 		this.reload();
 
-		if(j.isPresentRole())
-			this.setRole(j.getRole());
+		vUser requesterUser = vUser.get(this.getGraph(), vUser.class, requesteurGuid, false);
 
-		if(f)
-			this.setEnable(Boolean.TRUE);
+		this._update(j, requesterUser);
+
+		this.setEnable(Boolean.TRUE);
 	}
 
+	
+	vUser(jUser j) {
+		super(j, false);
+		
+		this.commit();
+		this.reload();
+		
+		this.setRole(enSecurityRole.GUEST);
+		this.setEnable(Boolean.TRUE);
+	}
+
+	private void _update(final jUser j, vUser requesterUser) {
+
+
+		if(j.isPresentRole()) {
+			
+			enSecurityRole requesterRole = requesterUser.getRole();
+			enSecurityRole jRole = j.getRole();
+			
+			if(requesterRole.isRoot()) {
+				this.setRole(jRole);
+			} else if(requesterRole.isAdmin() && !jRole.isRoot()) {
+				this.setRole(jRole);
+			} else {
+				throw new RuntimeException(""); //TODO
+			}
+		}
+
+		// ADMIN & ROOT
+		
+		if(requesterUser.getRole().isAdmin()) {
+			if(j.isPresentInGroup()) {
+				this.setGroupsJBL(j.getInGroups());
+			}
+		}
+	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -148,10 +185,19 @@ public class vUser extends vBaseChildAcl {
 		return j;
 	}
 	
-	@Override
-	public <T extends jBase> T update(T obj, Guid requesteurGuid) {
+	public static <T extends jBase> T create(T j, Guid requesteurGuid) {
 		
-		if(!(obj instanceof jUser))
+		// TODO Check Security
+		
+		vUser user = new vUser((jUser) j, requesteurGuid);
+		
+		return user.read(null, requesteurGuid);
+	}
+	
+	@Override
+	public <T extends jBase> T update(T j, Guid requesteurGuid) {
+		
+		if(!(j instanceof jUser))
 			throw new RuntimeException("TODO"); //TODO
 
 		vUser requesterUser = vUser.get(this.getGraph(), vUser.class, requesteurGuid, false);
@@ -177,31 +223,11 @@ public class vUser extends vBaseChildAcl {
 			throw new RuntimeException("TODO"); //TODO
 		}
 
-		super.update(obj, requesteurGuid);
+		super.update(j, requesteurGuid);
 
-		jUser juser = (jUser) obj;
-		
-		if(juser.isPresentRole()) {
-			
-			enSecurityRole requesterRole = requesterUser.getRole();
-			enSecurityRole jRole = juser.getRole();
-			
-			if(requesterRole.isRoot()) {
-				this.setRole(jRole);
-			} else if(requesterRole.isAdmin() && !jRole.isRoot()) {
-				this.setRole(jRole);
-			} else {
-				throw new RuntimeException(""); //TODO
-			}
-		}
 
-		// ADMIN & ROOT
 		
-		if(requesterUser.getRole().isAdmin()) {
-			if(juser.isPresentInGroup()) {
-				this.setGroupsJBL(juser.getInGroups());
-			}
-		}
+		this._update((jUser) j, requesterUser);
 		
 		return read(null, requesteurGuid);
 		

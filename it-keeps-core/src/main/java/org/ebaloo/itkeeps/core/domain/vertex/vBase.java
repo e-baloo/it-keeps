@@ -54,22 +54,7 @@ public class vBase extends vBaseAbstract {
 	}
 
 	
-	protected vBase(final jBase j, final boolean f) {
-		super(true);
 
-		this.setProperty(jBase.GUID, GuidFactory.getGuid());
-
-		if(j.isPresentName())
-			this.setName(j.getName());
-
-		if(j.isPresentDescription())
-			this.setDescription(j.getDescription());
-
-		this.setProperty(jBase.CREATION_DATE, DateTime.now(DateTimeZone.UTC).toDate());
-		
-		if(f)
-			this.setEnable(Boolean.TRUE);
-	}
 	
 	
 	private void defaultSetting(Guid guid) {
@@ -357,10 +342,33 @@ public class vBase extends vBaseAbstract {
 	
 
 	// API Methose
-	
-	
     
+	protected vBase(final jBase j, final boolean f) {
+		super(true);
+
+		this.setProperty(jBase.GUID, GuidFactory.getGuid());
+		this.setProperty(jBase.CREATION_DATE, DateTime.now(DateTimeZone.UTC).toDate());
+
+		this._update(j);
+		
+		if(f)
+			this.setEnable(Boolean.TRUE);
+	}
+	
+	public static <T extends jBase> T create(T j, Guid requesteurGuid) {
+		throw new RuntimeException("Base is Abstract");
+	}
     
+	public <T extends jBase> T delete(Guid requesteurGuid) {
+
+		T jr = this.read(null, requesteurGuid);
+		
+		// TODO Check Security
+		
+		// TODO delete
+		
+		return jr;
+	}
     
     
 	public <T extends jBase> T read(T j, Guid requesteurGuid) {
@@ -374,31 +382,43 @@ public class vBase extends vBaseAbstract {
 		j.setName(this.getName());
 		j.setDescription(this.getDescription());
 		
-		return null;
+		return j;
 	}
 	
 	
-	public <T extends jBase> T update(T obj, Guid requesteurGuid) {
+	public <T extends jBase> T update(T j, Guid requesteurGuid) {
 		
-		if(!obj.isPresentJObject())
+		if(!j.isPresentJObject())
 			throw new RuntimeException(); //TODO
 
-		if(!obj.getJObject().isPresentVersion())
+		if(!j.getJObject().isPresentVersion())
 			throw new RuntimeException(); //TODO
 
-		if(obj.getJObject().getVersion() != this.getObjectVersion()) 
+		if(j.getJObject().getVersion() != this.getObjectVersion()) 
 			throw new RuntimeException(); //TODO
 		
-		if(obj.isPresentName())
-			this.setName(obj.getName());
-
-		if(obj.isPresentDescription())
-			this.setDescription(obj.getDescription());
+		
+		this._update(j);
 		
 		return null;
 
 	}
 
+	private void _update(jBase jbase) {
+		if(jbase.isPresentName())
+			this.setName(jbase.getName());
+
+		if(jbase.isPresentDescription())
+			this.setDescription(jbase.getDescription());
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	/*
 	 * GUID 

@@ -24,7 +24,7 @@ import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
  *
  */
 @DatabaseVertrex()
-public class vPath extends vBaseChildAcl {
+public final class vPath extends vBaseChildAcl {
 
 	protected vPath() {
 		super();

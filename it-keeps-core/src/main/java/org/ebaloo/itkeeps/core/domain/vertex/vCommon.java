@@ -122,7 +122,7 @@ abstract class vCommon {
 	
 	private String orid = null;
 
-	protected final String getORID() {
+	public final String getORID() {
 
 		if (StringUtils.isBlank(orid))
 			this.orid = this.getOrientVertex().getIdentity().toString();

@@ -9,12 +9,16 @@ import org.ebaloo.itkeeps.commons.ConfigFactory;
 import org.ebaloo.itkeeps.commons.LogFactory;
 import org.ebaloo.itkeeps.core.database.DatabaseFactory;
 import org.ebaloo.itkeeps.core.database.GraphFactory;
+import org.ebaloo.itkeeps.core.domain.vertex.vEntry;
+import org.ebaloo.itkeeps.core.domain.vertex.vUser;
+import org.ebaloo.itkeeps.core.tools.SecurityFactory;
 import org.ebaloo.itkeeps.httpclient.ItkeepsHttpClient;
 import org.ebaloo.itkeeps.restapp.ApplicationConfig;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.common.collect.Multiset.Entry;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 public class Main {
@@ -80,11 +84,15 @@ public class Main {
 		}
 
 		
+		//-------------------------------------------------------------------
 		
-		Thread.sleep(30000);
+		System.out.println("---------------------------------------------------------");
+
+		vUser user2 = vUser.get(null, vUser.class, UserTest.user_2.getJBaseLight(), false);
+		vEntry entry4 = vEntry.get(null, vEntry.class, EntryTest.entry4.getJBaseLight(), false);
 		
 		
-		
+		SecurityFactory.getSecurityAcl(user2, entry4);
 		
 		LogFactory.getMain().info("END");
 		

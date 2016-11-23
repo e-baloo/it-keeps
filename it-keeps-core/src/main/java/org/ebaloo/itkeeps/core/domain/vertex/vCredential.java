@@ -4,7 +4,6 @@ package org.ebaloo.itkeeps.core.domain.vertex;
 
 
 import org.apache.commons.lang3.StringUtils;
-import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enSecurityRole;
 import org.ebaloo.itkeeps.api.enumeration.enAuthentication;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.model.jCredential;
@@ -54,12 +53,11 @@ public final class vCredential extends vBase {
 		
 		if((jblUser == null) || jblUser.getGuid() == null) {
 			
-			logger.trace("create user");
+			logger.trace("Create vUser");
 			
 			jUser juser = new jUser();
 			juser.setName(j.getUserName());
-			juser.setRole(enSecurityRole.GUEST);
-			
+
 			vUser user = new vUser(juser);
 			this.setUser(user);
 			

@@ -14,12 +14,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.enumeration.enAclAdmin;
 import org.ebaloo.itkeeps.api.enumeration.enAclData;
+import org.ebaloo.itkeeps.api.enumeration.enAclOwner;
 import org.ebaloo.itkeeps.api.enumeration.enAuthentication;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseEdge;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.vertex.vAclAdmin;
 import org.ebaloo.itkeeps.core.domain.vertex.vAclData;
+import org.ebaloo.itkeeps.core.domain.vertex.vAclOwner;
 import org.ebaloo.itkeeps.core.domain.vertex.vAuthentication;
 import org.ebaloo.itkeeps.core.domain.vertex.vBase;
 import org.ebaloo.itkeeps.core.tools.ReflectionsFactory;
@@ -63,13 +65,16 @@ public class DatabaseFactory {
 
 
 			vAuthentication.init(enAuthentication.class, vAuthentication.class);
-			logger.info(" - init AuthenticationTypeClass done.");
+			logger.info(" - init Authentication done.");
 
 			vAclData.init(enAclData.class, vAclData.class);
-			logger.info(" - init AclDataTypeClass done.");
+			logger.info(" - init AclData done.");
 
 			vAclAdmin.init(enAclAdmin.class, vAclAdmin.class);
-			logger.info(" - init AclAdminTypeClass done.");
+			logger.info(" - init AclAdmins done.");
+
+			vAclOwner.init(enAclOwner.class, vAclOwner.class);
+			logger.info(" - init AclOwner done.");
 			
 
 			

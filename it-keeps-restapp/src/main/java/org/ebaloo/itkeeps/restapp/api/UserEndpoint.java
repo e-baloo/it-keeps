@@ -123,11 +123,9 @@ public class UserEndpoint {
 
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
 
-    	vUser user = new vUser(juser);
-    	jUser newjuser = new jUser();
-    	user.read(newjuser, requesteurGuid);
+    	jUser user = vUser.create(juser, requesteurGuid);
 
-    	return Response.ok().entity(newjuser).build();
+    	return Response.ok().entity(user).build();
     }
     
     
