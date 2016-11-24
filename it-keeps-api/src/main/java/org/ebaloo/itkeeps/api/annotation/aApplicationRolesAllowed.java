@@ -10,16 +10,16 @@ import static java.lang.annotation.RetentionPolicy.*;
 @Retention (RUNTIME)
 @Target({TYPE, METHOD})
 public @interface aApplicationRolesAllowed {
-	enSecurityRole value();
+	enRole value();
 	
-	public enum enSecurityRole {
+	public enum enRole {
 
 		GUEST,
 		USER,
 		ADMIN,
 		ROOT;
 
-		
+
 		public boolean isGuest() {
 			return true;
 		}
@@ -36,7 +36,7 @@ public @interface aApplicationRolesAllowed {
 			return this == ROOT;
 		}
 		
-		public boolean isInRole(enSecurityRole role) {
+		public boolean isInRole(enRole role) {
 			
 			return this.ordinal() >= role.ordinal(); 
 			

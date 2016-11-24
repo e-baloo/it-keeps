@@ -11,7 +11,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
-import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enSecurityRole;
+import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
 import org.ebaloo.itkeeps.api.enumeration.enAuthentication;
 import org.ebaloo.itkeeps.api.enumeration.enAbstract;
 
@@ -23,7 +23,7 @@ public class AuthenticationTypeEndpoint {
 
 	@GET
     @Produces({MediaType.APPLICATION_JSON})
-	@aApplicationRolesAllowed(enSecurityRole.ROOT)
+	@aApplicationRolesAllowed(enRole.ROOT)
     @Timed
     public Response get() {
 

@@ -13,7 +13,6 @@ import org.ebaloo.itkeeps.api.model.jCredential;
 import org.ebaloo.itkeeps.core.database.GraphFactory;
 import org.ebaloo.itkeeps.core.domain.edge.notraverse.eAclNoTraverse;
 import org.ebaloo.itkeeps.core.domain.edge.traverse.eAclRelation;
-import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.SecurityAcl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -188,6 +187,14 @@ public final class SecurityFactory {
 
 		public boolean isRoot() {
 			return aclRole.isRoot();
+		}
+
+		public boolean isAdminUpdateGroup() {
+			
+			if(this.isOwner() || this.isRoot())
+				return true;
+			
+			return this.aclAdmin.contains(enAclAdmin.GROUP_CREATE); 
 		}
 		
 	}

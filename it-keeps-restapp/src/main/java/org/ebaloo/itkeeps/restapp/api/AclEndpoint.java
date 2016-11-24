@@ -19,7 +19,7 @@ import javax.ws.rs.core.SecurityContext;
 import org.ebaloo.itkeeps.ApiPath;
 import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
-import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enSecurityRole;
+import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
 import org.ebaloo.itkeeps.api.model.jAcl;
 import org.ebaloo.itkeeps.core.domain.vertex.vAcl;
 
@@ -36,7 +36,7 @@ public class AclEndpoint {
 	@SuppressWarnings("unused")
 	@GET // LIST
     @Produces({MediaType.APPLICATION_JSON})
-	@aApplicationRolesAllowed(enSecurityRole.ADMIN)
+	@aApplicationRolesAllowed(enRole.ADMIN)
     @Timed
     @Path(ApiPath.API_ACL_GET_ALL)
     public Response readAll() {
@@ -59,7 +59,7 @@ public class AclEndpoint {
     @GET //READ
     @Produces({MediaType.APPLICATION_JSON})
     @Path(ApiPath.API_ACL_GET_ID + "{id}")
-	@aApplicationRolesAllowed(enSecurityRole.ADMIN)
+	@aApplicationRolesAllowed(enRole.ADMIN)
     @Timed
     public Response readId(@PathParam("id") String id) {
 
@@ -77,7 +77,7 @@ public class AclEndpoint {
     @PUT // UPDATE
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-	@aApplicationRolesAllowed(enSecurityRole.ADMIN)
+	@aApplicationRolesAllowed(enRole.ADMIN)
     @Timed
     @Path(ApiPath.API_ACL_UPDATE)
     public Response update(final jAcl juser) {
@@ -97,7 +97,7 @@ public class AclEndpoint {
     @POST // CREATE
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-	@aApplicationRolesAllowed(enSecurityRole.ADMIN)
+	@aApplicationRolesAllowed(enRole.ADMIN)
     @Timed
     @Path(ApiPath.API_ACL_CREATE)
     public Response create(final jAcl jacl) {

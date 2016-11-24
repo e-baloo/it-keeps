@@ -19,7 +19,7 @@ import javax.ws.rs.core.SecurityContext;
 import org.ebaloo.itkeeps.ApiPath;
 import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
-import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enSecurityRole;
+import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
 import org.ebaloo.itkeeps.api.model.jGroup;
 import org.ebaloo.itkeeps.core.domain.vertex.vGroup;
 import org.slf4j.Logger;
@@ -39,7 +39,7 @@ public class GroupEndpoint {
 	
 	@GET 
     @Produces({MediaType.APPLICATION_JSON})
-	@aApplicationRolesAllowed(enSecurityRole.ADMIN)
+	@aApplicationRolesAllowed(enRole.ADMIN)
     @Timed
     @Path(ApiPath.API_GROUP_GET_ALL)
     public Response readAll() {
@@ -59,7 +59,7 @@ public class GroupEndpoint {
 	
     @GET 
     @Produces({MediaType.APPLICATION_JSON})
-	@aApplicationRolesAllowed(enSecurityRole.USER)
+	@aApplicationRolesAllowed(enRole.USER)
     @Timed
     @Path(ApiPath.API_GROUP_GET_ID + "{guid}")
     public Response read(@PathParam("guid") Guid guid) {
@@ -80,7 +80,7 @@ public class GroupEndpoint {
     @PUT 
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-	@aApplicationRolesAllowed(enSecurityRole.ADMIN)
+	@aApplicationRolesAllowed(enRole.ADMIN)
     @Timed
     @Path(ApiPath.API_GROUP_UPDATE)
     public Response update(final jGroup j) {
@@ -101,7 +101,7 @@ public class GroupEndpoint {
     @POST 
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-	@aApplicationRolesAllowed(enSecurityRole.ADMIN)
+	@aApplicationRolesAllowed(enRole.ADMIN)
     @Timed
     @Path(ApiPath.API_GROUP_CREATE)
     public Response create(final jGroup j) {

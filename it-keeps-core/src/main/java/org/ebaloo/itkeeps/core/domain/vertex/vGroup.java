@@ -272,6 +272,12 @@ public final class vGroup extends vBaseChildAcl {
 	@Override
 	public <T extends jBase> T read(T j, Guid requesteurGuid) {
 		
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(this.getGraph(), requesteurGuid, this);
+		
+		if(sAcl.isGuest() || sAcl.isUser())
+			throw new RuntimeException("Error : user is GUEST or USER "); //TODO
+
+		
 		if(j == null)
 			j = (T) new jGroup();
 		
@@ -295,17 +301,15 @@ public final class vGroup extends vBaseChildAcl {
 	@Override
 	public <T extends jBase> T update(T j, Guid requesteurGuid) {
 		
-		if(!(j instanceof jGroup))
-			throw new RuntimeException("TODO"); //TODO
-
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(this.getGraph(), requesteurGuid, this);
 		
 		if(sAcl.isGuest() || sAcl.isUser())
 			throw new RuntimeException("Error : user is GUEST or USER "); //TODO
 
-		if(sAcl.isUser()) {
-			
-		}
+		
+		if(!(j instanceof jGroup))
+			throw new RuntimeException("TODO"); //TODO
+
 			
 
 			

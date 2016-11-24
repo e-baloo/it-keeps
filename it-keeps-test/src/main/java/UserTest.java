@@ -1,7 +1,7 @@
 import javax.ws.rs.Path;
 
 import org.ebaloo.itkeeps.ApiPath;
-import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enSecurityRole;
+import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
 import org.ebaloo.itkeeps.api.enumeration.enAclRole;
 import org.ebaloo.itkeeps.api.model.jUser;
 import org.ebaloo.itkeeps.httpclient.ItkeepsHttpClient;

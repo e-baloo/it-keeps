@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enSecurityRole;
+import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
 import org.ebaloo.itkeeps.api.model.jBase;
 import org.ebaloo.itkeeps.commons.ConfigFactory;
 import org.ebaloo.itkeeps.core.domain.vertex.vUser;
@@ -103,7 +103,7 @@ public final class JwtFactory {
 		claims.put(jBase.NAME, user.getName());
 		
 		//claims.put(USER_ROLE, user.getRole().toString());
-		claims.put(USER_ROLE, enSecurityRole.ROOT.toString());
+		claims.put(USER_ROLE, enRole.ROOT.toString());
 		
 		
 		return signer.sign(claims);
@@ -171,11 +171,11 @@ public final class JwtFactory {
 		return claims.get(jBase.GUID).toString(); 
 	}
 
-	public static enSecurityRole getRole(Map<String, Object> claims) {
+	public static enRole getRole(Map<String, Object> claims) {
 		
 		String role = claims.get(USER_ROLE).toString();
 
-		return enSecurityRole.valueOf(role);
+		return enRole.valueOf(role);
 	}
 
 	

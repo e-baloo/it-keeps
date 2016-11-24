@@ -19,7 +19,7 @@ import javax.ws.rs.core.SecurityContext;
 import org.ebaloo.itkeeps.ApiPath;
 import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
-import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enSecurityRole;
+import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
 import org.ebaloo.itkeeps.api.model.jUser;
 import org.ebaloo.itkeeps.core.domain.vertex.vCredential;
 import org.ebaloo.itkeeps.core.domain.vertex.vUser;
@@ -37,7 +37,7 @@ public class UserEndpoint {
 	@SuppressWarnings("unused")
 	@GET // LIST
     @Produces({MediaType.APPLICATION_JSON})
-	@aApplicationRolesAllowed(enSecurityRole.ADMIN)
+	@aApplicationRolesAllowed(enRole.ADMIN)
     @Timed
     @Path(ApiPath.API_USER_GET_ALL)
     public Response readAll() {
@@ -60,7 +60,7 @@ public class UserEndpoint {
     @GET //READ
     @Produces({MediaType.APPLICATION_JSON})
     @Path(ApiPath.API_USER_GET_ID + "{id}")
-	@aApplicationRolesAllowed(enSecurityRole.USER)
+	@aApplicationRolesAllowed(enRole.USER)
     @Timed
     public Response readId(@PathParam("id") String id) {
 
@@ -78,7 +78,7 @@ public class UserEndpoint {
     @GET //READ
     @Produces({MediaType.APPLICATION_JSON})
     @Path(ApiPath.API_CRED_GET_ID + "{id}")
-	@aApplicationRolesAllowed(enSecurityRole.USER)
+	@aApplicationRolesAllowed(enRole.USER)
     @Timed
     public Response readCredId(@PathParam("id") String id) {
 
@@ -96,7 +96,7 @@ public class UserEndpoint {
     @PUT // UPDATE
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-	@aApplicationRolesAllowed(enSecurityRole.USER)
+	@aApplicationRolesAllowed(enRole.USER)
     @Timed
     @Path(ApiPath.API_USER_UPDATE)
     public Response update(final jUser juser) {
@@ -116,7 +116,7 @@ public class UserEndpoint {
     @POST // CREATE
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-	@aApplicationRolesAllowed(enSecurityRole.ADMIN)
+	@aApplicationRolesAllowed(enRole.ADMIN)
     @Timed
     @Path(ApiPath.API_USER_CREATE)
     public Response create(final jUser juser) {

@@ -3,18 +3,18 @@ package org.ebaloo.itkeeps.api.enumeration;
 import java.util.Collection;
 import java.util.HashMap;
 
-import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enSecurityRole;
+import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
 
-public class enAclRole extends enAbstract<enSecurityRole> {
+public class enAclRole extends enAbstract<enRole> {
 
 	private static final HashMap<String, enAclRole> map = new HashMap<String, enAclRole>();
 
-	public static final enAclRole ROOT = new enAclRole(enSecurityRole.ROOT);
-	public static final enAclRole ADMIN = new enAclRole(enSecurityRole.ADMIN);
-	public static final enAclRole USER = new enAclRole(enSecurityRole.USER);
-	public static final enAclRole GUEST = new enAclRole(enSecurityRole.GUEST);
+	public static final enAclRole ROOT = new enAclRole(enRole.ROOT);
+	public static final enAclRole ADMIN = new enAclRole(enRole.ADMIN);
+	public static final enAclRole USER = new enAclRole(enRole.USER);
+	public static final enAclRole GUEST = new enAclRole(enRole.GUEST);
 
-	private enAclRole(enSecurityRole role) {
+	private enAclRole(enRole role) {
 		super(role.name(), role.ordinal(), role);
 		map.put(role.name(), this);
 	}

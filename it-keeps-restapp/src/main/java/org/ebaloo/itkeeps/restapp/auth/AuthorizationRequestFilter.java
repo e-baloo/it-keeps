@@ -16,7 +16,7 @@ import javax.ws.rs.ext.Provider;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
-import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enSecurityRole;
+import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
 import org.ebaloo.itkeeps.restapp.exception.ExceptionResponse;
 import org.glassfish.jersey.server.ContainerRequest;
 import org.slf4j.Logger;
@@ -89,7 +89,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 			return;
 		}
 		
-		enSecurityRole role = JwtFactory.getRole(claims);
+		enRole role = JwtFactory.getRole(claims);
 		String guid = JwtFactory.getGuid(claims);
 		
 		
@@ -97,7 +97,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
         if(method.isAnnotationPresent(aApplicationRolesAllowed.class))
         {
         	aApplicationRolesAllowed applicationRolesAllowed = method.getAnnotation(aApplicationRolesAllowed.class);
-            enSecurityRole tRole = applicationRolesAllowed.value() ;
+            enRole tRole = applicationRolesAllowed.value() ;
               
             logger.info("role : " + role + "  /  tRole: " + tRole);
             if(tRole.isInRole(role)) {
