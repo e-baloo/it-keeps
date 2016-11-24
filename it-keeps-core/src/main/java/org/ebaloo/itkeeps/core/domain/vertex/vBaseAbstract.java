@@ -171,21 +171,25 @@ abstract class vBaseAbstract extends vCommon {
 			List<String> srcOrid = src.stream().map(e -> e.getORID()).collect(Collectors.toList());
 			List<String> dstOrid = dst.stream().map(e -> e.getORID()).collect(Collectors.toList());
 
-			String cmdSQL = ""
-					+ "SELECT FROM "
-					+ " (TRAVERSE "
-					+ "     " + direction.getDirection().toString() + "('" + relation.getSimpleName() + "') "
-					+ "     FROM [" + StringUtils.join(srcOrid, ", ") + "] "
-					+ "     WHILE $depth <= 1) "
-					+ "WHERE @rid NOT IN [" + StringUtils.join(srcOrid, ", ") + "]";
+			StringBuilder sb = new StringBuilder();
+			
+			sb.append("SELECT FROM (TRAVERSE ");
+			sb.append(direction.getDirection().toString());
+			sb.append("('");
+			sb.append(relation.getSimpleName());
+			sb.append("') FROM [");
+			sb.append(StringUtils.join(srcOrid, ","));
+			sb.append("] WHILE $depth <= 1) WHERE @rid NOT IN [");
+			sb.append(StringUtils.join(srcOrid, ","));
+			sb.append("]");
 
-			cmdSQL = cmdSQL + " AND " + WhereClause.ENABLE_IS_TRUE;  
-
-			if(dstTarget != null)
-				cmdSQL = cmdSQL + " AND " + WhereClause.IsntanceOf(dstTarget, instanceOf);  
+			if(dstTarget != null) {
+				sb.append(" AND ");
+				sb.append(WhereClause.IsntanceOf(dstTarget, instanceOf));
+			}
 			
 			
-			ovDstBck = command(graph, cmdSQL).stream().map(e -> e.getIdentity().toString()).collect(Collectors.toList());
+			ovDstBck = command(graph, sb.toString()).stream().map(e -> e.getIdentity().toString()).collect(Collectors.toList());
 			
 	    	switch(direction) {
 	    	
@@ -225,14 +229,33 @@ abstract class vBaseAbstract extends vCommon {
 
 		if(ovSrc.size() > 0) {
 			if(ovDstRemove.size() > 0) {
-		    	String cmd = "DELETE EDGE FROM [" + StringUtils.join(ovSrc, ", ") + "] TO [" + StringUtils.join(ovDstRemove, ", ") + "] ";
-		   		cmd += " WHERE @class = '" + relation.getSimpleName() + "'";
-				vCommon.executeNoReturn(graph, cmd);
+				
+				StringBuilder sb1 = new StringBuilder();
+				
+				sb1.append("DELETE EDGE FROM [");
+				sb1.append(StringUtils.join(ovSrc, ","));
+				sb1.append("] TO [");
+				sb1.append(StringUtils.join(ovDstRemove, ","));
+				sb1.append("] WHERE @class = '");
+				sb1.append(relation.getSimpleName());
+				sb1.append("'");
+				
+				vCommon.executeNoReturn(graph, sb1.toString());
 			}
 			
 			if(ovDstAdd.size() > 0) {
-		    	String cmd = "CREATE EDGE " + relation.getSimpleName() + " FROM [" + StringUtils.join(ovSrc, ", ") + "] TO [" + StringUtils.join(ovDstAdd, ", ") + "] ";
-				vCommon.executeNoReturn(graph, cmd);
+				
+				StringBuilder sb2 = new StringBuilder();
+
+				sb2.append("CREATE EDGE ");
+				sb2.append(relation.getSimpleName());
+				sb2.append(" FROM [");
+				sb2.append(StringUtils.join(ovSrc, ","));
+				sb2.append("] TO [");
+				sb2.append(StringUtils.join(ovDstAdd, ","));
+				sb2.append("]");
+				
+				vCommon.executeNoReturn(graph, sb2.toString());
 			}
 		}
 		

@@ -51,10 +51,6 @@ public class Main {
 
 		ItkeepsHttpClient client = new ItkeepsHttpClient(cred);
 
-		for(OrientVertex ov : GraphFactory.command(null, "SELECT FROM V" /*+ EnumAbstractClass.class.getSimpleName()*/)) {
-			System.out.println(ov.getRecord().toJSON());
-		}
-
 		{
 			
 			jUser rootUser =  client.callJsonRead("/api/cred/id/marc", jUser.class);
@@ -65,7 +61,11 @@ public class Main {
 		
 		GroupTest.run(client);
 		PathTest.run(client);
+
+		
 		UserTest.run(client);
+		System.exit(0);
+
 		EntryTest.run(client);
 		AclTest.run(client);
 		

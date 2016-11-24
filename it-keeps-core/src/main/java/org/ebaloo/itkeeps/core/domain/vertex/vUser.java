@@ -176,11 +176,11 @@ public final class vUser extends vBaseChildAcl {
 
 			if(!role.equals(this.getRole())) {
 			
-			if(role.isRoot() && !sAcl.isRoot())
+			if(role.isRoot() && !sAcl.isRoleRoot())
 				throw new RuntimeException(); //TODO
 			
-			if(role.isAdmin() && !sAcl.isAdminDeleguat())
-				throw new RuntimeException(); // TODO
+			if(role.isAdmin() && !sAcl.isAdminDeleguat() && !sAcl.isRoleRoot())
+				throw new RuntimeException(role.toString() + " / " + sAcl.toString()); // TODO
 		
 			this.setRole(role);
 			}
@@ -223,7 +223,7 @@ public final class vUser extends vBaseChildAcl {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(null, requesteurGuid, null);
 		
-		if(sAcl.isGuest() || sAcl.isUser())
+		if(!sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
 			throw new RuntimeException("Error : user is GUEST or USER "); //TODO
 
 		// TODO Check Security
@@ -237,11 +237,11 @@ public final class vUser extends vBaseChildAcl {
 	public <T extends jBase> T update(T j, Guid requesteurGuid) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(this.getGraph(), requesteurGuid, this);
-		
-		if(sAcl.isGuest())
+
+		if(sAcl.isRoleGuest())
 			throw new RuntimeException("Error : user is GUEST"); //TODO
 		
-		if(sAcl.isUser() && !this.getGuid().equals(requesteurGuid))
+		if(!this.getGuid().equals(requesteurGuid) && !sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
 			throw new RuntimeException("TODO"); //TODO
 
 		

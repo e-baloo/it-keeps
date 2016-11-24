@@ -4,6 +4,7 @@ package org.ebaloo.itkeeps.core.domain.vertex;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.ebaloo.itkeeps.Guid;
@@ -274,8 +275,8 @@ public final class vGroup extends vBaseChildAcl {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(this.getGraph(), requesteurGuid, this);
 		
-		if(sAcl.isGuest() || sAcl.isUser())
-			throw new RuntimeException("Error : user is GUEST or USER "); //TODO
+		if(!sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
+			throw new RuntimeException("Error : user is GUEST or USER / " + sAcl.toString()); //TODO
 
 		
 		if(j == null)
@@ -303,7 +304,7 @@ public final class vGroup extends vBaseChildAcl {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(this.getGraph(), requesteurGuid, this);
 		
-		if(sAcl.isGuest() || sAcl.isUser())
+		if(!sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
 			throw new RuntimeException("Error : user is GUEST or USER "); //TODO
 
 		

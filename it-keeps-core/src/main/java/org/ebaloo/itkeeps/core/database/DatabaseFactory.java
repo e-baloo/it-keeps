@@ -17,11 +17,13 @@ import org.ebaloo.itkeeps.api.enumeration.enAclData;
 import org.ebaloo.itkeeps.api.enumeration.enAclOwner;
 import org.ebaloo.itkeeps.api.enumeration.enAclRole;
 import org.ebaloo.itkeeps.api.enumeration.enAuthentication;
+import org.ebaloo.itkeeps.api.model.jBase;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseEdge;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.vertex.vAclAdmin;
 import org.ebaloo.itkeeps.core.domain.vertex.vAclData;
+import org.ebaloo.itkeeps.core.domain.vertex.vAclEnum;
 import org.ebaloo.itkeeps.core.domain.vertex.vAclOwner;
 import org.ebaloo.itkeeps.core.domain.vertex.vAclRole;
 import org.ebaloo.itkeeps.core.domain.vertex.vAuthentication;
@@ -64,8 +66,20 @@ public class DatabaseFactory {
 			
 			
 			GraphFactory.executeNoReturn(null, "ALTER DATABASE DATETIMEFORMAT \"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\"");
+			
+			try {
+				GraphFactory.executeNoReturn(null, "CREATE INDEX " + vBase.class.getSimpleName() + "." + jBase.GUID + " UNIQUE_HASH_INDEX");
+			} catch (Exception e) {
+				logger.warn(e.getMessage());
+			}
+			
+			try {
+				GraphFactory.executeNoReturn(null, "CREATE INDEX " + vAclEnum.class.getSimpleName() + "." + vAclEnum.NAME + " NOTUNIQUE_HASH_INDEX");
+			} catch (Exception e) {
+				logger.warn(e.getMessage());
+			}
 
-
+			
 			vAuthentication.init(enAuthentication.class, vAuthentication.class);
 			logger.info(" - init Authentication done.");
 
