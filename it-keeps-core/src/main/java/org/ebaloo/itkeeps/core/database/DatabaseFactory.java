@@ -15,6 +15,7 @@ import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.enumeration.enAclAdmin;
 import org.ebaloo.itkeeps.api.enumeration.enAclData;
 import org.ebaloo.itkeeps.api.enumeration.enAclOwner;
+import org.ebaloo.itkeeps.api.enumeration.enAclRole;
 import org.ebaloo.itkeeps.api.enumeration.enAuthentication;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseEdge;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
@@ -22,6 +23,7 @@ import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.vertex.vAclAdmin;
 import org.ebaloo.itkeeps.core.domain.vertex.vAclData;
 import org.ebaloo.itkeeps.core.domain.vertex.vAclOwner;
+import org.ebaloo.itkeeps.core.domain.vertex.vAclRole;
 import org.ebaloo.itkeeps.core.domain.vertex.vAuthentication;
 import org.ebaloo.itkeeps.core.domain.vertex.vBase;
 import org.ebaloo.itkeeps.core.tools.ReflectionsFactory;
@@ -75,7 +77,10 @@ public class DatabaseFactory {
 
 			vAclOwner.init(enAclOwner.class, vAclOwner.class);
 			logger.info(" - init AclOwner done.");
-			
+
+			vAclRole.init(enAclRole.class, vAclRole.class);
+			logger.info(" - init AclSecurityRole done.");
+
 
 			
 			

@@ -11,9 +11,9 @@ import javax.ws.rs.core.Response;
 
 import org.ebaloo.itkeeps.api.model.jCredential;
 import org.ebaloo.itkeeps.api.model.jToken;
+import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory;
 import org.ebaloo.itkeeps.core.domain.vertex.vCredential;
 import org.ebaloo.itkeeps.core.domain.vertex.vUser;
-import org.ebaloo.itkeeps.core.tools.SecurityFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

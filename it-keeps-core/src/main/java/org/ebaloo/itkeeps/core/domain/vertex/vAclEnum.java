@@ -1,18 +1,19 @@
 
 package org.ebaloo.itkeeps.core.domain.vertex;
 
-import org.ebaloo.itkeeps.api.enumeration.enAclAdmin;
+import org.ebaloo.itkeeps.api.enumeration.enAbstract;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 
 /**
  * 
  *
  */
+@SuppressWarnings("rawtypes")
 @DatabaseVertrex()
-public final class vAclAdmin extends vAclEnum<enAclAdmin> {
+public abstract class vAclEnum<K extends enAbstract> extends vEnumAbstract<K> {
 
 
-	protected vAclAdmin() {
+	protected vAclEnum() {
 		super();
 	}
 	

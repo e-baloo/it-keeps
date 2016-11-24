@@ -2,6 +2,7 @@ import javax.ws.rs.Path;
 
 import org.ebaloo.itkeeps.ApiPath;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enSecurityRole;
+import org.ebaloo.itkeeps.api.enumeration.enAclRole;
 import org.ebaloo.itkeeps.api.model.jUser;
 import org.ebaloo.itkeeps.httpclient.ItkeepsHttpClient;
 
@@ -32,10 +33,10 @@ public class UserTest {
 		user_2.setName("user_2");
 		admin_1.setName("admin_1");
 
-		gest_1.setRole(enSecurityRole.GUEST);
-		user_1.setRole(enSecurityRole.USER);
-		user_2.setRole(enSecurityRole.USER);
-		admin_1.setRole(enSecurityRole.ADMIN);
+		gest_1.setRole(enAclRole.GUEST);
+		user_1.setRole(enAclRole.USER);
+		user_2.setRole(enAclRole.USER);
+		admin_1.setRole(enAclRole.ADMIN);
 
 		/* Create */
 		

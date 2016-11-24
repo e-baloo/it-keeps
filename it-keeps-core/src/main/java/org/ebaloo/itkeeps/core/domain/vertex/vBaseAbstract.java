@@ -124,7 +124,7 @@ abstract class vBaseAbstract extends vCommon {
 	 * 
 	 */
 
-	protected final static <T extends vBaseAbstract, D extends vBaseAbstract, R extends eRelation> void setEdges(OrientBaseGraph graph, final Class<T> target, T src, D dst, DirectionType direction, Class<R> relation, boolean instanceOf) {
+	protected final static <T extends vBaseAbstract, D extends vBaseAbstract, R extends eRelation> void setEdges(OrientBaseGraph graph, final Class<T> srcTarget, T src, final Class<D> dstTarget, D dst, DirectionType direction, Class<R> relation, boolean instanceOf) {
 
 		List<T> listSrc = new ArrayList<T>();
 		if(src != null)
@@ -134,19 +134,19 @@ abstract class vBaseAbstract extends vCommon {
 		if(dst != null)
 			listDst.add(dst);
 
-		setEdges(graph, target, listSrc, listDst, direction, relation, instanceOf);
+		setEdges(graph, srcTarget, listSrc, dstTarget, listDst, direction, relation, instanceOf);
 	}
 
-	protected final static <T extends vBaseAbstract, D extends vBaseAbstract, R extends eRelation> void setEdges(OrientBaseGraph graph, final Class<T> target, T src, List<D> dst, DirectionType direction, Class<R> relation, boolean instanceOf) {
+	protected final static <T extends vBaseAbstract, D extends vBaseAbstract, R extends eRelation> void setEdges(OrientBaseGraph graph, final Class<T> srcTarget, T src, final Class<D> dstTarget, List<D> dst, DirectionType direction, Class<R> relation, boolean instanceOf) {
 
 		List<T> listSrc = new ArrayList<T>();
 		if(src != null)
 			listSrc.add(src);
 		
-		setEdges(graph, target, listSrc, dst, direction, relation, instanceOf);
+		setEdges(graph, srcTarget, listSrc, dstTarget, dst, direction, relation, instanceOf);
 	}
 	
-	protected final static <T extends vBaseAbstract, D extends vBaseAbstract, R extends eRelation> void setEdges(OrientBaseGraph graph, final Class<T> target, List<T> src, List<D> dst, DirectionType direction, Class<R> relation, boolean instanceOf) {
+	protected final static <T extends vBaseAbstract, D extends vBaseAbstract, R extends eRelation> void setEdges(OrientBaseGraph graph, final Class<T> srcTarget, List<T> src, final Class<D> dstTarget, List<D> dst, DirectionType direction, Class<R> relation, boolean instanceOf) {
 
 		if(direction == null) 
 			throw new RuntimeException("direction is null!");
@@ -181,8 +181,8 @@ abstract class vBaseAbstract extends vCommon {
 
 			cmdSQL = cmdSQL + " AND " + WhereClause.ENABLE_IS_TRUE;  
 
-			if(target != null)
-				cmdSQL = cmdSQL + " AND " + WhereClause.IsntanceOf(target, instanceOf);  
+			if(dstTarget != null)
+				cmdSQL = cmdSQL + " AND " + WhereClause.IsntanceOf(dstTarget, instanceOf);  
 			
 			
 			ovDstBck = command(graph, cmdSQL).stream().map(e -> e.getIdentity().toString()).collect(Collectors.toList());

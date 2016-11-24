@@ -10,9 +10,9 @@ import org.ebaloo.itkeeps.commons.ConfigFactory;
 import org.ebaloo.itkeeps.commons.LogFactory;
 import org.ebaloo.itkeeps.core.database.DatabaseFactory;
 import org.ebaloo.itkeeps.core.database.GraphFactory;
+import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory;
 import org.ebaloo.itkeeps.core.domain.vertex.vEntry;
 import org.ebaloo.itkeeps.core.domain.vertex.vUser;
-import org.ebaloo.itkeeps.core.tools.SecurityFactory;
 import org.ebaloo.itkeeps.httpclient.ItkeepsHttpClient;
 import org.ebaloo.itkeeps.restapp.ApplicationConfig;
 import org.glassfish.grizzly.http.server.HttpServer;
@@ -55,9 +55,11 @@ public class Main {
 		cred.setUserName("Marc DONVAL");
 
 		ItkeepsHttpClient client = new ItkeepsHttpClient(cred);
-		
 
-		
+		for(OrientVertex ov : GraphFactory.command(null, "SELECT FROM V" /*+ EnumAbstractClass.class.getSimpleName()*/)) {
+			System.out.println(ov.getRecord().toJSON());
+		}
+
 		{
 			
 			jUser rootUser =  client.callJsonRead("/api/cred/id/marc", jUser.class);
@@ -66,13 +68,11 @@ public class Main {
 		}
 		
 		
-		/*
 		GroupTest.run(client);
 		PathTest.run(client);
 		UserTest.run(client);
 		EntryTest.run(client);
 		AclTest.run(client);
-		*/
 		
 		
 
@@ -90,12 +90,14 @@ public class Main {
 		System.out.println("---------------------------------------------------------");
 
 		
-		
+		/*
 		vUser user2 = vUser.get(null, vUser.class, new Guid("30142ffb-3a82-465c-a1f0-123d1cbf10fa"), false);
 		vEntry entry4 = vEntry.get(null, vEntry.class, new Guid("fbc909c0-8a69-4adb-b81a-4ff513e99de4"), false);
 		                      
-		
 		SecurityFactory.getSecurityAcl(user2, entry4);
+		SecurityFactory.getSecurityAcl(user2, null);
+
+		 */
 		
 		LogFactory.getMain().info("END");
 		

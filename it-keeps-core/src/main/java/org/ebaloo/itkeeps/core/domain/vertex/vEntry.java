@@ -10,8 +10,7 @@ import org.ebaloo.itkeeps.api.model.jEntry;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
 import org.ebaloo.itkeeps.core.domain.edge.traverse.eInPath;
-import org.ebaloo.itkeeps.core.tools.SecurityFactory;
-import org.ebaloo.itkeeps.core.tools.SecurityFactory.SecurityAcl;
+import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.SecurityAcl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +37,7 @@ public final class vEntry extends vBaseChildAcl {
 	}
 	
 	protected void setPath(vPath path) {
-		setEdges(this.getGraph(), vEntry.class, this, path, DirectionType.PARENT, eInPath.class, false);
+		setEdges(this.getGraph(), vEntry.class, this, vPath.class, path, DirectionType.PARENT, eInPath.class, false);
 	}
 
 	protected void setPath(jBaseLight path) {
@@ -75,7 +74,7 @@ public final class vEntry extends vBaseChildAcl {
 		
 		vUser requesterUser = vUser.get(this.getGraph(), vUser.class, requesteurGuid, false);
 		
-		switch(requesterUser.getRole()) {
+		switch(requesterUser.getRole().value()) {
 			case ROOT:
 				break;
 	
@@ -115,7 +114,7 @@ public final class vEntry extends vBaseChildAcl {
 
 		vUser requesterUser = vUser.get(this.getGraph(), vUser.class, requesteurGuid, false);
 
-		switch(requesterUser.getRole()) {
+		switch(requesterUser.getRole().value()) {
 		case ROOT:
 			break;
 

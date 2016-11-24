@@ -40,8 +40,8 @@ public final class vPath extends vBaseChildAcl {
 		return this.getEdgeByClassesNames(vPath.class, DirectionType.PARENT, false, eInPath.class);
 	}
 	
-	public void setParent(final vPath group) {
-		setEdges(this.getGraph(), vPath.class, this, group, DirectionType.PARENT, eInPath.class, false);
+	public void setParent(final vPath path) {
+		setEdges(this.getGraph(), vPath.class, this, vPath.class, path, DirectionType.PARENT, eInPath.class, false);
 	}
 
 	private void setParent(final jBaseLight path) {
@@ -60,7 +60,7 @@ public final class vPath extends vBaseChildAcl {
 	}
 	
 	protected void setChildsGroup(List<vPath> list) {
-		setEdges(this.getGraph(), vPath.class, this, list, DirectionType.CHILD, eInPath.class, false);
+		setEdges(this.getGraph(), vPath.class, this, vPath.class, list, DirectionType.CHILD, eInPath.class, false);
 	}
 
 	private void setChildsJBL(List<jBaseLight> list) {
@@ -129,7 +129,7 @@ public final class vPath extends vBaseChildAcl {
 
 		vUser requesterUser = vUser.get(this.getGraph(), vUser.class, requesteurGuid, false);
 
-		switch(requesterUser.getRole()) {
+		switch(requesterUser.getRole().value()) {
 
 		case ROOT:
 			// -> Ok is root

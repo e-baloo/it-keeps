@@ -13,13 +13,11 @@ import org.ebaloo.itkeeps.api.enumeration.enAclAdmin;
 import org.ebaloo.itkeeps.api.enumeration.enAclData;
 import org.ebaloo.itkeeps.api.enumeration.enAclOwner;
 import org.ebaloo.itkeeps.api.model.jAcl;
-import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
 import org.ebaloo.itkeeps.core.domain.edge.notraverse.eAclNoTraverse;
 import org.ebaloo.itkeeps.core.domain.edge.traverse.eAclRelation;
 
-import com.orientechnologies.orient.core.metadata.schema.OType;
 import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
 
 
@@ -47,7 +45,7 @@ public final class vAcl extends vBase {
 		if(list == null)
 			list = new ArrayList<vBaseChildAcl>();
 		
-		setEdges(this.getGraph(), vAcl.class, this, list, DirectionType.CHILD, eAclRelation.class, true);
+		setEdges(this.getGraph(), vAcl.class, this, vBaseChildAcl.class, list, DirectionType.CHILD, eAclRelation.class, true);
 	}
 
 	protected void _setChildObjects(List<jBaseLight> list) {
@@ -71,7 +69,7 @@ public final class vAcl extends vBase {
 	}
 	
 	protected void setOwner(final enAclOwner aclOwner) {
-		setEdges(this.getGraph(), vAcl.class, this, vAclOwner.get(getGraph(), vAclOwner.class, aclOwner.name()), DirectionType.PARENT, eAclNoTraverse.class, false);
+		setEdges(this.getGraph(), vAcl.class, this, vAclOwner.class, vAclOwner.get(getGraph(), vAclOwner.class, aclOwner.name()), DirectionType.PARENT, eAclNoTraverse.class, false);
 	}
 	
 	/*
@@ -83,7 +81,7 @@ public final class vAcl extends vBase {
 	}
 	
 	protected void setAclData(final enAclData aclData) {
-		setEdges(this.getGraph(), vAcl.class, this, vAclData.get(getGraph(), vAclData.class, aclData.name()), DirectionType.PARENT, eAclNoTraverse.class, false);
+		setEdges(this.getGraph(), vAcl.class, this, vAclData.class, vAclData.get(getGraph(), vAclData.class, aclData.name()), DirectionType.PARENT, eAclNoTraverse.class, false);
 	}
 
 	
@@ -107,7 +105,8 @@ public final class vAcl extends vBase {
 		setEdges(
 				this.getGraph(),
 				vAcl.class, 
-				this, 
+				this,
+				vAclAdmin.class,
 				list.stream().map(e -> vAclAdmin.get(getGraph(), vAclAdmin.class, e.name())).collect(Collectors.toList()),
 				DirectionType.PARENT,
 				eAclNoTraverse.class,
@@ -177,7 +176,7 @@ public final class vAcl extends vBase {
 
 		vUser requesterUser = vUser.get(this.getGraph(), vUser.class, requesteurGuid, false);
 
-		switch(requesterUser.getRole()) {
+		switch(requesterUser.getRole().value()) {
 
 		case ROOT:
 			break;

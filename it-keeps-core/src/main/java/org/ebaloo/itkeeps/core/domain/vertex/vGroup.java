@@ -13,6 +13,7 @@ import org.ebaloo.itkeeps.api.model.jGroup;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
 import org.ebaloo.itkeeps.core.domain.edge.traverse.eInGroup;
+import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.SecurityAcl;
 
 import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
 
@@ -37,7 +38,7 @@ public final class vGroup extends vBaseChildAcl {
 	}
 	
 	protected void setParent(final vGroup group) {
-		setEdges(this.getGraph(), vGroup.class, this, group, DirectionType.CHILD, eInGroup.class, false);
+		setEdges(this.getGraph(), vGroup.class, this, vGroup.class, group, DirectionType.CHILD, eInGroup.class, false);
 	}
 
 	protected void setParent(final jBaseLight group) {
@@ -54,7 +55,7 @@ public final class vGroup extends vBaseChildAcl {
 	}
 	
 	protected void setChilds(List<vGroup> list) {
-		setEdges(this.getGraph(), vGroup.class, this, list, DirectionType.PARENT, eInGroup.class, false);
+		setEdges(this.getGraph(), vGroup.class, this, vGroup.class, list, DirectionType.PARENT, eInGroup.class, false);
 	}
 
 	protected void setChildsJBL(List<jBaseLight> list) {
@@ -298,8 +299,12 @@ public final class vGroup extends vBaseChildAcl {
 			throw new RuntimeException("TODO"); //TODO
 
 		vUser requesterUser = vUser.get(this.getGraph(), vUser.class, requesteurGuid, false);
+		
+		
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterUser, this);
+		
 
-		switch(requesterUser.getRole()) {
+		switch(requesterUser.getRole().value()) {
 
 		case ROOT:
 			// -> Ok is root
@@ -312,7 +317,7 @@ public final class vGroup extends vBaseChildAcl {
 		case USER:
 		case GUEST:
 		default:
-			throw new RuntimeException("TODO"); //TODO
+			throw new RuntimeException("TODO " + requesterUser.getRole().value()); //TODO
 		}
 		
 

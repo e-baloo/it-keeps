@@ -9,7 +9,7 @@ import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
  *
  */
 @DatabaseVertrex()
-public final class vAclData extends vEnumAbstract<enAclData> {
+public final class vAclData extends vAclEnum<enAclData> {
 
 
 	protected vAclData() {

@@ -80,7 +80,7 @@ public final class vCredential extends vBase {
 	}
 	
 	private void setUser(final vUser user) {
-		setEdges(this.getGraph(), vCredential.class, this, user, DirectionType.PARENT, eCredentialToUser.class, false);
+		setEdges(this.getGraph(), vCredential.class, this, vUser.class, user, DirectionType.PARENT, eCredentialToUser.class, false);
 	}
 
 	public void setUser(jBaseLight user) {

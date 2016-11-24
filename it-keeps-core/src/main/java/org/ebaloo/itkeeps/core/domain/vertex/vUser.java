@@ -9,11 +9,15 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enSecurityRole;
+import org.ebaloo.itkeeps.api.enumeration.enAclAdmin;
+import org.ebaloo.itkeeps.api.enumeration.enAclOwner;
+import org.ebaloo.itkeeps.api.enumeration.enAclRole;
 import org.ebaloo.itkeeps.api.model.jBase;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
+import org.ebaloo.itkeeps.core.domain.edge.notraverse.eAclNoTraverse;
 import org.ebaloo.itkeeps.core.domain.edge.notraverse.eCredentialToUser;
 import org.ebaloo.itkeeps.core.domain.edge.traverse.eInGroup;
 import org.slf4j.Logger;
@@ -44,7 +48,7 @@ public final class vUser extends vBaseChildAcl {
 	}
 	
 	protected void setGroups(List<vGroup> list) {
-		setEdges(this.getGraph(), vUser.class, this, list, DirectionType.PARENT, eInGroup.class, false);
+		setEdges(this.getGraph(), vUser.class, this, vGroup.class, list, DirectionType.PARENT, eInGroup.class, false);
 	}
 
 	private void setGroupsJBL(List<jBaseLight> list) {
@@ -67,7 +71,7 @@ public final class vUser extends vBaseChildAcl {
 	}
 	
 	protected void _setCredentials(List<vCredential> list) {
-		setEdges(this.getGraph(), vUser.class, this, list, DirectionType.CHILD, eCredentialToUser.class, false);
+		setEdges(this.getGraph(), vUser.class, this, vCredential.class, list, DirectionType.CHILD, eCredentialToUser.class, false);
 	}
 
 	protected void setCredentials(List<jBaseLight> list) {
@@ -87,25 +91,53 @@ public final class vUser extends vBaseChildAcl {
 	 * ROLE
 	 */
 	
-	@DatabaseProperty(name = jUser.ROLE)
-	protected enSecurityRole getRole() {
+	
+	enAclRole getRole() {
 		
-		String role = this.getProperty(jUser.ROLE);
+		vAclRole role = this.getEdgeByClassesNames(vAclRole.class, DirectionType.PARENT, false, eAclNoTraverse.class);
 		
-		if(StringUtils.isEmpty(role))
-			role = enSecurityRole.GUEST.name();
+		if(role == null)
+			return enAclRole.GUEST;
 		
-		return enSecurityRole.valueOf(role);
+		return enAclRole.valueOf(role.getName());
 	}
 	
-	protected void setRole(String role) {
-		this.setRole(enSecurityRole.valueOf(role));
+	void setRole(final enAclRole aclRole) {
+		logger.info("ROLE ==== " + aclRole);
+		
+		setEdges(this.getGraph(), vUser.class, this, vAclRole.class, vAclRole.get(getGraph(), vAclRole.class, aclRole.name()), DirectionType.PARENT, eAclNoTraverse.class, false);
 	}
 	
-	public void setRole(enSecurityRole role) {
-		this.setProperty(jUser.ROLE, role.toString());
+	
+	/*
+	 * ACL ADMIN
+	 */
+	
+	protected List<enAclAdmin> getAclAdmin() {
+		return this.getEdgesByClassesNames(
+				vAclAdmin.class, 
+				DirectionType.PARENT, 
+				true, 
+				eAclNoTraverse.class)
+					.stream().map(e -> enAclAdmin.valueOf(e.getName())).collect(Collectors.toList());
 	}
-
+	
+	protected void setAclAdmin(List<enAclAdmin> list) {
+		if(list == null)
+			list = new ArrayList<enAclAdmin>();
+		
+		setEdges(
+				this.getGraph(),
+				vUser.class, 
+				this, 
+				vAclAdmin.class,
+				list.stream().map(e -> vAclAdmin.get(getGraph(), vAclAdmin.class, e.name())).collect(Collectors.toList()),
+				DirectionType.PARENT,
+				eAclNoTraverse.class,
+				false);
+	}
+	
+	
 	
 	// API
 	
@@ -134,7 +166,7 @@ public final class vUser extends vBaseChildAcl {
 		this.commit();
 		this.reload();
 		
-		this.setRole(enSecurityRole.GUEST);
+		this.setRole(enAclRole.GUEST);
 		this.setEnable(Boolean.TRUE);
 	}
 
@@ -143,12 +175,12 @@ public final class vUser extends vBaseChildAcl {
 
 		if(j.isPresentRole()) {
 			
-			enSecurityRole requesterRole = requesterUser.getRole();
-			enSecurityRole jRole = j.getRole();
+			enAclRole requesterRole = requesterUser.getRole();
+			enAclRole jRole = j.getRole();
 			
-			if(requesterRole.isRoot()) {
+			if(requesterRole.value().isRoot()) {
 				this.setRole(jRole);
-			} else if(requesterRole.isAdmin() && !jRole.isRoot()) {
+			} else if(requesterRole.value().isAdmin() && !jRole.value().isRoot()) {
 				this.setRole(jRole);
 			} else {
 				throw new RuntimeException(""); //TODO
@@ -157,11 +189,17 @@ public final class vUser extends vBaseChildAcl {
 
 		// ADMIN & ROOT
 		
-		if(requesterUser.getRole().isAdmin()) {
-			if(j.isPresentInGroup()) {
+		if(requesterUser.getRole().value().isAdmin()) {
+			if(j.isPresentInGroup())
 				this.setGroupsJBL(j.getInGroups());
-			}
+			
+
+			if(j.isPresentAclAdmin())
+				this.setAclAdmin(j.getAclAdmin());
+
 		}
+		
+
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -202,7 +240,7 @@ public final class vUser extends vBaseChildAcl {
 
 		vUser requesterUser = vUser.get(this.getGraph(), vUser.class, requesteurGuid, false);
 
-		switch(requesterUser.getRole()) {
+		switch(requesterUser.getRole().value()) {
 
 		case ROOT:
 			// -> Ok is root
