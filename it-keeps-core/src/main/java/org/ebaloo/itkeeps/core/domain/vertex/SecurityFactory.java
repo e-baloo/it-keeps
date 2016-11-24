@@ -3,6 +3,7 @@ package org.ebaloo.itkeeps.core.domain.vertex;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.enumeration.enAclAdmin;
 import org.ebaloo.itkeeps.api.enumeration.enAclData;
 import org.ebaloo.itkeeps.api.enumeration.enAclOwner;
@@ -12,9 +13,11 @@ import org.ebaloo.itkeeps.api.model.jCredential;
 import org.ebaloo.itkeeps.core.database.GraphFactory;
 import org.ebaloo.itkeeps.core.domain.edge.notraverse.eAclNoTraverse;
 import org.ebaloo.itkeeps.core.domain.edge.traverse.eAclRelation;
+import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.SecurityAcl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 
@@ -198,7 +201,13 @@ public final class SecurityFactory {
 	private static final String E_ACL_NO_TRAVERSE = eAclNoTraverse.class.getSimpleName();
 	private static final String E_ACL_RELATION = eAclRelation.class.getSimpleName();
 	
-	public static SecurityAcl getSecurityAcl(final vUser src, final vBaseChildAcl dst) {
+
+	static SecurityAcl getSecurityAcl(OrientBaseGraph graph, final Guid guidUser, final vBaseChildAcl dst) {
+		return SecurityFactory.getSecurityAcl(vUser.get(graph, vUser.class, guidUser, false), dst);
+	}
+	
+	
+	static SecurityAcl getSecurityAcl(final vUser src, final vBaseChildAcl dst) {
 		
 		long time = System.currentTimeMillis();
 		

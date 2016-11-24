@@ -298,13 +298,10 @@ public final class vGroup extends vBaseChildAcl {
 		if(!(j instanceof jGroup))
 			throw new RuntimeException("TODO"); //TODO
 
-		vUser requesterUser = vUser.get(this.getGraph(), vUser.class, requesteurGuid, false);
-		
-		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterUser, this);
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(this.getGraph(), requesteurGuid, this);
 		
 		if(sAcl.isGuest() || sAcl.isUser())
-			throw new RuntimeException("TODO " + requesterUser.getRole()); //TODO
+			throw new RuntimeException("Error : user is GUEST or USER "); //TODO
 
 		if(sAcl.isUser()) {
 			
