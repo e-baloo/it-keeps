@@ -6,15 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.ebaloo.itkeeps.Guid;
-import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enSecurityRole;
 import org.ebaloo.itkeeps.api.enumeration.enAclAdmin;
-import org.ebaloo.itkeeps.api.enumeration.enAclOwner;
 import org.ebaloo.itkeeps.api.enumeration.enAclRole;
 import org.ebaloo.itkeeps.api.model.jBase;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
-import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
 import org.ebaloo.itkeeps.core.domain.edge.notraverse.eAclNoTraverse;
@@ -31,7 +27,6 @@ import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
 @DatabaseVertrex()
 public final class vUser extends vBaseChildAcl {
 
-	@SuppressWarnings("unused")
 	private static Logger logger = LoggerFactory.getLogger(vUser.class);
 
 	

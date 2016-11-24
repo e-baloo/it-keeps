@@ -2,7 +2,6 @@
 
 import java.net.URI;
 
-import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.enumeration.enAuthentication;
 import org.ebaloo.itkeeps.api.model.jCredential;
 import org.ebaloo.itkeeps.api.model.jUser;
@@ -10,16 +9,12 @@ import org.ebaloo.itkeeps.commons.ConfigFactory;
 import org.ebaloo.itkeeps.commons.LogFactory;
 import org.ebaloo.itkeeps.core.database.DatabaseFactory;
 import org.ebaloo.itkeeps.core.database.GraphFactory;
-import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory;
-import org.ebaloo.itkeeps.core.domain.vertex.vEntry;
-import org.ebaloo.itkeeps.core.domain.vertex.vUser;
 import org.ebaloo.itkeeps.httpclient.ItkeepsHttpClient;
 import org.ebaloo.itkeeps.restapp.ApplicationConfig;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.google.common.collect.Multiset.Entry;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 public class Main {

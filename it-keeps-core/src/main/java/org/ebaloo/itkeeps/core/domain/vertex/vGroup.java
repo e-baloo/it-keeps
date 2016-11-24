@@ -303,23 +303,16 @@ public final class vGroup extends vBaseChildAcl {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterUser, this);
 		
+		if(sAcl.isGuest() || sAcl.isUser())
+			throw new RuntimeException("TODO " + requesterUser.getRole()); //TODO
 
-		switch(requesterUser.getRole().value()) {
-
-		case ROOT:
-			// -> Ok is root
-			break;
-
-		case ADMIN:
-			//TODO Check it requesterUser have the right to update this
-			break;
+		if(sAcl.isUser()) {
 			
-		case USER:
-		case GUEST:
-		default:
-			throw new RuntimeException("TODO " + requesterUser.getRole().value()); //TODO
 		}
-		
+			
+
+			
+			
 
 		super.update(j, requesteurGuid);
 		
