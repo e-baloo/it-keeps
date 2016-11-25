@@ -46,9 +46,7 @@ public class EntryEndpoint {
 		List<jEntry> list = new ArrayList<jEntry>();
 		
 		for(vEntry entry : vEntry.getAllBase(null, vEntry.class, false)) {
-			jEntry juser = new jEntry();
-			entry.read(juser, new Guid(securityContext.getUserPrincipal().getName()));
-	    	list.add(juser);
+	    	list.add(entry.read(requesteurGuid));
 		}
 		
     	return Response.ok().entity(list).build();
@@ -71,7 +69,7 @@ public class EntryEndpoint {
 			throw new RuntimeException("readId(" + id + ") is null" );
 		
 		
-    	return Response.ok().entity(entry.read(new jEntry(), requesteurGuid)).build();
+    	return Response.ok().entity(entry.read(requesteurGuid)).build();
     }
 	
     @PUT // UPDATE
@@ -84,14 +82,11 @@ public class EntryEndpoint {
     	
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
     	
-    	vEntry user = vEntry.get(null, vEntry.class,  juser.getGuid(), false);
+    	vEntry entry = vEntry.get(null, vEntry.class,  juser.getGuid(), false);
 
-    	user.update(juser, requesteurGuid);
+    	entry.update(juser, requesteurGuid);
 
-    	jEntry newjuser = new jEntry();
-    	vEntry.get(null, vEntry.class, juser.getGuid(), false).read(newjuser, requesteurGuid);
-
-    	return Response.ok().entity(newjuser).build();
+    	return Response.ok().entity(entry.read(requesteurGuid)).build();
     }
 
     @POST // CREATE
@@ -104,11 +99,9 @@ public class EntryEndpoint {
 
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
 
-    	vEntry user = new vEntry(juser);
-    	jEntry newjuser = new jEntry();
-    	user.read(newjuser, requesteurGuid);
+    	vEntry entry = new vEntry(juser);
 
-    	return Response.ok().entity(newjuser).build();
+    	return Response.ok().entity(entry.read(requesteurGuid)).build();
     }
     
     

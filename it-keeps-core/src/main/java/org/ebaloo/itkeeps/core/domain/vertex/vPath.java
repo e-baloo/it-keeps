@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.ebaloo.itkeeps.Guid;
-import org.ebaloo.itkeeps.api.model.jBase;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.model.jPath;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
@@ -103,17 +102,11 @@ public final class vPath extends vBaseChildAcl {
 
 	
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T extends jBase> T read(T j, Guid requesteurGuid) {
+	public jPath read(Guid requesteurGuid) {
 		
-		if(j == null)
-			j = (T) new jPath();
-		
-		if(!(j instanceof jPath))
-			throw new RuntimeException("TODO"); //TODO
-		
-		super.read(j, requesteurGuid);
+		jPath j = new jPath();
+
+		this.readBaseStandard(j, requesteurGuid);
 
 		jPath jpath = (jPath) j;
 		
@@ -122,13 +115,13 @@ public final class vPath extends vBaseChildAcl {
 		
 		return j;
 	}
-	
-	@Override
-	public <T extends jBase> T update(T j, Guid requesteurGuid) {
-		
-		if(!(j instanceof jPath))
-			throw new RuntimeException("TODO"); //TODO
 
+	public jPath update(jPath j, Guid requesteurGuid) {
+		return this.update(j, requesteurGuid, false);
+	}
+	
+	private jPath update(jPath j, Guid requesteurGuid, boolean froce) {
+		
 		vUser requesterUser = vUser.get(this.getGraph(), vUser.class, requesteurGuid, false);
 
 		switch(requesterUser.getRole().value()) {
@@ -147,7 +140,7 @@ public final class vPath extends vBaseChildAcl {
 			throw new RuntimeException("TODO"); //TODO
 		}
 		
-		super.update(j, requesteurGuid);
+		this._updateBaseStandard(j, requesteurGuid, froce);
 
 		jPath jpath = (jPath) j;
 		
@@ -157,7 +150,7 @@ public final class vPath extends vBaseChildAcl {
 		if(jpath.isPresentChilds())
 			this.setChildsJBL(jpath.getChilds());
 		
-		return read(null, requesteurGuid);
+		return read(requesteurGuid);
 	}
 }
 

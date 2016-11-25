@@ -359,19 +359,8 @@ public class vBase extends vBaseAbstract {
 		throw new RuntimeException("Base is Abstract");
 	}
     
-	public <T extends jBase> T delete(Guid requesteurGuid) {
 
-		T jr = this.read(null, requesteurGuid);
-		
-		// TODO Check Security
-		
-		// TODO delete
-		
-		return jr;
-	}
-    
-    
-	public <T extends jBase> T read(T j, Guid requesteurGuid) {
+	protected <T extends jBase> void readBase(T j, Guid requesteurGuid) {
 		
 		j.getJObject().setType(this.getType());
 		j.getJObject().setVersion(this.getObjectVersion());
@@ -382,21 +371,21 @@ public class vBase extends vBaseAbstract {
 		j.setName(this.getName());
 		j.setDescription(this.getDescription());
 		
-		return j;
 	}
 	
 	
-	public <T extends jBase> T update(T j, Guid requesteurGuid) {
+	protected <T extends jBase> T _updateBase(T j, Guid requesteurGuid, boolean froce) {
 		
-		if(!j.isPresentJObject())
-			throw new RuntimeException(); //TODO
-
-		if(!j.getJObject().isPresentVersion())
-			throw new RuntimeException(); //TODO
-
-		if(j.getJObject().getVersion() != this.getObjectVersion()) 
-			throw new RuntimeException(); //TODO
-		
+		if(!froce) {
+			if(!j.isPresentJObject())
+				throw new RuntimeException(); //TODO
+	
+			if(!j.getJObject().isPresentVersion())
+				throw new RuntimeException(); //TODO
+	
+			if(j.getJObject().getVersion() != this.getObjectVersion()) 
+				throw new RuntimeException(); //TODO
+		}		
 		
 		this._update(j);
 		

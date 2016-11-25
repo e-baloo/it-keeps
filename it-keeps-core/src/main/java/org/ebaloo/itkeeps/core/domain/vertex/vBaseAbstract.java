@@ -518,6 +518,8 @@ abstract class vBaseAbstract extends vCommon {
 		
 		try {
 			
+			System.out.println(target);
+			
 			T baseAbstract;
 
 			baseAbstract = target.newInstance();

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.ebaloo.itkeeps.Guid;
-import org.ebaloo.itkeeps.api.model.jBase;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.enumeration.enAclAdmin;
 import org.ebaloo.itkeeps.api.enumeration.enAclData;
@@ -76,12 +75,28 @@ public final class vAcl extends vBase {
 	 * ACL DATA
 	 */
 	
-	protected enAclData getAclData() {
-		return enAclData.valueOf(this.getEdgeByClassesNames(vAclData.class, DirectionType.PARENT, false, eAclNoTraverse.class).getName());
+	protected List<enAclData> getAclData() {
+		return this.getEdgesByClassesNames(
+				vAclData.class, 
+				DirectionType.PARENT, 
+				true, 
+				eAclNoTraverse.class)
+					.stream().map(e -> enAclData.valueOf(e.getName())).collect(Collectors.toList());
 	}
 	
-	protected void setAclData(final enAclData aclData) {
-		setEdges(this.getGraph(), vAcl.class, this, vAclData.class, vAclData.get(getGraph(), vAclData.class, aclData.name()), DirectionType.PARENT, eAclNoTraverse.class, false);
+	protected void setAclData(List<enAclData> list) {
+		if(list == null)
+			list = new ArrayList<enAclData>();
+		
+		setEdges(
+				this.getGraph(),
+				vAcl.class, 
+				this,
+				vAclData.class,
+				list.stream().map(e -> vAclData.get(getGraph(), vAclData.class, e.name())).collect(Collectors.toList()),
+				DirectionType.PARENT,
+				eAclNoTraverse.class,
+				false);
 	}
 
 	
@@ -142,38 +157,23 @@ public final class vAcl extends vBase {
 
 	
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T extends jBase> T read(T j, Guid requesteurGuid) {
+	public jAcl read(Guid requesteurGuid) {
 		
-		if(j == null)
-			j = (T) new jAcl();
+		jAcl j = new jAcl();
 		
-		if(!(j instanceof jAcl))
-			throw new RuntimeException("TODO"); //TODO
+		this.readBase(j, requesteurGuid);
 		
 		
-		// TODO SECURITY
-		
-		
-		super.read(j, requesteurGuid);
-
-		jAcl jacl = (jAcl) j;
-		
-		jacl.setChildObjects(this.getChildObjects().stream().map(e -> getJBaseLight(e)).collect(Collectors.toList()));
-		jacl.setAclData(this.getAclData());
-		jacl.setAclAdmin(this.getAclAdmin());
-		jacl.setOwner(this.getOwner());
+		j.setChildObjects(this.getChildObjects().stream().map(e -> getJBaseLight(e)).collect(Collectors.toList()));
+		j.setAclData(this.getAclData());
+		j.setAclAdmin(this.getAclAdmin());
+		j.setOwner(this.getOwner());
 		
 		return j;
 	}
 	
-	@Override
-	public <T extends jBase> T update(T j, Guid requesteurGuid) {
+	public jAcl update(jAcl j, Guid requesteurGuid) {
 		
-		if(!(j instanceof jAcl))
-			throw new RuntimeException("TODO"); //TODO
-
 		vUser requesterUser = vUser.get(this.getGraph(), vUser.class, requesteurGuid, false);
 
 		switch(requesterUser.getRole().value()) {
@@ -191,12 +191,11 @@ public final class vAcl extends vBase {
 			throw new RuntimeException("TODO"); //TODO
 		}
 		
-
-		super.update(j, requesteurGuid);
+		this._updateBase(j, requesteurGuid, false);
 		
 		this._update((jAcl) j);
 
-		return read(null, requesteurGuid);
+		return read(requesteurGuid);
 	}
 	
 	

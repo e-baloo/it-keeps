@@ -46,15 +46,13 @@ public class PathEndpoint {
 		
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
 
-		List<jPath> jl = new ArrayList<jPath>();
+		List<jPath> list = new ArrayList<jPath>();
 		
-		for(vPath ba : vPath.getAllBase(null, vPath.class, false)) {
-			jPath j = new jPath();
-			((vPath) ba).read(j, requesteurGuid);
-	    	jl.add(j);
+		for(vPath path : vPath.getAllBase(null, vPath.class, false)) {
+	    	list.add(path.read(requesteurGuid));
 		}
 		
-    	return Response.ok().entity(jl).build();
+    	return Response.ok().entity(list).build();
 	}
 	
 	
@@ -73,9 +71,8 @@ public class PathEndpoint {
 		if(group == null)
 			throw new RuntimeException("TODO"); // TODO
 		
-		jPath j = group.read(null, requesteurGuid);
 		
-    	return Response.ok().entity(j).build();
+    	return Response.ok().entity(group.read(requesteurGuid)).build();
     }
 	
 
@@ -110,11 +107,9 @@ public class PathEndpoint {
 
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
 
-    	vPath group = new vPath(j);
-    	jPath nj = new jPath();
-    	group.read(nj, requesteurGuid);
+    	vPath path = new vPath(j);
 
-    	return Response.ok().entity(nj).build();
+    	return Response.ok().entity(path.read(requesteurGuid)).build();
     }
     
     

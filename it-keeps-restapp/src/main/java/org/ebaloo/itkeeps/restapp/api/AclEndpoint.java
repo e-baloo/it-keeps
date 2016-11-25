@@ -33,7 +33,6 @@ public class AclEndpoint {
     SecurityContext securityContext;
 
 	
-	@SuppressWarnings("unused")
 	@GET // LIST
     @Produces({MediaType.APPLICATION_JSON})
 	@aApplicationRolesAllowed(enRole.ADMIN)
@@ -45,10 +44,8 @@ public class AclEndpoint {
 
 		List<jAcl> list = new ArrayList<jAcl>();
 		
-		for(vAcl entry : vAcl.getAllBase(null, vAcl.class, false)) {
-			jAcl juser = new jAcl();
-			entry.read(juser, new Guid(securityContext.getUserPrincipal().getName()));
-	    	list.add(juser);
+		for(vAcl acl : vAcl.getAllBase(null, vAcl.class, false)) {
+	    	list.add(acl.read(requesteurGuid));
 		}
 		
     	return Response.ok().entity(list).build();
@@ -65,13 +62,13 @@ public class AclEndpoint {
 
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
 
-    	vAcl entry = vAcl.get(null, vAcl.class, id, false);
+    	vAcl acl = vAcl.get(null, vAcl.class, id, false);
 		
-		if(entry == null)
+		if(acl == null)
 			throw new RuntimeException("readId(" + id + ") is null" );
 		
 		
-    	return Response.ok().entity(entry.read(new jAcl(), requesteurGuid)).build();
+    	return Response.ok().entity(acl.read(requesteurGuid)).build();
     }
 	
     @PUT // UPDATE
@@ -80,18 +77,15 @@ public class AclEndpoint {
 	@aApplicationRolesAllowed(enRole.ADMIN)
     @Timed
     @Path(ApiPath.API_ACL_UPDATE)
-    public Response update(final jAcl juser) {
+    public Response update(final jAcl j) {
     	
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
     	
-    	vAcl user = vAcl.get(null, vAcl.class,  juser.getGuid(), false);
+    	vAcl acl = vAcl.get(null, vAcl.class,  j.getGuid(), false);
 
-    	user.update(juser, requesteurGuid);
+    	acl.update(j, requesteurGuid);
 
-    	jAcl newjuser = new jAcl();
-    	vAcl.get(null, vAcl.class, juser.getGuid(), false).read(newjuser, requesteurGuid);
-
-    	return Response.ok().entity(newjuser).build();
+    	return Response.ok().entity(acl.read(requesteurGuid)).build();
     }
 
     @POST // CREATE
@@ -100,13 +94,13 @@ public class AclEndpoint {
 	@aApplicationRolesAllowed(enRole.ADMIN)
     @Timed
     @Path(ApiPath.API_ACL_CREATE)
-    public Response create(final jAcl jacl) {
+    public Response create(final jAcl j) {
 
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
 
-    	vAcl acl = new vAcl(jacl);
+    	vAcl acl = new vAcl(j);
     	
-    	return Response.ok().entity(acl.read(null, requesteurGuid)).build();
+    	return Response.ok().entity(acl.read(requesteurGuid)).build();
     }
     
     

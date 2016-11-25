@@ -34,7 +34,6 @@ public class UserEndpoint {
     SecurityContext securityContext;
 
 	
-	@SuppressWarnings("unused")
 	@GET // LIST
     @Produces({MediaType.APPLICATION_JSON})
 	@aApplicationRolesAllowed(enRole.ADMIN)
@@ -46,10 +45,8 @@ public class UserEndpoint {
 
 		List<jUser> list = new ArrayList<jUser>();
 		
-		for(vUser ba : vUser.getAllBase(null, vUser.class, false)) {
-			jUser juser = new jUser();
-			((vUser) ba).read(juser, new Guid(securityContext.getUserPrincipal().getName()));
-	    	list.add(juser);
+		for(vUser user : vUser.getAllBase(null, vUser.class, false)) {
+	    	list.add(user.read(requesteurGuid));
 		}
 		
     	return Response.ok().entity(list).build();
@@ -72,7 +69,7 @@ public class UserEndpoint {
 			throw new RuntimeException("readId(" + id + ") is null" );
 		
 		
-    	return Response.ok().entity(user.read(new jUser(), requesteurGuid)).build();
+    	return Response.ok().entity(user.read(requesteurGuid)).build();
     }
 	
     @GET //READ
@@ -90,7 +87,7 @@ public class UserEndpoint {
 			throw new RuntimeException("readId(" + id + ") is null" );
 		
 		
-    	return Response.ok().entity(cred.getUser().read(new jUser(), requesteurGuid)).build();
+    	return Response.ok().entity(cred.getUser().read(requesteurGuid)).build();
     }
 
     @PUT // UPDATE
@@ -107,10 +104,7 @@ public class UserEndpoint {
 
     	user.update(juser, requesteurGuid);
 
-    	jUser newjuser = new jUser();
-    	vUser.get(null, vUser.class, juser.getGuid(), false).read(newjuser, requesteurGuid);
-
-    	return Response.ok().entity(newjuser).build();
+    	return Response.ok().entity(user.read(requesteurGuid)).build();
     }
 
     @POST // CREATE

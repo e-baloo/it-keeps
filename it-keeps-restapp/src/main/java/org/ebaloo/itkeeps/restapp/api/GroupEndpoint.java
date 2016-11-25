@@ -46,13 +46,13 @@ public class GroupEndpoint {
 		
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
 
-		List<jGroup> jl = new ArrayList<jGroup>();
+		List<jGroup> list = new ArrayList<jGroup>();
 		
 		for(vGroup group : vGroup.getAllBase(null, vGroup.class, false)) {
-	    	jl.add(group.read(null, requesteurGuid));
+	    	list.add(group.read(requesteurGuid));
 		}
 		
-    	return Response.ok().entity(jl).build();
+    	return Response.ok().entity(list).build();
 	}
 	
 	
@@ -71,9 +71,7 @@ public class GroupEndpoint {
 		if(group == null)
 			throw new RuntimeException("TODO"); // TODO
 		
-		jGroup j = group.read(null, requesteurGuid);
-		
-    	return Response.ok().entity(j).build();
+    	return Response.ok().entity(group.read(requesteurGuid)).build();
     }
 	
 
@@ -109,10 +107,8 @@ public class GroupEndpoint {
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
 
     	vGroup group = new vGroup(j);
-    	jGroup nj = new jGroup();
-    	group.read(nj, requesteurGuid);
 
-    	return Response.ok().entity(nj).build();
+    	return Response.ok().entity(group.read(requesteurGuid)).build();
     }
     
     

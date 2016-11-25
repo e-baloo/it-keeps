@@ -5,7 +5,6 @@ package org.ebaloo.itkeeps.core.domain.vertex;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.ebaloo.itkeeps.Guid;
-import org.ebaloo.itkeeps.api.model.jBase;
 import org.ebaloo.itkeeps.api.model.jImage;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
@@ -203,22 +202,16 @@ public final class vImage extends vBaseSysteme {
 	
 	// API
 	
-	@Override
-	public <T extends jBase> T read(T j, Guid requesteurGuid) {
-		return read(j, requesteurGuid, true);
+	public jImage read(Guid requesteurGuid) {
+		return read(requesteurGuid, true);
 	}
 
 	
-	@SuppressWarnings("unchecked")
-	public <T extends jBase> T read(T j, Guid requesteurGuid, final boolean full) {
+	public jImage read(Guid requesteurGuid, final boolean full) {
 
-		if(j == null)
-			j = (T) new jImage();
-		
-		if(!(j instanceof jImage))
-			throw new RuntimeException("TODO"); //TODO
+		jImage	j = new jImage();
 
-		super.read(j, requesteurGuid);
+		this.readBase(j, requesteurGuid);
 		
 		jImage jimage = (jImage) j;
 		
@@ -231,13 +224,9 @@ public final class vImage extends vBaseSysteme {
 	}
 
 	
-	@Override
-	public <T extends jBase> T update(T j, Guid requesteurGuid) {
-		
-		if(!(j instanceof jImage))
-			throw new RuntimeException("TODO"); //TODO
+	public jImage update(jImage j, Guid requesteurGuid) {
 
-		super.update(j, requesteurGuid);
+		this._updateBase(j, requesteurGuid, false);
 		
 		jImage jimage = (jImage) j;
 		
@@ -249,7 +238,7 @@ public final class vImage extends vBaseSysteme {
 			this.setBase64(this.getBase64());
 		
 		
-		return read(null, requesteurGuid);
+		return read(requesteurGuid);
 	}
 	
 	

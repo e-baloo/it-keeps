@@ -5,7 +5,7 @@ import org.ebaloo.itkeeps.api.model.jBaseStandard;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 
 @DatabaseVertrex()
-public class vBaseChildAcl extends vBase {
+public class vBaseChildAcl extends vBaseStandard {
 
 	
 	public vBaseChildAcl() {

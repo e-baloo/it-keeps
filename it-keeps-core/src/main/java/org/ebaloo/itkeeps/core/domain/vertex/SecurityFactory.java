@@ -27,7 +27,7 @@ public final class SecurityFactory {
 	public static class SecurityAcl {
 
 		private enAclOwner aclOwner = enAclOwner.FALSE;
-		private enAclData aclData = null;
+		private Set<enAclData> aclData = new HashSet<enAclData>();
 		private Set<enAclAdmin> aclAdmin = new HashSet<enAclAdmin>();
 		private enAclRole aclRole = null;
 
@@ -112,9 +112,50 @@ public final class SecurityFactory {
 			return this.aclAdmin.contains(enAclAdmin.GROUP_CREATE_ROOT);
 		}
 
+		public boolean isAdminUserRead() {
+
+			if (this.isAdminOwner())
+				return true;
+
+			if(this.isRoleRoot())
+				return true;
+			
+			if(this.aclAdmin.contains(enAclAdmin.USER_NO_OPERATION))
+				return false;
+			
+			return this.aclAdmin.contains(enAclAdmin.USER_READ) || this.aclAdmin.contains(enAclAdmin.USER_UPDATE) || this.aclAdmin.contains(enAclAdmin.USER_CREATE);
+		}
 		
+		public boolean isAdminUserUpdate() {
+
+			if (this.isAdminOwner())
+				return true;
+
+			if(this.isRoleRoot())
+				return true;
+			
+			if(this.aclAdmin.contains(enAclAdmin.USER_NO_OPERATION))
+				return false;
+			
+			return this.aclAdmin.contains(enAclAdmin.USER_UPDATE) || this.aclAdmin.contains(enAclAdmin.USER_CREATE);
+		}
+
+		public boolean isAdminUserCreate() {
+
+			if(this.isAdminOwner())
+				return true;
+
+			if(this.isRoleRoot())
+				return true;
+			
+			if(this.aclAdmin.contains(enAclAdmin.USER_NO_OPERATION))
+				return false;
+			
+			return this.aclAdmin.contains(enAclAdmin.USER_CREATE);
+		}
+
 		
-		
+		/*
 		public boolean isDataCreate() {
 			if (this.isAdminOwner())
 				return true;
@@ -142,6 +183,7 @@ public final class SecurityFactory {
 
 			return this.aclData.ordinal() <= enAclData.UPDATE.ordinal();
 		}
+		*/
 
 		public boolean isRoleAdmin() {
 			return aclRole.isAdmin();
@@ -355,16 +397,7 @@ public final class SecurityFactory {
 		}
 
 		if (V_ACL_DATA.equals(type)) {
-			enAclData tAclData = enAclData.valueOf(ov.getProperty(vAclData.NAME));
-
-			if (sAcl.aclData == null) {
-				sAcl.aclData = tAclData;
-				return;
-			}
-
-			if (sAcl.aclData.ordinal() < tAclData.ordinal()) {
-				sAcl.aclData = tAclData;
-			}
+			sAcl.aclData.add(enAclData.valueOf(ov.getProperty(vAclData.NAME)));
 			return;
 		}
 

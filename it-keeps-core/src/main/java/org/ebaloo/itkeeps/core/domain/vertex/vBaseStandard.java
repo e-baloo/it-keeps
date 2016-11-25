@@ -287,21 +287,14 @@ public abstract class vBaseStandard extends vBase {
 
 	// API
 	
-	@Override
-	public <T extends jBase> T read(T j, Guid requesteurGuid) {
+	protected <T extends jBase> void readBaseStandard(jBaseStandard j, Guid requesteurGuid) {
+
+		this.readBase(j, requesteurGuid);
 		
-		if(!(j instanceof jBaseStandard))
-			throw new RuntimeException("TODO"); //TODO
+		j.setIcon(this.getIcon());
+		j.setOtherName(this.getOtherName());
+		j.setExternalRef(this.getExternalRef());
 		
-		super.read(j, requesteurGuid);
-		
-		jBaseStandard jBaseStandard = (jBaseStandard) j;
-		
-		jBaseStandard.setIcon(this.getIcon());
-		jBaseStandard.setOtherName(this.getOtherName());
-		jBaseStandard.setExternalRef(this.getExternalRef());
-		
-		return null;
 	}
 
 	public static <T extends jBase> T create(T j, Guid requesteurGuid) {
@@ -309,17 +302,15 @@ public abstract class vBaseStandard extends vBase {
 	}
 
 	
-	@Override
-	public <T extends jBase> T update(T j, Guid requesteurGuid) {
+	protected void _updateBaseStandard(jBaseStandard j, Guid requesteurGuid, boolean force) {
 		
 		if(!(j instanceof jBaseStandard))
 			throw new RuntimeException("TODO"); //TODO
 
-		super.update(j, requesteurGuid);
+		this._updateBase(j, requesteurGuid, force);
 
 		this._update((jBaseStandard) j);
 		
-		return null;
 	}
 
 

@@ -4,7 +4,6 @@ package org.ebaloo.itkeeps.core.domain.vertex;
 
 
 import org.ebaloo.itkeeps.Guid;
-import org.ebaloo.itkeeps.api.model.jBase;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.model.jEntry;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
@@ -70,76 +69,40 @@ public final class vEntry extends vBaseChildAcl {
 	}
 
 	
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T extends jBase> T read(T j, Guid requesteurGuid) {
+	public jEntry read(Guid requesteurGuid) {
 		
-		vUser requesterUser = vUser.get(this.getGraph(), vUser.class, requesteurGuid, false);
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(new oRID(requesteurGuid), new oRID(this));
 		
-		switch(requesterUser.getRole().value()) {
-			case ROOT:
-				break;
-	
-			case ADMIN:
-			case USER:
-				SecurityAcl sacl = SecurityFactory.getSecurityAcl(new oRID(requesterUser), new oRID(this));
-				if(!sacl.isDataRead())
-					throw new RuntimeException("TODO"); //TODO
-				break;
-	
-			case GUEST:
-			default:
-				throw new RuntimeException("TODO"); //TODO
-		}
+		// TODO Security
+				
+		
+		jEntry j = new jEntry();
 
+		this.readBaseStandard(j, requesteurGuid);
 		
-		if(j == null)
-			j = (T) new jEntry();
-		
-		if(!(j instanceof jEntry))
-			throw new RuntimeException("TODO"); //TODO
-		
-		super.read(j, requesteurGuid);
-
-		jEntry jentry = (jEntry) j;
-
-		jentry.setPath(getJBaseLight(this.getPath()));
+		j.setPath(getJBaseLight(this.getPath()));
 		
 		return j;
 	}
 	
-	@Override
-	public <T extends jBase> T update(T obj, Guid requesteurGuid) {
-		
-		if(!(obj instanceof jEntry))
-			throw new RuntimeException("TODO"); //TODO
-
-		vUser requesterUser = vUser.get(this.getGraph(), vUser.class, requesteurGuid, false);
-
-		switch(requesterUser.getRole().value()) {
-		case ROOT:
-			break;
-
-		case ADMIN:
-		case USER:
-			SecurityAcl sacl = SecurityFactory.getSecurityAcl(new oRID(requesterUser), new oRID(this));
-			if(!sacl.isDataUpdate())
-				throw new RuntimeException("TODO"); //TODO
-			break;
-
-		case GUEST:
-		default:
-			throw new RuntimeException("TODO"); //TODO
+	public jEntry update(jEntry j, Guid requesteurGuid) {
+		return this.update(j, requesteurGuid, false);
 	}
-		
-		super.update(obj, requesteurGuid);
 
-		jEntry jentry = (jEntry) obj;
-		
-		if(jentry.isPresentPath())
-			this.setPath(jentry.getPath());
+	private jEntry update(jEntry j, Guid requesteurGuid, boolean force) {
 
-		return read(null, requesteurGuid);
+		
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(new oRID(requesteurGuid), new oRID(this));
+
+		//TODO Security
+
+		this._updateBaseStandard(j, requesteurGuid, force);
+
+		
+		if(j.isPresentPath())
+			this.setPath(j.getPath());
+
+		return read(requesteurGuid);
 	}
 
 

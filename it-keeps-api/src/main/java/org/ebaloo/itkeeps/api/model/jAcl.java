@@ -13,31 +13,58 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class jAcl extends jBase {
 
-	// ACL_DATA_TYPE
+	// ACL_DATA
 	
 	public static final String ACL_DATA = "aclData";
 	
 	@JsonIgnore
-	private enAclData aclData = enAclData.DENY;
+	private List<enAclData> aclData = new ArrayList<enAclData>();
 	
 	@JsonIgnore
-	public final enAclData getAclData() {
+	public final List<enAclData> getAclData() {
 		return this.aclData;
 	}
 
 	@JsonIgnore
-	public final void setAclData(enAclData value) {
-		aclData = value == null ? enAclData.DENY : value;
+	public final void setAclData(List<enAclData> value) {
+		aclData = value == null ? new ArrayList<enAclData>() : value;
 	}
 
 	@JsonProperty(ACL_DATA)
-	public final String _getAclData() {
-		return this.aclData.name();
+	public final List<String> _getAclData() {
+		return this.aclData.stream().map(e -> e.name()).collect(Collectors.toList());
 	}
 	
 	@JsonProperty(ACL_DATA)
-	public final void _setAclData(String value) {
-		this.aclData = value == null ? enAclData.DENY : enAclData.valueOf(value);
+	public final void _setAclData(List<String> value) {
+		this.aclData = value == null ? new ArrayList<enAclData>() : value.stream().map(e -> enAclData.valueOf(e)).collect(Collectors.toList());
+	}
+	
+	// ACL_ADMIN_TYPE
+	
+	public static final String ACL_ADMIN = "aclAdmin";
+	
+	@JsonIgnore
+	private List<enAclAdmin> aclAdmin = new ArrayList<enAclAdmin>();
+	
+	@JsonIgnore
+	public final List<enAclAdmin> getAclAdmin() {
+		return this.aclAdmin;
+	}
+
+	@JsonIgnore
+	public final void setAclAdmin(List<enAclAdmin> value) {
+		aclAdmin = (value == null ? new ArrayList<enAclAdmin>() : value);
+	}
+
+	@JsonProperty(ACL_ADMIN)
+	public final List<String> _getAclAdmin() {
+		return this.aclAdmin.stream().map(e -> e.name()).collect(Collectors.toList());
+	}
+	
+	@JsonProperty(ACL_ADMIN)
+	public final void _setAclAdmin(List<String> value) {
+		aclAdmin = value == null ? new ArrayList<enAclAdmin>() : value.stream().map(e -> enAclAdmin.valueOf(e)).collect(Collectors.toList());
 	}
 	
 	// OWNER
@@ -67,33 +94,7 @@ public class jAcl extends jBase {
 		this.owner = value == null ? enAclOwner.FALSE : value == Boolean.FALSE ? enAclOwner.FALSE : enAclOwner.TRUE;
 	}
 
-	// ACL_ADMIN_TYPE
-	
-	public static final String ACL_ADMIN = "aclAdmin";
-	
-	@JsonIgnore
-	private List<enAclAdmin> aclAdmin = new ArrayList<enAclAdmin>();
-	
-	@JsonIgnore
-	public final List<enAclAdmin> getAclAdmin() {
-		return this.aclAdmin;
-	}
 
-	@JsonIgnore
-	public final void setAclAdmin(List<enAclAdmin> value) {
-		aclAdmin = (value == null ? new ArrayList<enAclAdmin>() : value);
-	}
-
-	@JsonProperty(ACL_ADMIN)
-	public final List<String> _getAclAdmin() {
-		return this.aclAdmin.stream().map(e -> e.name()).collect(Collectors.toList());
-	}
-	
-	@JsonProperty(ACL_ADMIN)
-	public final void _setAclAdmin(List<String> value) {
-		aclAdmin = value == null ? new ArrayList<enAclAdmin>() : value.stream().map(e -> enAclAdmin.valueOf(e)).collect(Collectors.toList());
-	}
-	
 	// CHILD_OBJECTS
 
 	public final static String CHILD_OBJECTS = "childObjects";

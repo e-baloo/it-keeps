@@ -39,10 +39,14 @@ public class ImageEndpoint {
     @Path(ApiPath.API_IMAGE_GET_ALL)
     public Response readAll() {
 
+    	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
+
+    	
+    	
 		List<jImage> list = new ArrayList<jImage>();
 		
 		for(vImage image : vImage.getAllBase(null, vImage.class, false)) {
-		    	list.add(image.read(null, new Guid(securityContext.getUserPrincipal().getName()), false));
+		    	list.add(image.read(requesteurGuid, false));
 		}
 		
     	return Response.ok().entity(list).build();
@@ -57,10 +61,12 @@ public class ImageEndpoint {
     @aApplicationRolesAllowed(enRole.ADMIN)
     @Timed
     public Response getImage(@PathParam("id") String id) {
+
+    	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
+
+    	vImage image = vImage.getImage(id);
     	
-		jImage jimage = vImage.getImage(id).read(new jImage(), new Guid(securityContext.getUserPrincipal().getName()), false);
-    	
-    	return Response.ok().entity(jimage).build();
+    	return Response.ok().entity(image.read(requesteurGuid, true)).build();
     }
 	
     

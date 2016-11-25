@@ -23,7 +23,8 @@ public class AclTest {
 		
 		acl1.setName("acl1");
 		acl1.setOwner(enAclOwner.TRUE);
-		acl1.setAclData(enAclData.CREATE);
+		acl1.getAclData().add(enAclData.PATH_CREATE);
+		acl1.getAclData().add(enAclData.ENTRY_CREATE);
 		acl1.getAclAdmin().add(enAclAdmin.DELEGATE);
 		acl1.getChildObjects().add(GroupTest.jg_n1.getJBaseLight());
 		acl1.getChildObjects().add(PathTest.jg_r2_n1.getJBaseLight());

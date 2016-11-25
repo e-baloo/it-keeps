@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.enumeration.enAclAdmin;
 import org.ebaloo.itkeeps.api.enumeration.enAclRole;
-import org.ebaloo.itkeeps.api.model.jBase;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
@@ -29,12 +28,12 @@ import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
 @DatabaseVertrex()
 public final class vUser extends vBaseChildAcl {
 
+	@SuppressWarnings("unused")
 	private static Logger logger = LoggerFactory.getLogger(vUser.class);
 
 	
-	protected vUser() {
-		super();
-	}
+	vUser() { };
+	
 	
 	/*
 	 * IN_GROUP
@@ -79,7 +78,6 @@ public final class vUser extends vBaseChildAcl {
 		
 		// Optimization
 		OrientBaseGraph graph = this.getGraph();
-		
 		this._setCredentials(list.stream().map(e -> get(graph, vCredential.class, e, false)).collect(Collectors.toList())); 
 	}
 	
@@ -100,8 +98,6 @@ public final class vUser extends vBaseChildAcl {
 	}
 	
 	void setRole(final enAclRole aclRole) {
-		logger.info("ROLE ==== " + aclRole);
-		
 		setEdges(this.getGraph(), vUser.class, this, vAclRole.class, vAclRole.get(getGraph(), vAclRole.class, aclRole.name()), DirectionType.PARENT, eAclNoTraverse.class, false);
 	}
 	
@@ -138,36 +134,17 @@ public final class vUser extends vBaseChildAcl {
 	
 	// API
 	
-	/*
-	private vUser(final jUser j, Guid requesteurGuid) {
-		this(j, true, requesteurGuid);
-	}
-	*/
-	
 	private vUser(final jUser j, final SecurityAcl sAcl) {
 		super(j, false);
-		
-		/*
-		this.commit();
-		this.reload();
-		*/
 		
 		this._update(j, sAcl);
 
 		this.setEnable(Boolean.TRUE);
 	}
 
-	
-	
-	
-	
 	vUser(jUser j) {
 		super(j, false);
 		
-		/*
-		this.commit();
-		this.reload();
-		*/
 		this.setRole(enAclRole.GUEST);
 		this.setEnable(Boolean.TRUE);
 	}
@@ -179,7 +156,6 @@ public final class vUser extends vBaseChildAcl {
 		this._updateInGroup(j, sAcl);
 		
 		this._updateAclAdmin(j, sAcl);
-
 	}
 	
 	private void _updateAclAdmin(final jUser j, SecurityAcl sAcl) {
@@ -194,7 +170,6 @@ public final class vUser extends vBaseChildAcl {
 			return;
 	
 		this.setAclAdmin(j.getAclAdmin());
-
 	}
 	
 	private void _updateRole(final jUser j, SecurityAcl sAcl) {
@@ -217,7 +192,6 @@ public final class vUser extends vBaseChildAcl {
 			return;
 	
 		this.setRole(role);
-
 	}
 	
 	private void _updateInGroup(final jUser j, SecurityAcl sAcl) {
@@ -239,43 +213,50 @@ public final class vUser extends vBaseChildAcl {
 		this.setGroupsJBL(list);
 	}
 	
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T extends jBase> T read(T j, Guid requesteurGuid) {
-		
-		if(j == null)
-			j = (T) new jUser();
-		
-		if(!(j instanceof jUser))
-			throw new RuntimeException("TODO"); //TODO
-		
-		super.read(j, requesteurGuid);
+	public jUser read(Guid requesteurGuid) {
 
-		jUser juser = (jUser) j;
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(new oRID(requesteurGuid), new oRID(this));
+
+		if(sAcl.isRoleGuest())
+			throw new RuntimeException("Error : requester is GUEST");
 		
-		juser.setRole(this.getRole());
+		if((!sAcl.isRoleRoot() || !sAcl.isRoleAdmin()) && !this.getGuid().equals(requesteurGuid) )
+			throw new RuntimeException("Error : requester is USER and read user is not himself");
+
 		
-		juser.setInGroups(this.getGroups().stream().map(e -> getJBaseLight(e)).collect(Collectors.toList()));
+		
+		
+		jUser j = new jUser();
+		
+		this.readBaseStandard(j, requesteurGuid);
+
+		j.setRole(this.getRole());
+		
+		j.setInGroups(this.getGroups().stream().map(e -> getJBaseLight(e)).collect(Collectors.toList()));
 		
 		return j;
 	}
 	
-	public static <T extends jBase> T create(T j, Guid requesteurGuid) {
+	public static jUser create(jUser j, Guid requesteurGuid) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(new oRID(requesteurGuid), null);
 		
 		if(!sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
 			throw new RuntimeException("Error : user is GUEST or USER "); //TODO
 
-		// TODO Check Security
+		if(!sAcl.isAdminUserCreate())
+			throw new RuntimeException("Error : user have not right to create 'User'" ); //TODO
 		
-		vUser user = new vUser((jUser) j, sAcl);
+		vUser user = new vUser(j, sAcl);
 		
-		return user.read(null, requesteurGuid);
+		return user.read(requesteurGuid);
 	}
-	
-	@Override
-	public <T extends jBase> T update(T j, Guid requesteurGuid) {
+
+	public jUser update(jUser j, Guid requesteurGuid) {
+		return this.update(j, requesteurGuid, false);
+	}
+
+	private jUser update(jUser j, Guid requesteurGuid, boolean force) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(new oRID(requesteurGuid), new oRID(this));
 
@@ -286,17 +267,11 @@ public final class vUser extends vBaseChildAcl {
 			throw new RuntimeException("TODO"); //TODO
 
 		
-		if(!(j instanceof jUser))
-			throw new RuntimeException("TODO"); //TODO
+		this._updateBaseStandard(j, requesteurGuid, force);
 
-
-		super.update(j, requesteurGuid);
-
-
+		this._update(j, sAcl);
 		
-		this._update((jUser) j, sAcl);
-		
-		return read(null, requesteurGuid);
+		return read(requesteurGuid);
 		
 	}
 

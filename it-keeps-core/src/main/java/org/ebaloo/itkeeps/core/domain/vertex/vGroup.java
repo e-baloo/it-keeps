@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.ebaloo.itkeeps.Guid;
-import org.ebaloo.itkeeps.api.model.jBase;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.model.jGroup;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
@@ -271,9 +270,7 @@ public final class vGroup extends vBaseChildAcl {
 
 	
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T extends jBase> T read(T j, Guid requesteurGuid) {
+	public jGroup read(Guid requesteurGuid) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(new oRID(requesteurGuid), new oRID(this));
 		
@@ -281,18 +278,13 @@ public final class vGroup extends vBaseChildAcl {
 			throw new RuntimeException("Error : user is GUEST or USER / " + sAcl.toString()); //TODO
 
 		
-		if(j == null)
-			j = (T) new jGroup();
-		
-		if(!(j instanceof jGroup))
-			throw new RuntimeException("TODO"); //TODO
+		jGroup j = new jGroup();
 		
 		
 		// TODO SECURITY
 		
+		this.readBaseStandard(j, requesteurGuid);
 		
-		super.read(j, requesteurGuid);
-
 		jGroup jgroup = (jGroup) j;
 		
 		jgroup.setParent(getJBaseLight(this.getParent()));
@@ -300,9 +292,12 @@ public final class vGroup extends vBaseChildAcl {
 		
 		return j;
 	}
+
+	public jGroup update(jGroup j, Guid requesteurGuid) {
+		return this.update(j, requesteurGuid, false);
+	}
 	
-	@Override
-	public <T extends jBase> T update(T j, Guid requesteurGuid) {
+	public jGroup update(jGroup j, Guid requesteurGuid, boolean force) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(new oRID(requesteurGuid), new oRID(this));
 		
@@ -315,11 +310,8 @@ public final class vGroup extends vBaseChildAcl {
 
 			
 
+		this._updateBaseStandard(j, requesteurGuid, force);
 			
-			
-
-		super.update(j, requesteurGuid);
-		
 		jGroup jgroup = (jGroup) j;
 		
 		if(jgroup.isPresentParent())
@@ -329,7 +321,7 @@ public final class vGroup extends vBaseChildAcl {
 			this.setChildsJBL(jgroup.getChilds());
 	
 		
-		return read(null, requesteurGuid);
+		return read(requesteurGuid);
 		
 	}
 }
