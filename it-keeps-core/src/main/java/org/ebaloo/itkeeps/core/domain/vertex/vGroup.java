@@ -257,8 +257,10 @@ public final class vGroup extends vBaseChildAcl {
 	protected vGroup(final jGroup j, final boolean f) {
 		super(j, false);
 		
+		/*
 		this.commit();
 		this.reload();
+		*/
 		
 		this.setParent(j.getParent());
 		this.setChildsJBL(j.getChilds());

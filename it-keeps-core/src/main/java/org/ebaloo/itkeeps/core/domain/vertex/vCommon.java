@@ -176,7 +176,6 @@ abstract class vCommon {
 		return this.getOrientVertex().getRecord().toJSON();
 	}
 
-	@Deprecated
 	protected final void reload() {
 
 		String cmdSQL = "SELECT FROM " + this.getORID();

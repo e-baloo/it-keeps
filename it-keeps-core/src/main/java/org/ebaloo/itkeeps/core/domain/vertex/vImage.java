@@ -41,9 +41,11 @@ public final class vImage extends vBaseSysteme {
 	protected vImage(final jImage j, final boolean f) {
 		super(j, false);
 		
+		/*
 		this.commit();
 		this.reload();
-
+		*/
+		
 		if(StringUtils.isEmpty(j.getImageType()) || StringUtils.isEmpty(j.getBase64()))
 				throw new RuntimeException("TODO"); //
 				

@@ -147,9 +147,11 @@ public final class vUser extends vBaseChildAcl {
 	private vUser(final jUser j, final SecurityAcl sAcl) {
 		super(j, false);
 		
+		/*
 		this.commit();
 		this.reload();
-
+		*/
+		
 		this._update(j, sAcl);
 
 		this.setEnable(Boolean.TRUE);
@@ -162,9 +164,10 @@ public final class vUser extends vBaseChildAcl {
 	vUser(jUser j) {
 		super(j, false);
 		
+		/*
 		this.commit();
 		this.reload();
-		
+		*/
 		this.setRole(enAclRole.GUEST);
 		this.setEnable(Boolean.TRUE);
 	}

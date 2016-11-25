@@ -572,7 +572,6 @@ abstract class vBaseAbstract extends vCommon {
 	
 	@DatabaseProperty(name = jBase.ENABLE, type = OType.BOOLEAN)
 	protected void setEnable(Boolean enable) {
-		
 		this.reload();
 		this.setProperty(jBase.ENABLE, enable);
 	}
