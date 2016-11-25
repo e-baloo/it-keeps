@@ -37,7 +37,7 @@ public final class vAcl extends vBase {
 	 */
 	
 	protected List<vBaseChildAcl> getChildObjects() {
-		return this.getEdgesByClassesNames(vBaseChildAcl.class, DirectionType.CHILD, true, eAclRelation.class);
+		return this.getEdges(vBaseChildAcl.class, DirectionType.CHILD, true, eAclRelation.class);
 	}
 	
 	protected void setChildObjects(List<vBaseChildAcl> list) {
@@ -64,7 +64,7 @@ public final class vAcl extends vBase {
 	 */
 	
 	protected enAclOwner getOwner() {
-		return enAclOwner.valueOf(this.getEdgeByClassesNames(vAclOwner.class, DirectionType.PARENT, false, eAclNoTraverse.class).getName());
+		return enAclOwner.valueOf(this.getEdge(vAclOwner.class, DirectionType.PARENT, false, eAclNoTraverse.class).getName());
 	}
 	
 	protected void setOwner(final enAclOwner aclOwner) {
@@ -76,7 +76,7 @@ public final class vAcl extends vBase {
 	 */
 	
 	protected List<enAclData> getAclData() {
-		return this.getEdgesByClassesNames(
+		return this.getEdges(
 				vAclData.class, 
 				DirectionType.PARENT, 
 				true, 
@@ -105,7 +105,7 @@ public final class vAcl extends vBase {
 	 */
 	
 	protected List<enAclAdmin> getAclAdmin() {
-		return this.getEdgesByClassesNames(
+		return this.getEdges(
 				vAclAdmin.class, 
 				DirectionType.PARENT, 
 				true, 
@@ -161,7 +161,7 @@ public final class vAcl extends vBase {
 		
 		jAcl j = new jAcl();
 		
-		this.readBase(j, requesteurGuid);
+		this.readBase(j);
 		
 		
 		j.setChildObjects(this.getChildObjects().stream().map(e -> getJBaseLight(e)).collect(Collectors.toList()));
@@ -191,7 +191,7 @@ public final class vAcl extends vBase {
 			throw new RuntimeException("TODO"); //TODO
 		}
 		
-		this._updateBase(j, requesteurGuid, false);
+		this.updateBase(j);
 		
 		this._update((jAcl) j);
 

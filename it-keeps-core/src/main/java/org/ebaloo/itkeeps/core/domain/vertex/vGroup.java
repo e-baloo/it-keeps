@@ -34,7 +34,7 @@ public final class vGroup extends vBaseChildAcl {
 	 */
 	
 	protected vGroup getParent() {
-		return this.getEdgeByClassesNames(vGroup.class, DirectionType.CHILD, false, eInGroup.class);
+		return this.getEdge(vGroup.class, DirectionType.CHILD, false, eInGroup.class);
 	}
 	
 	protected void setParent(final vGroup group) {
@@ -51,7 +51,7 @@ public final class vGroup extends vBaseChildAcl {
 	 */
 	
 	protected List<vGroup> getChilds() {
-		return this.getEdgesByClassesNames(vGroup.class, DirectionType.PARENT, false, eInGroup.class);
+		return this.getEdges(vGroup.class, DirectionType.PARENT, false, eInGroup.class);
 	}
 	
 	protected void setChilds(List<vGroup> list) {
@@ -283,7 +283,7 @@ public final class vGroup extends vBaseChildAcl {
 		
 		// TODO SECURITY
 		
-		this.readBaseStandard(j, requesteurGuid);
+		this.readBaseStandard(j);
 		
 		jGroup jgroup = (jGroup) j;
 		
@@ -309,8 +309,9 @@ public final class vGroup extends vBaseChildAcl {
 			throw new RuntimeException("TODO"); //TODO
 
 			
+		this.checkVersion(j);
 
-		this._updateBaseStandard(j, requesteurGuid, force);
+		this.updateBaseStandard(j);
 			
 		jGroup jgroup = (jGroup) j;
 		

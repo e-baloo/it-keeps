@@ -42,24 +42,13 @@ public abstract class vBaseStandard extends vBase {
 	protected vBaseStandard(final jBaseStandard j, final boolean f) {
 		super(j, f);
 		
-		this._update(j);
+		this.updateBaseStandard(j);
 
 		if(f)
 			this.setEnable(Boolean.TRUE);
 	}
 
 	
-	private void _update(jBaseStandard j) {
-		if(j.isPresentExternalRef())
-			this.setExternalRef(j.getExternalRef());
-		
-		if(j.isPresentOtherName())
-			this.setOtherName(j.getOtherName());
-
-		if(j.isPresentIcon()) {
-			this.setIcon(j.getIcon());
-		}
-	}
 	
 	
 	/*
@@ -287,9 +276,9 @@ public abstract class vBaseStandard extends vBase {
 
 	// API
 	
-	protected <T extends jBase> void readBaseStandard(jBaseStandard j, Guid requesteurGuid) {
+	protected <T extends jBaseStandard> void readBaseStandard(jBaseStandard j) {
 
-		this.readBase(j, requesteurGuid);
+		this.readBase(j);
 		
 		j.setIcon(this.getIcon());
 		j.setOtherName(this.getOtherName());
@@ -297,19 +286,26 @@ public abstract class vBaseStandard extends vBase {
 		
 	}
 
+	/*
 	public static <T extends jBase> T create(T j, Guid requesteurGuid) {
 		throw new RuntimeException("Base is Abstract");
 	}
+	*/
 
 	
-	protected void _updateBaseStandard(jBaseStandard j, Guid requesteurGuid, boolean force) {
+	protected void updateBaseStandard(jBaseStandard j) {
 		
-		if(!(j instanceof jBaseStandard))
-			throw new RuntimeException("TODO"); //TODO
+		this.updateBase(j);
 
-		this._updateBase(j, requesteurGuid, force);
+		if(j.isPresentExternalRef())
+			this.setExternalRef(j.getExternalRef());
+		
+		if(j.isPresentOtherName())
+			this.setOtherName(j.getOtherName());
 
-		this._update((jBaseStandard) j);
+		if(j.isPresentIcon()) {
+			this.setIcon(j.getIcon());
+		}
 		
 	}
 

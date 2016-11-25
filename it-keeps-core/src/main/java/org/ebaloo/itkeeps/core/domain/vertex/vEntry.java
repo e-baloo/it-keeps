@@ -33,7 +33,7 @@ public final class vEntry extends vBaseChildAcl {
 	 */
 	
 	public vPath getPath() {
-		return this.getEdgeByClassesNames(vPath.class, DirectionType.PARENT, false, eInPath.class);
+		return this.getEdge(vPath.class, DirectionType.PARENT, false, eInPath.class);
 	}
 	
 	protected void setPath(vPath path) {
@@ -78,7 +78,7 @@ public final class vEntry extends vBaseChildAcl {
 		
 		jEntry j = new jEntry();
 
-		this.readBaseStandard(j, requesteurGuid);
+		this.readBaseStandard(j);
 		
 		j.setPath(getJBaseLight(this.getPath()));
 		
@@ -96,7 +96,9 @@ public final class vEntry extends vBaseChildAcl {
 
 		//TODO Security
 
-		this._updateBaseStandard(j, requesteurGuid, force);
+		this.checkVersion(j);
+		
+		this.updateBaseStandard(j);
 
 		
 		if(j.isPresentPath())

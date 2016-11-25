@@ -36,7 +36,7 @@ public final class vPath extends vBaseChildAcl {
 	 */
 	
 	public vPath getParent() {
-		return this.getEdgeByClassesNames(vPath.class, DirectionType.PARENT, false, eInPath.class);
+		return this.getEdge(vPath.class, DirectionType.PARENT, false, eInPath.class);
 	}
 	
 	public void setParent(final vPath path) {
@@ -55,7 +55,7 @@ public final class vPath extends vBaseChildAcl {
 	 */
 	
 	protected List<vPath> getChildsGroup() {
-		return this.getEdgesByClassesNames(vPath.class, DirectionType.CHILD, false, eInPath.class);
+		return this.getEdges(vPath.class, DirectionType.CHILD, false, eInPath.class);
 	}
 	
 	protected void setChildsGroup(List<vPath> list) {
@@ -106,7 +106,7 @@ public final class vPath extends vBaseChildAcl {
 		
 		jPath j = new jPath();
 
-		this.readBaseStandard(j, requesteurGuid);
+		this.readBaseStandard(j);
 
 		jPath jpath = (jPath) j;
 		
@@ -117,10 +117,6 @@ public final class vPath extends vBaseChildAcl {
 	}
 
 	public jPath update(jPath j, Guid requesteurGuid) {
-		return this.update(j, requesteurGuid, false);
-	}
-	
-	private jPath update(jPath j, Guid requesteurGuid, boolean froce) {
 		
 		vUser requesterUser = vUser.get(this.getGraph(), vUser.class, requesteurGuid, false);
 
@@ -140,7 +136,9 @@ public final class vPath extends vBaseChildAcl {
 			throw new RuntimeException("TODO"); //TODO
 		}
 		
-		this._updateBaseStandard(j, requesteurGuid, froce);
+		this.checkVersion(j);
+		
+		this.updateBaseStandard(j);
 
 		jPath jpath = (jPath) j;
 		

@@ -46,9 +46,9 @@ public class UserTest {
 		admin_1 = client.callJsonCreat(ApiPath.API_USER_CREATE, admin_1, jUser.class);
 		
 		
-		user_1.getInGroups().add(GroupTest.jg_n1.getJBaseLight());
-		user_2.getInGroups().add(GroupTest.jg_n2.getJBaseLight());
-		admin_1.getInGroups().add(GroupTest.jg_r.getJBaseLight());
+		user_1.getGroups().add(GroupTest.jg_n1.getJBaseLight());
+		user_2.getGroups().add(GroupTest.jg_n2.getJBaseLight());
+		admin_1.getGroups().add(GroupTest.jg_r.getJBaseLight());
 
 		user_1 = client.callJsonUpdate(ApiPath.API_USER_UPDATE, user_1, jUser.class);
 		user_2 = client.callJsonUpdate(ApiPath.API_USER_UPDATE, user_2, jUser.class);

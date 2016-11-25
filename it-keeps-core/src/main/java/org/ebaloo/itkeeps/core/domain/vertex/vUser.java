@@ -15,6 +15,7 @@ import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
 import org.ebaloo.itkeeps.core.domain.edge.notraverse.eAclNoTraverse;
 import org.ebaloo.itkeeps.core.domain.edge.notraverse.eCredentialToUser;
 import org.ebaloo.itkeeps.core.domain.edge.traverse.eInGroup;
+import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.ExceptionPermission;
 import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.SecurityAcl;
 import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.oRID;
 import org.slf4j.Logger;
@@ -32,53 +33,71 @@ public final class vUser extends vBaseChildAcl {
 	private static Logger logger = LoggerFactory.getLogger(vUser.class);
 
 	
-	vUser() { };
+	vUser() { ; };
 	
 	
 	/*
-	 * IN_GROUP
+	 * GROUPS
 	 */
 	
-	protected List<vGroup> getGroups() {
-		return this.getEdgesByClassesNames(vGroup.class, DirectionType.PARENT, false, eInGroup.class);
+	private List<jBaseLight> getGroups() {
+		return this.getEdges(
+				vGroup.class,
+				DirectionType.PARENT,
+				false,
+				eInGroup.class).stream().map(e -> getJBaseLight(e)).collect(Collectors.toList());
+		
 	}
 	
-	protected void setGroups(List<vGroup> list) {
-		setEdges(this.getGraph(), vUser.class, this, vGroup.class, list, DirectionType.PARENT, eInGroup.class, false);
-	}
-
-	private void setGroupsJBL(List<jBaseLight> list) {
+	private void setGroups(List<jBaseLight> list) {
 		
-		if(list == null) {
+		if(list == null)
 			list = new ArrayList<jBaseLight>();
-		}
 		
 		// Optimization
 		OrientBaseGraph graph = this.getGraph();
-		setGroups(list.stream().map(e -> get(graph, vGroup.class, e, false)).collect(Collectors.toList())); 
+		
+		setEdges(
+				graph,
+				vUser.class, 
+				this, 
+				vGroup.class, 
+				list.stream().map(e -> get(graph, vGroup.class, e, false)).collect(Collectors.toList()), 
+				DirectionType.PARENT, 
+				eInGroup.class, false);
+
 	}
 
 	/*
 	 * CREDENTIALS
 	 */
 	
-	protected List<vCredential> getCredentials() {
-		return this.getEdgesByClassesNames(vCredential.class, DirectionType.CHILD, false, eCredentialToUser.class);
+	private List<jBaseLight> getCredentials() {
+		return this.getEdges(
+				vCredential.class,
+				DirectionType.CHILD,
+				false,
+				eCredentialToUser.class).stream().map(e -> getJBaseLight(e)).collect(Collectors.toList());
 	}
 	
-	protected void _setCredentials(List<vCredential> list) {
-		setEdges(this.getGraph(), vUser.class, this, vCredential.class, list, DirectionType.CHILD, eCredentialToUser.class, false);
-	}
 
-	protected void setCredentials(List<jBaseLight> list) {
+	private void setCredentials(List<jBaseLight> list) {
 		
-		if(list == null) {
+		if(list == null)
 			list = new ArrayList<jBaseLight>();
-		}
 		
 		// Optimization
 		OrientBaseGraph graph = this.getGraph();
-		this._setCredentials(list.stream().map(e -> get(graph, vCredential.class, e, false)).collect(Collectors.toList())); 
+		
+		setEdges(
+				graph,
+				vUser.class,
+				this,
+				vCredential.class,
+				list.stream().map(e -> get(graph, vCredential.class, e, false)).collect(Collectors.toList()),
+				DirectionType.CHILD,
+				eCredentialToUser.class,
+				false);
 	}
 	
 	
@@ -86,19 +105,26 @@ public final class vUser extends vBaseChildAcl {
 	 * ROLE
 	 */
 	
-	
 	enAclRole getRole() {
-		
-		vAclRole role = this.getEdgeByClassesNames(vAclRole.class, DirectionType.PARENT, false, eAclNoTraverse.class);
-		
+		vAclRole role = this.getEdge(vAclRole.class, DirectionType.PARENT, false, eAclNoTraverse.class);
 		if(role == null)
 			return enAclRole.GUEST;
-		
 		return enAclRole.valueOf(role.getName());
 	}
 	
 	void setRole(final enAclRole aclRole) {
-		setEdges(this.getGraph(), vUser.class, this, vAclRole.class, vAclRole.get(getGraph(), vAclRole.class, aclRole.name()), DirectionType.PARENT, eAclNoTraverse.class, false);
+		setEdges(
+				this.getGraph(),
+				vUser.class,
+				this,
+				vAclRole.class,
+				vAclRole.get(
+						this.getGraph(),
+						vAclRole.class,
+						aclRole.name()),
+				DirectionType.PARENT,
+				eAclNoTraverse.class,
+				false);
 	}
 	
 	
@@ -107,7 +133,7 @@ public final class vUser extends vBaseChildAcl {
 	 */
 	
 	protected List<enAclAdmin> getAclAdmin() {
-		return this.getEdgesByClassesNames(
+		return this.getEdges(
 				vAclAdmin.class, 
 				DirectionType.PARENT, 
 				true, 
@@ -136,142 +162,118 @@ public final class vUser extends vBaseChildAcl {
 	
 	private vUser(final jUser j, final SecurityAcl sAcl) {
 		super(j, false);
-		
-		this._update(j, sAcl);
-
+		this.updateImplem(j, sAcl);
 		this.setEnable(Boolean.TRUE);
 	}
 
 	vUser(jUser j) {
 		super(j, false);
-		
 		this.setRole(enAclRole.GUEST);
 		this.setEnable(Boolean.TRUE);
 	}
 
-	private void _update(final jUser j, SecurityAcl sAcl) {
-
-		this._updateRole(j, sAcl);
-		
-		this._updateInGroup(j, sAcl);
-		
-		this._updateAclAdmin(j, sAcl);
+	private void updateImplem(final jUser j, SecurityAcl sAcl) {
+		this.updateRole(j, sAcl);
+		this.updateGroups(j, sAcl);
+		this.updateAclAdmin(j, sAcl);
+		this.updateCredentials(j, sAcl);
 	}
 	
-	private void _updateAclAdmin(final jUser j, SecurityAcl sAcl) {
+	private void updateCredentials(jUser j, SecurityAcl sAcl) {
+		if(!j.isPresentCredentials())
+			return;
+		this.setCredentials(j.getCredentials());
+	}
 
+	private void updateAclAdmin(final jUser j, SecurityAcl sAcl) {
 		if(!j.isPresentAclAdmin())
 			return;
-		
 		if(!sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
-			return;
-
-		if(!sAcl.isAdminDeleguat())
-			return;
-	
+			throw ExceptionPermission.IS_GUEST_OR_USER;
+		if(!sAcl.isAdminDelegate())
+			throw ExceptionPermission.NOT_DELEGATE;
 		this.setAclAdmin(j.getAclAdmin());
 	}
 	
-	private void _updateRole(final jUser j, SecurityAcl sAcl) {
-
+	private void updateRole(final jUser j, SecurityAcl sAcl) {
 		if(!j.isPresentRole())
 			return;
-		
-		if(!sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
-			return;
-		
 		enAclRole role = j.getRole();
-
 		if(role.equals(this.getRole()))
 			return;
-		
+		if(!sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
+			throw ExceptionPermission.IS_GUEST_OR_USER;
 		if(role.isRoot() && !sAcl.isRoleRoot())
-			return;
-		
-		if(!sAcl.isAdminDeleguat())
-			return;
-	
+			throw ExceptionPermission.NOT_ROOT;
+		if(!sAcl.isAdminDelegate())
+			throw ExceptionPermission.NOT_DELEGATE;
 		this.setRole(role);
 	}
 	
-	private void _updateInGroup(final jUser j, SecurityAcl sAcl) {
-
-		if(!j.isPresentInGroup())
+	private void updateGroups(final jUser j, SecurityAcl sAcl) {
+		if(!j.isPresentGroups())
 			return;
-			
 		if(!sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
 			return;
-
-		List<jBaseLight> list = new ArrayList<jBaseLight>();
-		
-		for(jBaseLight jbl : j.getInGroups()) {
-			if(SecurityFactory.getSecurityAcl(new oRID(this), new oRID(jbl)).isAdminUpdateGroup()) {
-				list.add(jbl);
-			}
-		}
-		
-		this.setGroupsJBL(list);
+		if(!sAcl.isAdminUpdateGroup())
+			throw ExceptionPermission.NOT_GROUP_UPDATE;
+		this.setGroups(j.getGroups());
 	}
 	
-	public jUser read(Guid requesteurGuid) {
+	public static final jUser read(Guid requesteurGuid, Guid user) {
 
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(new oRID(requesteurGuid), new oRID(this));
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(new oRID(requesteurGuid), new oRID(user));
 
 		if(sAcl.isRoleGuest())
-			throw new RuntimeException("Error : requester is GUEST");
-		
-		if((!sAcl.isRoleRoot() || !sAcl.isRoleAdmin()) && !this.getGuid().equals(requesteurGuid) )
-			throw new RuntimeException("Error : requester is USER and read user is not himself");
+			throw ExceptionPermission.IS_GUEST;
+		if((!sAcl.isRoleRoot() || !sAcl.isRoleAdmin()) && !user.equals(requesteurGuid) )
+			throw ExceptionPermission.IS_USER;
 
-		
-		
-		
+		return vUser.get(null, vUser.class, user, false).read();
+	}
+	
+	private jUser read() {
 		jUser j = new jUser();
-		
-		this.readBaseStandard(j, requesteurGuid);
-
+		this.readBaseStandard(j);
 		j.setRole(this.getRole());
-		
-		j.setInGroups(this.getGroups().stream().map(e -> getJBaseLight(e)).collect(Collectors.toList()));
+		j.setGroups(this.getGroups());
+		j.setCredentials(this.getCredentials());
 		
 		return j;
 	}
 	
-	public static jUser create(jUser j, Guid requesteurGuid) {
+	public static final jUser create(Guid requesteurGuid, jUser j) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(new oRID(requesteurGuid), null);
 		
 		if(!sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
-			throw new RuntimeException("Error : user is GUEST or USER "); //TODO
+			throw ExceptionPermission.IS_GUEST_OR_USER;
 
 		if(!sAcl.isAdminUserCreate())
-			throw new RuntimeException("Error : user have not right to create 'User'" ); //TODO
+			throw ExceptionPermission.NOT_USER_CREATE ;
 		
 		vUser user = new vUser(j, sAcl);
 		
-		return user.read(requesteurGuid);
+		return user.read();
 	}
 
-	public jUser update(jUser j, Guid requesteurGuid) {
-		return this.update(j, requesteurGuid, false);
-	}
-
-	private jUser update(jUser j, Guid requesteurGuid, boolean force) {
+	public static final jUser update(Guid requesteurGuid, jUser j) {
 		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(new oRID(requesteurGuid), new oRID(this));
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(new oRID(requesteurGuid), new oRID(j.getGuid()));
 
 		if(sAcl.isRoleGuest())
-			throw new RuntimeException("Error : user is GUEST"); //TODO
+			throw ExceptionPermission.IS_GUEST;
 		
-		if(!this.getGuid().equals(requesteurGuid) && !sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
-			throw new RuntimeException("TODO"); //TODO
+		if(!j.getGuid().equals(requesteurGuid) && !sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
+			throw ExceptionPermission.IS_USER;
 
+		vUser user = vUser.get(null, vUser.class, j.getGuid(), false);
 		
-		this._updateBaseStandard(j, requesteurGuid, force);
-
-		this._update(j, sAcl);
+		user.checkVersion(j);
+		user.updateBaseStandard(j);
+		user.updateImplem(j, sAcl);
 		
-		return read(requesteurGuid);
+		return user.read();
 		
 	}
 

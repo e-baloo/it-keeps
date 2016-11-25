@@ -349,18 +349,19 @@ public class vBase extends vBaseAbstract {
 		this.setProperty(jBase.GUID, GuidFactory.getGuid());
 		this.setProperty(jBase.CREATION_DATE, DateTime.now(DateTimeZone.UTC).toDate());
 
-		this._update(j);
+		this.updateBase(j);
 		
 		if(f)
 			this.setEnable(Boolean.TRUE);
 	}
 	
+	/*
 	public static <T extends jBase> T create(T j, Guid requesteurGuid) {
 		throw new RuntimeException("Base is Abstract");
 	}
-    
+    */
 
-	protected <T extends jBase> void readBase(T j, Guid requesteurGuid) {
+	protected <T extends jBase> void readBase(T j) {
 		
 		j.getJObject().setType(this.getType());
 		j.getJObject().setVersion(this.getObjectVersion());
@@ -374,32 +375,26 @@ public class vBase extends vBaseAbstract {
 	}
 	
 	
-	protected <T extends jBase> T _updateBase(T j, Guid requesteurGuid, boolean froce) {
-		
-		if(!froce) {
-			if(!j.isPresentJObject())
-				throw new RuntimeException(); //TODO
+	protected final <T extends jBase> void checkVersion(T j) {
+		if(!j.isPresentJObject())
+			throw new RuntimeException("json not have '" + jBase._OBJECT + "' seting");
+		if(!j.getJObject().isPresentVersion())
+			throw new RuntimeException("json not have '" + jBase._OBJECT + "." + jBase.VERSION + "' seting");
+		if(j.getJObject().getVersion() != this.getObjectVersion()) 
+			throw new RuntimeException("json '" + jBase._OBJECT + "." + jBase.VERSION + " is differtne with 'this'");
+	}
 	
-			if(!j.getJObject().isPresentVersion())
-				throw new RuntimeException(); //TODO
 	
-			if(j.getJObject().getVersion() != this.getObjectVersion()) 
-				throw new RuntimeException(); //TODO
-		}		
+	protected <T extends jBase> void updateBase(T j) {
 		
-		this._update(j);
-		
-		return null;
+		if(j.isPresentName())
+			this.setName(j.getName());
 
+		if(j.isPresentDescription())
+			this.setDescription(j.getDescription());
+		
 	}
 
-	private void _update(jBase jbase) {
-		if(jbase.isPresentName())
-			this.setName(jbase.getName());
-
-		if(jbase.isPresentDescription())
-			this.setDescription(jbase.getDescription());
-	}
 	
 	
 	

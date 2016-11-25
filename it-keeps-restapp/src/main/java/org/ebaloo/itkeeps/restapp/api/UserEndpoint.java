@@ -46,7 +46,7 @@ public class UserEndpoint {
 		List<jUser> list = new ArrayList<jUser>();
 		
 		for(vUser user : vUser.getAllBase(null, vUser.class, false)) {
-	    	list.add(user.read(requesteurGuid));
+	    	list.add(vUser.read(requesteurGuid, user.getGuid()));
 		}
 		
     	return Response.ok().entity(list).build();
@@ -59,17 +59,18 @@ public class UserEndpoint {
     @Path(ApiPath.API_USER_GET_ID + "{id}")
 	@aApplicationRolesAllowed(enRole.USER)
     @Timed
-    public Response readId(@PathParam("id") String id) {
+    public Response readId(@PathParam("id") Guid id) {
 
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
 
+    	/*
 		vUser user = vUser.get(null, vUser.class, id, false);
 		
 		if(user == null)
 			throw new RuntimeException("readId(" + id + ") is null" );
+		*/
 		
-		
-    	return Response.ok().entity(user.read(requesteurGuid)).build();
+    	return Response.ok().entity(vUser.read(requesteurGuid, id)).build();
     }
 	
     @GET //READ
@@ -87,7 +88,7 @@ public class UserEndpoint {
 			throw new RuntimeException("readId(" + id + ") is null" );
 		
 		
-    	return Response.ok().entity(cred.getUser().read(requesteurGuid)).build();
+    	return Response.ok().entity(vUser.read(requesteurGuid, cred.getUser().getGuid())).build();
     }
 
     @PUT // UPDATE
@@ -102,9 +103,9 @@ public class UserEndpoint {
     	
     	vUser user = vUser.get(null, vUser.class,  juser.getGuid(), false);
 
-    	user.update(juser, requesteurGuid);
+    	user.update(requesteurGuid, juser);
 
-    	return Response.ok().entity(user.read(requesteurGuid)).build();
+    	return Response.ok().entity(vUser.read(requesteurGuid, juser.getGuid())).build();
     }
 
     @POST // CREATE
@@ -117,7 +118,7 @@ public class UserEndpoint {
 
     	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
 
-    	jUser user = vUser.create(juser, requesteurGuid);
+    	jUser user = vUser.create(requesteurGuid, juser);
 
     	return Response.ok().entity(user).build();
     }

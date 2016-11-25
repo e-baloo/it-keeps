@@ -76,7 +76,7 @@ public final class vCredential extends vBase {
 	 */
 	
 	public vUser getUser() {
-		return this.getEdgeByClassesNames(vUser.class, DirectionType.PARENT, false, eCredentialToUser.class);
+		return this.getEdge(vUser.class, DirectionType.PARENT, false, eCredentialToUser.class);
 	}
 	
 	private void setUser(final vUser user) {

@@ -341,9 +341,9 @@ abstract class vBaseAbstract extends vCommon {
 
 
 	
-	protected final <T extends vBaseAbstract, R extends eRelation> T getEdgeByClassesNames(final Class<T> target, final DirectionType direction, final boolean isInstanceof, Class<R> relation) {
+	protected final <T extends vBaseAbstract, R extends eRelation> T getEdge(final Class<T> target, final DirectionType direction, final boolean isInstanceof, Class<R> relation) {
 		
-		List<T> list = getEdgesByClassesNames(target, direction, isInstanceof, relation);
+		List<T> list = getEdges(target, direction, isInstanceof, relation);
 		
 		if(list.size() < 1) {
 			return null;
@@ -385,7 +385,7 @@ abstract class vBaseAbstract extends vCommon {
 	 */
 	
 	
-	protected final <T extends vBaseAbstract, R extends eRelation> List<T> getEdgesByClassesNames(final Class<T> target, final DirectionType relationship, final boolean isInstanceof, Class<R> relation) {
+	protected final <T extends vBaseAbstract, R extends eRelation> List<T> getEdges(final Class<T> target, final DirectionType relationship, final boolean isInstanceof, Class<R> relation) {
 
 			if((target == null) || (relationship == null)) {
 				throw new RuntimeException("TODO"); //TODO

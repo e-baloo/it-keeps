@@ -60,8 +60,10 @@ public class jBase extends jObject {
 		
 	}
 
+	
+	public static final String _OBJECT = "_object";
 
-	@JsonProperty("_object")
+	@JsonProperty(_OBJECT)
 	private JObject jobject = null;
 	
 	public JObject getJObject() {

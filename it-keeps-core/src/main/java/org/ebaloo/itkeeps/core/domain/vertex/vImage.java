@@ -211,7 +211,7 @@ public final class vImage extends vBaseSysteme {
 
 		jImage	j = new jImage();
 
-		this.readBase(j, requesteurGuid);
+		this.readBase(j);
 		
 		jImage jimage = (jImage) j;
 		
@@ -226,7 +226,7 @@ public final class vImage extends vBaseSysteme {
 	
 	public jImage update(jImage j, Guid requesteurGuid) {
 
-		this._updateBase(j, requesteurGuid, false);
+		this.updateBase(j);
 		
 		jImage jimage = (jImage) j;
 		

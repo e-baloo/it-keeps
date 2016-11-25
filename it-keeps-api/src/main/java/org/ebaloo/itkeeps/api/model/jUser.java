@@ -16,7 +16,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class jUser extends jBaseStandard{
 
 	public static final String ROLE = "role";
-	public static final String IN_GROUPS = "inGroups";
+	public static final String GROUPS = "groups";
+	public static final String CREDENTIALS = "credentials";
 	
 	public jUser() {
 		super();
@@ -58,24 +59,44 @@ public class jUser extends jBaseStandard{
 	}
 
 
-	// IN_GROUPS
+	// GROUPS
 	
 	@JsonIgnore
-	private Optional<List<jBaseLight>> inGroups = Optional.empty();
+	private Optional<List<jBaseLight>> groups = Optional.empty();
 	
-	@JsonProperty(IN_GROUPS)
-	public final List<jBaseLight> getInGroups() {
-		return this.inGroups.orElse(new ArrayList<jBaseLight>());
+	@JsonProperty(GROUPS)
+	public final List<jBaseLight> getGroups() {
+		return this.groups.orElse(new ArrayList<jBaseLight>());
 	}
 
-	@JsonProperty(IN_GROUPS)
-	public final void setInGroups(List<jBaseLight> value) {
-		inGroups = Optional.ofNullable(value);
+	@JsonProperty(GROUPS)
+	public final void setGroups(List<jBaseLight> value) {
+		groups = Optional.ofNullable(value);
 	}
 
 	@JsonIgnore
-	public final boolean isPresentInGroup() {
-		return this.inGroups.isPresent();
+	public final boolean isPresentGroups() {
+		return this.groups.isPresent();
+	}
+	
+	// GROUPS
+	
+	@JsonIgnore
+	private Optional<List<jBaseLight>> credentials = Optional.empty();
+	
+	@JsonProperty(CREDENTIALS)
+	public final List<jBaseLight> getCredentials() {
+		return this.credentials.orElse(new ArrayList<jBaseLight>());
+	}
+
+	@JsonProperty(CREDENTIALS)
+	public final void setCredentials(List<jBaseLight> value) {
+		credentials = Optional.ofNullable(value);
+	}
+
+	@JsonIgnore
+	public final boolean isPresentCredentials() {
+		return this.credentials.isPresent();
 	}
 	
 	// ACL_ADMIN_TYPE
