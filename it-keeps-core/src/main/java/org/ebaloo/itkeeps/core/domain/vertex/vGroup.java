@@ -4,7 +4,6 @@ package org.ebaloo.itkeeps.core.domain.vertex;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.ebaloo.itkeeps.Guid;
@@ -15,6 +14,7 @@ import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
 import org.ebaloo.itkeeps.core.domain.edge.traverse.eInGroup;
 import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.SecurityAcl;
+import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.oRID;
 
 import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
 
@@ -273,7 +273,7 @@ public final class vGroup extends vBaseChildAcl {
 	@Override
 	public <T extends jBase> T read(T j, Guid requesteurGuid) {
 		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(this.getGraph(), requesteurGuid, this);
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(new oRID(requesteurGuid), new oRID(this));
 		
 		if(!sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
 			throw new RuntimeException("Error : user is GUEST or USER / " + sAcl.toString()); //TODO
@@ -302,7 +302,7 @@ public final class vGroup extends vBaseChildAcl {
 	@Override
 	public <T extends jBase> T update(T j, Guid requesteurGuid) {
 		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(this.getGraph(), requesteurGuid, this);
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(new oRID(requesteurGuid), new oRID(this));
 		
 		if(!sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
 			throw new RuntimeException("Error : user is GUEST or USER "); //TODO

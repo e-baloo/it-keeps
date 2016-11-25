@@ -68,9 +68,11 @@ abstract class vCommon {
 		}
 	}
 
-	public final void commit() {
+	protected final void commit() {
 
-		this.getOrientVertex().getGraph().commit();
+		logger.warn("commit() @Deprecated"); 
+		
+		//this.getOrientVertex().getGraph().commit();
 
 	}
 
@@ -174,6 +176,7 @@ abstract class vCommon {
 		return this.getOrientVertex().getRecord().toJSON();
 	}
 
+	@Deprecated
 	protected final void reload() {
 
 		String cmdSQL = "SELECT FROM " + this.getORID();

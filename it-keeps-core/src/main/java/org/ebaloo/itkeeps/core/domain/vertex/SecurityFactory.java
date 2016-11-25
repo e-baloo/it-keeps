@@ -1,6 +1,7 @@
 package org.ebaloo.itkeeps.core.domain.vertex;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.ebaloo.itkeeps.Guid;
@@ -9,14 +10,16 @@ import org.ebaloo.itkeeps.api.enumeration.enAclData;
 import org.ebaloo.itkeeps.api.enumeration.enAclOwner;
 import org.ebaloo.itkeeps.api.enumeration.enAclRole;
 import org.ebaloo.itkeeps.api.enumeration.enAuthentication;
+import org.ebaloo.itkeeps.api.model.jBase;
+import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.model.jCredential;
 import org.ebaloo.itkeeps.core.database.GraphFactory;
 import org.ebaloo.itkeeps.core.domain.edge.notraverse.eAclNoTraverse;
 import org.ebaloo.itkeeps.core.domain.edge.traverse.eAclRelation;
+import org.ebaloo.itkeeps.core.domain.vertex.vBaseAbstract.WhereClause;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 public final class SecurityFactory {
@@ -50,7 +53,11 @@ public final class SecurityFactory {
 		
 		
 		public boolean isAdminDeleguat() {
+			
 			if (this.isAdminOwner())
+				return true;
+			
+			if(this.isRoleRoot())
 				return true;
 
 			if (this.aclAdmin.contains(enAclAdmin.NO_DELEGATE))
@@ -64,12 +71,50 @@ public final class SecurityFactory {
 		}
 
 		public boolean isAdminUpdateGroup() {
-			if (this.isAdminOwner() || this.isRoleRoot())
+			
+			if (this.isAdminOwner())
 				return true;
 
+			if(this.isRoleRoot())
+				return true;
+			
+			if(this.aclAdmin.contains(enAclAdmin.GROUP_NO_OPERATION))
+				return false;
+			
+			return this.aclAdmin.contains(enAclAdmin.GROUP_UPDATE);
+		}
+
+		public boolean isAdminCreatGroup() {
+			
+			if (this.isAdminOwner())
+				return true;
+
+			if(this.isRoleRoot())
+				return true;
+			
+			if(this.aclAdmin.contains(enAclAdmin.GROUP_NO_OPERATION))
+				return false;
+			
 			return this.aclAdmin.contains(enAclAdmin.GROUP_CREATE);
 		}
 
+		public boolean isAdminCreatRootGroup() {
+			
+			if (this.isAdminOwner())
+				return true;
+
+			if(this.isRoleRoot())
+				return true;
+			
+			if(this.aclAdmin.contains(enAclAdmin.GROUP_NO_OPERATION))
+				return false;
+			
+			return this.aclAdmin.contains(enAclAdmin.GROUP_CREATE_ROOT);
+		}
+
+		
+		
+		
 		public boolean isDataCreate() {
 			if (this.isAdminOwner())
 				return true;
@@ -165,10 +210,79 @@ public final class SecurityFactory {
 		}
 
 	}
+	
+	/*
 	static SecurityAcl getSecurityAcl(OrientBaseGraph graph, final Guid guidUser, final vBaseChildAcl dst) {
 		return SecurityFactory.getSecurityAcl(vUser.get(graph, vUser.class, guidUser, false), dst);
 	}
+	
 	static SecurityAcl getSecurityAcl(final vUser src, final vBaseChildAcl dst) {
+		return getSecurityAcl(src.getOrientVertex(), dst.getOrientVertex());
+	}
+
+	static SecurityAcl getSecurityAcl(final vUser src, final jBaseLight dst) {
+		
+		String cmd = "SELECT FROM vBase WHERE " + WhereClause.ENABLE_IS_TRUE + " AND guid = ?";
+		
+		
+		return getSecurityAcl(src.getOrientVertex(), dst.getOrientVertex());
+	}
+
+
+	
+	static OrientVertex getOrientVertex(jBaseLight jbl) {
+		
+		String cmdSQL = "SELECT FROM " + V_BASE_CLASS + " WHERE " + WhereClause.ENABLE_IS_TRUE + " AND (" + jBase.GUID + "= ?)";
+		
+		List<T> list = vBaseAbstract.commandBaseAbstract(graph, target, cmdSQL, guid.toString());
+		
+	}
+
+*/
+	
+	
+	public static class oRID {
+		
+		public final static oRID NULL = new oRID(); 
+		
+		private final String orid;
+		
+		private oRID() {
+			this.orid = null;
+		}
+		
+		oRID(vBaseChildAcl base) {
+			this.orid = base.getORID();
+		}
+		
+		oRID(jBaseLight jbl) {
+			this(jbl.getGuid());
+		}
+		
+		private static final String REQUEST_GUID = "SELECT FROM " + vBase.class.getSimpleName() + " WHERE " + WhereClause.ENABLE_IS_TRUE + " AND (" + jBase.GUID + "= ?)";
+
+		
+		oRID(Guid guid) {
+			List<OrientVertex> list = GraphFactory.command(null, REQUEST_GUID, guid.toString());
+
+			if(list.size() != 1)
+				throw new RuntimeException(String.format("guid is zero or not unique (%s): %s", list.size() ,guid));
+
+			this.orid = list.get(0).getIdentity().toString();
+		}
+
+		oRID(OrientVertex ov) {
+			this.orid = ov.getIdentity().toString();
+		}
+
+		String get() {
+			return this.orid;
+		}
+		
+	}
+	
+		
+	static SecurityAcl getSecurityAcl(final oRID src, final oRID dst) {
 
 		long time = System.currentTimeMillis();
 
@@ -177,7 +291,7 @@ public final class SecurityFactory {
 
 		SecurityAcl sAcl = new SecurityAcl();
 
-		String userOrid = src.getORID();
+		String userOrid = src.get();
 
 		{
 			StringBuilder request = new StringBuilder();
@@ -195,7 +309,7 @@ public final class SecurityFactory {
 			}
 		}
 
-		if (dst != null) {
+		if ((dst != null) && (dst.get() != null)) {
 			StringBuilder request = new StringBuilder();
 
 			request.append("SELECT FROM (TRAVERSE OUT('");
@@ -207,7 +321,7 @@ public final class SecurityFactory {
 			request.append(") WHERE @rid IN (SELECT @rid FROM (TRAVERSE OUT('");
 			request.append(E_ACL_RELATION);
 			request.append("') FROM ");
-			request.append(dst.getORID());
+			request.append(dst.get());
 			request.append(") WHERE @class = '");
 			request.append(vAcl.class.getSimpleName());
 			request.append("') AND @class = '");

@@ -61,11 +61,7 @@ public class Main {
 		
 		GroupTest.run(client);
 		PathTest.run(client);
-
-		
 		UserTest.run(client);
-		System.exit(0);
-
 		EntryTest.run(client);
 		AclTest.run(client);
 		

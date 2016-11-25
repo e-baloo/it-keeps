@@ -17,6 +17,7 @@ import org.ebaloo.itkeeps.core.domain.edge.notraverse.eAclNoTraverse;
 import org.ebaloo.itkeeps.core.domain.edge.notraverse.eCredentialToUser;
 import org.ebaloo.itkeeps.core.domain.edge.traverse.eInGroup;
 import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.SecurityAcl;
+import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.oRID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -170,32 +171,69 @@ public final class vUser extends vBaseChildAcl {
 
 	private void _update(final jUser j, SecurityAcl sAcl) {
 
-		if(j.isPresentRole()) {
-			
-			enAclRole role = j.getRole();
-
-			if(!role.equals(this.getRole())) {
-			
-			if(role.isRoot() && !sAcl.isRoleRoot())
-				throw new RuntimeException(); //TODO
-			
-			if(role.isAdmin() && !sAcl.isAdminDeleguat() && !sAcl.isRoleRoot())
-				throw new RuntimeException(role.toString() + " / " + sAcl.toString()); // TODO
+		this._updateRole(j, sAcl);
 		
-			this.setRole(role);
+		this._updateInGroup(j, sAcl);
+		
+		this._updateAclAdmin(j, sAcl);
+
+	}
+	
+	private void _updateAclAdmin(final jUser j, SecurityAcl sAcl) {
+
+		if(!j.isPresentAclAdmin())
+			return;
+		
+		if(!sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
+			return;
+
+		if(!sAcl.isAdminDeleguat())
+			return;
+	
+		this.setAclAdmin(j.getAclAdmin());
+
+	}
+	
+	private void _updateRole(final jUser j, SecurityAcl sAcl) {
+
+		if(!j.isPresentRole())
+			return;
+		
+		if(!sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
+			return;
+		
+		enAclRole role = j.getRole();
+
+		if(role.equals(this.getRole()))
+			return;
+		
+		if(role.isRoot() && !sAcl.isRoleRoot())
+			return;
+		
+		if(!sAcl.isAdminDeleguat())
+			return;
+	
+		this.setRole(role);
+
+	}
+	
+	private void _updateInGroup(final jUser j, SecurityAcl sAcl) {
+
+		if(!j.isPresentInGroup())
+			return;
+			
+		if(!sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
+			return;
+
+		List<jBaseLight> list = new ArrayList<jBaseLight>();
+		
+		for(jBaseLight jbl : j.getInGroups()) {
+			if(SecurityFactory.getSecurityAcl(new oRID(this), new oRID(jbl)).isAdminUpdateGroup()) {
+				list.add(jbl);
 			}
 		}
-
-		if(j.isPresentInGroup() && sAcl.isAdminUpdateGroup())
-				this.setGroupsJBL(j.getInGroups());
-			
-
-		if(j.isPresentAclAdmin()) // TODO
-			this.setAclAdmin(j.getAclAdmin());
-
 		
-		
-
+		this.setGroupsJBL(list);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -221,7 +259,7 @@ public final class vUser extends vBaseChildAcl {
 	
 	public static <T extends jBase> T create(T j, Guid requesteurGuid) {
 		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(null, requesteurGuid, null);
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(new oRID(requesteurGuid), null);
 		
 		if(!sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
 			throw new RuntimeException("Error : user is GUEST or USER "); //TODO
@@ -236,7 +274,7 @@ public final class vUser extends vBaseChildAcl {
 	@Override
 	public <T extends jBase> T update(T j, Guid requesteurGuid) {
 		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(this.getGraph(), requesteurGuid, this);
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(new oRID(requesteurGuid), new oRID(this));
 
 		if(sAcl.isRoleGuest())
 			throw new RuntimeException("Error : user is GUEST"); //TODO

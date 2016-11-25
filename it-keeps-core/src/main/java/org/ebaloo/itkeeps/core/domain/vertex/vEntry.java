@@ -11,6 +11,7 @@ import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
 import org.ebaloo.itkeeps.core.domain.edge.traverse.eInPath;
 import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.SecurityAcl;
+import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.oRID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,7 +81,7 @@ public final class vEntry extends vBaseChildAcl {
 	
 			case ADMIN:
 			case USER:
-				SecurityAcl sacl = SecurityFactory.getSecurityAcl(requesterUser, this);
+				SecurityAcl sacl = SecurityFactory.getSecurityAcl(new oRID(requesterUser), new oRID(this));
 				if(!sacl.isDataRead())
 					throw new RuntimeException("TODO"); //TODO
 				break;
@@ -120,7 +121,7 @@ public final class vEntry extends vBaseChildAcl {
 
 		case ADMIN:
 		case USER:
-			SecurityAcl sacl = SecurityFactory.getSecurityAcl(requesterUser, this);
+			SecurityAcl sacl = SecurityFactory.getSecurityAcl(new oRID(requesterUser), new oRID(this));
 			if(!sacl.isDataUpdate())
 				throw new RuntimeException("TODO"); //TODO
 			break;
