@@ -412,6 +412,8 @@ public final class SecurityFactory {
 		public static final RuntimeException NOT_DELEGATE =  new RuntimeException("requester have not '" + enAclAdmin.DELEGATE.name() + "' permission");
 		public static final RuntimeException NOT_GROUP_UPDATE = new RuntimeException("requester have not '" + enAclAdmin.GROUP_UPDATE.name() + "' permission");
 		public static final RuntimeException NOT_USER_CREATE = new RuntimeException("requester have not '" + enAclAdmin.USER_CREATE.name() + "' permission");
+		public static final RuntimeException NOT_USER_UPDATE = new RuntimeException("requester have not '" + enAclAdmin.USER_UPDATE.name() + "' permission");
+		public static final RuntimeException NOT_USER_READ = new RuntimeException("requester have not '" + enAclAdmin.USER_READ.name() + "' permission");;;
 		
 		
 	}

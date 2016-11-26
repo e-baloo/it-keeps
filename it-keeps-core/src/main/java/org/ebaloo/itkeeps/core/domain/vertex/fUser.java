@@ -34,12 +34,33 @@ public final class fUser extends vBaseChildAcl {
 			throw ExceptionPermission.IS_GUEST;
 		if((!sAcl.isRoleRoot() || !sAcl.isRoleAdmin()) && !userRid.equals(requesteurRid) )
 			throw ExceptionPermission.IS_USER;
+		if(!userRid.equals(requesteurRid) && !sAcl.isAdminUserRead())
+			throw ExceptionPermission.NOT_USER_READ;
 
 		vUser user = vUser.get(null, vUser.class, userRid, false);
 		
 		return user.read();
 	}
 	
+	public static final jUser delete(Rid requesteurRid, Rid userRid) {
+
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, userRid);
+
+		if(sAcl.isRoleGuest())
+			throw ExceptionPermission.IS_GUEST;
+		if((!sAcl.isRoleRoot() || !sAcl.isRoleAdmin()) && !userRid.equals(requesteurRid) )
+			throw ExceptionPermission.IS_USER;
+		if(!sAcl.isAdminUserCreate())
+			throw ExceptionPermission.NOT_USER_CREATE;
+
+		vUser user = vUser.get(null, vUser.class, userRid, false);
+		
+		jUser j = vUser.get(null, vUser.class, userRid, false).read();
+		
+		user.delete();
+		
+		return j;
+	}
 
 	public static final jUser create(Rid requesteurRid, jUser j) {
 		
@@ -47,9 +68,9 @@ public final class fUser extends vBaseChildAcl {
 		
 		if(!sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
 			throw ExceptionPermission.IS_GUEST_OR_USER;
-
 		if(!sAcl.isAdminUserCreate())
 			throw ExceptionPermission.NOT_USER_CREATE ;
+
 		
 		checkUpdate(sAcl, j);
 		
@@ -64,9 +85,10 @@ public final class fUser extends vBaseChildAcl {
 
 		if(sAcl.isRoleGuest())
 			throw ExceptionPermission.IS_GUEST;
-		
 		if(!j.getRid().equals(requesteurRid) && !sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
 			throw ExceptionPermission.IS_USER;
+		if(!j.getRid().equals(requesteurRid) && !sAcl.isAdminUserUpdate())
+			throw ExceptionPermission.NOT_USER_UPDATE;
 
 		
 		checkUpdate(sAcl, j);

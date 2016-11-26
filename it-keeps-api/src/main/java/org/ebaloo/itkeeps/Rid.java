@@ -43,4 +43,14 @@ public class Rid {
 	public String toString() {
 		return this.get();
 	}
+	
+    public boolean equals(Object obj) {
+    	if(obj == null)
+    		return false;
+    	if(!(obj instanceof Rid))
+    		return false;
+    		
+        return this.get().equals(((Rid) obj).get());
+    }
+
 }
