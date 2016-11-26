@@ -561,7 +561,7 @@ abstract class vBaseAbstract extends vCommon {
 	 */
 	protected void delete() {
 		this.reload();
-		logger.info("delete : " + this.toString());
+		logger.info(String.format("delete : %s -> %s", this, this.OrientVertexToJson()));
 		this.getOrientVertex().remove();
 	}
 	

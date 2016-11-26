@@ -15,9 +15,11 @@ import org.ebaloo.itkeeps.api.model.jCredential;
 import org.ebaloo.itkeeps.core.database.GraphFactory;
 import org.ebaloo.itkeeps.core.domain.edge.notraverse.eAclNoTraverse;
 import org.ebaloo.itkeeps.core.domain.edge.traverse.eAclRelation;
+import org.ebaloo.itkeeps.core.tools.MetricsFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.codahale.metrics.Timer;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 public final class SecurityFactory {
@@ -218,10 +220,6 @@ public final class SecurityFactory {
 	
 	private static final void checkRootUserExist(jCredential jcredential) {
 
-		if (logger.isTraceEnabled())
-			logger.trace("checkRootUserExist()");
-
-		// TODO Add CONF "Create Root User"
 		try {
 
 			StringBuilder sb = new StringBuilder();
@@ -275,65 +273,69 @@ public final class SecurityFactory {
 		
 	}
 	
+	public static final Timer TIMER_GET_SECURITY_ACL = MetricsFactory.getMetricRegistry().timer(SecurityFactory.class.getName() + ".getSecurityAcl");
 		
 	static SecurityAcl getSecurityAcl(final Rid src, final Rid dst) {
 
-		long time = System.currentTimeMillis();
+		final Timer.Context timerContext = TIMER_GET_SECURITY_ACL.time();
 
-		if (src == null)
-			throw new RuntimeException("TODO"); // TODO
+		try {
 
-		SecurityAcl sAcl = new SecurityAcl();
-
-		String userOrid = src.get();
-
-		{
-			StringBuilder request = new StringBuilder();
-
-			request.append("SELECT FROM (TRAVERSE OUT('");
-			request.append(E_ACL_NO_TRAVERSE);
-			request.append("') FROM ");
-			request.append(userOrid);
-			request.append(" WHILE $depth <= 1) WHERE @class INSTANCEOF '");
-			request.append(V_ACL_ENUM);
-			request.append("'");
-
-			for (OrientVertex ov : GraphFactory.command(null, request.toString())) {
-				put(sAcl, ov);
+			if (src == null)
+				throw new RuntimeException("TODO"); // TODO
+	
+			SecurityAcl sAcl = new SecurityAcl();
+	
+			String userOrid = src.get();
+	
+			{
+				StringBuilder request = new StringBuilder();
+	
+				request.append("SELECT FROM (TRAVERSE OUT('");
+				request.append(E_ACL_NO_TRAVERSE);
+				request.append("') FROM ");
+				request.append(userOrid);
+				request.append(" WHILE $depth <= 1) WHERE @class INSTANCEOF '");
+				request.append(V_ACL_ENUM);
+				request.append("'");
+	
+				for (OrientVertex ov : GraphFactory.command(null, request.toString())) {
+					put(sAcl, ov);
+				}
 			}
+	
+			if ((dst != null) && (dst.get() != null)) {
+				StringBuilder request = new StringBuilder();
+	
+				request.append("SELECT FROM (TRAVERSE OUT('");
+				request.append(E_ACL_NO_TRAVERSE);
+				request.append("') FROM (SELECT FROM (TRAVERSE OUT('");
+				request.append(E_ACL_RELATION);
+				request.append("') FROM ");
+				request.append(userOrid);
+				request.append(") WHERE @rid IN (SELECT @rid FROM (TRAVERSE OUT('");
+				request.append(E_ACL_RELATION);
+				request.append("') FROM ");
+				request.append(dst.get());
+				request.append(") WHERE @class = '");
+				request.append(vAcl.class.getSimpleName());
+				request.append("') AND @class = '");
+				request.append(vAcl.class.getSimpleName());
+				request.append("')) WHERE @class INSTANCEOF '");
+				request.append(V_ACL_ENUM);
+				request.append("'");
+	
+				for (OrientVertex ov : GraphFactory.command(null, request.toString())) {
+					put(sAcl, ov);
+				}
+			}
+
+			return sAcl;
+			
+		} finally {
+			timerContext.stop();
 		}
 
-		if ((dst != null) && (dst.get() != null)) {
-			StringBuilder request = new StringBuilder();
-
-			request.append("SELECT FROM (TRAVERSE OUT('");
-			request.append(E_ACL_NO_TRAVERSE);
-			request.append("') FROM (SELECT FROM (TRAVERSE OUT('");
-			request.append(E_ACL_RELATION);
-			request.append("') FROM ");
-			request.append(userOrid);
-			request.append(") WHERE @rid IN (SELECT @rid FROM (TRAVERSE OUT('");
-			request.append(E_ACL_RELATION);
-			request.append("') FROM ");
-			request.append(dst.get());
-			request.append(") WHERE @class = '");
-			request.append(vAcl.class.getSimpleName());
-			request.append("') AND @class = '");
-			request.append(vAcl.class.getSimpleName());
-			request.append("')) WHERE @class INSTANCEOF '");
-			request.append(V_ACL_ENUM);
-			request.append("'");
-
-			for (OrientVertex ov : GraphFactory.command(null, request.toString())) {
-				put(sAcl, ov);
-			}
-
-		}
-
-		time = System.currentTimeMillis() - time;
-		logger.info(String.format("Executed in %sms", time));
-
-		return sAcl;
 	}
 
 	private static void put(SecurityAcl sAcl, OrientVertex ov) {

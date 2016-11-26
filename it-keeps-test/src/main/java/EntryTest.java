@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.ebaloo.itkeeps.ApiPath;
 import org.ebaloo.itkeeps.api.model.jEntry;
 import org.ebaloo.itkeeps.httpclient.ItkeepsHttpClient;
@@ -26,8 +29,18 @@ public class EntryTest {
 		/* Set Name */
 		
 		entry1.setName("entry 1");
+		ArrayList<String> list1 = new ArrayList<String>();
+		list1.add("xxxxxxxxxxxxxx");
+		list1.add("yyyyyyyyyyyyyy");
+		entry1.setOtherName(list1);
+
 		entry2.setName("entry 2");
+		
 		entry3.setName("entry 3");
+		HashMap<String, String> map1 = new HashMap<>();
+		map1.put("kkkkkkkkkkkkkkk", "vvvvvvvvvvvvvvvvvv");
+		entry3.setExternalRef(map1);
+		
 		entry4.setName("entry 4");
 
 		/* Create */

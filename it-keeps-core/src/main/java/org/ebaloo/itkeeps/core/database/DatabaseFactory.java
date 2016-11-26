@@ -1,9 +1,6 @@
 
 package org.ebaloo.itkeeps.core.database;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -17,7 +14,6 @@ import org.ebaloo.itkeeps.api.enumeration.enAclOwner;
 import org.ebaloo.itkeeps.api.enumeration.enAclRole;
 import org.ebaloo.itkeeps.api.enumeration.enAuthentication;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseEdge;
-import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.edge.eRelation;
 import org.ebaloo.itkeeps.core.domain.vertex.vAclAdmin;
@@ -31,7 +27,6 @@ import org.ebaloo.itkeeps.core.tools.ReflectionsFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.orientechnologies.orient.core.metadata.schema.OProperty;
 import com.tinkerpop.blueprints.impls.orient.OrientEdgeType;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
@@ -66,11 +61,13 @@ public class DatabaseFactory {
 			
 			GraphFactory.executeNoReturn(null, "ALTER DATABASE DATETIMEFORMAT \"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\"");
 			
+			/*
 			try {
 				GraphFactory.executeNoReturn(null, "CREATE INDEX " + vAclEnum.class.getSimpleName() + "." + vAclEnum.NAME + " NOTUNIQUE_HASH_INDEX");
 			} catch (Exception e) {
 				logger.warn(e.getMessage());
 			}
+			*/
 
 			
 			vAuthentication.init(enAuthentication.class, vAuthentication.class);
@@ -185,8 +182,7 @@ public class DatabaseFactory {
 			if (clasz.isAnnotationPresent(DatabaseVertrex.class)) {
 				
 				
-				Map<String, DatabaseProperty> mapSchemaProperty = new HashMap<String, DatabaseProperty>();
-				//mapSchema.put(clasz.getSimpleName(), mapSchemaProperty);
+				//Map<String, DatabaseProperty> mapSchemaProperty = new HashMap<String, DatabaseProperty>();
 
 				DatabaseVertrex classAnotation = clasz.getAnnotation(DatabaseVertrex.class);
 
@@ -224,7 +220,7 @@ public class DatabaseFactory {
 				}
 				*/	
 
-				ArrayList<DatabaseProperty> listDatabaseProperty = new ArrayList<DatabaseProperty>();
+				//ArrayList<DatabaseProperty> listDatabaseProperty = new ArrayList<DatabaseProperty>();
 
 				/*
 				for (Field field : clasz.getFields()) {
@@ -234,12 +230,15 @@ public class DatabaseFactory {
 				}
 				*/
 
+				/*
 				for (Method method : clasz.getMethods()) {
 					if (method.isAnnotationPresent(DatabaseProperty.class)) {
 						listDatabaseProperty.add(method.getAnnotation(DatabaseProperty.class));
 					}
 				}
+				*/
 
+				/*
 				for (DatabaseProperty propertyAnnotation : listDatabaseProperty) {
 
 					OProperty oProperty = oClass.getProperty(propertyAnnotation.name());
@@ -273,21 +272,7 @@ public class DatabaseFactory {
 								+ propertyAnnotation.isReadOnly());
 					}
 
-// ITA-198
-//					if (StringUtils.isNotBlank(propertyAnnotation.defaultValue())) {
-//						if (!propertyAnnotation.defaultValue().equals(oProperty.getDefaultValue())) {
-//							oProperty.setDefaultValue(propertyAnnotation.defaultValue());
-//							logger.warn("Set defaultValue for Vertrex @" + oClass + "." + propertyAnnotation.name()
-//									+ " to " + propertyAnnotation.defaultValue());
-//						}
-//					}
-
-					/*
-					 * if(propertyAnnotation.isIndex()) {
-					 * oProperty.createIndex("IDX_" +
-					 * propertyAnnotation.name().toUpperCase()); }
-					 */
-				}
+				}*/
 
 			}
 		}

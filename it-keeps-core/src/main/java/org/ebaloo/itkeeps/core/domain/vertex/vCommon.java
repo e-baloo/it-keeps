@@ -68,6 +68,7 @@ abstract class vCommon {
 		}
 	}
 
+	/*
 	protected final void commit() {
 
 		logger.warn("commit() @Deprecated"); 
@@ -75,6 +76,7 @@ abstract class vCommon {
 		//this.getOrientVertex().getGraph().commit();
 
 	}
+	*/
 
 	protected final int deleteAllEdges(final Direction direction) {
 
@@ -240,14 +242,13 @@ abstract class vCommon {
 		}
 		this.getOrientVertex().setProperty(key, value);
 
-		this.commit();
+		//this.commit();
 	}
 
 	public String toString() {
 
-		if (this.orientVertex == null) {
+		if (this.orientVertex == null)
 			return this.getClass().getSimpleName() + " [ov:error]";
-		}
 
 		return this.getOrientVertex().toString();
 
