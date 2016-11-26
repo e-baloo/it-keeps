@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -20,7 +21,9 @@ import org.ebaloo.itkeeps.ApiPath;
 import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
+import org.ebaloo.itkeeps.api.model.jAclGroup;
 import org.ebaloo.itkeeps.api.model.jUser;
+import org.ebaloo.itkeeps.core.domain.vertex.fAclGroup;
 import org.ebaloo.itkeeps.core.domain.vertex.fUser;
 import org.ebaloo.itkeeps.core.domain.vertex.vCredential;
 import org.ebaloo.itkeeps.core.domain.vertex.vUser;
@@ -109,13 +112,20 @@ public class rUser {
     @Timed
     @Path(ApiPath.API_USER_CREATE)
     public Response create(final jUser juser) {
-
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-
     	jUser user = fUser.create(requesteurRid, juser);
-
     	return Response.ok().entity(user).build();
     }
     
+    @DELETE //DELETE
+    @Produces({MediaType.APPLICATION_JSON})
+	@aApplicationRolesAllowed(enRole.ADMIN)
+    @Timed
+    @Path(ApiPath.API_USER_DELETE + "{id}")
+    public Response delete(@PathParam("id") Rid rid) {
+    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
+    	jUser j = fUser.delete(requesteurRid, rid);
+    	return Response.ok().entity(j).build();
+    }
     
 }
