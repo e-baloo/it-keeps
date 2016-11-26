@@ -250,22 +250,15 @@ public final class vGroup extends vBaseChildAcl {
 	// API
 	
 	public vGroup(final jGroup j) {
-		this(j, true);
-	}
-	
-	protected vGroup(final jGroup j, final boolean f) {
-		super(j, false);
-		
-		/*
-		this.commit();
-		this.reload();
-		*/
-		
+		super(j);
+
+		try {
 		this.setParent(j.getParent());
 		this.setChildsJBL(j.getChilds());
-
-		if(f)
-			this.setEnable(Boolean.TRUE);
+	} catch (Exception e) {
+		this.delete();
+		throw e;
+	}
 	}
 
 	

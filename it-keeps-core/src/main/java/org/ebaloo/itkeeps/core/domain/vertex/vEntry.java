@@ -49,23 +49,17 @@ public final class vEntry extends vBaseChildAcl {
 	// API
 
 	public vEntry(final jEntry j) {
-		this(j, true);
-	}
+		super(j);
 
-	
-	protected vEntry(final jEntry j, final boolean f) {
-		super(j, false);
-		
-		/*
-		this.commit();
-		this.reload();
-		*/
-
+		try {
 		if(j.isPresentPath())
 			this.setPath(j.getPath());
 
-		if(f)
-			this.setEnable(Boolean.TRUE);
+	} catch (Exception e) {
+		this.delete();
+		throw e;
+	}
+
 	}
 
 	

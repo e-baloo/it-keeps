@@ -39,13 +39,16 @@ public abstract class vBaseStandard extends vBase {
 	}
 
 
-	protected vBaseStandard(final jBaseStandard j, final boolean f) {
-		super(j, f);
-		
-		this.updateBaseStandard(j);
+	protected vBaseStandard(final jBaseStandard j) {
+		super(j);
 
-		if(f)
-			this.setEnable(Boolean.TRUE);
+		try {
+		this.updateBaseStandard(j);
+	} catch (Exception e) {
+		this.delete();
+		throw e;
+	}
+
 	}
 
 	
@@ -86,7 +89,6 @@ public abstract class vBaseStandard extends vBase {
 
 		
 		String cmdSql = "SELECT FROM " + target.getSimpleName() + " WHERE "
-				+ WhereClause.ENABLE_IS_TRUE + " AND "
 				+ WhereClause.IsntanceOf(target, instanceOf) + " AND "
 				+ jBaseStandard.EXTERNAL_REF + "['"+ key + "'] = ?";
 
@@ -170,8 +172,6 @@ public abstract class vBaseStandard extends vBase {
 		cmdSQL += "  (SELECT myRid FROM ";
 		cmdSQL += "    (SELECT @rid as myRid, " + jBaseStandard.OTHER_NAME + " FROM " + target.getSimpleName() + "";
 		cmdSQL += "    WHERE " + jBaseStandard.OTHER_NAME + " IS NOT NULL ";
-		cmdSQL +=        "AND "; 
-		cmdSQL +=      WhereClause.ENABLE_IS_TRUE;
 		cmdSQL +=        "AND "; 
 		cmdSQL +=      WhereClause.IsntanceOf(target, isInstanceOf);
 		cmdSQL += "    UNWIND " + jBaseStandard.OTHER_NAME + " ) ";

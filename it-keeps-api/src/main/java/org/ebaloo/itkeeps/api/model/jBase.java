@@ -22,7 +22,6 @@ public class jBase extends jObject {
 	
 	//----------------------------
 	
-	public static final String ENABLE = "enable";
 	public static final String CREATION_DATE = "creationDate";
 	public static final String DESCRIPTION = "description";
 	public static final String NAME = jBaseLight.NAME;
@@ -183,27 +182,6 @@ public class jBase extends jObject {
 			return this.version.isPresent();
 		}
 		
-		
-	// ENABLE
-		
-		@JsonIgnore
-		private Optional<Boolean> enable = Optional.empty();
-		
-		@JsonProperty(ENABLE)
-		public final Boolean getEnable() {
-			return this.enable.orElse(null);
-		}
-
-		@JsonProperty(ENABLE)
-		public final void setEnable(Boolean value) {
-			this.enable = Optional.ofNullable(value);
-		}
-
-		@JsonIgnore
-		public final boolean isPresentEnable() {
-			return this.enable.isPresent();
-		}
-
 		
 		// CREATION_DATE
 		

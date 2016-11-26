@@ -89,7 +89,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 			return;
 		}
 		
-		enRole role = JwtFactory.getRole(claims);
+		enRole requesterRole = JwtFactory.getRole(claims);
 		String guid = JwtFactory.getGuid(claims);
 		
 		
@@ -97,10 +97,10 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
         if(method.isAnnotationPresent(aApplicationRolesAllowed.class))
         {
         	aApplicationRolesAllowed applicationRolesAllowed = method.getAnnotation(aApplicationRolesAllowed.class);
-            enRole tRole = applicationRolesAllowed.value() ;
+            enRole applicationRole = applicationRolesAllowed.value() ;
               
-            logger.info("role : " + role + "  /  tRole: " + tRole);
-            if(tRole.isInRole(role)) {
+            logger.info("requesterRole : " + requesterRole + "  /  applicationRole: " + applicationRole + " => " + requesterRole.isInRole(applicationRole));
+            if(!requesterRole.isInRole(applicationRole)) {
             
     			if (logger.isTraceEnabled())
     				logger.trace("'token.role' is invalide -> Deniy");
@@ -114,7 +114,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 		if (logger.isTraceEnabled())
 			logger.trace("'token.role' is valide -> Ok");
 		
-		requestContext.setSecurityContext(new SecurityContextAuthorizer(uriInfo, guid, role));
+		requestContext.setSecurityContext(new SecurityContextAuthorizer(uriInfo, guid, requesterRole));
 		
 	}
 

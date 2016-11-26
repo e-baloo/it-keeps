@@ -58,11 +58,8 @@ public class vBase extends vBaseAbstract {
 	
 	
 	private void defaultSetting(Guid guid) {
-
 		this.setProperty(jBase.GUID, guid.toString());
-
 		this.setProperty(jBase.CREATION_DATE, DateTime.now(DateTimeZone.UTC).toDate());
-		this.setProperty(jBase.ENABLE, true);
 		this.setProperty(jBase.NAME, guid.toString());		
 		this.commit();
 	}
@@ -208,10 +205,9 @@ public class vBase extends vBaseAbstract {
 
 		StringBuilder request = new StringBuilder();
 		
-		request.append("SELECT FROM " + target.getSimpleName() + " ");
-		request.append("WHERE ");
-		request.append(WhereClause.ENABLE_IS_TRUE);
-		request.append(" AND ");
+		request.append("SELECT FROM ");
+		request.append(target.getSimpleName());
+		request.append(" WHERE ");
 		request.append(WhereClause.IsntanceOf(target, isInstanceof));
 
 		//BaseQuery bq = new BaseQuery();
@@ -343,16 +339,19 @@ public class vBase extends vBaseAbstract {
 
 	// API Methose
     
-	protected vBase(final jBase j, final boolean f) {
+	protected vBase(final jBase j) {
 		super(true);
 
-		this.setProperty(jBase.GUID, GuidFactory.getGuid());
-		this.setProperty(jBase.CREATION_DATE, DateTime.now(DateTimeZone.UTC).toDate());
 
-		this.updateBase(j);
-		
-		if(f)
-			this.setEnable(Boolean.TRUE);
+		try {
+			this.setProperty(jBase.GUID, GuidFactory.getGuid());
+			this.setProperty(jBase.CREATION_DATE, DateTime.now(DateTimeZone.UTC).toDate());
+	
+			this.updateBase(j);
+		} catch (Exception e) {
+			this.delete();
+			throw e;
+		}
 	}
 	
 	/*
@@ -365,7 +364,6 @@ public class vBase extends vBaseAbstract {
 		
 		j.getJObject().setType(this.getType());
 		j.getJObject().setVersion(this.getObjectVersion());
-		j.getJObject().setEnable(this.isEnable());
 		j.getJObject().setCreationDate(this.getCreationDate());
 
 		j.setGuid(this.getGuid());

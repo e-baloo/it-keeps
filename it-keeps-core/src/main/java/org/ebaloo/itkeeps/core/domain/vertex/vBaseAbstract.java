@@ -8,14 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.orientechnologies.orient.core.metadata.schema.OType;
 import com.tinkerpop.blueprints.Direction;
 import org.apache.commons.lang.StringUtils;
 import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.model.jBase;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.core.database.GraphFactory;
-import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.domain.edge.eRelation;
 import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
 import org.slf4j.Logger;
@@ -57,7 +55,7 @@ abstract class vBaseAbstract extends vCommon {
     	if(guid == null)
     		return null;
 		
-		String cmdSQL = "SELECT FROM " + target.getSimpleName() + " WHERE " + WhereClause.ENABLE_IS_TRUE + " AND " + WhereClause.IsntanceOf(target, isInstanceof) + " AND (" + jBase.GUID + "= ?)";
+		String cmdSQL = "SELECT FROM " + target.getSimpleName() + " WHERE " + WhereClause.IsntanceOf(target, isInstanceof) + " AND (" + jBase.GUID + "= ?)";
 		
 		List<T> list = vBaseAbstract.commandBaseAbstract(graph, target, cmdSQL, guid.toString());
 		
@@ -81,7 +79,7 @@ abstract class vBaseAbstract extends vCommon {
     	if(Guid.isGuid(name))
     		return get(graph, target, new Guid(name), isInstanceof); 
     	
-		String cmdSQL = "SELECT FROM " + target.getSimpleName() + " WHERE " + WhereClause.ENABLE_IS_TRUE + " AND " + WhereClause.IsntanceOf(target, isInstanceof) + " AND (" + jBase.NAME + "= ?)";
+		String cmdSQL = "SELECT FROM " + target.getSimpleName() + " WHERE " + WhereClause.IsntanceOf(target, isInstanceof) + " AND (" + jBase.NAME + "= ?)";
 		
 		List<T> list = vBaseAbstract.commandBaseAbstract(graph, target, cmdSQL, name);
 		
@@ -101,8 +99,7 @@ abstract class vBaseAbstract extends vCommon {
     
     protected static <T extends vBaseAbstract> List<T> getListBaseAbstract(OrientBaseGraph graph, final Class<T> target, final List<Guid> guid) {
 
-		String cmdSQL = "SELECT FROM " + vBase.class.getSimpleName() + " WHERE " + WhereClause.ENABLE_IS_TRUE
-				+ " AND (guid IN [" + guid.stream().map(e -> "'" + e.toString() + "'").collect(Collectors.joining(","))
+		String cmdSQL = "SELECT FROM " + vBase.class.getSimpleName() + " WHERE (" + jBase.GUID + " IN [" + guid.stream().map(e -> "'" + e.toString() + "'").collect(Collectors.joining(","))
 				+ "])";
 
 		return vBaseAbstract.commandBaseAbstract(graph, target, cmdSQL);
@@ -397,8 +394,6 @@ abstract class vBaseAbstract extends vCommon {
 			request.append("SELECT FROM ");
 			request.append("(TRAVERSE " + relationship.getDirection().toString() + "('" + (relation != null ? relation.getSimpleName() : "") + "') FROM " + this.getORID() + " WHILE $depth <= 1)");
 			request.append(" WHERE ");
-			request.append(WhereClause.ENABLE_IS_TRUE);
-			request.append(" AND ");
 			request.append(WhereClause.IsntanceOf(target, isInstanceof));
 			request.append(" AND ");
 			request.append("(@rid <> " + this.getORID() + ")");
@@ -518,8 +513,6 @@ abstract class vBaseAbstract extends vCommon {
 		
 		try {
 			
-			System.out.println(target);
-			
 			T baseAbstract;
 
 			baseAbstract = target.newInstance();
@@ -528,9 +521,12 @@ abstract class vBaseAbstract extends vCommon {
 			return baseAbstract;
 
 		} catch (Exception e) {
-			
+
+			logger.error(String.format("targer = %s", target));
+
 			if(logger.isDebugEnabled())
 				e.printStackTrace();
+			
 			throw new RuntimeException(e);
 		}
 		
@@ -539,9 +535,6 @@ abstract class vBaseAbstract extends vCommon {
 	
 	public static class WhereClause {
 		
-		public static String ENABLE_IS_TRUE = " (" + jBase.ENABLE + " = true) ";
-		
-
 		public final static <T extends vBaseAbstract> String IsntanceOf(final Class<T> target, final boolean instanceOf) {
 			return String.format(" (@class %s '%s') ", instanceOf ? "INSTANCEOF" : "=", target.getSimpleName());
 		}
@@ -550,46 +543,15 @@ abstract class vBaseAbstract extends vCommon {
 
 
 	/*
-	 * (non-Javadoc)
-	 * @see com.jcdecaux.itasset.model.domain.BaseAbstract#delete()
+	 * 
 	 */
-	public boolean delete() {
-		
-		if(this.disable()) {
-			this.reload();
-			
-			this.getOrientVertex().remove();
-			this.commit();
-			
-			return true;
-		}
-		
-		return false;
-	}
-	
-	/*
-	 * ENABLE
-	 */
-
-	
-	@DatabaseProperty(name = jBase.ENABLE, type = OType.BOOLEAN)
-	protected void setEnable(Boolean enable) {
+	protected void delete() {
 		this.reload();
-		this.setProperty(jBase.ENABLE, enable);
-	}
-
-	public Boolean isEnable() {
-		return (Boolean) this.getProperty(jBase.ENABLE);
+		logger.info("delete : " + this.toString());
+		this.getOrientVertex().remove();
 	}
 	
-	public boolean disable() {
-		
-		this.deleteAllEdges(Direction.IN);
-		this.deleteAllEdges(Direction.OUT);
-		this.setProperty(jBase.ENABLE, false);
-		this.commit();
-		return true;
-	}
+
 
 }
 

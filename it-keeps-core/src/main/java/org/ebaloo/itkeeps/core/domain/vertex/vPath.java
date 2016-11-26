@@ -82,22 +82,17 @@ public final class vPath extends vBaseChildAcl {
 	// API
 	
 	public vPath(final jPath j) {
-		this(j, true);
-	}
-	
-	protected vPath(final jPath j, final boolean f) {
-		super(j, false);
+		super(j);
 		
-		/*
-		this.commit();
-		this.reload();
-		*/
-		
+
+		try {
 		this.setParent(j.getParent());
 		this.setChildsJBL(j.getChilds());
 
-		if(f)
-			this.setEnable(Boolean.TRUE);
+		} catch (Exception e) {
+			this.delete();
+			throw e;
+		}
 	}
 
 	

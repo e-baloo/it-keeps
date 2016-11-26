@@ -8,19 +8,12 @@ import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 public class vBaseChildAcl extends vBaseStandard {
 
 	
-	public vBaseChildAcl() {
+	protected vBaseChildAcl() {
 		super();
 	}
-	
-	public vBaseChildAcl(
-			final String name
-			) {
-		super(name);
-		
-	}
 
-	public vBaseChildAcl(jBaseStandard j, boolean b) {
-		super(j, b);
+	protected vBaseChildAcl(jBaseStandard j) {
+		super(j);
 	}
 
 

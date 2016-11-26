@@ -33,26 +33,21 @@ public final class vImage extends vBaseSysteme {
 		this.setBase64(base64);
 	}
 
-	public vImage(final jImage j) {
-		this(j, true);
-	}
-	
-	protected vImage(final jImage j, final boolean f) {
-		super(j, false);
-		
-		/*
-		this.commit();
-		this.reload();
-		*/
+	protected vImage(final jImage j) {
+		super(j);
+
+		try {
 		
 		if(StringUtils.isEmpty(j.getImageType()) || StringUtils.isEmpty(j.getBase64()))
 				throw new RuntimeException("TODO"); //
 				
 		this.setImageType(j.getImageType());
 		this.setBase64(j.getBase64());
+	} catch (Exception e) {
+		this.delete();
+		throw e;
+	}
 		
-		if(f)
-			this.setEnable(Boolean.TRUE);
 	}
 	
 

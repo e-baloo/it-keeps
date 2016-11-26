@@ -58,7 +58,9 @@ public class Main {
 
 		}
 		
-		
+
+		tAclGroup.run(client);
+
 		GroupTest.run(client);
 		PathTest.run(client);
 		UserTest.run(client);

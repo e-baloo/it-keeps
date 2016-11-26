@@ -23,6 +23,7 @@ public class ApiConfig {
     	parent.classesAdd(PathEndpoint.class);
     	parent.classesAdd(EntryEndpoint.class);
     	parent.classesAdd(AclEndpoint.class);
+    	parent.classesAdd(rAclGroup.class);
 
     	
     }

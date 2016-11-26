@@ -8,28 +8,16 @@ import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 @DatabaseVertrex()
 public abstract class vBaseSysteme extends vBase {
 
-	public vBaseSysteme() {
+	protected vBaseSysteme() {
 		super();
 	}
 	
-	/*
-	public BaseSysteme(final BaseAbstract abase) {
-		super(abase);
+	protected vBaseSysteme(final jBase j) {
+		super(j);
 	}
-	*/
 
-	public vBaseSysteme(
-			final String name
-			) {
+	protected vBaseSysteme(String name) {
 		super(name);
-		
-	}
-	
-	protected vBaseSysteme(final jBase j, final boolean f) {
-		super(j, f);
-		
-		if(f)
-			this.setEnable(Boolean.TRUE);
 	}	
 }
 

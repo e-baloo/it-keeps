@@ -39,6 +39,14 @@ public final class ApiPath {
 	public  static final String API_ACL_CREATE = API_ACL + CREATE;
 	public  static final String API_ACL_DELETE = API_ACL + DELETE;
 
+	
+	private static final String API_ACL_GRP = API + "aclgroup/";
+	public  static final String API_ACL_GRP_GET_ALL = API_ACL_GRP + ALL;
+	public  static final String API_ACL_GRP_GET_ID = API_ACL_GRP + ID;
+	public  static final String API_ACL_GRP_UPDATE = API_ACL_GRP + UPDATE;
+	public  static final String API_ACL_GRP_CREATE = API_ACL_GRP + CREATE;
+	public  static final String API_ACL_GRP_DELETE = API_ACL_GRP + DELETE;
+
 	private static final String API_PATH = API + "path/";
 	public  static final String API_PATH_GET_ALL = API_PATH + ALL;
 	public  static final String API_PATH_GET_ID = API_PATH + ID;

@@ -32,14 +32,13 @@ public final class vCredential extends vBase {
 	public vCredential(final jCredential j, final jBaseLight jblUser) {
 		super(j.getId());
 		
+		try {
 		if(StringUtils.isEmpty(j.getId())) {
-			this.disable();
 			throw new RuntimeException("TODO"); //TODO
 		}
 		
 		if(jblUser != null) {
 			if(vCredential.get(this.getGraph(), this.getClass(), j.getId(), false) != null) {
-				this.disable();
 				throw new RuntimeException("TODO"); //TODO
 			}
 		}
@@ -53,20 +52,19 @@ public final class vCredential extends vBase {
 		
 		if((jblUser == null) || jblUser.getGuid() == null) {
 			
-			logger.trace("Create vUser");
-			
 			jUser juser = new jUser();
 			juser.setName(j.getUserName());
 
 			vUser user = new vUser(juser);
 			this.setUser(user);
 			
-			logger.trace("Cred : " + this.toString());
-			logger.trace("User : " + user.toString());
-			
 		}
-		
-		this.setEnable(Boolean.TRUE);
+
+	} catch (Exception e) {
+		this.delete();
+		throw e;
+	}
+
 		
 	}
 	

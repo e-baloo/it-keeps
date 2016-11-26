@@ -140,19 +140,15 @@ public final class vAcl extends vBase {
 	// API
 	
 	public vAcl(final jAcl j) {
-		this(j, true);
-	}
-	
-	protected vAcl(final jAcl j, final boolean f) {
-		super(j, false);
+		super(j);
 		
-		this.commit();
-		this.reload();
-		
-		this._update(j);
+		try {
+			this._update(j);
+		} catch (Exception e) {
+			this.delete();
+			throw e;
+		}
 
-		if(f)
-			this.setEnable(Boolean.TRUE);
 	}
 
 	

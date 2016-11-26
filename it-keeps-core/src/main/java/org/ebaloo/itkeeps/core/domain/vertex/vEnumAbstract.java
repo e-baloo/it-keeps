@@ -202,7 +202,6 @@ abstract class vEnumAbstract<K extends enAbstract> extends vBaseAbstract {
 			eac.setName(value.name());
 			eac.setOrdinale(value.ordinal());
 			eac.setValue(String.format("%s", value.value()));
-			eac.setEnable(true);
 			
 		}
 		

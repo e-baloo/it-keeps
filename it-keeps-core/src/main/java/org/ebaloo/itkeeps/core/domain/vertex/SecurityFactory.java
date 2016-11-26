@@ -231,8 +231,6 @@ public final class SecurityFactory {
 			sb.append(E_ACL_NO_TRAVERSE);
 			sb.append("') FROM (SELECT FROM ");
 			sb.append(vUser.class.getSimpleName());
-			sb.append(" WHERE ");
-			sb.append(vBase.WhereClause.ENABLE_IS_TRUE);
 			sb.append(")) WHERE @class = '");
 			sb.append(V_ACL_ROLE);
 			sb.append("' AND name = '");
@@ -301,7 +299,7 @@ public final class SecurityFactory {
 			this(jbl.getGuid());
 		}
 		
-		private static final String REQUEST_GUID = "SELECT FROM " + vBase.class.getSimpleName() + " WHERE " + WhereClause.ENABLE_IS_TRUE + " AND (" + jBase.GUID + "= ?)";
+		private static final String REQUEST_GUID = "SELECT FROM " + vBase.class.getSimpleName() + " WHERE (" + jBase.GUID + "= ?)";
 
 		
 		oRID(Guid guid) {

@@ -17,6 +17,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.ebaloo.itkeeps.api.model.jObject;
+import org.ebaloo.itkeeps.api.model.jAclGroup;
 import org.ebaloo.itkeeps.api.model.jCredential;
 import org.ebaloo.itkeeps.api.model.jToken;
 import org.ebaloo.itkeeps.commons.ConfigFactory;
@@ -118,6 +119,10 @@ public class ItkeepsHttpClient {
 		return callJsonCRUD(CRUD.UPDATE, url, data, target);
 	}
 
+	public final <T extends jObject> T callJsonDelete(String url, Class<T> target) {
+		return callJsonCRUD(CRUD.DELETE, url, null, target);
+	}
+
 
 	public final <T extends jObject> T callJsonCRUD(CRUD command, String url, Object data, Class<T> target) {
 
@@ -194,5 +199,8 @@ public class ItkeepsHttpClient {
 		}
 
 	}
+
+
+
 
 }

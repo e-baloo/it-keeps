@@ -161,15 +161,30 @@ public final class vUser extends vBaseChildAcl {
 	// API
 	
 	private vUser(final jUser j, final SecurityAcl sAcl) {
-		super(j, false);
+		super(j);
+
+		try {
+		
 		this.updateImplem(j, sAcl);
-		this.setEnable(Boolean.TRUE);
+
+	} catch (Exception e) {
+		this.delete();
+		throw e;
+	}
+
 	}
 
 	vUser(jUser j) {
-		super(j, false);
+		super(j);
+		
+		try {
 		this.setRole(enAclRole.GUEST);
-		this.setEnable(Boolean.TRUE);
+		
+	} catch (Exception e) {
+		this.delete();
+		throw e;
+	}
+
 	}
 
 	private void updateImplem(final jUser j, SecurityAcl sAcl) {
@@ -254,7 +269,7 @@ public final class vUser extends vBaseChildAcl {
 		
 		vUser user = new vUser(j, sAcl);
 		
-		return user.read();
+		return vUser.read(requesteurGuid, user.getGuid());
 	}
 
 	public static final jUser update(Guid requesteurGuid, jUser j) {
@@ -273,7 +288,7 @@ public final class vUser extends vBaseChildAcl {
 		user.updateBaseStandard(j);
 		user.updateImplem(j, sAcl);
 		
-		return user.read();
+		return vUser.read(requesteurGuid, j.getGuid());
 		
 	}
 
