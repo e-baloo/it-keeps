@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.ebaloo.itkeeps.Guid;
+import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.model.jGroup;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
 import org.ebaloo.itkeeps.core.domain.edge.traverse.eInGroup;
 import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.SecurityAcl;
-import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.oRID;
+import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.RID;
 
 import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
 
@@ -263,9 +263,9 @@ public final class vGroup extends vBaseChildAcl {
 
 	
 
-	public jGroup read(Guid requesteurGuid) {
+	public jGroup read(Rid requesteurRid) {
 		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(new oRID(requesteurGuid), new oRID(this));
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, RID.get(this));
 		
 		if(!sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
 			throw new RuntimeException("Error : user is GUEST or USER / " + sAcl.toString()); //TODO
@@ -286,13 +286,13 @@ public final class vGroup extends vBaseChildAcl {
 		return j;
 	}
 
-	public jGroup update(jGroup j, Guid requesteurGuid) {
-		return this.update(j, requesteurGuid, false);
+	public jGroup update(jGroup j, Rid requesteurRid) {
+		return this.update(j, requesteurRid, false);
 	}
 	
-	public jGroup update(jGroup j, Guid requesteurGuid, boolean force) {
+	public jGroup update(jGroup j, Rid requesteurRid, boolean force) {
 		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(new oRID(requesteurGuid), new oRID(this));
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, RID.get(this));
 		
 		if(!sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
 			throw new RuntimeException("Error : user is GUEST or USER "); //TODO
@@ -315,7 +315,7 @@ public final class vGroup extends vBaseChildAcl {
 			this.setChildsJBL(jgroup.getChilds());
 	
 		
-		return read(requesteurGuid);
+		return read(requesteurRid);
 		
 	}
 }

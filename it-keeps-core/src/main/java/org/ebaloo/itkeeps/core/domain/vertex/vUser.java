@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.ebaloo.itkeeps.Guid;
+import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.enumeration.enAclAdmin;
 import org.ebaloo.itkeeps.api.enumeration.enAclRole;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
@@ -17,7 +17,6 @@ import org.ebaloo.itkeeps.core.domain.edge.notraverse.eCredentialToUser;
 import org.ebaloo.itkeeps.core.domain.edge.traverse.eInGroup;
 import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.ExceptionPermission;
 import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.SecurityAcl;
-import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.oRID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -235,13 +234,13 @@ public final class vUser extends vBaseChildAcl {
 		this.setGroups(j.getGroups());
 	}
 	
-	public static final jUser read(Guid requesteurGuid, Guid user) {
+	public static final jUser read(Rid requesteurRid, Rid user) {
 
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(new oRID(requesteurGuid), new oRID(user));
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, user);
 
 		if(sAcl.isRoleGuest())
 			throw ExceptionPermission.IS_GUEST;
-		if((!sAcl.isRoleRoot() || !sAcl.isRoleAdmin()) && !user.equals(requesteurGuid) )
+		if((!sAcl.isRoleRoot() || !sAcl.isRoleAdmin()) && !user.equals(requesteurRid) )
 			throw ExceptionPermission.IS_USER;
 
 		return vUser.get(null, vUser.class, user, false).read();
@@ -257,9 +256,9 @@ public final class vUser extends vBaseChildAcl {
 		return j;
 	}
 	
-	public static final jUser create(Guid requesteurGuid, jUser j) {
+	public static final jUser create(Rid requesteurRid, jUser j) {
 		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(new oRID(requesteurGuid), null);
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, null);
 		
 		if(!sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
 			throw ExceptionPermission.IS_GUEST_OR_USER;
@@ -269,26 +268,26 @@ public final class vUser extends vBaseChildAcl {
 		
 		vUser user = new vUser(j, sAcl);
 		
-		return vUser.read(requesteurGuid, user.getGuid());
+		return vUser.read(requesteurRid, user.getRid());
 	}
 
-	public static final jUser update(Guid requesteurGuid, jUser j) {
+	public static final jUser update(Rid requesteurRid, jUser j) {
 		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(new oRID(requesteurGuid), new oRID(j.getGuid()));
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, j.getRid());
 
 		if(sAcl.isRoleGuest())
 			throw ExceptionPermission.IS_GUEST;
 		
-		if(!j.getGuid().equals(requesteurGuid) && !sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
+		if(!j.getRid().equals(requesteurRid) && !sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
 			throw ExceptionPermission.IS_USER;
 
-		vUser user = vUser.get(null, vUser.class, j.getGuid(), false);
+		vUser user = vUser.get(null, vUser.class, j.getRid(), false);
 		
 		user.checkVersion(j);
 		user.updateBaseStandard(j);
 		user.updateImplem(j, sAcl);
 		
-		return vUser.read(requesteurGuid, j.getGuid());
+		return vUser.read(requesteurRid, j.getRid());
 		
 	}
 

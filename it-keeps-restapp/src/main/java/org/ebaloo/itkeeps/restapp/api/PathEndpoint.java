@@ -17,7 +17,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 import org.ebaloo.itkeeps.ApiPath;
-import org.ebaloo.itkeeps.Guid;
+import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
 import org.ebaloo.itkeeps.api.model.jPath;
@@ -44,12 +44,12 @@ public class PathEndpoint {
     @Path(ApiPath.API_PATH_GET_ALL)
     public Response read() {
 		
-    	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
+    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
 
 		List<jPath> list = new ArrayList<jPath>();
 		
 		for(vPath path : vPath.getAllBase(null, vPath.class, false)) {
-	    	list.add(path.read(requesteurGuid));
+	    	list.add(path.read(requesteurRid));
 		}
 		
     	return Response.ok().entity(list).build();
@@ -62,9 +62,9 @@ public class PathEndpoint {
 	@aApplicationRolesAllowed(enRole.USER)
     @Timed
     @Path(ApiPath.API_PATH_GET_ID + "{guid}")
-    public Response read(@PathParam("guid") Guid guid) {
+    public Response read(@PathParam("guid") Rid guid) {
 
-    	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
+    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
 
 		vPath group = vPath.get(null, vPath.class, guid, false);
 		
@@ -72,7 +72,7 @@ public class PathEndpoint {
 			throw new RuntimeException("TODO"); // TODO
 		
 		
-    	return Response.ok().entity(group.read(requesteurGuid)).build();
+    	return Response.ok().entity(group.read(requesteurRid)).build();
     }
 	
 
@@ -88,11 +88,11 @@ public class PathEndpoint {
 			logger.trace("updateGroup()");
 
     	
-    	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
+    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
     	
-    	vPath group = vPath.get(null, vPath.class, j.getGuid(), false);
+    	vPath group = vPath.get(null, vPath.class, j.getRid(), false);
 
-    	jPath nj = group.update(j, requesteurGuid);
+    	jPath nj = group.update(j, requesteurRid);
 
     	return Response.ok().entity(nj).build();
     }
@@ -105,11 +105,11 @@ public class PathEndpoint {
     @Path(ApiPath.API_PATH_CREATE)
     public Response create(final jPath j) {
 
-    	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
+    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
 
     	vPath path = new vPath(j);
 
-    	return Response.ok().entity(path.read(requesteurGuid)).build();
+    	return Response.ok().entity(path.read(requesteurRid)).build();
     }
     
     

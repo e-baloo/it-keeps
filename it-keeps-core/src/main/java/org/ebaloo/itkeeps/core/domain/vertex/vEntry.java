@@ -3,14 +3,14 @@ package org.ebaloo.itkeeps.core.domain.vertex;
 
 
 
-import org.ebaloo.itkeeps.Guid;
+import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.model.jEntry;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
 import org.ebaloo.itkeeps.core.domain.edge.traverse.eInPath;
 import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.SecurityAcl;
-import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.oRID;
+import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.RID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,9 +63,10 @@ public final class vEntry extends vBaseChildAcl {
 	}
 
 	
-	public jEntry read(Guid requesteurGuid) {
+	public jEntry read(Rid requesteurRid) {
 		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(new oRID(requesteurGuid), new oRID(this));
+		@SuppressWarnings("unused")
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, RID.get(this));
 		
 		// TODO Security
 				
@@ -79,14 +80,15 @@ public final class vEntry extends vBaseChildAcl {
 		return j;
 	}
 	
-	public jEntry update(jEntry j, Guid requesteurGuid) {
-		return this.update(j, requesteurGuid, false);
+	public jEntry update(jEntry j, Rid requesteurRid) {
+		return this.update(j, requesteurRid, false);
 	}
 
-	private jEntry update(jEntry j, Guid requesteurGuid, boolean force) {
+	private jEntry update(jEntry j, Rid requesteurRid, boolean force) {
 
 		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(new oRID(requesteurGuid), new oRID(this));
+		@SuppressWarnings("unused")
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, RID.get(this));
 
 		//TODO Security
 
@@ -98,7 +100,7 @@ public final class vEntry extends vBaseChildAcl {
 		if(j.isPresentPath())
 			this.setPath(j.getPath());
 
-		return read(requesteurGuid);
+		return read(requesteurRid);
 	}
 
 

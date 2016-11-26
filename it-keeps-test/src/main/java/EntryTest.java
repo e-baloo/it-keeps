@@ -1,6 +1,7 @@
 import org.ebaloo.itkeeps.ApiPath;
 import org.ebaloo.itkeeps.api.model.jEntry;
 import org.ebaloo.itkeeps.httpclient.ItkeepsHttpClient;
+import org.ebaloo.itkeeps.httpclient.ParameterEncoder;
 
 public class EntryTest {
 
@@ -13,10 +14,10 @@ public class EntryTest {
 	
 	public static final void reload(ItkeepsHttpClient client) {
 		
-		entry1 = client.callJsonRead(ApiPath.API_ENTRY_GET_ID + entry1.getGuid(), jEntry.class);
-		entry2 = client.callJsonRead(ApiPath.API_ENTRY_GET_ID + entry2.getGuid(), jEntry.class);
-		entry3 = client.callJsonRead(ApiPath.API_ENTRY_GET_ID + entry3.getGuid(), jEntry.class);
-		entry4 = client.callJsonRead(ApiPath.API_ENTRY_GET_ID + entry4.getGuid(), jEntry.class);
+		entry1 = client.callJsonRead(ApiPath.API_ENTRY_GET_ID + ParameterEncoder.encoding(entry1.getRid()), jEntry.class);
+		entry2 = client.callJsonRead(ApiPath.API_ENTRY_GET_ID + ParameterEncoder.encoding(entry2.getRid()), jEntry.class);
+		entry3 = client.callJsonRead(ApiPath.API_ENTRY_GET_ID + ParameterEncoder.encoding(entry3.getRid()), jEntry.class);
+		entry4 = client.callJsonRead(ApiPath.API_ENTRY_GET_ID + ParameterEncoder.encoding(entry4.getRid()), jEntry.class);
 		
 	}	
 	
@@ -37,10 +38,10 @@ public class EntryTest {
 		entry4 = client.callJsonCreat(ApiPath.API_ENTRY_CREATE, entry4, jEntry.class);
 		
 		
-		entry1.setPath(PathTest.jg_r1_n1_1.getJBaseLight());
-		entry2.setPath(PathTest.jg_r1_n1_2.getJBaseLight());
-		entry3.setPath(PathTest.jg_r2_n1_1.getJBaseLight());
-		entry4.setPath(PathTest.jg_r2_n1.getJBaseLight());
+		entry1.setPath(tPath.jg_r1_n1_1.getJBaseLight());
+		entry2.setPath(tPath.jg_r1_n1_2.getJBaseLight());
+		entry3.setPath(tPath.jg_r2_n1_1.getJBaseLight());
+		entry4.setPath(tPath.jg_r2_n1.getJBaseLight());
 
 
 		entry1 = client.callJsonUpdate(ApiPath.API_ENTRY_UPDATE, entry1, jEntry.class);
@@ -49,7 +50,7 @@ public class EntryTest {
 		entry4 = client.callJsonUpdate(ApiPath.API_ENTRY_UPDATE, entry4, jEntry.class);
 		
 		reload(client);
-		PathTest.reload(client);
+		tPath.reload(client);
 		
 	}
 	

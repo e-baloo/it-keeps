@@ -21,6 +21,7 @@ import  org.ebaloo.itkeeps.api.model.jUser;
 @DatabaseVertrex()
 public final class vCredential extends vBase {
 
+	@SuppressWarnings("unused")
 	private static Logger logger = LoggerFactory.getLogger(vCredential.class);
 
 	
@@ -50,7 +51,7 @@ public final class vCredential extends vBase {
 	
 		this.setAuthenticationType(j.getAuthenticationType());
 		
-		if((jblUser == null) || jblUser.getGuid() == null) {
+		if((jblUser == null) || jblUser.getRid() == null) {
 			
 			jUser juser = new jUser();
 			juser.setName(j.getUserName());

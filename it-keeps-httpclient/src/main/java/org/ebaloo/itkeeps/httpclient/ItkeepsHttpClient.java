@@ -17,7 +17,6 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.ebaloo.itkeeps.api.model.jObject;
-import org.ebaloo.itkeeps.api.model.jAclGroup;
 import org.ebaloo.itkeeps.api.model.jCredential;
 import org.ebaloo.itkeeps.api.model.jToken;
 import org.ebaloo.itkeeps.commons.ConfigFactory;

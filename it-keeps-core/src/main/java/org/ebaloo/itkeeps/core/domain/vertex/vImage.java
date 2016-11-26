@@ -4,7 +4,7 @@ package org.ebaloo.itkeeps.core.domain.vertex;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
-import org.ebaloo.itkeeps.Guid;
+import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.model.jImage;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
@@ -71,7 +71,7 @@ public final class vImage extends vBaseSysteme {
 		 this.setProperty(jImage.BASE64,value);
 		 
 		getCache().remove(this.getName());
-		getCache().remove(this.getGuid().toString());
+		getCache().remove(this.getRid().toString());
 		
 	}
 		
@@ -117,7 +117,7 @@ public final class vImage extends vBaseSysteme {
 		this.setProperty(jImage.IMAGE_TYPE, value);
 		 
 		getCache().remove(this.getName());
-		getCache().remove(this.getGuid().toString());
+		getCache().remove(this.getRid().toString());
 
 	}
 	
@@ -129,11 +129,11 @@ public final class vImage extends vBaseSysteme {
 
 		vImage image = null;
 		
-		if(!Guid.isGuid(id) && getCache().isKeyInCache(id)) {
+		if(!Rid.is(id) && getCache().isKeyInCache(id)) {
 			id = (String) getCache().get(id).getObjectValue();
 		}
 			
-		if(Guid.isGuid(id) && getCache().isKeyInCache(id)) {
+		if(Rid.is(id) && getCache().isKeyInCache(id)) {
 			return (vImage) getCache().get(id).getObjectValue();
 		}
 		
@@ -143,10 +143,10 @@ public final class vImage extends vBaseSysteme {
 		if(image != null) {
 			
 			getCache().remove(image.getName());
-			getCache().remove(image.getGuid().toString());
+			getCache().remove(image.getRid().toString());
 			
-			getCache().put(new Element(image.getName(), image.getGuid().toString()));
-			getCache().put(new Element(image.getGuid().toString(), image));
+			getCache().put(new Element(image.getName(), image.getRid().toString()));
+			getCache().put(new Element(image.getRid().toString(), image));
 		}
 
 		return image;
@@ -197,12 +197,12 @@ public final class vImage extends vBaseSysteme {
 	
 	// API
 	
-	public jImage read(Guid requesteurGuid) {
-		return read(requesteurGuid, true);
+	public jImage read(Rid requesteurRid) {
+		return read(requesteurRid, true);
 	}
 
 	
-	public jImage read(Guid requesteurGuid, final boolean full) {
+	public jImage read(Rid requesteurRid, final boolean full) {
 
 		jImage	j = new jImage();
 
@@ -219,7 +219,7 @@ public final class vImage extends vBaseSysteme {
 	}
 
 	
-	public jImage update(jImage j, Guid requesteurGuid) {
+	public jImage update(jImage j, Rid requesteurRid) {
 
 		this.updateBase(j);
 		
@@ -233,7 +233,7 @@ public final class vImage extends vBaseSysteme {
 			this.setBase64(this.getBase64());
 		
 		
-		return read(requesteurGuid);
+		return read(requesteurRid);
 	}
 	
 	

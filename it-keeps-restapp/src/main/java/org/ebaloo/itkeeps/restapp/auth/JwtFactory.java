@@ -99,7 +99,7 @@ public final class JwtFactory {
 		claims.put("iss", "IT-Keeps");		
 		
 		
-		claims.put(jBase.GUID, user.getGuid().toString());
+		claims.put(jBase.RID, user.getRid().toString());
 		claims.put(jBase.NAME, user.getName());
 		
 		//claims.put(USER_ROLE, user.getRole().toString());
@@ -162,13 +162,13 @@ public final class JwtFactory {
 	}
 	*/
 
-	public static final String getGuid(Map<String, Object> claims) {
+	public static final String getRid(Map<String, Object> claims) {
 
 		if (logger.isTraceEnabled())
-			logger.trace("getGuid()");
+			logger.trace("getRid()");
 
 
-		return claims.get(jBase.GUID).toString(); 
+		return claims.get(jBase.RID).toString(); 
 	}
 
 	public static enRole getRole(Map<String, Object> claims) {

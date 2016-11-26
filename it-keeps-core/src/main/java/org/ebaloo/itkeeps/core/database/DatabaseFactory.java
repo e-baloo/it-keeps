@@ -11,16 +11,15 @@ import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
-import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.enumeration.enAclAdmin;
 import org.ebaloo.itkeeps.api.enumeration.enAclData;
 import org.ebaloo.itkeeps.api.enumeration.enAclOwner;
 import org.ebaloo.itkeeps.api.enumeration.enAclRole;
 import org.ebaloo.itkeeps.api.enumeration.enAuthentication;
-import org.ebaloo.itkeeps.api.model.jBase;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseEdge;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
+import org.ebaloo.itkeeps.core.domain.edge.eRelation;
 import org.ebaloo.itkeeps.core.domain.vertex.vAclAdmin;
 import org.ebaloo.itkeeps.core.domain.vertex.vAclData;
 import org.ebaloo.itkeeps.core.domain.vertex.vAclEnum;
@@ -66,12 +65,6 @@ public class DatabaseFactory {
 			
 			
 			GraphFactory.executeNoReturn(null, "ALTER DATABASE DATETIMEFORMAT \"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\"");
-			
-			try {
-				GraphFactory.executeNoReturn(null, "CREATE INDEX " + vBase.class.getSimpleName() + "." + jBase.GUID + " UNIQUE_HASH_INDEX");
-			} catch (Exception e) {
-				logger.warn(e.getMessage());
-			}
 			
 			try {
 				GraphFactory.executeNoReturn(null, "CREATE INDEX " + vAclEnum.class.getSimpleName() + "." + vAclEnum.NAME + " NOTUNIQUE_HASH_INDEX");
@@ -141,7 +134,7 @@ public class DatabaseFactory {
 
 			Map<String, Class<?>> map = new TreeMap<String, Class<?>>();
 
-			for (Class<?> clasz : ReflectionsFactory.getReflections(Guid.class).getTypesAnnotatedWith(DatabaseEdge.class)) {
+			for (Class<?> clasz : ReflectionsFactory.getReflections(eRelation.class).getTypesAnnotatedWith(DatabaseEdge.class)) {
 				
 				logger.info(clasz.getName());
 				

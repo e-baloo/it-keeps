@@ -1,10 +1,9 @@
 package org.ebaloo.itkeeps.core.domain.vertex;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import org.ebaloo.itkeeps.Guid;
+import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.enumeration.enAclAdmin;
 import org.ebaloo.itkeeps.api.enumeration.enAclData;
 import org.ebaloo.itkeeps.api.enumeration.enAclOwner;
@@ -16,7 +15,6 @@ import org.ebaloo.itkeeps.api.model.jCredential;
 import org.ebaloo.itkeeps.core.database.GraphFactory;
 import org.ebaloo.itkeeps.core.domain.edge.notraverse.eAclNoTraverse;
 import org.ebaloo.itkeeps.core.domain.edge.traverse.eAclRelation;
-import org.ebaloo.itkeeps.core.domain.vertex.vBaseAbstract.WhereClause;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -251,78 +249,34 @@ public final class SecurityFactory {
 
 	}
 	
-	/*
-	static SecurityAcl getSecurityAcl(OrientBaseGraph graph, final Guid guidUser, final vBaseChildAcl dst) {
-		return SecurityFactory.getSecurityAcl(vUser.get(graph, vUser.class, guidUser, false), dst);
-	}
-	
-	static SecurityAcl getSecurityAcl(final vUser src, final vBaseChildAcl dst) {
-		return getSecurityAcl(src.getOrientVertex(), dst.getOrientVertex());
-	}
-
-	static SecurityAcl getSecurityAcl(final vUser src, final jBaseLight dst) {
-		
-		String cmd = "SELECT FROM vBase WHERE " + WhereClause.ENABLE_IS_TRUE + " AND guid = ?";
-		
-		
-		return getSecurityAcl(src.getOrientVertex(), dst.getOrientVertex());
-	}
-
-
-	
-	static OrientVertex getOrientVertex(jBaseLight jbl) {
-		
-		String cmdSQL = "SELECT FROM " + V_BASE_CLASS + " WHERE " + WhereClause.ENABLE_IS_TRUE + " AND (" + jBase.GUID + "= ?)";
-		
-		List<T> list = vBaseAbstract.commandBaseAbstract(graph, target, cmdSQL, guid.toString());
-		
-	}
-
-*/
 	
 	
-	public static class oRID {
+	public static class RID {
 		
-		public final static oRID NULL = new oRID(); 
-		
-		private final String orid;
-		
-		private oRID() {
-			this.orid = null;
+		static Rid get(vBaseChildAcl base) {
+			return base.getRid();
 		}
 		
-		oRID(vBaseChildAcl base) {
-			this.orid = base.getORID();
-		}
-		
-		oRID(jBaseLight jbl) {
-			this(jbl.getGuid());
-		}
-		
-		private static final String REQUEST_GUID = "SELECT FROM " + vBase.class.getSimpleName() + " WHERE (" + jBase.GUID + "= ?)";
-
-		
-		oRID(Guid guid) {
-			List<OrientVertex> list = GraphFactory.command(null, REQUEST_GUID, guid.toString());
-
-			if(list.size() != 1)
-				throw new RuntimeException(String.format("guid is zero or not unique (%s): %s", list.size() ,guid));
-
-			this.orid = list.get(0).getIdentity().toString();
+		static Rid get(OrientVertex ov) {
+			return new Rid(ov.getIdentity().toString());
 		}
 
-		oRID(OrientVertex ov) {
-			this.orid = ov.getIdentity().toString();
+		static Rid get(jBaseLight j) {
+			return j.getRid();
 		}
 
-		String get() {
-			return this.orid;
+		static <T extends jBase> Rid get(jBase j) {
+			return j.getRid();
+		}
+
+		static Rid get(Rid rid) {
+			return rid;
 		}
 		
 	}
 	
 		
-	static SecurityAcl getSecurityAcl(final oRID src, final oRID dst) {
+	static SecurityAcl getSecurityAcl(final Rid src, final Rid dst) {
 
 		long time = System.currentTimeMillis();
 

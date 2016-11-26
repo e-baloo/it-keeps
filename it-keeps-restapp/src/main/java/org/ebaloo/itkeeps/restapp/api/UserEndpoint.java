@@ -17,7 +17,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 import org.ebaloo.itkeeps.ApiPath;
-import org.ebaloo.itkeeps.Guid;
+import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
 import org.ebaloo.itkeeps.api.model.jUser;
@@ -41,12 +41,12 @@ public class UserEndpoint {
     @Path(ApiPath.API_USER_GET_ALL)
     public Response readAll() {
 		
-    	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
+    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
 
 		List<jUser> list = new ArrayList<jUser>();
 		
 		for(vUser user : vUser.getAllBase(null, vUser.class, false)) {
-	    	list.add(vUser.read(requesteurGuid, user.getGuid()));
+	    	list.add(vUser.read(requesteurRid, user.getRid()));
 		}
 		
     	return Response.ok().entity(list).build();
@@ -59,18 +59,13 @@ public class UserEndpoint {
     @Path(ApiPath.API_USER_GET_ID + "{id}")
 	@aApplicationRolesAllowed(enRole.USER)
     @Timed
-    public Response readId(@PathParam("id") Guid id) {
+    public Response readId(@PathParam("id") Rid id) {
 
-    	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
+    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
 
-    	/*
-		vUser user = vUser.get(null, vUser.class, id, false);
+    	jUser user = vUser.read(requesteurRid, id);
 		
-		if(user == null)
-			throw new RuntimeException("readId(" + id + ") is null" );
-		*/
-		
-    	return Response.ok().entity(vUser.read(requesteurGuid, id)).build();
+    	return Response.ok().entity(user).build();
     }
 	
     @GET //READ
@@ -80,7 +75,7 @@ public class UserEndpoint {
     @Timed
     public Response readCredId(@PathParam("id") String id) {
 
-    	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
+    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
 
     	vCredential cred = vCredential.get(null, vCredential.class, id, false);
 		
@@ -88,7 +83,7 @@ public class UserEndpoint {
 			throw new RuntimeException("readId(" + id + ") is null" );
 		
 		
-    	return Response.ok().entity(vUser.read(requesteurGuid, cred.getUser().getGuid())).build();
+    	return Response.ok().entity(vUser.read(requesteurRid, cred.getUser().getRid())).build();
     }
 
     @PUT // UPDATE
@@ -97,15 +92,13 @@ public class UserEndpoint {
 	@aApplicationRolesAllowed(enRole.USER)
     @Timed
     @Path(ApiPath.API_USER_UPDATE)
-    public Response update(final jUser juser) {
+    public Response update(final jUser j) {
     	
-    	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
+    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
     	
-    	vUser user = vUser.get(null, vUser.class,  juser.getGuid(), false);
-
-    	user.update(requesteurGuid, juser);
-
-    	return Response.ok().entity(vUser.read(requesteurGuid, juser.getGuid())).build();
+    	jUser user = vUser.update(requesteurRid, j);
+    	
+    	return Response.ok().entity(user).build();
     }
 
     @POST // CREATE
@@ -116,9 +109,9 @@ public class UserEndpoint {
     @Path(ApiPath.API_USER_CREATE)
     public Response create(final jUser juser) {
 
-    	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
+    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
 
-    	jUser user = vUser.create(requesteurGuid, juser);
+    	jUser user = vUser.create(requesteurRid, juser);
 
     	return Response.ok().entity(user).build();
     }

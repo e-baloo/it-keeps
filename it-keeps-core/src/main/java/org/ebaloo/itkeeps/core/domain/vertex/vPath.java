@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.ebaloo.itkeeps.Guid;
+import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.model.jPath;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
@@ -97,7 +97,7 @@ public final class vPath extends vBaseChildAcl {
 
 	
 
-	public jPath read(Guid requesteurGuid) {
+	public jPath read(Rid requesteurRid) {
 		
 		jPath j = new jPath();
 
@@ -111,9 +111,9 @@ public final class vPath extends vBaseChildAcl {
 		return j;
 	}
 
-	public jPath update(jPath j, Guid requesteurGuid) {
+	public jPath update(jPath j, Rid requesteurRid) {
 		
-		vUser requesterUser = vUser.get(this.getGraph(), vUser.class, requesteurGuid, false);
+		vUser requesterUser = vUser.get(this.getGraph(), vUser.class, requesteurRid, false);
 
 		switch(requesterUser.getRole().value()) {
 
@@ -143,7 +143,7 @@ public final class vPath extends vBaseChildAcl {
 		if(jpath.isPresentChilds())
 			this.setChildsJBL(jpath.getChilds());
 		
-		return read(requesteurGuid);
+		return read(requesteurRid);
 	}
 }
 

@@ -8,8 +8,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.ebaloo.itkeeps.Guid;
-import org.ebaloo.itkeeps.api.model.jBase;
+import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.model.jBaseStandard;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
@@ -251,7 +250,7 @@ public abstract class vBaseStandard extends vBase {
 		
 		String value = this.getProperty(jBaseStandard.ICON);
 		
-		if(Guid.isGuid(value)) {
+		if(Rid.is(value)) {
 			return value;
 		}
 		

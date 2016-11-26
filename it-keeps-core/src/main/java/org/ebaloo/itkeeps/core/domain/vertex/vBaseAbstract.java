@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 import com.tinkerpop.blueprints.Direction;
 import org.apache.commons.lang.StringUtils;
-import org.ebaloo.itkeeps.Guid;
+import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.model.jBase;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.core.database.GraphFactory;
@@ -41,30 +41,30 @@ abstract class vBaseAbstract extends vCommon {
 	
 	public static final <T extends vBaseAbstract> T get(OrientBaseGraph graph, final Class<T> target, final jBaseLight baselight, boolean isInstanceof)  
  	{
-    	if(baselight == null || !baselight.isPresentGuid())
+    	if(baselight == null || !baselight.isPresentRid())
     		return null;
     	
-		return get(graph, target, baselight.getGuid(), isInstanceof);
+		return get(graph, target, baselight.getRid(), isInstanceof);
 	}
 	
 	
    
 
-	public static final <T extends vBaseAbstract> T get(final OrientBaseGraph graph, final Class<T> target, final Guid guid, boolean isInstanceof)  
+	public static final <T extends vBaseAbstract> T get(final OrientBaseGraph graph, final Class<T> target, final Rid rid, boolean isInstanceof)  
 	{
-    	if(guid == null)
+    	if(rid == null)
     		return null;
 		
-		String cmdSQL = "SELECT FROM " + target.getSimpleName() + " WHERE " + WhereClause.IsntanceOf(target, isInstanceof) + " AND (" + jBase.GUID + "= ?)";
+		String cmdSQL = "SELECT FROM " + rid.get() + " WHERE " + WhereClause.IsntanceOf(target, isInstanceof);
 		
-		List<T> list = vBaseAbstract.commandBaseAbstract(graph, target, cmdSQL, guid.toString());
+		List<T> list = vBaseAbstract.commandBaseAbstract(graph, target, cmdSQL);
 		
 		if(list.size() == 0) {
 			return null;
 		}
 		
 		if(list.size() > 1) {
-			throw new RuntimeException(String.format("guid is not unique : %s", guid));
+			throw new RuntimeException(String.format("rid is not unique : %s", rid));
 		}
 		
 		return list.get(0);
@@ -76,8 +76,8 @@ abstract class vBaseAbstract extends vCommon {
     	if(StringUtils.isEmpty(name))
     		return null;
 		
-    	if(Guid.isGuid(name))
-    		return get(graph, target, new Guid(name), isInstanceof); 
+    	if(Rid.is(name))
+    		return get(graph, target, new Rid(name), isInstanceof); 
     	
 		String cmdSQL = "SELECT FROM " + target.getSimpleName() + " WHERE " + WhereClause.IsntanceOf(target, isInstanceof) + " AND (" + jBase.NAME + "= ?)";
 		
@@ -97,12 +97,16 @@ abstract class vBaseAbstract extends vCommon {
 	
 	
     
-    protected static <T extends vBaseAbstract> List<T> getListBaseAbstract(OrientBaseGraph graph, final Class<T> target, final List<Guid> guid) {
+    protected static <T extends vBaseAbstract> List<T> getListBaseAbstract(OrientBaseGraph graph, final Class<T> target, final List<Rid> ridList) {
 
-		String cmdSQL = "SELECT FROM " + vBase.class.getSimpleName() + " WHERE (" + jBase.GUID + " IN [" + guid.stream().map(e -> "'" + e.toString() + "'").collect(Collectors.joining(","))
-				+ "])";
+    	StringBuilder request = new StringBuilder();
+    	
+    	request.append("SELECT FROM [");
+    	request.append(ridList.stream().map(e -> e.get()).collect(Collectors.joining(",")));
+    	request.append("] WHERE @class INSTANCEOF ");
+    	request.append(vBase.class.getSimpleName());
 
-		return vBaseAbstract.commandBaseAbstract(graph, target, cmdSQL);
+		return vBaseAbstract.commandBaseAbstract(graph, target, request.toString());
 	}
     
     
@@ -422,6 +426,16 @@ abstract class vBaseAbstract extends vCommon {
 		
 		
 		return type.getName();
+	}
+	
+	private Rid rid = null;
+	
+	public final Rid getRid() {
+		
+		if(rid == null)
+			rid = new Rid(this.getORID());
+		
+		return rid;
 	}
 
 	

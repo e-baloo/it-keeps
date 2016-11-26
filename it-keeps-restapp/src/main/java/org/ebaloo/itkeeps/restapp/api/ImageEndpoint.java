@@ -15,7 +15,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 import org.ebaloo.itkeeps.ApiPath;
-import org.ebaloo.itkeeps.Guid;
+import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
 import org.ebaloo.itkeeps.api.model.jImage;
@@ -39,14 +39,14 @@ public class ImageEndpoint {
     @Path(ApiPath.API_IMAGE_GET_ALL)
     public Response readAll() {
 
-    	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
+    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
 
     	
     	
 		List<jImage> list = new ArrayList<jImage>();
 		
 		for(vImage image : vImage.getAllBase(null, vImage.class, false)) {
-		    	list.add(image.read(requesteurGuid, false));
+		    	list.add(image.read(requesteurRid, false));
 		}
 		
     	return Response.ok().entity(list).build();
@@ -62,11 +62,11 @@ public class ImageEndpoint {
     @Timed
     public Response getImage(@PathParam("id") String id) {
 
-    	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
+    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
 
     	vImage image = vImage.getImage(id);
     	
-    	return Response.ok().entity(image.read(requesteurGuid, true)).build();
+    	return Response.ok().entity(image.read(requesteurRid, true)).build();
     }
 	
     

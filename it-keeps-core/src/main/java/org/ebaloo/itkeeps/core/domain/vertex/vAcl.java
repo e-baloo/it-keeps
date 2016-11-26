@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.ebaloo.itkeeps.Guid;
+import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.enumeration.enAclAdmin;
 import org.ebaloo.itkeeps.api.enumeration.enAclData;
@@ -153,7 +153,7 @@ public final class vAcl extends vBase {
 
 	
 
-	public jAcl read(Guid requesteurGuid) {
+	public jAcl read(Rid requesteurGuid) {
 		
 		jAcl j = new jAcl();
 		
@@ -168,7 +168,7 @@ public final class vAcl extends vBase {
 		return j;
 	}
 	
-	public jAcl update(jAcl j, Guid requesteurGuid) {
+	public jAcl update(jAcl j, Rid requesteurGuid) {
 		
 		vUser requesterUser = vUser.get(this.getGraph(), vUser.class, requesteurGuid, false);
 

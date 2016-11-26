@@ -17,7 +17,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 import org.ebaloo.itkeeps.ApiPath;
-import org.ebaloo.itkeeps.Guid;
+import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
 import org.ebaloo.itkeeps.api.model.jAclGroup;
@@ -38,8 +38,8 @@ public class rAclGroup {
     @Timed
     @Path(ApiPath.API_ACL_GRP_GET_ALL)
     public Response readAll() {
-    	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
-		List<jAclGroup> list = vAclGroup.readAll(requesteurGuid);
+    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
+		List<jAclGroup> list = vAclGroup.readAll(requesteurRid);
     	return Response.ok().entity(list).build();
 	}
 	
@@ -49,9 +49,9 @@ public class rAclGroup {
 	@aApplicationRolesAllowed(enRole.ROOT)
     @Timed
     @Path(ApiPath.API_ACL_GRP_GET_ID + "{id}")
-    public Response readId(@PathParam("id") Guid guid) {
-    	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
-    	jAclGroup j = vAclGroup.read(requesteurGuid, guid);
+    public Response readId(@PathParam("id") Rid guid) {
+    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
+    	jAclGroup j = vAclGroup.read(requesteurRid, guid);
     	return Response.ok().entity(j).build();
     }
 	
@@ -62,8 +62,8 @@ public class rAclGroup {
     @Timed
     @Path(ApiPath.API_ACL_GRP_UPDATE)
     public Response update(jAclGroup j) {
-    	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
-    	j = vAclGroup.update(requesteurGuid, j);
+    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
+    	j = vAclGroup.update(requesteurRid, j);
     	return Response.ok().entity(j).build();
     }
 
@@ -75,9 +75,9 @@ public class rAclGroup {
     @Path(ApiPath.API_ACL_GRP_CREATE)
     public Response create(jAclGroup j) {
 
-    	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
+    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
 
-    	j = vAclGroup.create(requesteurGuid, j);
+    	j = vAclGroup.create(requesteurRid, j);
     	
     	return Response.ok().entity(j).build();
     }
@@ -87,9 +87,9 @@ public class rAclGroup {
 	@aApplicationRolesAllowed(enRole.ROOT)
     @Timed
     @Path(ApiPath.API_ACL_GRP_DELETE + "{id}")
-    public Response delete(@PathParam("id") Guid guid) {
-    	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
-    	jAclGroup j = vAclGroup.delete(requesteurGuid, guid);
+    public Response delete(@PathParam("id") Rid rid) {
+    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
+    	jAclGroup j = vAclGroup.delete(requesteurRid, rid);
     	return Response.ok().entity(j).build();
     }
     

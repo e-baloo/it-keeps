@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.ebaloo.itkeeps.Guid;
+import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.enumeration.enAclAdmin;
 import org.ebaloo.itkeeps.api.enumeration.enAclData;
 import org.ebaloo.itkeeps.api.model.jAclGroup;
@@ -16,7 +16,6 @@ import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
 import org.ebaloo.itkeeps.core.domain.edge.notraverse.eAclNoTraverse;
 import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.ExceptionPermission;
 import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.SecurityAcl;
-import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.oRID;
 
 import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
 
@@ -174,21 +173,21 @@ public final class vAclGroup extends vBase {
 	}
 	
 
-	public static final jAclGroup create(Guid requesteurGuid, jAclGroup j) {
+	public static final jAclGroup create(Rid requesteurRid, jAclGroup j) {
 		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(new oRID(requesteurGuid), oRID.NULL);
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
 		if(!sAcl.isRoleRoot())
 			throw ExceptionPermission.NOT_ROOT;
 
 		vAclGroup aclGroup = new vAclGroup(j);
 		
-		return vAclGroup.read(requesteurGuid, aclGroup.getGuid());
+		return vAclGroup.read(requesteurRid, aclGroup.getRid());
 	}
 
 
-	public static final jAclGroup delete(Guid requesteurGuid, Guid guid) {
+	public static final jAclGroup delete(Rid requesteurRid, Rid guid) {
 		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(new oRID(requesteurGuid), oRID.NULL);
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
 		if(!sAcl.isRoleRoot())
 			throw ExceptionPermission.NOT_ROOT;
 
@@ -200,9 +199,9 @@ public final class vAclGroup extends vBase {
 		return j;
 	}
 
-	public static final jAclGroup read(Guid requesteurGuid, Guid guid) {
+	public static final jAclGroup read(Rid requesteurRid, Rid guid) {
 		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(new oRID(requesteurGuid), oRID.NULL);
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
 		if(!sAcl.isRoleRoot())
 			throw ExceptionPermission.NOT_ROOT;
 
@@ -211,18 +210,18 @@ public final class vAclGroup extends vBase {
 		return aclGroup.read();
 	}
 
-	public static final jAclGroup update(Guid requesteurGuid,  jAclGroup j) {
+	public static final jAclGroup update(Rid requesteurRid,  jAclGroup j) {
 		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(new oRID(requesteurGuid), oRID.NULL);
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
 		if(!sAcl.isRoleRoot())
 			throw ExceptionPermission.NOT_ROOT;
 
-		vAclGroup aclGroup = vAclGroup.get(null, vAclGroup.class, j.getGuid(), false);
+		vAclGroup aclGroup = vAclGroup.get(null, vAclGroup.class, j.getRid(), false);
 
 		aclGroup.checkVersion(j);
 		aclGroup.update(j);
 		
-		return vAclGroup.read(requesteurGuid, j.getGuid());
+		return vAclGroup.read(requesteurRid, j.getRid());
 	}
 	
 	
@@ -233,9 +232,9 @@ public final class vAclGroup extends vBase {
 		this.setChild(j.getChild());
 	}
 
-	public static final List<jAclGroup> readAll(Guid requesteurGuid) {
+	public static final List<jAclGroup> readAll(Rid requesteurRid) {
 		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(new oRID(requesteurGuid), oRID.NULL);
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
 		if(!sAcl.isRoleRoot())
 			throw ExceptionPermission.NOT_ROOT;
 

@@ -17,7 +17,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 import org.ebaloo.itkeeps.ApiPath;
-import org.ebaloo.itkeeps.Guid;
+import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
 import org.ebaloo.itkeeps.api.model.jAcl;
@@ -40,12 +40,12 @@ public class AclEndpoint {
     @Path(ApiPath.API_ACL_GET_ALL)
     public Response readAll() {
 		
-    	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
+    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
 
 		List<jAcl> list = new ArrayList<jAcl>();
 		
 		for(vAcl acl : vAcl.getAllBase(null, vAcl.class, false)) {
-	    	list.add(acl.read(requesteurGuid));
+	    	list.add(acl.read(requesteurRid));
 		}
 		
     	return Response.ok().entity(list).build();
@@ -60,7 +60,7 @@ public class AclEndpoint {
     @Timed
     public Response readId(@PathParam("id") String id) {
 
-    	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
+    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
 
     	vAcl acl = vAcl.get(null, vAcl.class, id, false);
 		
@@ -68,7 +68,7 @@ public class AclEndpoint {
 			throw new RuntimeException("readId(" + id + ") is null" );
 		
 		
-    	return Response.ok().entity(acl.read(requesteurGuid)).build();
+    	return Response.ok().entity(acl.read(requesteurRid)).build();
     }
 	
     @PUT // UPDATE
@@ -79,13 +79,13 @@ public class AclEndpoint {
     @Path(ApiPath.API_ACL_UPDATE)
     public Response update(final jAcl j) {
     	
-    	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
+    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
     	
-    	vAcl acl = vAcl.get(null, vAcl.class,  j.getGuid(), false);
+    	vAcl acl = vAcl.get(null, vAcl.class,  j.getRid(), false);
 
-    	acl.update(j, requesteurGuid);
+    	acl.update(j, requesteurRid);
 
-    	return Response.ok().entity(acl.read(requesteurGuid)).build();
+    	return Response.ok().entity(acl.read(requesteurRid)).build();
     }
 
     @POST // CREATE
@@ -96,11 +96,11 @@ public class AclEndpoint {
     @Path(ApiPath.API_ACL_CREATE)
     public Response create(final jAcl j) {
 
-    	Guid requesteurGuid = new Guid(securityContext.getUserPrincipal().getName());
+    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
 
     	vAcl acl = new vAcl(j);
     	
-    	return Response.ok().entity(acl.read(requesteurGuid)).build();
+    	return Response.ok().entity(acl.read(requesteurRid)).build();
     }
     
     

@@ -3,7 +3,7 @@ package org.ebaloo.itkeeps.api.model;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.ebaloo.itkeeps.Guid;
+import org.ebaloo.itkeeps.Rid;
 import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -26,7 +26,7 @@ public class jBase extends jObject {
 	public static final String DESCRIPTION = "description";
 	public static final String NAME = jBaseLight.NAME;
 	public static final String CLASS_TYPE = jBaseLight.CLASS_TYPE;
-	public static final String GUID = jBaseLight.GUID;
+	public static final String RID = jBaseLight.RID;
 	public static final String VERSION = jBaseLight.VERSION;
 	
 	
@@ -39,8 +39,8 @@ public class jBase extends jObject {
 		
 		jBaseLight j = new jBaseLight();
 		
-		if(this.isPresentGuid())
-			j.setGuid(this.getGuid());
+		if(this.isPresentRid())
+			j.setRid(this.getRid());
 		
 		if(this.isPresentName())
 			j.setName(this.getName());
@@ -82,31 +82,31 @@ public class jBase extends jObject {
 	// GUID
 	
 	@JsonIgnore
-	private Optional<Guid> guid = Optional.empty();
+	private Optional<Rid> rid = Optional.empty();
 	
 	@JsonIgnore
-	public final Guid getGuid() {
-		return this.guid.orElse(null);
+	public final Rid getRid() {
+		return this.rid.orElse(null);
 	}
 
-	@JsonProperty(GUID)
-	private final String _getGuid() {
-		return guid.isPresent() ?  guid.get().toString() : null;
-	}
-
-	@JsonIgnore
-	public final void setGuid(Guid guid) {
-		this.guid = Optional.ofNullable(guid);
-	}
-
-	@JsonProperty(GUID)
-	private final void _setGuid(String guid) {
-		this.guid = StringUtils.isEmpty(guid) ? Optional.empty() : Optional.of(new Guid(guid));
+	@JsonProperty(RID)
+	private final String _getRid() {
+		return rid.isPresent() ?  rid.get().toString() : null;
 	}
 
 	@JsonIgnore
-	public final boolean isPresentGuid() {
-		return this.guid.isPresent();
+	public final void setRid(Rid rid) {
+		this.rid = Optional.ofNullable(rid);
+	}
+
+	@JsonProperty(RID)
+	private final void _setRid(String rid) {
+		this.rid = StringUtils.isEmpty(rid) ? Optional.empty() : Optional.of(new Rid(rid));
+	}
+
+	@JsonIgnore
+	public final boolean isPresentRid() {
+		return this.rid.isPresent();
 	}
 
 	

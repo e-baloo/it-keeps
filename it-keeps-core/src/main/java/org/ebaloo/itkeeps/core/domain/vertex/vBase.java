@@ -6,12 +6,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.ebaloo.itkeeps.Guid;
 import org.ebaloo.itkeeps.api.model.jBase;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
-import org.ebaloo.itkeeps.core.domain.GuidFactory;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
@@ -44,44 +42,9 @@ public class vBase extends vBaseAbstract {
 
 	protected vBase(final String name) {
 		super(true);
-
-		this.defaultSetting(GuidFactory.getGuid());
-
-		if(StringUtils.isNoneBlank(name)) {
-			this.setName(name);
-		}
-
-	}
-
-	
-
-	
-	
-	private void defaultSetting(Guid guid) {
-		this.setProperty(jBase.GUID, guid.toString());
 		this.setProperty(jBase.CREATION_DATE, DateTime.now(DateTimeZone.UTC).toDate());
-		this.setProperty(jBase.NAME, guid.toString());		
-		this.commit();
+		this.setProperty(jBase.NAME, StringUtils.isEmpty(name) ? this.getORID() : name );		
 	}
-	
-	
-	public void defaultSetting(String name) {
-
-		if(!this.hasGuid()) {
-			defaultSetting(GuidFactory.getGuid());
-		}
-
-		this.setName(name);
-		this.commit();
-		
-		
-	}
-	
-
-
-
-	
-
 
 
 	
@@ -326,7 +289,7 @@ public class vBase extends vBaseAbstract {
     	
     	jBaseLight j = new jBaseLight();
     	
-    	j.setGuid(base.getGuid());
+    	j.setRid(base.getRid());
     	j.setName(base.getName());
     	j.setType(base.getType());
     	j.setVersion(base.getObjectVersion());
@@ -344,9 +307,7 @@ public class vBase extends vBaseAbstract {
 
 
 		try {
-			this.setProperty(jBase.GUID, GuidFactory.getGuid());
 			this.setProperty(jBase.CREATION_DATE, DateTime.now(DateTimeZone.UTC).toDate());
-	
 			this.updateBase(j);
 		} catch (Exception e) {
 			this.delete();
@@ -366,7 +327,7 @@ public class vBase extends vBaseAbstract {
 		j.getJObject().setVersion(this.getObjectVersion());
 		j.getJObject().setCreationDate(this.getCreationDate());
 
-		j.setGuid(this.getGuid());
+		j.setRid(this.getRid());
 		j.setName(this.getName());
 		j.setDescription(this.getDescription());
 		
@@ -400,25 +361,6 @@ public class vBase extends vBaseAbstract {
 	
 	
 	
-	
-	
-	/*
-	 * GUID 
-	 */
-	
-	private Guid guid = null; 
-
-	
-	@DatabaseProperty(name = jBase.GUID, isNotNull = true, isReadOnly = true)
-	public final Guid getGuid() {
-		
-		if(this.guid == null) {
-			guid = new Guid(this.getProperty(jBase.GUID).toString());
-		}
-		
-		return guid;
-	}
-
 
 	/*
 	 * NAME
@@ -452,24 +394,6 @@ public class vBase extends vBaseAbstract {
 
 	
 
-	
-	public boolean hasGuid() {
-		
-		if(guid != null) {
-			return true;
-		}
-		
-		Object obj = this.getProperty(jBase.GUID);
-		
-		if(obj == null) {
-			return false;
-		}
-		
-		return Guid.isGuid(this.getProperty(jBase.GUID).toString());
-		
-	}
-	
-
 	public String toString() {
 		
 		StringBuilder sb = new StringBuilder();
@@ -477,7 +401,7 @@ public class vBase extends vBaseAbstract {
 		try {
 			sb.append(this.getType());
 			sb.append("/");
-			sb.append(this.getGuid());
+			sb.append(this.getRid());
 			sb.append("/");
 			sb.append(this.getName());
 		} catch ( Throwable e) {

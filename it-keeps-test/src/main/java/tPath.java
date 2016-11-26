@@ -1,8 +1,9 @@
 import org.ebaloo.itkeeps.ApiPath;
 import org.ebaloo.itkeeps.api.model.jPath;
 import org.ebaloo.itkeeps.httpclient.ItkeepsHttpClient;
+import org.ebaloo.itkeeps.httpclient.ParameterEncoder;
 
-public class PathTest {
+public class tPath {
 
 	public static jPath jg_r1 = new jPath();
 	public static jPath jg_r2 = new jPath();
@@ -18,15 +19,15 @@ public class PathTest {
 	
 	public static final void reload(ItkeepsHttpClient client) {
 		
-		jg_r1 = client.callJsonRead(ApiPath.API_PATH_GET_ID + jg_r1.getGuid(), jPath.class);
-		jg_r2 = client.callJsonRead(ApiPath.API_PATH_GET_ID + jg_r2.getGuid(), jPath.class);
-		jg_r1_n1 = client.callJsonRead(ApiPath.API_PATH_GET_ID + jg_r1_n1.getGuid(), jPath.class);
-		jg_r1_n2 = client.callJsonRead(ApiPath.API_PATH_GET_ID + jg_r1_n2.getGuid(), jPath.class);
-		jg_r1_n1_1 = client.callJsonRead(ApiPath.API_PATH_GET_ID + jg_r1_n1_1.getGuid(), jPath.class);
-		jg_r1_n1_2 = client.callJsonRead(ApiPath.API_PATH_GET_ID + jg_r1_n1_2.getGuid(), jPath.class);
-		jg_r2_n1 = client.callJsonRead(ApiPath.API_PATH_GET_ID + jg_r2_n1.getGuid(), jPath.class);
-		jg_r2_n1_1 = client.callJsonRead(ApiPath.API_PATH_GET_ID + jg_r2_n1_1.getGuid(), jPath.class);
-		jg_r2_n1_2 = client.callJsonRead(ApiPath.API_PATH_GET_ID + jg_r2_n1_2.getGuid(), jPath.class);
+		jg_r1 = client.callJsonRead(ApiPath.API_PATH_GET_ID + ParameterEncoder.encoding(jg_r1.getRid()), jPath.class);
+		jg_r2 = client.callJsonRead(ApiPath.API_PATH_GET_ID + ParameterEncoder.encoding(jg_r2.getRid()), jPath.class);
+		jg_r1_n1 = client.callJsonRead(ApiPath.API_PATH_GET_ID + ParameterEncoder.encoding(jg_r1_n1.getRid()), jPath.class);
+		jg_r1_n2 = client.callJsonRead(ApiPath.API_PATH_GET_ID + ParameterEncoder.encoding(jg_r1_n2.getRid()), jPath.class);
+		jg_r1_n1_1 = client.callJsonRead(ApiPath.API_PATH_GET_ID + ParameterEncoder.encoding(jg_r1_n1_1.getRid()), jPath.class);
+		jg_r1_n1_2 = client.callJsonRead(ApiPath.API_PATH_GET_ID + ParameterEncoder.encoding(jg_r1_n1_2.getRid()), jPath.class);
+		jg_r2_n1 = client.callJsonRead(ApiPath.API_PATH_GET_ID + ParameterEncoder.encoding(jg_r2_n1.getRid()), jPath.class);
+		jg_r2_n1_1 = client.callJsonRead(ApiPath.API_PATH_GET_ID + ParameterEncoder.encoding(jg_r2_n1_1.getRid()), jPath.class);
+		jg_r2_n1_2 = client.callJsonRead(ApiPath.API_PATH_GET_ID + ParameterEncoder.encoding(jg_r2_n1_2.getRid()), jPath.class);
 		
 	}	
 	

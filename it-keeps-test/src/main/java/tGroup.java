@@ -1,8 +1,9 @@
 import org.ebaloo.itkeeps.ApiPath;
 import org.ebaloo.itkeeps.api.model.jGroup;
 import org.ebaloo.itkeeps.httpclient.ItkeepsHttpClient;
+import org.ebaloo.itkeeps.httpclient.ParameterEncoder;
 
-public class GroupTest {
+public class tGroup {
 
 	public static jGroup jg_r = new jGroup();
 	public static jGroup jg_n1 = new jGroup();
@@ -16,13 +17,13 @@ public class GroupTest {
 	
 	public static final void reload(ItkeepsHttpClient client) {
 		
-		jg_r = client.callJsonRead(ApiPath.API_GROUP_GET_ID + jg_r.getGuid(), jGroup.class);
-		jg_n1 = client.callJsonRead(ApiPath.API_GROUP_GET_ID + jg_n1.getGuid(), jGroup.class);
-		jg_n1_1 = client.callJsonRead(ApiPath.API_GROUP_GET_ID + jg_n1_1.getGuid(), jGroup.class);
-		jg_n1_2 = client.callJsonRead(ApiPath.API_GROUP_GET_ID + jg_n1_2.getGuid(), jGroup.class);
-		jg_n2 = client.callJsonRead(ApiPath.API_GROUP_GET_ID + jg_n2.getGuid(), jGroup.class);
-		jg_n2_1 = client.callJsonRead(ApiPath.API_GROUP_GET_ID + jg_n2_1.getGuid(), jGroup.class);
-		jg_n2_2 = client.callJsonRead(ApiPath.API_GROUP_GET_ID + jg_n2_2.getGuid(), jGroup.class);
+		jg_r = client.callJsonRead(ApiPath.API_GROUP_GET_ID + ParameterEncoder.encoding(jg_r.getRid()), jGroup.class);
+		jg_n1 = client.callJsonRead(ApiPath.API_GROUP_GET_ID + ParameterEncoder.encoding(jg_n1.getRid()), jGroup.class);
+		jg_n1_1 = client.callJsonRead(ApiPath.API_GROUP_GET_ID + ParameterEncoder.encoding(jg_n1_1.getRid()), jGroup.class);
+		jg_n1_2 = client.callJsonRead(ApiPath.API_GROUP_GET_ID + ParameterEncoder.encoding(jg_n1_2.getRid()), jGroup.class);
+		jg_n2 = client.callJsonRead(ApiPath.API_GROUP_GET_ID + ParameterEncoder.encoding(jg_n2.getRid()), jGroup.class);
+		jg_n2_1 = client.callJsonRead(ApiPath.API_GROUP_GET_ID + ParameterEncoder.encoding(jg_n2_1.getRid()), jGroup.class);
+		jg_n2_2 = client.callJsonRead(ApiPath.API_GROUP_GET_ID + ParameterEncoder.encoding(jg_n2_2.getRid()), jGroup.class);
 		
 	}	
 	

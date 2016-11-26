@@ -4,8 +4,9 @@ import org.ebaloo.itkeeps.api.enumeration.enAclData;
 import org.ebaloo.itkeeps.api.enumeration.enAclOwner;
 import org.ebaloo.itkeeps.api.model.jAcl;
 import org.ebaloo.itkeeps.httpclient.ItkeepsHttpClient;
+import org.ebaloo.itkeeps.httpclient.ParameterEncoder;
 
-public class AclTest {
+public class tTest {
 
 	public static jAcl acl1 = new jAcl();
 
@@ -13,7 +14,7 @@ public class AclTest {
 	
 	public static final void reload(ItkeepsHttpClient client) {
 		
-		acl1 = client.callJsonRead(ApiPath.API_ACL_GET_ID + acl1.getGuid(), jAcl.class);
+		acl1 = client.callJsonRead(ApiPath.API_ACL_GET_ID + ParameterEncoder.encoding(acl1.getRid()), jAcl.class);
 		
 	}	
 	
@@ -26,8 +27,8 @@ public class AclTest {
 		acl1.getAclData().add(enAclData.PATH_CREATE);
 		acl1.getAclData().add(enAclData.ENTRY_CREATE);
 		acl1.getAclAdmin().add(enAclAdmin.DELEGATE);
-		acl1.getChildObjects().add(GroupTest.jg_n1.getJBaseLight());
-		acl1.getChildObjects().add(PathTest.jg_r2_n1.getJBaseLight());
+		acl1.getChildObjects().add(tGroup.jg_n1.getJBaseLight());
+		acl1.getChildObjects().add(tPath.jg_r2_n1.getJBaseLight());
 
 		/* Create */
 		
@@ -36,8 +37,8 @@ public class AclTest {
 		
 		
 		reload(client);
-		PathTest.reload(client);
-		GroupTest.reload(client);
+		tPath.reload(client);
+		tGroup.reload(client);
 		
 	}
 	

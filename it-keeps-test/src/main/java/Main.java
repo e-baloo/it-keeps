@@ -61,11 +61,11 @@ public class Main {
 
 		tAclGroup.run(client);
 
-		GroupTest.run(client);
-		PathTest.run(client);
-		UserTest.run(client);
+		tGroup.run(client);
+		tPath.run(client);
+		tUser.run(client);
 		EntryTest.run(client);
-		AclTest.run(client);
+		tTest.run(client);
 		
 		
 

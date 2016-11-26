@@ -2,6 +2,8 @@ import org.ebaloo.itkeeps.ApiPath;
 import org.ebaloo.itkeeps.api.enumeration.enAclData;
 import org.ebaloo.itkeeps.api.model.jAclGroup;
 import org.ebaloo.itkeeps.httpclient.ItkeepsHttpClient;
+import org.ebaloo.itkeeps.httpclient.ParameterEncoder;
+
 
 public class tAclGroup {
 
@@ -93,14 +95,17 @@ public class tAclGroup {
 		
 		
 		/* Create */
-		
+		//ParameterEncoder.encoding(engine, "UTF-8")
 		
 		aclGrp_TestDelete = client.callJsonCreat(ApiPath.API_ACL_GRP_CREATE, aclGrp_TestDelete, jAclGroup.class);
-		aclGrp_TestDelete = client.callJsonDelete(ApiPath.API_ACL_GRP_DELETE + aclGrp_TestDelete.getGuid(), jAclGroup.class);
+		
+		aclGrp_TestDelete = client.callJsonDelete(ApiPath.API_ACL_GRP_DELETE + ParameterEncoder.encoding(aclGrp_TestDelete.getRid()), jAclGroup.class);
 		
 		
 		
 	}
+
+
 	
 	
 }

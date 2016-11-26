@@ -90,7 +90,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 		}
 		
 		enRole requesterRole = JwtFactory.getRole(claims);
-		String guid = JwtFactory.getGuid(claims);
+		String rid = JwtFactory.getRid(claims);
 		
 		
         //Verify user access by Roles
@@ -114,7 +114,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 		if (logger.isTraceEnabled())
 			logger.trace("'token.role' is valide -> Ok");
 		
-		requestContext.setSecurityContext(new SecurityContextAuthorizer(uriInfo, guid, requesterRole));
+		requestContext.setSecurityContext(new SecurityContextAuthorizer(uriInfo, rid, requesterRole));
 		
 	}
 

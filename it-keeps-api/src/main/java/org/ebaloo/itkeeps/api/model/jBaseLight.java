@@ -3,7 +3,7 @@ package org.ebaloo.itkeeps.api.model;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.ebaloo.itkeeps.Guid;
+import org.ebaloo.itkeeps.Rid;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -14,7 +14,7 @@ public class jBaseLight extends jObject {
 
 	public static final String NAME = "name";
 	public static final String CLASS_TYPE = "classType";
-	public static final String GUID = "guid";
+	public static final String RID = Rid.RDI_NAME;
 	public static final String VERSION = "version";
 	
 	public jBaseLight() {
@@ -27,30 +27,30 @@ public class jBaseLight extends jObject {
 	// GUID
 	
 	@JsonIgnore
-	private Optional<Guid> guid = Optional.empty();
+	private Optional<Rid> guid = Optional.empty();
 	
 	@JsonIgnore
-	public final Guid getGuid() {
+	public final Rid getRid() {
 		return this.guid.orElse(null);
 	}
 
-	@JsonProperty(GUID)
-	private final String _getGuid() {
+	@JsonProperty(RID)
+	private final String _getRid() {
 		return guid.isPresent() ?  guid.get().toString() : null;
 	}
 
 	@JsonIgnore
-	public final void setGuid(Guid guid) {
+	public final void setRid(Rid guid) {
 		this.guid = Optional.of(guid);
 	}
 
-	@JsonProperty(GUID)
-	private final void _setGuid(String guid) {
-		this.guid = StringUtils.isEmpty(guid) ? Optional.of(null) : Optional.of(new Guid(guid));
+	@JsonProperty(RID)
+	private final void _setRid(String guid) {
+		this.guid = StringUtils.isEmpty(guid) ? Optional.of(null) : Optional.of(new Rid(guid));
 	}
 
 	@JsonIgnore
-	public final boolean isPresentGuid() {
+	public final boolean isPresentRid() {
 		return this.guid.isPresent();
 	}
 
