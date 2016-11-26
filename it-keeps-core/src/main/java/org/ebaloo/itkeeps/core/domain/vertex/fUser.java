@@ -26,16 +26,18 @@ public final class fUser extends vBaseChildAcl {
 	
 	// API
 	
-	public static final jUser read(Rid requesteurRid, Rid user) {
+	public static final jUser read(Rid requesteurRid, Rid userRid) {
 
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, user);
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, userRid);
 
 		if(sAcl.isRoleGuest())
 			throw ExceptionPermission.IS_GUEST;
-		if((!sAcl.isRoleRoot() || !sAcl.isRoleAdmin()) && !user.equals(requesteurRid) )
+		if((!sAcl.isRoleRoot() || !sAcl.isRoleAdmin()) && !userRid.equals(requesteurRid) )
 			throw ExceptionPermission.IS_USER;
 
-		return vUser.get(null, vUser.class, user, false).read(sAcl);
+		vUser user = vUser.get(null, vUser.class, userRid, false);
+		
+		return user.read();
 	}
 	
 
@@ -51,7 +53,7 @@ public final class fUser extends vBaseChildAcl {
 		
 		checkUpdate(sAcl, j);
 		
-		vUser user = new vUser(j, sAcl);
+		vUser user = new vUser(j);
 		
 		return fUser.read(requesteurRid, user.getRid());
 	}

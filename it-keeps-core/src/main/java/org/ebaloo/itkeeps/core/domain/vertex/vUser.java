@@ -14,7 +14,7 @@ import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
 import org.ebaloo.itkeeps.core.domain.edge.notraverse.eAclNoTraverse;
 import org.ebaloo.itkeeps.core.domain.edge.notraverse.eCredentialToUser;
 import org.ebaloo.itkeeps.core.domain.edge.traverse.eInGroup;
-import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.SecurityAcl;
+//import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.SecurityAcl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -187,7 +187,7 @@ public final class vUser extends vBaseChildAcl {
 	
 	// API
 	
-	vUser(final jUser j, final SecurityAcl sAcl) {
+	vUser(final jUser j) {
 		super(j);
 
 		try {
@@ -201,7 +201,7 @@ public final class vUser extends vBaseChildAcl {
 
 	}
 
-	vUser(jUser j) {
+	vUser(jUser j, boolean force) {
 		super(j);
 		
 		try {
@@ -235,25 +235,17 @@ public final class vUser extends vBaseChildAcl {
 	}
 	
 	
-	jUser read(SecurityAcl sAcl) {
+	jUser read() {
 		
 		jUser j = new jUser();
 		
 		this.readBaseStandard(j);
 		
 		j.setCredentials(this.getCredentials());
-
-		if(sAcl.isRoleAdmin()) {
-			j.setAclAdmin(this.getAclAdmin());
-			j.setRole(this.getRole());
-			j.setGroups(this.getGroups());
-			j.setAclGroups(this.getAclGroups());
-		} else {
-			j.setAclAdmin(null);
-			j.setRole(null);
-			j.setGroups(null);
-			j.setAclGroups(null);
-		}
+		j.setAclAdmin(this.getAclAdmin());
+		j.setRole(this.getRole());
+		j.setGroups(this.getGroups());
+		j.setAclGroups(this.getAclGroups());
 		
 		return j;
 	}

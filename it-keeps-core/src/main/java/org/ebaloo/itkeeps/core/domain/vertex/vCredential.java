@@ -56,7 +56,7 @@ public final class vCredential extends vBase {
 			jUser juser = new jUser();
 			juser.setName(j.getUserName());
 
-			vUser user = new vUser(juser);
+			vUser user = new vUser(juser, true);
 			this.setUser(user);
 			
 		}
