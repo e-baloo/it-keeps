@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.enumeration.enAclAdmin;
 import org.ebaloo.itkeeps.api.enumeration.enAclRole;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
@@ -15,7 +14,6 @@ import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
 import org.ebaloo.itkeeps.core.domain.edge.notraverse.eAclNoTraverse;
 import org.ebaloo.itkeeps.core.domain.edge.notraverse.eCredentialToUser;
 import org.ebaloo.itkeeps.core.domain.edge.traverse.eInGroup;
-import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.ExceptionPermission;
 import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.SecurityAcl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -131,7 +129,7 @@ public final class vUser extends vBaseChildAcl {
 	 * ACL ADMIN
 	 */
 	
-	protected List<enAclAdmin> getAclAdmin() {
+	private final List<enAclAdmin> getAclAdmin() {
 		return this.getEdges(
 				vAclAdmin.class, 
 				DirectionType.PARENT, 
@@ -140,7 +138,7 @@ public final class vUser extends vBaseChildAcl {
 					.stream().map(e -> enAclAdmin.valueOf(e.getName())).collect(Collectors.toList());
 	}
 	
-	protected void setAclAdmin(List<enAclAdmin> list) {
+	private final void setAclAdmin(List<enAclAdmin> list) {
 		if(list == null)
 			list = new ArrayList<enAclAdmin>();
 		
@@ -155,16 +153,46 @@ public final class vUser extends vBaseChildAcl {
 				false);
 	}
 	
+	/*
+	 * ACL GROUPS
+	 */
+
+	
+	private List<jBaseLight> getAclGroups() {
+		return this.getEdges(
+				vAclGroup.class,
+				DirectionType.PARENT,
+				false,
+				eAclNoTraverse.class).stream().map(e -> getJBaseLight(e)).collect(Collectors.toList());
+	}
+	
+	private void setAclGroups(List<jBaseLight> list) {
+		
+		if(list == null)
+			list = new ArrayList<jBaseLight>();
+		
+		// Optimization
+		OrientBaseGraph graph = this.getGraph();
+		
+		setEdges(
+				graph,
+				vUser.class, 
+				this, 
+				vAclGroup.class, 
+				list.stream().map(e -> get(graph, vAclGroup.class, e, false)).collect(Collectors.toList()), 
+				DirectionType.PARENT, 
+				eAclNoTraverse.class, false);
+	}
 	
 	
 	// API
 	
-	private vUser(final jUser j, final SecurityAcl sAcl) {
+	vUser(final jUser j, final SecurityAcl sAcl) {
 		super(j);
 
 		try {
 		
-		this.updateImplem(j, sAcl);
+		this.update(j);
 
 	} catch (Exception e) {
 		this.delete();
@@ -186,112 +214,50 @@ public final class vUser extends vBaseChildAcl {
 
 	}
 
-	private void updateImplem(final jUser j, SecurityAcl sAcl) {
-		this.updateRole(j, sAcl);
-		this.updateGroups(j, sAcl);
-		this.updateAclAdmin(j, sAcl);
-		this.updateCredentials(j, sAcl);
-	}
-	
-	private void updateCredentials(jUser j, SecurityAcl sAcl) {
-		if(!j.isPresentCredentials())
-			return;
-		this.setCredentials(j.getCredentials());
-	}
+	void update(final jUser j) {
+		
+		this.updateBaseStandard(j);
 
-	private void updateAclAdmin(final jUser j, SecurityAcl sAcl) {
-		if(!j.isPresentAclAdmin())
-			return;
-		if(!sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
-			throw ExceptionPermission.IS_GUEST_OR_USER;
-		if(!sAcl.isAdminDelegate())
-			throw ExceptionPermission.NOT_DELEGATE;
-		this.setAclAdmin(j.getAclAdmin());
-	}
-	
-	private void updateRole(final jUser j, SecurityAcl sAcl) {
-		if(!j.isPresentRole())
-			return;
-		enAclRole role = j.getRole();
-		if(role.equals(this.getRole()))
-			return;
-		if(!sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
-			throw ExceptionPermission.IS_GUEST_OR_USER;
-		if(role.isRoot() && !sAcl.isRoleRoot())
-			throw ExceptionPermission.NOT_ROOT;
-		if(!sAcl.isAdminDelegate())
-			throw ExceptionPermission.NOT_DELEGATE;
-		this.setRole(role);
-	}
-	
-	private void updateGroups(final jUser j, SecurityAcl sAcl) {
-		if(!j.isPresentGroups())
-			return;
-		if(!sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
-			return;
-		if(!sAcl.isAdminUpdateGroup())
-			throw ExceptionPermission.NOT_GROUP_UPDATE;
-		this.setGroups(j.getGroups());
-	}
-	
-	public static final jUser read(Rid requesteurRid, Rid user) {
+		if(j.isPresentRole())
+			this.setRole(j.getRole());
 
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, user);
-
-		if(sAcl.isRoleGuest())
-			throw ExceptionPermission.IS_GUEST;
-		if((!sAcl.isRoleRoot() || !sAcl.isRoleAdmin()) && !user.equals(requesteurRid) )
-			throw ExceptionPermission.IS_USER;
-
-		return vUser.get(null, vUser.class, user, false).read();
+		if(j.isPresentGroups())
+			this.setGroups(j.getGroups());
+		
+		if(j.isPresentAclAdmin())
+			this.setAclAdmin(j.getAclAdmin());
+		
+		if(j.isPresentCredentials())
+			this.setCredentials(j.getCredentials());
+		
+		if(j.isPresentAclGroups())
+			this.setAclGroups(j.getAclGroups());
 	}
 	
-	private jUser read() {
+	
+	jUser read(SecurityAcl sAcl) {
+		
 		jUser j = new jUser();
+		
 		this.readBaseStandard(j);
-		j.setRole(this.getRole());
-		j.setGroups(this.getGroups());
+		
 		j.setCredentials(this.getCredentials());
+
+		if(sAcl.isRoleAdmin()) {
+			j.setAclAdmin(this.getAclAdmin());
+			j.setRole(this.getRole());
+			j.setGroups(this.getGroups());
+			j.setAclGroups(this.getAclGroups());
+		} else {
+			j.setAclAdmin(null);
+			j.setRole(null);
+			j.setGroups(null);
+			j.setAclGroups(null);
+		}
 		
 		return j;
 	}
 	
-	public static final jUser create(Rid requesteurRid, jUser j) {
-		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, null);
-		
-		if(!sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
-			throw ExceptionPermission.IS_GUEST_OR_USER;
-
-		if(!sAcl.isAdminUserCreate())
-			throw ExceptionPermission.NOT_USER_CREATE ;
-		
-		vUser user = new vUser(j, sAcl);
-		
-		return vUser.read(requesteurRid, user.getRid());
-	}
-
-	public static final jUser update(Rid requesteurRid, jUser j) {
-		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, j.getRid());
-
-		if(sAcl.isRoleGuest())
-			throw ExceptionPermission.IS_GUEST;
-		
-		if(!j.getRid().equals(requesteurRid) && !sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
-			throw ExceptionPermission.IS_USER;
-
-		vUser user = vUser.get(null, vUser.class, j.getRid(), false);
-		
-		user.checkVersion(j);
-		user.updateBaseStandard(j);
-		user.updateImplem(j, sAcl);
-		
-		return vUser.read(requesteurRid, j.getRid());
-		
-	}
-
-
 	
 }
 

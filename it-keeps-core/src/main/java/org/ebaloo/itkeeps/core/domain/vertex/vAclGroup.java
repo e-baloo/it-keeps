@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.enumeration.enAclAdmin;
 import org.ebaloo.itkeeps.api.enumeration.enAclData;
 import org.ebaloo.itkeeps.api.model.jAclGroup;
@@ -14,8 +13,6 @@ import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
 import org.ebaloo.itkeeps.core.domain.edge.notraverse.eAclNoTraverse;
-import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.ExceptionPermission;
-import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.SecurityAcl;
 
 import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
 
@@ -25,9 +22,9 @@ import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
  *
  */
 @DatabaseVertrex()
-public final class vAclGroup extends vBase {
+final class vAclGroup extends vBase {
 
-	protected vAclGroup() {
+	vAclGroup() {
 		super();
 	}
 	
@@ -35,12 +32,12 @@ public final class vAclGroup extends vBase {
 	 * CHILD
 	 */
 	
-	protected jBaseLight getChild() {
+	final jBaseLight getChild() {
 		vAclGroup child = this.getEdge(vAclGroup.class, DirectionType.CHILD, false, eAclNoTraverse.class);
 		return child == null ? null : getJBaseLight(child);
 	}
 	
-	protected void setChild(final jBaseLight group) {
+	final void setChild(final jBaseLight group) {
 		vAclGroup child = get(this.getGraph(), vAclGroup.class, group, false);
 		setEdges(this.getGraph(), vAclGroup.class, this, vAclGroup.class, child, DirectionType.CHILD, eAclNoTraverse.class, false);
 	}
@@ -50,7 +47,7 @@ public final class vAclGroup extends vBase {
 	 * PARENTS
 	 */
 	
-	protected List<jBaseLight> getParents() {
+	final List<jBaseLight> getParents() {
 		return this.getEdges(
 				vAclGroup.class, 
 				DirectionType.PARENT, 
@@ -58,7 +55,7 @@ public final class vAclGroup extends vBase {
 				eAclNoTraverse.class).stream().map(e -> getJBaseLight(e)).collect(Collectors.toList());
 	}
 	
-	protected void setParents(List<jBaseLight> list) {
+	final void setParents(List<jBaseLight> list) {
 
 		if(list == null) 
 			list = new ArrayList<jBaseLight>();
@@ -82,7 +79,7 @@ public final class vAclGroup extends vBase {
 	 * ACL ADMIN
 	 */
 	
-	protected List<enAclAdmin> getAclAdmin() {
+	final List<enAclAdmin> getAclAdmin() {
 		return this.getEdges(
 				vAclAdmin.class, 
 				DirectionType.PARENT, 
@@ -91,7 +88,7 @@ public final class vAclGroup extends vBase {
 					.stream().map(e -> enAclAdmin.valueOf(e.getName())).collect(Collectors.toList());
 	}
 	
-	protected void setAclAdmin(List<enAclAdmin> list) {
+	final void setAclAdmin(List<enAclAdmin> list) {
 		if(list == null)
 			list = new ArrayList<enAclAdmin>();
 		
@@ -113,7 +110,7 @@ public final class vAclGroup extends vBase {
 	 * ACL DATA
 	 */
 	
-	protected List<enAclData> getAclData() {
+	final List<enAclData> getAclData() {
 		return this.getEdges(
 				vAclData.class, 
 				DirectionType.PARENT, 
@@ -122,7 +119,7 @@ public final class vAclGroup extends vBase {
 					.stream().map(e -> enAclData.valueOf(e.getName())).collect(Collectors.toList());
 	}
 	
-	protected void setAclData(List<enAclData> list) {
+	final void setAclData(List<enAclData> list) {
 		if(list == null)
 			list = new ArrayList<enAclData>();
 		
@@ -144,7 +141,7 @@ public final class vAclGroup extends vBase {
 	
 	// API
 	
-	protected vAclGroup(final jAclGroup j) {
+	vAclGroup(final jAclGroup j) {
 		super(j);
 
 		
@@ -158,7 +155,7 @@ public final class vAclGroup extends vBase {
 
 
 	
-	private final jAclGroup read() {
+	final jAclGroup read() {
 		
 		jAclGroup j = new jAclGroup();
 		
@@ -172,7 +169,7 @@ public final class vAclGroup extends vBase {
 		return j;
 	}
 	
-
+/*
 	public static final jAclGroup create(Rid requesteurRid, jAclGroup j) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
@@ -183,8 +180,10 @@ public final class vAclGroup extends vBase {
 		
 		return vAclGroup.read(requesteurRid, aclGroup.getRid());
 	}
+	*/
 
 
+	/*
 	public static final jAclGroup delete(Rid requesteurRid, Rid guid) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
@@ -198,7 +197,9 @@ public final class vAclGroup extends vBase {
 		
 		return j;
 	}
+	*/
 
+	/*
 	public static final jAclGroup read(Rid requesteurRid, Rid guid) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
@@ -209,7 +210,9 @@ public final class vAclGroup extends vBase {
 		
 		return aclGroup.read();
 	}
+	*/
 
+	/*
 	public static final jAclGroup update(Rid requesteurRid,  jAclGroup j) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
@@ -223,15 +226,16 @@ public final class vAclGroup extends vBase {
 		
 		return vAclGroup.read(requesteurRid, j.getRid());
 	}
+	*/
 	
-	
-	private void update(jAclGroup j) {
+	final void update(jAclGroup j) {
 		this.setAclAdmin(j.getAclAdmin());
 		this.setAclData(j.getAclData());
 		this.setParents(j.getParents());
 		this.setChild(j.getChild());
 	}
 
+	/*
 	public static final List<jAclGroup> readAll(Rid requesteurRid) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
@@ -242,6 +246,8 @@ public final class vAclGroup extends vBase {
 		
 		return list;
 	}
+	*/
+
 }
 
 

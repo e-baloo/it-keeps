@@ -21,7 +21,7 @@ import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
 import org.ebaloo.itkeeps.api.model.jAclGroup;
-import org.ebaloo.itkeeps.core.domain.vertex.vAclGroup;
+import org.ebaloo.itkeeps.core.domain.vertex.fAclGroup;
 
 import com.codahale.metrics.annotation.Timed;
 
@@ -39,7 +39,7 @@ public class rAclGroup {
     @Path(ApiPath.API_ACL_GRP_GET_ALL)
     public Response readAll() {
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-		List<jAclGroup> list = vAclGroup.readAll(requesteurRid);
+		List<jAclGroup> list = fAclGroup.readAll(requesteurRid);
     	return Response.ok().entity(list).build();
 	}
 	
@@ -51,7 +51,7 @@ public class rAclGroup {
     @Path(ApiPath.API_ACL_GRP_GET_ID + "{id}")
     public Response readId(@PathParam("id") Rid guid) {
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-    	jAclGroup j = vAclGroup.read(requesteurRid, guid);
+    	jAclGroup j = fAclGroup.read(requesteurRid, guid);
     	return Response.ok().entity(j).build();
     }
 	
@@ -63,7 +63,7 @@ public class rAclGroup {
     @Path(ApiPath.API_ACL_GRP_UPDATE)
     public Response update(jAclGroup j) {
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-    	j = vAclGroup.update(requesteurRid, j);
+    	j = fAclGroup.update(requesteurRid, j);
     	return Response.ok().entity(j).build();
     }
 
@@ -77,7 +77,7 @@ public class rAclGroup {
 
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
 
-    	j = vAclGroup.create(requesteurRid, j);
+    	j = fAclGroup.create(requesteurRid, j);
     	
     	return Response.ok().entity(j).build();
     }
@@ -89,7 +89,7 @@ public class rAclGroup {
     @Path(ApiPath.API_ACL_GRP_DELETE + "{id}")
     public Response delete(@PathParam("id") Rid rid) {
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-    	jAclGroup j = vAclGroup.delete(requesteurRid, rid);
+    	jAclGroup j = fAclGroup.delete(requesteurRid, rid);
     	return Response.ok().entity(j).build();
     }
     

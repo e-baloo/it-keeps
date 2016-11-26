@@ -18,7 +18,7 @@ public class ApiConfig {
 
     	
     	
-    	parent.classesAdd(UserEndpoint.class);
+    	parent.classesAdd(rUser.class);
     	parent.classesAdd(GroupEndpoint.class);
     	parent.classesAdd(PathEndpoint.class);
     	parent.classesAdd(EntryEndpoint.class);

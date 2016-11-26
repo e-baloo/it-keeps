@@ -58,7 +58,7 @@ public final class SecurityFactory {
 			if(this.isRoleRoot())
 				return true;
 
-			if (this.aclAdmin.contains(enAclAdmin.NO_DELEGATE))
+			if (this.aclAdmin.contains(enAclAdmin.DELEGATE_DENY))
 				return false;
 
 			return this.aclAdmin.contains(enAclAdmin.DELEGATE);
@@ -76,7 +76,7 @@ public final class SecurityFactory {
 			if(this.isRoleRoot())
 				return true;
 			
-			if(this.aclAdmin.contains(enAclAdmin.GROUP_NO_OPERATION))
+			if(this.aclAdmin.contains(enAclAdmin.GROUP_DENY))
 				return false;
 			
 			return this.aclAdmin.contains(enAclAdmin.GROUP_UPDATE);
@@ -90,7 +90,7 @@ public final class SecurityFactory {
 			if(this.isRoleRoot())
 				return true;
 			
-			if(this.aclAdmin.contains(enAclAdmin.GROUP_NO_OPERATION))
+			if(this.aclAdmin.contains(enAclAdmin.GROUP_DENY))
 				return false;
 			
 			return this.aclAdmin.contains(enAclAdmin.GROUP_CREATE);
@@ -104,7 +104,7 @@ public final class SecurityFactory {
 			if(this.isRoleRoot())
 				return true;
 			
-			if(this.aclAdmin.contains(enAclAdmin.GROUP_NO_OPERATION))
+			if(this.aclAdmin.contains(enAclAdmin.GROUP_DENY))
 				return false;
 			
 			return this.aclAdmin.contains(enAclAdmin.GROUP_CREATE_ROOT);
@@ -118,7 +118,7 @@ public final class SecurityFactory {
 			if(this.isRoleRoot())
 				return true;
 			
-			if(this.aclAdmin.contains(enAclAdmin.USER_NO_OPERATION))
+			if(this.aclAdmin.contains(enAclAdmin.USER_DENY))
 				return false;
 			
 			return this.aclAdmin.contains(enAclAdmin.USER_READ) || this.aclAdmin.contains(enAclAdmin.USER_UPDATE) || this.aclAdmin.contains(enAclAdmin.USER_CREATE);
@@ -132,7 +132,7 @@ public final class SecurityFactory {
 			if(this.isRoleRoot())
 				return true;
 			
-			if(this.aclAdmin.contains(enAclAdmin.USER_NO_OPERATION))
+			if(this.aclAdmin.contains(enAclAdmin.USER_DENY))
 				return false;
 			
 			return this.aclAdmin.contains(enAclAdmin.USER_UPDATE) || this.aclAdmin.contains(enAclAdmin.USER_CREATE);
@@ -146,7 +146,7 @@ public final class SecurityFactory {
 			if(this.isRoleRoot())
 				return true;
 			
-			if(this.aclAdmin.contains(enAclAdmin.USER_NO_OPERATION))
+			if(this.aclAdmin.contains(enAclAdmin.USER_DENY))
 				return false;
 			
 			return this.aclAdmin.contains(enAclAdmin.USER_CREATE);

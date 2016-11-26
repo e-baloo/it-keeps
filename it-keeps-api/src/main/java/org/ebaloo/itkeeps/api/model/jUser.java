@@ -1,6 +1,5 @@
 package org.ebaloo.itkeeps.api.model;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,6 +17,7 @@ public class jUser extends jBaseStandard{
 	public static final String ROLE = "role";
 	public static final String GROUPS = "groups";
 	public static final String CREDENTIALS = "credentials";
+	public static final String ACL_GROUPS = "aclcroups";
 	
 	public jUser() {
 		super();
@@ -32,25 +32,25 @@ public class jUser extends jBaseStandard{
 	
 	@JsonIgnore
 	public final enAclRole getRole() {
-		return this.role.orElse(null);
+		return this.role.isPresent() ? this.role.get() : null;
 	}
 
 	@JsonIgnore
 	public final void setRole(enAclRole value) {
-		role = Optional.ofNullable(value);
+		this.role = Optional.ofNullable(value);
 	}
 
 	@JsonProperty(ROLE)
 	public final String _getRole() {
-		if(isPresentRole())
-			return this.role.get().name();
-		else
-			return null;
+		return this.role.isPresent() ? this.role.get().name() : null;
 	}
 
 	@JsonProperty(ROLE)
 	public final void _setRole(String value) {
-		role = Optional.of(enAclRole.valueOf(value));
+		if(value == null)
+			role = Optional.empty();
+		else
+			role = Optional.of(enAclRole.valueOf(value));
 	}
 
 	@JsonIgnore
@@ -66,7 +66,7 @@ public class jUser extends jBaseStandard{
 	
 	@JsonProperty(GROUPS)
 	public final List<jBaseLight> getGroups() {
-		return this.groups.orElse(new ArrayList<jBaseLight>());
+		return this.groups.isPresent() ? this.groups.get() : null;
 	}
 
 	@JsonProperty(GROUPS)
@@ -79,14 +79,14 @@ public class jUser extends jBaseStandard{
 		return this.groups.isPresent();
 	}
 	
-	// GROUPS
+	// CREDENTIALS
 	
 	@JsonIgnore
 	private Optional<List<jBaseLight>> credentials = Optional.empty();
 	
 	@JsonProperty(CREDENTIALS)
 	public final List<jBaseLight> getCredentials() {
-		return this.credentials.orElse(new ArrayList<jBaseLight>());
+		return this.credentials.isPresent() ? this.credentials.get() : null;
 	}
 
 	@JsonProperty(CREDENTIALS)
@@ -99,7 +99,7 @@ public class jUser extends jBaseStandard{
 		return this.credentials.isPresent();
 	}
 	
-	// ACL_ADMIN_TYPE
+	// ACL_ADMIN
 	
 	public static final String ACL_ADMIN = jAcl.ACL_ADMIN;
 	
@@ -108,32 +108,49 @@ public class jUser extends jBaseStandard{
 	
 	@JsonIgnore
 	public final List<enAclAdmin> getAclAdmin() {
-		return this.aclAdmin.orElse(null);
+		return this.aclAdmin.isPresent() ? this.aclAdmin.get() : null;
 	}
 
 	@JsonIgnore
 	public final void setAclAdmin(List<enAclAdmin> value) {
-		aclAdmin = Optional.ofNullable(value);
+		this.aclAdmin = Optional.ofNullable(value);
 	}
 
 	@JsonProperty(ACL_ADMIN)
 	public final List<String> _getAclAdmin() {
-		if(aclAdmin.isPresent())
-			return this.aclAdmin.get().stream().map(e -> e.name()).collect(Collectors.toList());
-		else
-			return null;
+		return this.aclAdmin.isPresent() ? this.aclAdmin.get().stream().map(e -> e.name()).collect(Collectors.toList()) : null;
 	}
 	
 	@JsonProperty(ACL_ADMIN)
 	public final void _setAclAdmin(List<String> value) {
 		if(value == null)
-			aclAdmin = Optional.empty();
+			this.aclAdmin = Optional.empty();
 		else
-			aclAdmin = Optional.of(value.stream().map(e -> enAclAdmin.valueOf(e)).collect(Collectors.toList()));
+			this.aclAdmin = Optional.of(value.stream().map(e -> enAclAdmin.valueOf(e)).collect(Collectors.toList()));
 	}
 
 	@JsonIgnore
 	public boolean isPresentAclAdmin() {
 		return aclAdmin.isPresent();
+	}
+	
+	// ACL_GROUPS
+	
+	@JsonIgnore
+	private Optional<List<jBaseLight>> aclGroups = Optional.empty();
+	
+	@JsonProperty(ACL_GROUPS)
+	public final List<jBaseLight> getAclGroups() {
+		return this.aclGroups.isPresent() ? this.aclGroups.get() : null;
+	}
+
+	@JsonProperty(ACL_GROUPS)
+	public final void setAclGroups(List<jBaseLight> value) {
+		aclGroups = Optional.ofNullable(value);
+	}
+
+	@JsonIgnore
+	public final boolean isPresentAclGroups() {
+		return this.aclGroups.isPresent();
 	}
 }

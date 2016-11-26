@@ -1,6 +1,5 @@
 package org.ebaloo.itkeeps.api.model;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +12,7 @@ public class jGroup extends jBaseStandard{
 
 	public static final String PARENT_GROUP = jBase.PARENT;
 	public static final String CHILDS_GROUPS = jBase.CHILDS;
+
 
 	
 	public jGroup() {
@@ -48,7 +48,7 @@ public class jGroup extends jBaseStandard{
 	
 	@JsonProperty(CHILDS_GROUPS)
 	public final List<jBaseLight> getChilds() {
-		return this.childGroups.orElse(new ArrayList<jBaseLight>());
+		return this.childGroups.isPresent() ? this.childGroups.get() : null;
 	}
 
 	@JsonProperty(CHILDS_GROUPS)
@@ -60,5 +60,5 @@ public class jGroup extends jBaseStandard{
 	public final boolean isPresentChilds() {
 		return this.childGroups.isPresent();
 	}
-	
+
 }

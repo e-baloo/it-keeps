@@ -21,6 +21,7 @@ import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
 import org.ebaloo.itkeeps.api.model.jUser;
+import org.ebaloo.itkeeps.core.domain.vertex.fUser;
 import org.ebaloo.itkeeps.core.domain.vertex.vCredential;
 import org.ebaloo.itkeeps.core.domain.vertex.vUser;
 
@@ -28,7 +29,7 @@ import com.codahale.metrics.annotation.Timed;
 
 
 @Path("")
-public class UserEndpoint {
+public class rUser {
 
     @Context
     SecurityContext securityContext;
@@ -46,7 +47,7 @@ public class UserEndpoint {
 		List<jUser> list = new ArrayList<jUser>();
 		
 		for(vUser user : vUser.getAllBase(null, vUser.class, false)) {
-	    	list.add(vUser.read(requesteurRid, user.getRid()));
+	    	list.add(fUser.read(requesteurRid, user.getRid()));
 		}
 		
     	return Response.ok().entity(list).build();
@@ -63,7 +64,7 @@ public class UserEndpoint {
 
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
 
-    	jUser user = vUser.read(requesteurRid, id);
+    	jUser user = fUser.read(requesteurRid, id);
 		
     	return Response.ok().entity(user).build();
     }
@@ -83,7 +84,7 @@ public class UserEndpoint {
 			throw new RuntimeException("readId(" + id + ") is null" );
 		
 		
-    	return Response.ok().entity(vUser.read(requesteurRid, cred.getUser().getRid())).build();
+    	return Response.ok().entity(fUser.read(requesteurRid, cred.getUser().getRid())).build();
     }
 
     @PUT // UPDATE
@@ -96,7 +97,7 @@ public class UserEndpoint {
     	
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
     	
-    	jUser user = vUser.update(requesteurRid, j);
+    	jUser user = fUser.update(requesteurRid, j);
     	
     	return Response.ok().entity(user).build();
     }
@@ -111,7 +112,7 @@ public class UserEndpoint {
 
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
 
-    	jUser user = vUser.create(requesteurRid, juser);
+    	jUser user = fUser.create(requesteurRid, juser);
 
     	return Response.ok().entity(user).build();
     }

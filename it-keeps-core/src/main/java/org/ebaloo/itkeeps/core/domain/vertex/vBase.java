@@ -334,7 +334,7 @@ public class vBase extends vBaseAbstract {
 	}
 	
 	
-	protected final <T extends jBase> void checkVersion(T j) {
+	final <T extends jBase> void checkVersion(T j) {
 		if(!j.isPresentJObject())
 			throw new RuntimeException("json not have '" + jBase._OBJECT + "' seting");
 		if(!j.getJObject().isPresentVersion())
