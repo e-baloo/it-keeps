@@ -11,6 +11,7 @@ import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.model.jGroup;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
+import org.ebaloo.itkeeps.core.domain.edge.notraverse.eAclNoTraverse;
 import org.ebaloo.itkeeps.core.domain.edge.traverse.eInGroup;
 import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.SecurityAcl;
 import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.RID;
@@ -30,222 +31,45 @@ public final class vGroup extends vBaseChildAcl {
 	}
 	
 	/*
-	 * PARENT GROUP
+	 * PARENT
 	 */
-	
-	protected vGroup getParent() {
-		return this.getEdge(vGroup.class, DirectionType.CHILD, false, eInGroup.class);
-	}
-	
-	protected void setParent(final vGroup group) {
-		setEdges(this.getGraph(), vGroup.class, this, vGroup.class, group, DirectionType.CHILD, eInGroup.class, false);
+
+	final jBaseLight getParent() {
+		vGroup child = this.getEdge(vGroup.class, DirectionType.CHILD, false, eInGroup.class);
+		return child == null ? null : getJBaseLight(child);
 	}
 
-	protected void setParent(final jBaseLight group) {
-		this.setParent(get(this.getGraph(), vGroup.class, group, false));
-	}
 	
+	final void setParent(final jBaseLight group) {
+		vGroup child = get(this.getGraph(), vGroup.class, group, false);
+		setEdges(this.getGraph(), vGroup.class, this, vGroup.class, child, DirectionType.CHILD, eInGroup.class, false);
+	}
+
 	
 	/*
-	 * CHILD GROUP
+	 * CHILDS
 	 */
 	
-	protected List<vGroup> getChilds() {
-		return this.getEdges(vGroup.class, DirectionType.PARENT, false, eInGroup.class);
+	private final List<jBaseLight> getChilds() {
+		return this.getEdges(vGroup.class, DirectionType.PARENT, false, eInGroup.class).stream()
+				.map(e -> getJBaseLight(e)).collect(Collectors.toList());
+
 	}
 	
-	protected void setChilds(List<vGroup> list) {
-		setEdges(this.getGraph(), vGroup.class, this, vGroup.class, list, DirectionType.PARENT, eInGroup.class, false);
-	}
+	private final void setChilds(List<jBaseLight> list) {
 
-	protected void setChildsJBL(List<jBaseLight> list) {
-		
-		if(list == null) 
+		if (list == null)
 			list = new ArrayList<jBaseLight>();
 
 		// Optimization
 		OrientBaseGraph graph = this.getGraph();
-		
-		setChilds(list.stream().map(e -> get(graph, vGroup.class, e, false)).collect(Collectors.toList())); 
-	}
 
-	
-	
-	
-
-	
-	
-	/*
-	 * ALL GROUPE IN
-	 */
-	
-	/*
-	public static final String ALL_GROUPE_CHILD = PROPERTY.ALL_GROUPE_CHILD;
-	
-	@SuppressWarnings("unchecked")
-	@ModelPropertyAnnotation(name=ALL_GROUPE_CHILD, type=TypeProperty.GET, instanceOf = false) @I18nAnnotation(bundle = CONST.I18N.CLASS + CLASS.AUTH, label = ALL_GROUPE_CHILD)
-	public List<Group> getAllGroupChild() {
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append("SELECT FROM ");
-		sb.append("(TRAVERSE IN('"+ AuthRelation.class.getSimpleName()  +"') FROM " + this.getORID() + ") "); 
-		sb.append("WHERE ");
-		BaseUtils.WhereClause.classIsntanceOf(Group.class, false, sb);
-		sb.append("AND ");
-		sb.append("(@rid <> " + this.getORID() + ")");
-		
-		return (List<Group>) (List<?>) getBaseQuery().commandBaseAbstract(sb.toString());
+		setEdges(graph, vGroup.class, this, vGroup.class,
+				list.stream().map(e -> get(graph, vGroup.class, e, false)).collect(Collectors.toList()),
+				DirectionType.PARENT, eInGroup.class, false);
 
 	}
-	*/
 	
-	/*
-	 * ALL GROUPE OUT
-	 */
-	
-	/*
-	public static final String ALL_GROUPE_PARENT = PROPERTY.ALL_GROUPE_PARENT;
-	
-	@SuppressWarnings("unchecked")
-	@ModelPropertyAnnotation(name=ALL_GROUPE_PARENT, type=TypeProperty.GET, instanceOf = false) @I18nAnnotation(bundle = CONST.I18N.CLASS + CLASS.AUTH, label = ALL_GROUPE_PARENT)
-	public List<Group> getAllGroupParent() {
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append("SELECT FROM ");
-		sb.append("(TRAVERSE OUT('"+ AuthRelation.class.getSimpleName()  +"') FROM " + this.getORID() + ") "); 
-		sb.append("WHERE ");
-		BaseUtils.WhereClause.classIsntanceOf(Group.class, false, sb);
-		sb.append("AND ");
-		sb.append("(@rid <> " + this.getORID() + ")");
-		
-		return (List<Group>) (List<?>) getBaseQuery().commandBaseAbstract(sb.toString());
-
-	}
-	*/
-
-	/*
-	 * 
-	 * USER IN
-	 * 
-	 */
-	
-	/*
-	public static final String USERS = PROPERTY.USERS;
-	
-	@ModelPropertyAnnotation(name=USERS, type=TypeProperty.GET, instanceOf = false) @I18nAnnotation(bundle = CONST.I18N.CLASS + CLASS.AUTH, label = USERS)
-	public List<AuthUser> getUsers() {
-		return this.getEdgesByClassesNames(AuthUser.class, RelationType.CHILD, false, TraverseInGroup.class);
-	}
-
-	@ModelPropertyAnnotation(name=USERS, type=TypeProperty.ADD)
-	public void addUser(String user) {
-		this.addUser((AuthUser) this.getBaseAbstract(user));
-	}
-
-	public void addUser(final AuthUser user) {
-		this.addEdge(user, RelationType.CHILD, TraverseInGroup.class);
-	}
-
-	@ModelPropertyAnnotation(name=USERS, type=TypeProperty.REMOVE)
-	public void removeUser(String user) {
-		this.removeUser((AuthUser) this.getBaseAbstract(user));
-	}
-	
-	public void removeUser(final AuthUser user) {
-		this.removeEdge(user, RelationType.CHILD, TraverseInGroup.class);
-	}
-	*/
-
-	/*
-	 * ALL_USER IN
-	 */
-	
-	/*
-	public static final String ALL_USERS = PROPERTY.ALL_USERS;
-	
-	@SuppressWarnings("unchecked")
-	@ModelPropertyAnnotation(name=ALL_USERS, type=TypeProperty.GET, instanceOf = false) @I18nAnnotation(bundle = CONST.I18N.CLASS + CLASS.AUTH, label = ALL_USERS)
-	public List<AuthUser> getAllUser() {
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append("SELECT FROM ");
-		sb.append("(TRAVERSE IN('"+ AuthRelation.class.getSimpleName()  +"') FROM " + this.getORID() + ") "); 
-		sb.append("WHERE ");
-		BaseUtils.WhereClause.classIsntanceOf(AuthUser.class, false, sb);
-		
-		return (List<AuthUser>) (List<?>) getBaseQuery().commandBaseAbstract(sb.toString());
-		
-	}
-	*/
-
-	
-	/*
-	 * 
-	 */
-	/*
-	public static final String ACCESS_RIGHT = PROPERTY.ACCESS_RIGHT;
-
-	
-	@ModelPropertyAnnotation(name=ACCESS_RIGHT, type=TypeProperty.GET, instanceOf = false) @I18nAnnotation(bundle = CONST.I18N.CLASS + CLASS.AUTH, label = ACCESS_RIGHT)
-	public List<AuthAccessRight> getAccessRight() {
-		return super.getAccessRight();
-	}
-
-	
-	@ModelPropertyAnnotation(name=ACCESS_RIGHT, type=TypeProperty.ADD)
-	public void addAccessRight(String accessRight) {
-		this.addAccessRight((AuthAccessRight) this.getBaseAbstract(accessRight));
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	@ModelPropertyAnnotation(name=ACCESS_RIGHT, type=TypeProperty.REMOVE)
-	public void removeAccessRight(String accessRight) {
-		this.removeAccessRight((AuthAccessRight) this.getBaseAbstract(accessRight));
-	}
-
-	
-	
-	public static final String ALL_ACCESS_RIGHT = PROPERTY.ALL_ACCESS_RIGHT;
-
-	@ModelPropertyAnnotation(name=ALL_ACCESS_RIGHT, type=TypeProperty.GET, instanceOf = false) @I18nAnnotation(bundle = CONST.I18N.CLASS + CLASS.AUTH, label = ALL_ACCESS_RIGHT)
-	public List<AuthAccessRight> getAllAccessRight() {
-		return super.getAllAccessRight();
-	}
-*/
-	
-	/*
-	 * SCOPE
-	 */
-/*
-	public static final String ALL_SCOPE = PROPERTY.ALL_SCOPE;
-
-	@ModelPropertyAnnotation(name=ALL_SCOPE, type=TypeProperty.GET, instanceOf = false) @I18nAnnotation(bundle = CONST.I18N.CLASS + CLASS.AUTH, label = ALL_SCOPE)
-	public List<AuthScope> getAllScope() {
-		return super.getAllScope();
-	}
-	
-
-	public static final String SCOPE = PROPERTY.SCOPE;
-
-	@ModelPropertyAnnotation(name=SCOPE, type=TypeProperty.GET, instanceOf = false) @I18nAnnotation(bundle = CONST.I18N.CLASS + CLASS.AUTH, label = SCOPE)
-	public List<AuthScope> getScope() {
-		return super.getScope();
-	}
-
-	@Override
-	@ModelPropertyAnnotation(name=SCOPE, type=TypeProperty.ADD)
-	public void addScope(String scope) {
-		this.addScope((AuthScope) this.getBaseAbstract(scope));
-	}
-
-	@Override
-	@ModelPropertyAnnotation(name=SCOPE, type=TypeProperty.REMOVE)
-	public void removeScope(String scope) {
-		this.removeScope((AuthScope) this.getBaseAbstract(scope));
-	}
-	*/
 	
 	// API
 	
@@ -254,7 +78,7 @@ public final class vGroup extends vBaseChildAcl {
 
 		try {
 		this.setParent(j.getParent());
-		this.setChildsJBL(j.getChilds());
+		this.setChilds(j.getChilds());
 	} catch (Exception e) {
 		this.delete();
 		throw e;
@@ -280,8 +104,8 @@ public final class vGroup extends vBaseChildAcl {
 		
 		jGroup jgroup = (jGroup) j;
 		
-		jgroup.setParent(getJBaseLight(this.getParent()));
-		jgroup.setChilds(this.getChilds().stream().map(e -> getJBaseLight(e)).collect(Collectors.toList()));
+		jgroup.setParent(this.getParent());
+		jgroup.setChilds(this.getChilds());
 		
 		return j;
 	}
@@ -312,7 +136,7 @@ public final class vGroup extends vBaseChildAcl {
 			this.setParent(jgroup.getParent());
 
 		if(jgroup.isPresentChilds())
-			this.setChildsJBL(jgroup.getChilds());
+			this.setChilds(jgroup.getChilds());
 	
 		
 		return read(requesteurRid);
