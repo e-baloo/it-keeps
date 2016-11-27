@@ -1,9 +1,6 @@
 package org.ebaloo.itkeeps.restapp.api;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -21,17 +18,13 @@ import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
 import org.ebaloo.itkeeps.api.model.jGroup;
-import org.ebaloo.itkeeps.core.domain.vertex.vGroup;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.ebaloo.itkeeps.core.domain.vertex.fGroup;
 
 import com.codahale.metrics.annotation.Timed;
 
 
 @Path("/")
-public class GroupEndpoint {
-
-	private static final Logger logger = LoggerFactory.getLogger(GroupEndpoint.class.getName());
+public class rGroup {
 
     @Context
     SecurityContext securityContext;
@@ -46,13 +39,19 @@ public class GroupEndpoint {
 		
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
 
+    	
+    	// TODO
+    	
+    	/*
 		List<jGroup> list = new ArrayList<jGroup>();
 		
 		for(vGroup group : vGroup.getAllBase(null, vGroup.class, false)) {
-	    	list.add(group.read(requesteurRid));
+	    	list.add(vGroup.read(requesteurRid));
 		}
-		
-    	return Response.ok().entity(list).build();
+		*/
+    	
+    	return Response.ok().entity(null).build();
+    	
 	}
 	
 	
@@ -62,16 +61,13 @@ public class GroupEndpoint {
 	@aApplicationRolesAllowed(enRole.USER)
     @Timed
     @Path(ApiPath.API_GROUP_GET_ID + "{guid}")
-    public Response read(@PathParam("guid") Rid guid) {
+    public Response read(@PathParam("guid") Rid rid) {
 
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
 
-		vGroup group = vGroup.get(null, vGroup.class, guid, false);
+    	jGroup j = fGroup.read(requesteurRid, rid);
 		
-		if(group == null)
-			throw new RuntimeException("TODO"); // TODO
-		
-    	return Response.ok().entity(group.read(requesteurRid)).build();
+    	return Response.ok().entity(j).build();
     }
 	
 
@@ -83,17 +79,11 @@ public class GroupEndpoint {
     @Path(ApiPath.API_GROUP_UPDATE)
     public Response update(final jGroup j) {
     	
-		if (logger.isTraceEnabled())
-			logger.trace("updateGroup()");
-
-    	
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
+
+    	fGroup.update(requesteurRid, j);
     	
-    	vGroup group = vGroup.get(null, vGroup.class, j.getRid(), false);
-
-    	jGroup nj = group.update(j, requesteurRid);
-
-    	return Response.ok().entity(nj).build();
+    	return Response.ok().entity(fGroup.read(requesteurRid, j.getRid())).build();
     }
 
     @POST 
@@ -106,9 +96,9 @@ public class GroupEndpoint {
 
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
 
-    	vGroup group = new vGroup(j);
+    	jGroup group = fGroup.create(requesteurRid, j);
 
-    	return Response.ok().entity(group.read(requesteurRid)).build();
+    	return Response.ok().entity(fGroup.read(requesteurRid, group.getRid())).build();
     }
     
     
