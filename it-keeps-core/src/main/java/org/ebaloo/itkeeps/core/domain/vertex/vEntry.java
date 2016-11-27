@@ -77,6 +77,8 @@ public final class vEntry extends vBaseChildAcl {
 		
 		j.setPath(getJBaseLight(this.getPath()));
 		
+		this.readAcl(j);
+		
 		return j;
 	}
 	

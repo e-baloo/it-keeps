@@ -58,7 +58,7 @@ public class jAclGroup extends jBaseStandard{
 	
 	// ACL_ADMIN
 	
-	public static final String ACL_ADMIN = jAcl.ACL_ADMIN;
+	public static final String ACL_ADMIN = jAcl.ACL_ADMINS;
 	
 	@JsonIgnore
 	private List<enAclAdmin> aclAdmin = new ArrayList<enAclAdmin>();

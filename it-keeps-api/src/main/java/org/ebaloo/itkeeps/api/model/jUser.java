@@ -12,9 +12,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class jUser extends jBaseStandard {
+public class jUser extends jBaseChildAcl {
 
-	public static final String ACL_ADMIN = jAcl.ACL_ADMIN;
+	public static final String ACL_ADMINS = jAcl.ACL_ADMINS;
 	public static final String ACL_GROUPS = "aclgroups";
 	public static final String CREDENTIALS = "credentials";
 	public static final String GROUPS = "groups";
@@ -40,7 +40,7 @@ public class jUser extends jBaseStandard {
 		super();
 	}
 
-	@JsonProperty(ACL_ADMIN)
+	@JsonProperty(ACL_ADMINS)
 	public final List<String> _getAclAdmin() {
 		return this.aclAdmin.isPresent() ? this.aclAdmin.get().stream().map(e -> e.name()).collect(Collectors.toList())
 				: null;
@@ -51,7 +51,7 @@ public class jUser extends jBaseStandard {
 		return this.role.isPresent() ? this.role.get().name() : null;
 	}
 
-	@JsonProperty(ACL_ADMIN)
+	@JsonProperty(ACL_ADMINS)
 	public final void _setAclAdmin(List<String> value) {
 		if (value == null)
 			this.aclAdmin = Optional.empty();

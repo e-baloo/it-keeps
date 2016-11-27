@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class jEntry extends jBaseStandard{
+public class jEntry extends jBaseChildAcl {
 
 	public static final String PATH = "path";
 

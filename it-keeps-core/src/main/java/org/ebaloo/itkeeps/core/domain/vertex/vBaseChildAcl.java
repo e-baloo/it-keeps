@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.ebaloo.itkeeps.api.model.jBaseChildAcl;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.model.jBaseStandard;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
@@ -45,6 +46,10 @@ public class vBaseChildAcl extends vBaseStandard {
 				list.stream().map(e -> (vAcl) get(graph, vAcl.class, e, false)).collect(Collectors.toList()),
 				DirectionType.PARENT, eAclRelation.class, false);
 
+	}
+	
+	protected final <T extends jBaseChildAcl> void readAcl(T j) {
+		j.setAcls(this.getAcls());
 	}
 	
 }

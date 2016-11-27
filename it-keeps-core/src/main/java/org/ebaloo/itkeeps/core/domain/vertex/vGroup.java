@@ -91,6 +91,8 @@ public final class vGroup extends vBaseChildAcl {
 		j.setParent(this.getParent());
 		j.setChilds(this.getChilds());
 		
+		this.readAcl(j);
+		
 		return j;
 	}
 

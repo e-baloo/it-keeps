@@ -15,7 +15,10 @@ public class jAcl extends jBase {
 
 	// ACL_DATA
 	
-	public static final String ACL_DATA = "aclData";
+	public static final String ACLs = "acls";
+	
+	
+	public static final String ACL_DATA = "acldata";
 	
 	@JsonIgnore
 	private List<enAclData> aclData = new ArrayList<enAclData>();
@@ -42,29 +45,29 @@ public class jAcl extends jBase {
 	
 	// ACL_ADMIN_TYPE
 	
-	public static final String ACL_ADMIN = "aclAdmin";
+	public static final String ACL_ADMINS = "acladmins";
 	
 	@JsonIgnore
-	private List<enAclAdmin> aclAdmin = new ArrayList<enAclAdmin>();
+	private List<enAclAdmin> aclAdmins = new ArrayList<enAclAdmin>();
 	
 	@JsonIgnore
 	public final List<enAclAdmin> getAclAdmin() {
-		return this.aclAdmin;
+		return this.aclAdmins;
 	}
 
 	@JsonIgnore
 	public final void setAclAdmin(List<enAclAdmin> value) {
-		aclAdmin = (value == null ? new ArrayList<enAclAdmin>() : value);
+		aclAdmins = (value == null ? new ArrayList<enAclAdmin>() : value);
 	}
 
-	@JsonProperty(ACL_ADMIN)
+	@JsonProperty(ACL_ADMINS)
 	public final List<String> _getAclAdmin() {
-		return this.aclAdmin.stream().map(e -> e.name()).collect(Collectors.toList());
+		return this.aclAdmins.stream().map(e -> e.name()).collect(Collectors.toList());
 	}
 	
-	@JsonProperty(ACL_ADMIN)
+	@JsonProperty(ACL_ADMINS)
 	public final void _setAclAdmin(List<String> value) {
-		aclAdmin = value == null ? new ArrayList<enAclAdmin>() : value.stream().map(e -> enAclAdmin.valueOf(e)).collect(Collectors.toList());
+		aclAdmins = value == null ? new ArrayList<enAclAdmin>() : value.stream().map(e -> enAclAdmin.valueOf(e)).collect(Collectors.toList());
 	}
 	
 	// OWNER
@@ -97,7 +100,7 @@ public class jAcl extends jBase {
 
 	// CHILD_OBJECTS
 
-	public final static String CHILD_OBJECTS = "childObjects";
+	public final static String CHILD_OBJECTS = "childobjects";
 	
 	@JsonIgnore
 	private List<jBaseLight> childObjects = new ArrayList<jBaseLight>();

@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class jGroup extends jBaseStandard{
+public class jGroup extends jBaseChildAcl {
 
 	public static final String PARENT_GROUP = jBase.PARENT;
 	public static final String CHILDS_GROUPS = jBase.CHILDS;

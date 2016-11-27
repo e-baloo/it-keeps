@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class jPath extends jBaseStandard{
+public class jPath extends jBaseChildAcl {
 
 	public static final String PARENT_PATH = jBase.PARENT;
 	public static final String CHILDS_PATHS = jBase.CHILDS;

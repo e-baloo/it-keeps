@@ -54,11 +54,11 @@ public final class vPath extends vBaseChildAcl {
 	 * CHILD GROUP
 	 */
 	
-	protected List<vPath> getChildsGroup() {
+	protected List<vPath> getChilds() {
 		return this.getEdges(vPath.class, DirectionType.CHILD, false, eInPath.class);
 	}
 	
-	protected void setChildsGroup(List<vPath> list) {
+	protected void setChilds(List<vPath> list) {
 		setEdges(this.getGraph(), vPath.class, this, vPath.class, list, DirectionType.CHILD, eInPath.class, false);
 	}
 
@@ -70,7 +70,7 @@ public final class vPath extends vBaseChildAcl {
 		// Optimization
 		OrientBaseGraph graph = this.getGraph();
 		
-		setChildsGroup(list.stream().map(e -> get(graph, vPath.class, e, false)).collect(Collectors.toList())); 
+		setChilds(list.stream().map(e -> get(graph, vPath.class, e, false)).collect(Collectors.toList())); 
 	}
 
 	
@@ -106,7 +106,9 @@ public final class vPath extends vBaseChildAcl {
 		jPath jpath = (jPath) j;
 		
 		jpath.setParent(getJBaseLight(this.getParent()));
-		jpath.setChilds(this.getChildsGroup().stream().map(e -> getJBaseLight(e)).collect(Collectors.toList()));
+		jpath.setChilds(this.getChilds().stream().map(e -> getJBaseLight(e)).collect(Collectors.toList()));
+		
+		this.readAcl(j);
 		
 		return j;
 	}
@@ -142,7 +144,7 @@ public final class vPath extends vBaseChildAcl {
 
 		if(jpath.isPresentChilds())
 			this.setChildsJBL(jpath.getChilds());
-		
+				
 		return read(requesteurRid);
 	}
 }

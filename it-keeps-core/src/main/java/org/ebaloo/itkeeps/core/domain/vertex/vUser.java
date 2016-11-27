@@ -93,6 +93,8 @@ public final class vUser extends vBaseChildAcl {
 		j.setGroups(this.getGroups());
 		j.setAclGroups(this.getAclGroups());
 
+		this.readAcl(j);
+		
 		return j;
 	}
 
@@ -170,6 +172,7 @@ public final class vUser extends vBaseChildAcl {
 
 		if (j.isPresentAclGroups())
 			this.setAclGroups(j.getAclGroups());
+		
 	}
 
 }
