@@ -27,9 +27,12 @@ public class vBaseChildAcl extends vBaseStandard {
 	}
 
 	
+	private final List<vAcl> _getAcls() {
+		return this.getEdges(vAcl.class, DirectionType.PARENT, false, eAclRelation.class);
+	}
 	
 	protected final List<jBaseLight> getAcls() {
-		return this.getEdges(vAcl.class, DirectionType.PARENT, false, eAclRelation.class).stream()
+		return _getAcls().stream()
 				.map(e -> getJBaseLight(e)).collect(Collectors.toList());
 
 	}
@@ -50,6 +53,10 @@ public class vBaseChildAcl extends vBaseStandard {
 	
 	protected final <T extends jBaseChildAcl> void readAcl(T j) {
 		j.setAcls(this.getAcls());
+	}
+	
+	protected void delete() {
+		_getAcls().forEach(e -> e.delete());
 	}
 	
 }

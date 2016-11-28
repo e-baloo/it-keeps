@@ -48,8 +48,8 @@ public class rAclGroup {
     @Produces({MediaType.APPLICATION_JSON})
 	@aApplicationRolesAllowed(enRole.ROOT)
     @Timed
-    @Path(ApiPath.API_ACL_GRP_GET_ID + "{id}")
-    public Response readId(@PathParam("id") Rid guid) {
+    @Path(ApiPath.API_ACL_GRP_GET_ID + "{rid}")
+    public Response readId(@PathParam("rid") Rid guid) {
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
     	jAclGroup j = fAclGroup.read(requesteurRid, guid);
     	return Response.ok().entity(j).build();

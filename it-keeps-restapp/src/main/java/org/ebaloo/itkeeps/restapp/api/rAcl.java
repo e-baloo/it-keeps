@@ -1,10 +1,8 @@
 package org.ebaloo.itkeeps.restapp.api;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -21,56 +19,30 @@ import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
 import org.ebaloo.itkeeps.api.model.jAcl;
-import org.ebaloo.itkeeps.core.domain.vertex.vAcl;
+import org.ebaloo.itkeeps.core.domain.vertex.fAcl;
 
 import com.codahale.metrics.annotation.Timed;
 
 
 @Path("/")
-public class AclEndpoint {
+public class rAcl {
 
     @Context
     SecurityContext securityContext;
 
-	
-	@GET // LIST
-    @Produces({MediaType.APPLICATION_JSON})
-	@aApplicationRolesAllowed(enRole.ADMIN)
-    @Timed
-    @Path(ApiPath.API_ACL_GET_ALL)
-    public Response readAll() {
-		
-    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-
-		List<jAcl> list = new ArrayList<jAcl>();
-		
-		for(vAcl acl : vAcl.getAllBase(null, vAcl.class, false)) {
-	    	list.add(acl.read(requesteurRid));
-		}
-		
-    	return Response.ok().entity(list).build();
-	}
-	
-	
 	
     @GET //READ
     @Produces({MediaType.APPLICATION_JSON})
     @Path(ApiPath.API_ACL_GET_ID + "{id}")
 	@aApplicationRolesAllowed(enRole.ADMIN)
     @Timed
-    public Response readId(@PathParam("id") String id) {
-
+    public Response readId(@PathParam("id") Rid rid) {
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-
-    	vAcl acl = vAcl.get(null, vAcl.class, id, false);
-		
-		if(acl == null)
-			throw new RuntimeException("readId(" + id + ") is null" );
-		
-		
-    	return Response.ok().entity(acl.read(requesteurRid)).build();
+    	jAcl acl = fAcl.read(requesteurRid, rid);
+    	return Response.ok().entity(acl).build();
     }
 	
+    
     @PUT // UPDATE
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
@@ -78,16 +50,12 @@ public class AclEndpoint {
     @Timed
     @Path(ApiPath.API_ACL_UPDATE)
     public Response update(final jAcl j) {
-    	
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-    	
-    	vAcl acl = vAcl.get(null, vAcl.class,  j.getRid(), false);
-
-    	acl.update(j, requesteurRid);
-
-    	return Response.ok().entity(acl.read(requesteurRid)).build();
+    	fAcl.update(requesteurRid, j);
+     	return Response.ok().entity(fAcl.read(requesteurRid, j.getRid())).build();
     }
 
+    
     @POST // CREATE
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
@@ -95,13 +63,20 @@ public class AclEndpoint {
     @Timed
     @Path(ApiPath.API_ACL_CREATE)
     public Response create(final jAcl j) {
-
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-
-    	vAcl acl = new vAcl(j);
-    	
-    	return Response.ok().entity(acl.read(requesteurRid)).build();
+    	jAcl acl = fAcl.create(requesteurRid, j);
+    	return Response.ok().entity(fAcl.read(requesteurRid, acl.getRid())).build();
     }
+
     
-    
+    @DELETE //DELETE
+    @Produces({MediaType.APPLICATION_JSON})
+	@aApplicationRolesAllowed(enRole.ADMIN)
+    @Timed
+    @Path(ApiPath.API_ACL_DELETE + "{rid}")
+    public Response delete(@PathParam("rid") Rid rid) {
+    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
+    	jAcl j = fAcl.delete(requesteurRid, rid);
+    	return Response.ok().entity(j).build();
+    }
 }

@@ -49,8 +49,8 @@ public class rGroup {
     @Produces({MediaType.APPLICATION_JSON})
 	@aApplicationRolesAllowed(enRole.USER)
     @Timed
-    @Path(ApiPath.API_GROUP_GET_ID + "{guid}")
-    public Response read(@PathParam("guid") Rid rid) {
+    @Path(ApiPath.API_GROUP_GET_ID + "{rid}")
+    public Response read(@PathParam("rid") Rid rid) {
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
     	jGroup j = fGroup.read(requesteurRid, rid);
     	return Response.ok().entity(j).build();

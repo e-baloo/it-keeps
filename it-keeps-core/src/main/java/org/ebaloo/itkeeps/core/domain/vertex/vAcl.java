@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.enumeration.enAclAdmin;
 import org.ebaloo.itkeeps.api.enumeration.enAclData;
@@ -33,41 +32,43 @@ public final class vAcl extends vBase {
 	
 	
 	/*
-	 * CHILD GROUP
+	 * CHILD OBJECTS
 	 */
 	
-	protected List<vBaseChildAcl> getChildObjects() {
-		return this.getEdges(vBaseChildAcl.class, DirectionType.CHILD, true, eAclRelation.class);
+	final private List<jBaseLight> getChildObjects() {
+		return this.getEdges(vBaseChildAcl.class, DirectionType.CHILD, true, eAclRelation.class).stream()
+			.map(e -> getJBaseLight(e)).collect(Collectors.toList());
 	}
 	
-	protected void setChildObjects(List<vBaseChildAcl> list) {
-		if(list == null)
-			list = new ArrayList<vBaseChildAcl>();
-		
-		setEdges(this.getGraph(), vAcl.class, this, vBaseChildAcl.class, list, DirectionType.CHILD, eAclRelation.class, true);
-	}
-
-	protected void _setChildObjects(List<jBaseLight> list) {
+	final private void setChildObjects(List<jBaseLight> list) {
 		
 		if(list == null) 
 			list = new ArrayList<jBaseLight>();
 
 		// Optimization
 		OrientBaseGraph graph = this.getGraph();
-		
-		setChildObjects(list.stream().map(e -> get(graph, vBaseChildAcl.class, e, true)).collect(Collectors.toList())); 
-	}
+
+		setEdges(
+				graph, 
+				vAcl.class, 
+				this, 
+				vBaseChildAcl.class, 
+				list.stream().map(e -> get(graph, vBaseChildAcl.class, e, true)).collect(Collectors.toList()), 
+				DirectionType.CHILD, 
+				eAclRelation.class, 
+				true);
+		}
 
 	
 	/*
 	 * ACL OWNER
 	 */
 	
-	protected enAclOwner getOwner() {
+	final private enAclOwner getOwner() {
 		return enAclOwner.valueOf(this.getEdge(vAclOwner.class, DirectionType.PARENT, false, eAclNoTraverse.class).getName());
 	}
 	
-	protected void setOwner(final enAclOwner aclOwner) {
+	final private void setOwner(final enAclOwner aclOwner) {
 		setEdges(this.getGraph(), vAcl.class, this, vAclOwner.class, vAclOwner.get(getGraph(), vAclOwner.class, aclOwner.name()), DirectionType.PARENT, eAclNoTraverse.class, false);
 	}
 	
@@ -75,7 +76,7 @@ public final class vAcl extends vBase {
 	 * ACL DATA
 	 */
 	
-	protected List<enAclData> getAclData() {
+	final private List<enAclData> getAclData() {
 		return this.getEdges(
 				vAclData.class, 
 				DirectionType.PARENT, 
@@ -84,7 +85,7 @@ public final class vAcl extends vBase {
 					.stream().map(e -> enAclData.valueOf(e.getName())).collect(Collectors.toList());
 	}
 	
-	protected void setAclData(List<enAclData> list) {
+	final private void setAclData(List<enAclData> list) {
 		if(list == null)
 			list = new ArrayList<enAclData>();
 		
@@ -104,7 +105,7 @@ public final class vAcl extends vBase {
 	 * ACL ADMIN
 	 */
 	
-	protected List<enAclAdmin> getAclAdmin() {
+	final private List<enAclAdmin> getAclAdmin() {
 		return this.getEdges(
 				vAclAdmin.class, 
 				DirectionType.PARENT, 
@@ -113,7 +114,7 @@ public final class vAcl extends vBase {
 					.stream().map(e -> enAclAdmin.valueOf(e.getName())).collect(Collectors.toList());
 	}
 	
-	protected void setAclAdmin(List<enAclAdmin> list) {
+	final private void setAclAdmin(List<enAclAdmin> list) {
 		if(list == null)
 			list = new ArrayList<enAclAdmin>();
 		
@@ -139,11 +140,13 @@ public final class vAcl extends vBase {
 	
 	// API
 	
-	public vAcl(final jAcl j) {
+	vAcl(final jAcl j) {
 		super(j);
 		
 		try {
-			this._update(j);
+			this.update(j);
+			this.setChildObjects(j.getChildObjects());
+
 		} catch (Exception e) {
 			this.delete();
 			throw e;
@@ -153,14 +156,14 @@ public final class vAcl extends vBase {
 
 	
 
-	public jAcl read(Rid requesteurGuid) {
+	final jAcl read() {
 		
 		jAcl j = new jAcl();
 		
 		this.readBase(j);
 		
 		
-		j.setChildObjects(this.getChildObjects().stream().map(e -> getJBaseLight(e)).collect(Collectors.toList()));
+		j.setChildObjects(this.getChildObjects());
 		j.setAclData(this.getAclData());
 		j.setAclAdmin(this.getAclAdmin());
 		j.setOwner(this.getOwner());
@@ -168,40 +171,15 @@ public final class vAcl extends vBase {
 		return j;
 	}
 	
-	public jAcl update(jAcl j, Rid requesteurGuid) {
-		
-		vUser requesterUser = vUser.get(this.getGraph(), vUser.class, requesteurGuid, false);
-
-		switch(requesterUser.getRole().value()) {
-
-		case ROOT:
-			break;
-
-		case ADMIN:
-			//TODO Check it requesterUser have the right to update this
-			break;
-			
-		case USER:
-		case GUEST:
-		default:
-			throw new RuntimeException("TODO"); //TODO
-		}
-		
-		this.updateBase(j);
-		
-		this._update((jAcl) j);
-
-		return read(requesteurGuid);
-	}
 	
 	
-	private final void _update(jAcl jacl) {
-		this._setChildObjects(jacl.getChildObjects());
+	final void update(jAcl jacl) {
 		this.setAclData(jacl.getAclData());
 		this.setAclAdmin(jacl.getAclAdmin());
 		this.setOwner(jacl.getOwner());
 	}
-	
+
+
 }
 
 

@@ -81,7 +81,7 @@ public final class SecurityFactory {
 			if(this.aclAdmin.contains(enAclAdmin.GROUP_DENY))
 				return false;
 			
-			return this.aclAdmin.contains(enAclAdmin.GROUP_UPDATE);
+			return this.aclAdmin.contains(enAclAdmin.GROUP_UPDATE) || this.aclAdmin.contains(enAclAdmin.GROUP_CREATE);
 		}
 
 		public boolean isAdminGroupCreate() {
@@ -248,9 +248,61 @@ public final class SecurityFactory {
 		}
 
 
+
+		public boolean isAdminAclRead() {
+
+				if (this.isAdminOwner())
+					return true;
+
+				if(this.isRoleRoot())
+					return true;
+				
+				if(this.aclAdmin.contains(enAclAdmin.ACL_DENY))
+					return false;
+				
+				return this.aclAdmin.contains(enAclAdmin.ACL_READ) || this.aclAdmin.contains(enAclAdmin.ACL_UPDATE) || this.aclAdmin.contains(enAclAdmin.ACL_CREATE);
+			}		
+
+
 		public boolean isAdminGroupRead() {
-			// TODO Auto-generated method stub
-			return true;
+			if (this.isAdminOwner())
+				return true;
+
+			if(this.isRoleRoot())
+				return true;
+			
+			if(this.aclAdmin.contains(enAclAdmin.GROUP_DENY))
+				return false;
+			
+			return this.aclAdmin.contains(enAclAdmin.GROUP_READ) || this.aclAdmin.contains(enAclAdmin.GROUP_UPDATE) || this.aclAdmin.contains(enAclAdmin.GROUP_CREATE);
+		}
+
+
+		public boolean isAdminAclCreate() {
+			if (this.isAdminOwner())
+				return true;
+
+			if(this.isRoleRoot())
+				return true;
+			
+			if(this.aclAdmin.contains(enAclAdmin.ACL_DENY))
+				return false;
+			
+			return this.aclAdmin.contains(enAclAdmin.ACL_CREATE);
+		}
+
+
+		public boolean isAdminAclUpdate() {
+			if (this.isAdminOwner())
+				return true;
+
+			if(this.isRoleRoot())
+				return true;
+			
+			if(this.aclAdmin.contains(enAclAdmin.ACL_DENY))
+				return false;
+			
+			return this.aclAdmin.contains(enAclAdmin.ACL_UPDATE) || this.aclAdmin.contains(enAclAdmin.ACL_CREATE);
 		}
 
 	}

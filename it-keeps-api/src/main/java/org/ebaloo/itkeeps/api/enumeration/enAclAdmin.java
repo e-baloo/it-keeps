@@ -25,6 +25,12 @@ public class enAclAdmin extends enAbstract<String> {
 	public static final enAclAdmin ACL_GROUP_READ = new enAclAdmin("ACL_GROUP_READ");
 	public static final enAclAdmin ACL_GROUP_DENY = new enAclAdmin("ACL_GROUP_DENY");
 
+
+	public static final enAclAdmin ACL_CREATE = new enAclAdmin("ACL_CREATE");;
+	public static final enAclAdmin ACL_UPDATE = new enAclAdmin("ACL_UPDATE");;
+	public static final enAclAdmin ACL_READ = new enAclAdmin("ACL_READ");;
+	public static final enAclAdmin ACL_DENY = new enAclAdmin("ACL_DENY");;
+
 	
 	public static enAclAdmin PATH_CREATE = new enAclAdmin("PATH_CREATE");
 	public static enAclAdmin PATH_GREATE_ROOT = new enAclAdmin("PATH_GREATE_ROOT");
