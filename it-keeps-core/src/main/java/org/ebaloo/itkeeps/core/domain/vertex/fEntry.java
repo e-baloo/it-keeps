@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.ebaloo.itkeeps.Rid;
-import org.ebaloo.itkeeps.api.model.jPath;
+import org.ebaloo.itkeeps.api.model.jEntry;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.ExceptionPermission;
 import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.SecurityAcl;
@@ -18,10 +18,10 @@ import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.SecurityAcl;
  *
  */
 @DatabaseVertrex()
-public final class fPath {
+public final class fEntry {
 
 
-	public static final jPath create(Rid requesteurRid, jPath j) {
+	public static final jEntry create(Rid requesteurRid, jEntry j) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
 		if(!sAcl.isRoleUser())
@@ -29,27 +29,29 @@ public final class fPath {
 
 		// TODO Security
 		
-		vPath path = new vPath(j);
+		vEntry entry = new vEntry(j);
 		
-		return fPath.read(requesteurRid, path.getRid());
+		return fEntry.read(requesteurRid, entry.getRid());
 	}
 
 
-	public static final jPath delete(Rid requesteurRid, Rid rid) {
+	public static final jEntry delete(Rid requesteurRid, Rid rid) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
 		if(!sAcl.isRoleUser())
 			throw ExceptionPermission.NOT_USER;
 
-		vPath path = vBaseAbstract.get(null, vPath.class, rid, false);
-		jPath j = path.read();
+		// TODO Security
 		
-		path.delete();
+		vEntry entry = vBaseAbstract.get(null, vEntry.class, rid, false);
+		jEntry j = entry.read();
+		
+		entry.delete();
 		
 		return j;
 	}
 
-	public static final jPath read(Rid requesteurRid, Rid rid) {
+	public static final jEntry read(Rid requesteurRid, Rid rid) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
 		if(!sAcl.isRoleUser())
@@ -57,12 +59,12 @@ public final class fPath {
 		
 		// TODO Security
 
-		vPath path = vBaseAbstract.get(null, vPath.class, rid, false);
+		vEntry entry = vBaseAbstract.get(null, vEntry.class, rid, false);
 		
-		return path.read();
+		return entry.read();
 	}
 
-	public static final jPath update(Rid requesteurRid,  jPath j) {
+	public static final jEntry update(Rid requesteurRid,  jEntry j) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
 		if(!sAcl.isRoleUser())
@@ -70,27 +72,26 @@ public final class fPath {
 		
 		// TODO Security
 
-		vPath path = vBaseAbstract.get(null, vPath.class, j.getRid(), false);
+		vEntry entry = vBaseAbstract.get(null, vEntry.class, j.getRid(), false);
 
-		path.checkVersion(j);
-		path.update(j);
+		entry.checkVersion(j);
+		entry.update(j);
 		
-		return fPath.read(requesteurRid, j.getRid());
+		return fEntry.read(requesteurRid, j.getRid());
 	}
 	
 	
 
 
-	public static final List<jPath> readAll(Rid requesteurRid) {
+	public static final List<jEntry> readAll(Rid requesteurRid) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
-		if(!sAcl.isRoleUser())
-			throw ExceptionPermission.NOT_USER;
+		if(!sAcl.isRoleRoot())
+			throw ExceptionPermission.NOT_ROOT;
 
-	
-		// TODO
+		// TODO Security
 		
-		List<jPath> list = vBase.getAllBase(null, vPath.class, false).stream().map(e -> e.read()).collect(Collectors.toList());
+		List<jEntry> list = vBase.getAllBase(null, vEntry.class, false).stream().map(e -> e.read()).collect(Collectors.toList());
 		
 		return list;
 	}

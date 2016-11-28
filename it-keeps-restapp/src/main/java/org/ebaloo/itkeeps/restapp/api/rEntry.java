@@ -1,7 +1,6 @@
 package org.ebaloo.itkeeps.restapp.api;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -21,13 +20,13 @@ import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
 import org.ebaloo.itkeeps.api.model.jEntry;
-import org.ebaloo.itkeeps.core.domain.vertex.vEntry;
+import org.ebaloo.itkeeps.core.domain.vertex.fEntry;
 
 import com.codahale.metrics.annotation.Timed;
 
 
 @Path("/")
-public class EntryEndpoint {
+public class rEntry {
 
     @Context
     SecurityContext securityContext;
@@ -39,15 +38,8 @@ public class EntryEndpoint {
     @Timed
     @Path(ApiPath.API_ENTRY_GET_ALL)
     public Response readAll() {
-		
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-
-		List<jEntry> list = new ArrayList<jEntry>();
-		
-		for(vEntry entry : vEntry.getAllBase(null, vEntry.class, false)) {
-	    	list.add(entry.read(requesteurRid));
-		}
-		
+		List<jEntry> list = fEntry.readAll(requesteurRid);
     	return Response.ok().entity(list).build();
 	}
 	
@@ -58,17 +50,10 @@ public class EntryEndpoint {
     @Path(ApiPath.API_ENTRY_GET_ID + "{id}")
 	@aApplicationRolesAllowed(enRole.USER)
     @Timed
-    public Response readId(@PathParam("id") String id) {
-
+    public Response readId(@PathParam("id") Rid rid) {
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-
-    	vEntry entry = vEntry.get(null, vEntry.class, id, false);
-		
-		if(entry == null)
-			throw new RuntimeException("readId(" + id + ") is null" );
-		
-		
-    	return Response.ok().entity(entry.read(requesteurRid)).build();
+    	jEntry entry = fEntry.read(requesteurRid, rid);
+    	return Response.ok().entity(entry).build();
     }
 	
     @PUT // UPDATE
@@ -77,15 +62,10 @@ public class EntryEndpoint {
 	@aApplicationRolesAllowed(enRole.USER)
     @Timed
     @Path(ApiPath.API_ENTRY_UPDATE)
-    public Response update(final jEntry juser) {
-    	
+    public Response update(final jEntry j) {
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-    	
-    	vEntry entry = vEntry.get(null, vEntry.class,  juser.getRid(), false);
-
-    	entry.update(juser, requesteurRid);
-
-    	return Response.ok().entity(entry.read(requesteurRid)).build();
+    	fEntry.update(requesteurRid, j);
+    	return Response.ok().entity(fEntry.read(requesteurRid, j.getRid())).build();
     }
 
     @POST // CREATE
@@ -94,13 +74,10 @@ public class EntryEndpoint {
 	@aApplicationRolesAllowed(enRole.ADMIN)
     @Timed
     @Path(ApiPath.API_ENTRY_CREATE)
-    public Response create(final jEntry juser) {
-
+    public Response create(final jEntry j) {
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-
-    	vEntry entry = new vEntry(juser);
-
-    	return Response.ok().entity(entry.read(requesteurRid)).build();
+    	jEntry entry = fEntry.create(requesteurRid, j);
+    	return Response.ok().entity(fEntry.read(requesteurRid, entry.getRid())).build();
     }
     
     

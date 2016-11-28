@@ -21,7 +21,7 @@ public class ApiConfig {
     	parent.classesAdd(rUser.class);
     	parent.classesAdd(rGroup.class);
     	parent.classesAdd(rPath.class);
-    	parent.classesAdd(EntryEndpoint.class);
+    	parent.classesAdd(rEntry.class);
     	parent.classesAdd(AclEndpoint.class);
     	parent.classesAdd(rAclGroup.class);
 
