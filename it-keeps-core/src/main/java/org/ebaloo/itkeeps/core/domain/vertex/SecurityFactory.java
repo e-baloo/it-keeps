@@ -406,16 +406,21 @@ public final class SecurityFactory {
 		
 
 		public static final RuntimeException IS_GUEST = new RuntimeException("requester is '" + enAclRole.GUEST.name() + "'");
+		
+		// TODO remove
 		public static final RuntimeException IS_GUEST_OR_USER = new RuntimeException("requester is '" + enAclRole.GUEST.name() + "' or '" + enAclRole.USER.name() + "'");
+		// TODO remove
 		public static final RuntimeException IS_USER = new RuntimeException("requester is '" + enAclRole.USER.name() + "'");
 
 		public static final RuntimeException NOT_ROOT = new RuntimeException("requester is not '" + enAclRole.ROOT.name() + "'");
+		public static final RuntimeException NOT_ADMIN = new RuntimeException("requester is not '" + enAclRole.ADMIN.name() + "'");
+		public static final RuntimeException NOT_USER = new RuntimeException("requester is not '" + enAclRole.USER.name() + "'");
 		
 		public static final RuntimeException NOT_DELEGATE =  new RuntimeException("requester have not '" + enAclAdmin.DELEGATE.name() + "' permission");
 		public static final RuntimeException NOT_GROUP_UPDATE = new RuntimeException("requester have not '" + enAclAdmin.GROUP_UPDATE.name() + "' permission");
 		public static final RuntimeException NOT_USER_CREATE = new RuntimeException("requester have not '" + enAclAdmin.USER_CREATE.name() + "' permission");
 		public static final RuntimeException NOT_USER_UPDATE = new RuntimeException("requester have not '" + enAclAdmin.USER_UPDATE.name() + "' permission");
-		public static final RuntimeException NOT_USER_READ = new RuntimeException("requester have not '" + enAclAdmin.USER_READ.name() + "' permission");;;
+		public static final RuntimeException NOT_USER_READ = new RuntimeException("requester have not '" + enAclAdmin.USER_READ.name() + "' permission");
 		
 		
 	}

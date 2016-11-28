@@ -18,7 +18,6 @@ import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.edge.eRelation;
 import org.ebaloo.itkeeps.core.domain.vertex.vAclAdmin;
 import org.ebaloo.itkeeps.core.domain.vertex.vAclData;
-import org.ebaloo.itkeeps.core.domain.vertex.vAclEnum;
 import org.ebaloo.itkeeps.core.domain.vertex.vAclOwner;
 import org.ebaloo.itkeeps.core.domain.vertex.vAclRole;
 import org.ebaloo.itkeeps.core.domain.vertex.vAuthentication;

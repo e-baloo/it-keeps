@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.model.jPath;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
@@ -23,9 +22,9 @@ import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
  *
  */
 @DatabaseVertrex()
-public final class vPath extends vBaseChildAcl {
+final class vPath extends vBaseChildAcl {
 
-	protected vPath() {
+	vPath() {
 		super();
 	}
 	
@@ -35,16 +34,13 @@ public final class vPath extends vBaseChildAcl {
 	 * PARENT GROUP
 	 */
 	
-	public vPath getParent() {
-		return this.getEdge(vPath.class, DirectionType.PARENT, false, eInPath.class);
+	private jBaseLight getParent() {
+		vPath parent = this.getEdge(vPath.class, DirectionType.PARENT, false, eInPath.class);
+		return parent == null ? null : getJBaseLight(parent);
 	}
 	
-	public void setParent(final vPath path) {
-		setEdges(this.getGraph(), vPath.class, this, vPath.class, path, DirectionType.PARENT, eInPath.class, false);
-	}
-
 	private void setParent(final jBaseLight path) {
-		setParent(get(this.getGraph(), vPath.class, path, false));
+		setEdges(this.getGraph(), vPath.class, this, vPath.class, get(this.getGraph(), vPath.class, path, false), DirectionType.PARENT, eInPath.class, false);
 	}
 
 	
@@ -54,15 +50,17 @@ public final class vPath extends vBaseChildAcl {
 	 * CHILD GROUP
 	 */
 	
-	protected List<vPath> getChilds() {
-		return this.getEdges(vPath.class, DirectionType.CHILD, false, eInPath.class);
+	private List<jBaseLight> getChilds() {
+		return this.getEdges(
+				vPath.class,
+				DirectionType.CHILD,
+				false,
+				eInPath.class
+				).stream()
+				.map(e -> getJBaseLight(e)).collect(Collectors.toList());
 	}
 	
-	protected void setChilds(List<vPath> list) {
-		setEdges(this.getGraph(), vPath.class, this, vPath.class, list, DirectionType.CHILD, eInPath.class, false);
-	}
-
-	private void setChildsJBL(List<jBaseLight> list) {
+	private void setChilds(List<jBaseLight> list) {
 		
 		if(list == null) 
 			list = new ArrayList<jBaseLight>();
@@ -70,7 +68,15 @@ public final class vPath extends vBaseChildAcl {
 		// Optimization
 		OrientBaseGraph graph = this.getGraph();
 		
-		setChilds(list.stream().map(e -> get(graph, vPath.class, e, false)).collect(Collectors.toList())); 
+		setEdges(
+				graph, 
+				vPath.class, 
+				this, 
+				vPath.class, 
+				list.stream().map(e -> get(graph, vPath.class, e, false)).collect(Collectors.toList()), 
+				DirectionType.CHILD, 
+				eInPath.class, 
+				false);
 	}
 
 	
@@ -81,14 +87,14 @@ public final class vPath extends vBaseChildAcl {
 	
 	// API
 	
-	public vPath(final jPath j) {
+	vPath(final jPath j) {
 		super(j);
 		
 
 		try {
-		this.setParent(j.getParent());
-		this.setChildsJBL(j.getChilds());
-
+			
+			this.update(j);
+			
 		} catch (Exception e) {
 			this.delete();
 			throw e;
@@ -97,56 +103,32 @@ public final class vPath extends vBaseChildAcl {
 
 	
 
-	public jPath read(Rid requesteurRid) {
+	jPath read() {
 		
 		jPath j = new jPath();
 
 		this.readBaseStandard(j);
 
-		jPath jpath = (jPath) j;
-		
-		jpath.setParent(getJBaseLight(this.getParent()));
-		jpath.setChilds(this.getChilds().stream().map(e -> getJBaseLight(e)).collect(Collectors.toList()));
+		j.setParent(this.getParent());
+		j.setChilds(this.getChilds());
 		
 		this.readAcl(j);
 		
 		return j;
 	}
 
-	public jPath update(jPath j, Rid requesteurRid) {
-		
-		vUser requesterUser = vUser.get(this.getGraph(), vUser.class, requesteurRid, false);
-
-		switch(requesterUser.getRole().value()) {
-
-		case ROOT:
-			// -> Ok is root
-			break;
-
-		case ADMIN:
-			//TODO Check it requesterUser have the right to update this
-			break;
-			
-		case USER:
-		case GUEST:
-		default:
-			throw new RuntimeException("TODO"); //TODO
-		}
-		
-		this.checkVersion(j);
+	void update(jPath j) {
 		
 		this.updateBaseStandard(j);
 
-		jPath jpath = (jPath) j;
-		
-		if(jpath.isPresentParent())
-			this.setParent(jpath.getParent());
+		if(j.isPresentParent())
+			this.setParent(j.getParent());
 
-		if(jpath.isPresentChilds())
-			this.setChildsJBL(jpath.getChilds());
+		if(j.isPresentChilds())
+			this.setChilds(j.getChilds());
 				
-		return read(requesteurRid);
 	}
+
 }
 
 

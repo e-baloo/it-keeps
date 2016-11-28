@@ -1,7 +1,6 @@
 package org.ebaloo.itkeeps.restapp.api;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -21,17 +20,13 @@ import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
 import org.ebaloo.itkeeps.api.model.jPath;
-import org.ebaloo.itkeeps.core.domain.vertex.vPath;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.ebaloo.itkeeps.core.domain.vertex.fPath;
 
 import com.codahale.metrics.annotation.Timed;
 
 
 @Path("")
-public class PathEndpoint {
-
-	private static final Logger logger = LoggerFactory.getLogger(PathEndpoint.class.getName());
+public class rPath {
 
     @Context
     SecurityContext securityContext;
@@ -43,16 +38,9 @@ public class PathEndpoint {
     @Timed
     @Path(ApiPath.API_PATH_GET_ALL)
     public Response read() {
-		
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-
-		List<jPath> list = new ArrayList<jPath>();
-		
-		for(vPath path : vPath.getAllBase(null, vPath.class, false)) {
-	    	list.add(path.read(requesteurRid));
-		}
-		
-    	return Response.ok().entity(list).build();
+		List<jPath> list = fPath.readAll(requesteurRid);
+		return Response.ok().entity(list).build();
 	}
 	
 	
@@ -61,18 +49,11 @@ public class PathEndpoint {
     @Produces({MediaType.APPLICATION_JSON})
 	@aApplicationRolesAllowed(enRole.USER)
     @Timed
-    @Path(ApiPath.API_PATH_GET_ID + "{guid}")
-    public Response read(@PathParam("guid") Rid guid) {
-
+    @Path(ApiPath.API_PATH_GET_ID + "{rid}")
+    public Response read(@PathParam("rid") Rid RID) {
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-
-		vPath group = vPath.get(null, vPath.class, guid, false);
-		
-		if(group == null)
-			throw new RuntimeException("TODO"); // TODO
-		
-		
-    	return Response.ok().entity(group.read(requesteurRid)).build();
+		jPath path = fPath.read(requesteurRid, RID);
+    	return Response.ok().entity(path).build();
     }
 	
 
@@ -83,20 +64,12 @@ public class PathEndpoint {
     @Timed
     @Path(ApiPath.API_PATH_UPDATE)
     public Response update(final jPath j) {
-    	
-		if (logger.isTraceEnabled())
-			logger.trace("updateGroup()");
-
-    	
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-    	
-    	vPath group = vPath.get(null, vPath.class, j.getRid(), false);
-
-    	jPath nj = group.update(j, requesteurRid);
-
-    	return Response.ok().entity(nj).build();
+    	fPath.update(requesteurRid, j);
+    	return Response.ok().entity(fPath.read(requesteurRid, j.getRid())).build();
     }
 
+    
     @POST 
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
@@ -104,12 +77,9 @@ public class PathEndpoint {
     @Timed
     @Path(ApiPath.API_PATH_CREATE)
     public Response create(final jPath j) {
-
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-
-    	vPath path = new vPath(j);
-
-    	return Response.ok().entity(path.read(requesteurRid)).build();
+    	jPath path = fPath.create(requesteurRid, j);
+    	return Response.ok().entity(fPath.read(requesteurRid, path.getRid())).build();
     }
     
     
