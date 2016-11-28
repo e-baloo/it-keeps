@@ -1,6 +1,9 @@
 
 package org.ebaloo.itkeeps.core.domain.vertex;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.enumeration.enAclRole;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
@@ -8,7 +11,7 @@ import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.ExceptionPermission
 import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.SecurityAcl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.model.jUser;
 
 @DatabaseVertrex()
@@ -17,8 +20,27 @@ public final class fUser extends vBaseChildAcl {
 	@SuppressWarnings("unused")
 	private static Logger logger = LoggerFactory.getLogger(fUser.class);
 
+	
+
+	
+	
+	
 	// API
 
+	
+	public static final List<jBaseLight> readAll(Rid requesteurRid) {
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
+		if(!sAcl.isRoleAdmin())
+			throw ExceptionPermission.NOT_ADMIN;
+		if(!sAcl.isAdminUserRead())
+			throw ExceptionPermission.DENY;
+		List<jBaseLight> list = vBase.getAllBase(null, vUser.class, false).stream().map(e -> e.read().getJBaseLight()).collect(Collectors.toList());
+		return list;
+	}
+
+	
+	
+	
 	public static final jUser read(Rid requesteurRid, Rid userRid) {
 
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, userRid);

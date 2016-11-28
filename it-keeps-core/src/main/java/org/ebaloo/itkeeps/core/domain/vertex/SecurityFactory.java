@@ -24,7 +24,7 @@ import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 public final class SecurityFactory {
 
-	public static class SecurityAcl {
+	public final static class SecurityAcl {
 
 		private enAclOwner aclOwner = enAclOwner.FALSE;
 		private Set<enAclData> aclData = new HashSet<enAclData>();
@@ -98,20 +98,6 @@ public final class SecurityFactory {
 			return this.aclAdmin.contains(enAclAdmin.GROUP_CREATE);
 		}
 
-		public boolean isAdminCreatRootGroup() {
-			
-			if (this.isAdminOwner())
-				return true;
-
-			if(this.isRoleRoot())
-				return true;
-			
-			if(this.aclAdmin.contains(enAclAdmin.GROUP_DENY))
-				return false;
-			
-			return this.aclAdmin.contains(enAclAdmin.GROUP_CREATE_ROOT);
-		}
-
 		public boolean isAdminUserRead() {
 
 			if (this.isAdminOwner())
@@ -155,36 +141,6 @@ public final class SecurityFactory {
 		}
 
 		
-		/*
-		public boolean isDataCreate() {
-			if (this.isAdminOwner())
-				return true;
-
-			return this.aclData.ordinal() <= enAclData.CREATE.ordinal();
-		}
-
-		public boolean isDataDeny() {
-			if (this.isAdminOwner())
-				return false;
-
-			return this.aclData.ordinal() >= enAclData.DENY.ordinal();
-		}
-
-		public boolean isDataRead() {
-			if (this.isAdminOwner())
-				return true;
-
-			return this.aclData.ordinal() <= enAclData.READ.ordinal();
-		}
-
-		public boolean isDataUpdate() {
-			if (this.isAdminOwner())
-				return true;
-
-			return this.aclData.ordinal() <= enAclData.UPDATE.ordinal();
-		}
-		*/
-
 		public boolean isRoleAdmin() {
 			return aclRole.isAdmin();
 		}

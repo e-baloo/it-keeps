@@ -20,6 +20,7 @@ import org.ebaloo.itkeeps.ApiPath;
 import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
+import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.model.jUser;
 import org.ebaloo.itkeeps.core.domain.vertex.fUser;
 import org.ebaloo.itkeeps.core.domain.vertex.vCredential;
@@ -62,18 +63,12 @@ public class rUser {
 	@Timed
 	@Path(ApiPath.API_USER_GET_ALL)
 	public Response readAll() {
-
 		Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-
-		List<jUser> list = new ArrayList<jUser>();
-
-		for (vUser user : vUser.getAllBase(null, vUser.class, false)) {
-			list.add(fUser.read(requesteurRid, user.getRid()));
-		}
-
+		List<jBaseLight> list = fUser.readAll(requesteurRid);
 		return Response.ok().entity(list).build();
 	}
 
+	
 	@GET // READ
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path(ApiPath.API_CRED_GET_ID + "{id}")

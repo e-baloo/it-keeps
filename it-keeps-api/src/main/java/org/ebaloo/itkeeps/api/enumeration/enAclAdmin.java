@@ -12,7 +12,6 @@ public class enAclAdmin extends enAbstract<String> {
 	public static final enAclAdmin DELEGATE_DENY = new enAclAdmin("DELEGATE_DENY");
 
 	public static final enAclAdmin GROUP_CREATE = new enAclAdmin("GROUP_CREATE");
-	public static final enAclAdmin GROUP_CREATE_ROOT = new enAclAdmin("GROUP_CREATE_ROOT");
 	public static final enAclAdmin GROUP_UPDATE = new enAclAdmin("GROUP_UPDATE");
 	public static final enAclAdmin GROUP_READ = new enAclAdmin("GROUP_READ");
 	public static final enAclAdmin GROUP_DENY =  new enAclAdmin("GROUP_DENY");

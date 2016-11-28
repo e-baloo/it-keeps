@@ -23,42 +23,39 @@ public final class fAclGroup {
 
 
 	public static final jAclGroup create(Rid requesteurRid, jAclGroup j) {
-		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
 		if(!sAcl.isRoleRoot())
 			throw ExceptionPermission.NOT_ROOT;
-
 		vAclGroup aclGroup = new vAclGroup(j);
-		
 		return fAclGroup.read(requesteurRid, aclGroup.getRid());
 	}
 
 
 	public static final jAclGroup delete(Rid requesteurRid, Rid rid) {
-		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
 		if(!sAcl.isRoleRoot())
 			throw ExceptionPermission.NOT_ROOT;
-
+		
 		vAclGroup aclGroup = vBaseAbstract.get(null, vAclGroup.class, rid, false);
-		jAclGroup j = aclGroup.read();
+		if(aclGroup != null) {
+			jAclGroup j = aclGroup.read();
+			aclGroup.delete();
+			return j;
+		}
 		
-		aclGroup.delete();
-		
-		return j;
+		return null;
 	}
+
 
 	public static final jAclGroup read(Rid requesteurRid, Rid rid) {
-		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
 		if(!sAcl.isRoleRoot())
 			throw ExceptionPermission.NOT_ROOT;
-
 		vAclGroup aclGroup = vBaseAbstract.get(null, vAclGroup.class, rid, false);
-		
-		return aclGroup.read();
+		return aclGroup == null ? null : aclGroup.read();
 	}
 
+	
 	public static final jAclGroup update(Rid requesteurRid,  jAclGroup j) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
