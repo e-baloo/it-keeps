@@ -70,7 +70,7 @@ public final class SecurityFactory {
 			return this.aclOwner.value();
 		}
 
-		public boolean isAdminUpdateGroup() {
+		public boolean isAdminGroupUpdate() {
 			
 			if (this.isAdminOwner())
 				return true;
@@ -84,7 +84,7 @@ public final class SecurityFactory {
 			return this.aclAdmin.contains(enAclAdmin.GROUP_UPDATE);
 		}
 
-		public boolean isAdminCreatGroup() {
+		public boolean isAdminGroupCreate() {
 			
 			if (this.isAdminOwner())
 				return true;
@@ -203,6 +203,98 @@ public final class SecurityFactory {
 
 		public boolean isRoleUser() {
 			return aclRole.isUser();
+		}
+
+
+		public boolean isDataPathRead() {
+			
+			if(this.isAdminOwner())
+				return true;
+
+			if(this.isRoleRoot())
+				return true;
+
+			if(this.aclData.contains(enAclData.DENY) || this.aclData.contains(enAclData.PATH_DENY))
+				return false;
+
+			return this.aclData.contains(enAclData.PATH_CREATE) || this.aclData.contains(enAclData.PATH_UPDATE) || this.aclData.contains(enAclData.PATH_READ);
+		}
+
+		public boolean isDataPathUpdate() {
+			
+			if(this.isAdminOwner())
+				return true;
+
+			if(this.isRoleRoot())
+				return true;
+
+			if(this.aclData.contains(enAclData.DENY) || this.aclData.contains(enAclData.PATH_DENY))
+				return false;
+
+			return this.aclData.contains(enAclData.PATH_CREATE) || this.aclData.contains(enAclData.PATH_UPDATE);
+		}
+		
+		public boolean isDataPathCreate() {
+			
+			if(this.isAdminOwner())
+				return true;
+
+			if(this.isRoleRoot())
+				return true;
+
+			if(this.aclData.contains(enAclData.DENY) || this.aclData.contains(enAclData.PATH_DENY))
+				return false;
+
+			return this.aclData.contains(enAclData.PATH_CREATE);
+		}
+
+
+		public boolean isDataEntryRead() {
+			
+			if(this.isAdminOwner())
+				return true;
+
+			if(this.isRoleRoot())
+				return true;
+
+			if(this.aclData.contains(enAclData.DENY) || this.aclData.contains(enAclData.ENTRY_DENY))
+				return false;
+
+			return this.aclData.contains(enAclData.ENTRY_CREATE) || this.aclData.contains(enAclData.ENTRY_UPDATE) || this.aclData.contains(enAclData.ENTRY_READ);
+		}
+
+		public boolean isDataEntryUpdate() {
+			
+			if(this.isAdminOwner())
+				return true;
+
+			if(this.isRoleRoot())
+				return true;
+
+			if(this.aclData.contains(enAclData.DENY) || this.aclData.contains(enAclData.ENTRY_DENY))
+				return false;
+
+			return (this.aclData.contains(enAclData.ENTRY_CREATE) || this.aclData.contains(enAclData.ENTRY_UPDATE));
+		}
+		
+		public boolean isDataEntryCreate() {
+			
+			if(this.isAdminOwner())
+				return true;
+
+			if(this.isRoleRoot())
+				return true;
+
+			if(this.aclData.contains(enAclData.DENY) || this.aclData.contains(enAclData.PATH_DENY))
+				return false;
+
+			return this.aclData.contains(enAclData.PATH_CREATE);
+		}
+
+
+		public boolean isAdminGroupRead() {
+			// TODO Auto-generated method stub
+			return true;
 		}
 
 	}
@@ -421,6 +513,8 @@ public final class SecurityFactory {
 		public static final RuntimeException NOT_USER_CREATE = new RuntimeException("requester have not '" + enAclAdmin.USER_CREATE.name() + "' permission");
 		public static final RuntimeException NOT_USER_UPDATE = new RuntimeException("requester have not '" + enAclAdmin.USER_UPDATE.name() + "' permission");
 		public static final RuntimeException NOT_USER_READ = new RuntimeException("requester have not '" + enAclAdmin.USER_READ.name() + "' permission");
+
+		public static final RuntimeException DENY = new RuntimeException("requester have '" + enAclData.DENY.name() + "'");;
 		
 		
 	}

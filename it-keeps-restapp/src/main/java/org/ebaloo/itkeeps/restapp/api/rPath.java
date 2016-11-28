@@ -19,6 +19,7 @@ import org.ebaloo.itkeeps.ApiPath;
 import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
+import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.model.jPath;
 import org.ebaloo.itkeeps.core.domain.vertex.fPath;
 
@@ -39,7 +40,7 @@ public class rPath {
     @Path(ApiPath.API_PATH_GET_ALL)
     public Response read() {
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-		List<jPath> list = fPath.readAll(requesteurRid);
+		List<jBaseLight> list = fPath.readAll(requesteurRid);
 		return Response.ok().entity(list).build();
 	}
 	

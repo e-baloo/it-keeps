@@ -141,7 +141,7 @@ public final class fUser extends vBaseChildAcl {
 			return;
 		if (!sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
 			return;
-		if (!sAcl.isAdminUpdateGroup())
+		if (!sAcl.isAdminGroupUpdate())
 			throw ExceptionPermission.NOT_GROUP_UPDATE;
 	}
 

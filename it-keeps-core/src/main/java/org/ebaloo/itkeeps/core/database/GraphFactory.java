@@ -104,7 +104,7 @@ public final class GraphFactory {
 			
 	    	if(StringUtils.startsWithIgnoreCase(databaseUri, "memory:")) {
 	    		memoryGraph = (new OrientGraphFactory(databaseUri, databaseUser, databasePassword)).getNoTx();
-	    		
+	    		memoryGraph.setUseLightweightEdges(true);
 	    	}
 	    	
 			return new OrientGraphFactory(databaseUri, databaseUser, databasePassword).setupPool(poolMin, poolMax);
