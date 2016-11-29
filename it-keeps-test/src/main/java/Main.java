@@ -3,9 +3,11 @@
 import java.net.URI;
 import java.util.List;
 
+import org.ebaloo.itkeeps.ApiPath;
 import org.ebaloo.itkeeps.api.enumeration.enAuthentication;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.model.jCredential;
+import org.ebaloo.itkeeps.api.model.jGroup;
 import org.ebaloo.itkeeps.api.model.jUser;
 import org.ebaloo.itkeeps.commons.ConfigFactory;
 import org.ebaloo.itkeeps.commons.LogFactory;
@@ -13,11 +15,14 @@ import org.ebaloo.itkeeps.core.database.DatabaseFactory;
 import org.ebaloo.itkeeps.core.domain.vertex.fEntry;
 import org.ebaloo.itkeeps.core.domain.vertex.fPath;
 import org.ebaloo.itkeeps.httpclient.ItkeepsHttpClient;
+import org.ebaloo.itkeeps.httpclient.ParameterEncoder;
 import org.ebaloo.itkeeps.restapp.ApplicationConfig;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Main {
 	
@@ -89,6 +94,16 @@ public class Main {
 		List<jBaseLight> list2 = fEntry.readAll(tUser.admin_1.getRid());
 		LogFactory.getMain().info(String.format("%s - %s", list2.size(), list2 ));
 
+		LogFactory.getMain().info("---------------------------------------------------------");
+
+		
+		JsonNode jn = client.callJsonRead(ApiPath.TOOLS_STATS);
+
+	
+		ObjectMapper mapper = new ObjectMapper();
+		LogFactory.getMain().info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jn));
+		
+		
 		LogFactory.getMain().info("---------------------------------------------------------");
 
 		

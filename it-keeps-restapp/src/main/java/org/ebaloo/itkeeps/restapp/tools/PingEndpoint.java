@@ -20,7 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-@Path("")
+@Path("/")
 public class PingEndpoint {
 
 	private static final Logger logger = LoggerFactory.getLogger(PingEndpoint.class.getName());

@@ -201,5 +201,33 @@ public class ItkeepsHttpClient {
 
 
 
+	public JsonNode callJsonRead(String url) {
+		
+		try {
+		url = urlFormat(url);
+
+		HttpRequestBase request = null;
+		request = new HttpGet(url);
+
+		
+		HttpResponse response = getHttpJsonClient().execute(request);
+
+		// Check for HTTP response code: 200 = success
+		if (response.getStatusLine().getStatusCode() != 200) {
+			throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
+		}
+
+		JsonNode node = MAPPER.readValue(response.getEntity().getContent(), JsonNode.class);
+		return node;
+		} catch (Exception e){
+			throw new RuntimeException(e);
+		}
+		
+		
+
+	}
+
+
+
 
 }

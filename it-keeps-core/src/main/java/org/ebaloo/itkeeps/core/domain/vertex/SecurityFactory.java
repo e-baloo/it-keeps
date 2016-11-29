@@ -149,10 +149,6 @@ public final class SecurityFactory {
 			return this.aclRole.isGuest();
 		}
 
-		public boolean isRoleIn(enAclRole role) {
-			return this.aclRole.isInRole(role);
-		}
-
 		public boolean isRoleRoot() {
 			return aclRole.isRoot();
 		}

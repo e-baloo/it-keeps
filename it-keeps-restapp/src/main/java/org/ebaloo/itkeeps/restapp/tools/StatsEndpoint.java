@@ -31,7 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-@Path("")
+@Path("/")
 public class StatsEndpoint {
 
 	private static final Logger logger = LoggerFactory.getLogger(StatsEndpoint.class.getName());

@@ -57,6 +57,8 @@ public class vBaseChildAcl extends vBaseStandard {
 	
 	protected void delete() {
 		_getAcls().forEach(e -> e.delete());
+		
+		super.delete();
 	}
 	
 }
