@@ -32,6 +32,11 @@ public final class ApiPath {
 	public  static final String API_GROUP_CREATE = API_GROUP + CREATE;
 	public  static final String API_GROUP_DELETE = API_GROUP + DELETE;
 
+	private static final String API_ENUM = API + "enum/";
+	public  static final String API_ENUM_ACL = API_ENUM + "acl/";
+	public  static final String API_ENUM_AUTH = API_ENUM + "auth/";
+	
+	
 	private static final String API_ACL = API + "acl/";
 	public  static final String API_ACL_GET_ALL = API_ACL + ALL;
 	public  static final String API_ACL_GET_ID = API_ACL + ID;

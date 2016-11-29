@@ -49,6 +49,32 @@ public class Main {
 		
 		LogFactory.getMain().info("START");
 
+		ItkeepsHttpClient guestClient = new ItkeepsHttpClient();
+
+		{
+			ObjectMapper mapper = new ObjectMapper();
+
+			{
+				JsonNode jn = guestClient.callJsonRead(ApiPath.API_ENUM_AUTH);
+				LogFactory.getMain().debug(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jn));
+			}
+
+			{
+				JsonNode jn = guestClient.callJsonRead(ApiPath.TOOLS_PING);
+				LogFactory.getMain().debug(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jn));
+			}
+
+			{
+				JsonNode jn = guestClient.callJsonRead(ApiPath.TOOLS_STATS);
+				LogFactory.getMain().debug(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jn));
+			}
+
+		}
+		
+		
+		
+		
+		
 		
 		jCredential cred = new jCredential();
 		cred.setId("marc");
@@ -56,23 +82,23 @@ public class Main {
 		cred.setAuthenticationType(enAuthentication.BASIC);
 		cred.setUserName("Marc DONVAL");
 
-		ItkeepsHttpClient client = new ItkeepsHttpClient(cred);
+		ItkeepsHttpClient clientRoot = new ItkeepsHttpClient(cred);
 
 		{
 			
-			jUser rootUser =  client.callJsonRead("/api/cred/id/marc", jUser.class);
+			jUser rootUser =  clientRoot.callJsonRead("/api/cred/id/marc", jUser.class);
 			LogFactory.getMain().info(rootUser.toString());
 
 		}
 		
 
-		tAclGroup.run(client);
+		tAclGroup.run(clientRoot);
 
-		tGroup.run(client);
-		tPath.run(client);
-		tUser.run(client);
-		EntryTest.run(client);
-		tTest.run(client);
+		tGroup.run(clientRoot);
+		tPath.run(clientRoot);
+		tUser.run(clientRoot);
+		EntryTest.run(clientRoot);
+		tTest.run(clientRoot);
 		
 		
 
@@ -96,15 +122,7 @@ public class Main {
 
 		LogFactory.getMain().info("---------------------------------------------------------");
 
-		
-		JsonNode jn = client.callJsonRead(ApiPath.TOOLS_STATS);
 
-	
-		ObjectMapper mapper = new ObjectMapper();
-		LogFactory.getMain().info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jn));
-		
-		
-		LogFactory.getMain().info("---------------------------------------------------------");
 
 		
 		/*

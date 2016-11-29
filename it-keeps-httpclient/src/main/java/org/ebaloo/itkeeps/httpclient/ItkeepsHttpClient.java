@@ -53,14 +53,15 @@ public class ItkeepsHttpClient {
 
 	}
 	
+	public ItkeepsHttpClient() {
+		;
+	}
 	
 	
 	public ItkeepsHttpClient(jCredential jcredential) {
-		
 		jToken _token = callJsonCreat("/auth/login", jcredential, jToken.class);
 		token = _token.getToken();
 		httpJsonClient = null;
-		
 	}
 	
 	
