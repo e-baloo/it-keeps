@@ -10,7 +10,7 @@ public class AuthenticationConfig {
     public static void init(InterfaceApplicationConfig parent) {
     	
     	parent.classesAdd(AuthorizationRequestFilter.class);
-    	parent.classesAdd(AuthenticationEndpoint.class);
+    	parent.classesAdd(rAuthentication.class);
         
     }
 

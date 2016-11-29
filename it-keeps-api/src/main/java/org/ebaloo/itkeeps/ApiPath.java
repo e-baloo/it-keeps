@@ -77,6 +77,11 @@ public final class ApiPath {
 	private static final String API_CRED = API + "cred/";
 	public  static final String API_CRED_GET_ID = API_CRED + ID;
 	
+	private static final String AUTH = "auth/";
+	public static final String AUTH_LOGIN = AUTH + "login/";
+	public static final String AUTH_RENEW = AUTH + "renew/";
+	public static final String AUTH_CHECK = AUTH + "check/";
+	
 	
 	
 

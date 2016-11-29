@@ -17,6 +17,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.ebaloo.itkeeps.api.model.jObject;
+import org.ebaloo.itkeeps.ApiPath;
 import org.ebaloo.itkeeps.api.model.jCredential;
 import org.ebaloo.itkeeps.api.model.jToken;
 import org.ebaloo.itkeeps.commons.ConfigFactory;
@@ -59,11 +60,10 @@ public class ItkeepsHttpClient {
 	
 	
 	public ItkeepsHttpClient(jCredential jcredential) {
-		jToken _token = callJsonCreat("/auth/login", jcredential, jToken.class);
+		jToken _token = callJsonCreat(ApiPath.AUTH_LOGIN, jcredential, jToken.class);
 		token = _token.getToken();
 		httpJsonClient = null;
 	}
-	
 	
 	
 	private HttpClient httpJsonClient = null;

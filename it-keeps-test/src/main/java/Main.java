@@ -8,6 +8,8 @@ import org.ebaloo.itkeeps.api.enumeration.enAuthentication;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.model.jCredential;
 import org.ebaloo.itkeeps.api.model.jGroup;
+import org.ebaloo.itkeeps.api.model.jObject;
+import org.ebaloo.itkeeps.api.model.jToken;
 import org.ebaloo.itkeeps.api.model.jUser;
 import org.ebaloo.itkeeps.commons.ConfigFactory;
 import org.ebaloo.itkeeps.commons.LogFactory;
@@ -52,21 +54,20 @@ public class Main {
 		ItkeepsHttpClient guestClient = new ItkeepsHttpClient();
 
 		{
-			ObjectMapper mapper = new ObjectMapper();
 
 			{
 				JsonNode jn = guestClient.callJsonRead(ApiPath.API_ENUM_AUTH);
-				LogFactory.getMain().debug(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jn));
+				LogFactory.getMain().debug(jObject.MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(jn));
 			}
 
 			{
 				JsonNode jn = guestClient.callJsonRead(ApiPath.TOOLS_PING);
-				LogFactory.getMain().debug(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jn));
+				LogFactory.getMain().debug(jObject.MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(jn));
 			}
 
 			{
 				JsonNode jn = guestClient.callJsonRead(ApiPath.TOOLS_STATS);
-				LogFactory.getMain().debug(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jn));
+				LogFactory.getMain().debug(jObject.MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(jn));
 			}
 
 		}
@@ -85,11 +86,14 @@ public class Main {
 		ItkeepsHttpClient clientRoot = new ItkeepsHttpClient(cred);
 
 		{
-			
 			jUser rootUser =  clientRoot.callJsonRead("/api/cred/id/marc", jUser.class);
-			LogFactory.getMain().info(rootUser.toString());
-
+			LogFactory.getMain().debug(jObject.MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(rootUser));
+			
+			jToken token = clientRoot.callJsonRead(ApiPath.AUTH_RENEW, jToken.class);
+			LogFactory.getMain().debug(jObject.MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(token));
 		}
+		
+		
 		
 
 		tAclGroup.run(clientRoot);

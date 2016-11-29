@@ -23,7 +23,6 @@ import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.model.jUser;
 import org.ebaloo.itkeeps.core.domain.vertex.fUser;
 import org.ebaloo.itkeeps.core.domain.vertex.vCredential;
-import org.ebaloo.itkeeps.core.domain.vertex.vUser;
 
 import com.codahale.metrics.annotation.Timed;
 
