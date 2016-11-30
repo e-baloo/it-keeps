@@ -19,6 +19,10 @@ public class enAclData extends enAbstract<String> {
 
 	public static final enAclData DENY = new enAclData("DENY");
 
+	public static final enAclData ENCRYPTED_ENTRY_READ = new enAclData("ENCRYPTED_ENTRY_READ");
+	public static final enAclData ENCRYPTED_ENTRY_UPDATE = new enAclData("ENCRYPTED_ENTRY_UPDATE");
+	public static final enAclData ENCRYPTED_ENTRY_DENY = new enAclData("ENCRYPTED_ENTRY_DENY");
+
 	
 	private enAclData(String name) {
 		super(name, map.size(), name);

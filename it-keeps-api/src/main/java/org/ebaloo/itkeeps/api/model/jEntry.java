@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class jEntry extends jBaseChildAcl {
 
 	public static final String PATH = "path";
+	public static final String ENCRYPTED_DATA = "encryptedData";
 
 	
 	public jEntry() {
@@ -37,4 +38,6 @@ public class jEntry extends jBaseChildAcl {
 	public final boolean isPresentPath() {
 		return this.path.isPresent();
 	}
+	
+	
 }

@@ -301,6 +301,27 @@ public final class SecurityFactory {
 			return this.aclAdmin.contains(enAclAdmin.ACL_UPDATE) || this.aclAdmin.contains(enAclAdmin.ACL_CREATE);
 		}
 
+
+		public boolean isDataEncryptedEntryRead() {
+			if(this.isAdminOwner())
+				return true;
+
+			if(this.aclData.contains(enAclData.DENY) || this.aclData.contains(enAclData.ENTRY_DENY) || this.aclData.contains(enAclData.ENCRYPTED_ENTRY_DENY))
+				return false;
+
+			return this.aclData.contains(enAclData.ENCRYPTED_ENTRY_READ) || this.aclData.contains(enAclData.ENCRYPTED_ENTRY_UPDATE);
+		}
+
+		public boolean isDataEncryptedEntryUpdate() {
+			if(this.isAdminOwner())
+				return true;
+
+			if(this.aclData.contains(enAclData.DENY) || this.aclData.contains(enAclData.ENTRY_DENY) || this.aclData.contains(enAclData.ENCRYPTED_ENTRY_DENY))
+				return false;
+
+			return this.aclData.contains(enAclData.ENCRYPTED_ENTRY_UPDATE);
+		}
+
 	}
 
 	private static final Logger logger = LoggerFactory.getLogger(SecurityFactory.class.getName());
