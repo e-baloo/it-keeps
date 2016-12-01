@@ -98,6 +98,7 @@ public class rUser {
 		return Response.ok().entity(user).build();
 	}
 
+
 	@PUT // UPDATE
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Consumes({ MediaType.APPLICATION_JSON })

@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
+import org.ebaloo.itkeeps.api.model.jEncryptedEntry;
 import org.ebaloo.itkeeps.api.model.jEntry;
 import org.ebaloo.itkeeps.commons.LogFactory;
 import org.ebaloo.itkeeps.core.database.GraphFactory;
@@ -73,6 +74,19 @@ public final class fEntry {
 		return entry.read();
 	}
 
+	public static final jEncryptedEntry readEncrypted(Rid requesteurRid, Rid rid) {
+		
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, rid);
+		if(!sAcl.isRoleUser())
+			throw ExceptionPermission.NOT_USER;
+		
+		// TODO Security
+
+		vEntry entry = vBaseAbstract.get(null, vEntry.class, rid, false);
+		
+		return entry.readEncrypted(sAcl);
+	}
+
 	public static final jEntry update(Rid requesteurRid,  jEntry j) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, j.getRid());
@@ -89,6 +103,20 @@ public final class fEntry {
 		return fEntry.read(requesteurRid, j.getRid());
 	}
 	
+	public static final void updateEncrypted(Rid requesteurRid, Rid rid, jEncryptedEntry j) {
+		
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, rid);
+		if(!sAcl.isRoleUser())
+			throw ExceptionPermission.NOT_USER;
+		
+		// TODO Security
+
+		vEntry entry = vBaseAbstract.get(null, vEntry.class, rid, false);
+		
+		
+		entry.updateEncrypted(sAcl, j);
+		
+	}
 	
 
 

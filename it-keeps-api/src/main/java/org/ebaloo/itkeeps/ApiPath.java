@@ -66,6 +66,10 @@ public final class ApiPath {
 	public  static final String API_ENTRY_CREATE = API_ENTRY + CREATE;
 	public  static final String API_ENTRY_DELETE = API_ENTRY + DELETE;
 
+	private static final String API_ENTRY_ENC = API + "entryenc/";
+	public  static final String API_ENTRY_ENC_GET = API_ENTRY_ENC;
+	public  static final String API_ENTRY_ENC_UPDATE = API_ENTRY_ENC;
+
 
 	private static final String API_IMAGE = API + "image/";
 	public  static final String API_IMAGE_GET_ALL = API_IMAGE + ALL;
