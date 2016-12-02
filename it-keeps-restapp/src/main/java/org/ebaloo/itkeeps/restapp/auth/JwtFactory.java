@@ -8,6 +8,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
 import org.ebaloo.itkeeps.api.model.jBase;
+import org.ebaloo.itkeeps.api.model.jUser;
 import org.ebaloo.itkeeps.commons.ConfigFactory;
 import org.ebaloo.itkeeps.core.domain.vertex.vUser;
 import org.slf4j.Logger;
@@ -83,7 +84,7 @@ public final class JwtFactory {
 		return timeout;
 	}
 
-	public static String getJwtString(final vUser user) {
+	public static String getJwtString(final jUser user) {
 
 		if (logger.isTraceEnabled())
 			logger.trace("getJwtString()");

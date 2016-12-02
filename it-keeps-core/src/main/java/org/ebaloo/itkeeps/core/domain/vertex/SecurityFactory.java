@@ -1,11 +1,14 @@
 package org.ebaloo.itkeeps.core.domain.vertex;
 
 import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
 import java.security.Security;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.enumeration.enAclAdmin;
@@ -369,7 +372,7 @@ public final class SecurityFactory {
 			if (rootUserCount == 0) {
 				logger.warn("Create 'root' User!");
 				vCredential cred = new vCredential(jcredential, null);
-				vUser user = cred.getUser();
+				vUser user = cred._getUser();
 				user.setRole(enAclRole.ROOT);
 			}
 		} catch (Exception e) {
@@ -520,7 +523,7 @@ public final class SecurityFactory {
 
 		vCredential credential = vCredential.get(null, vCredential.class, jcredential.getId(), false);
 
-		if (!user.equals(credential.getUser()))
+		if (!user.equals(credential._getUser()))
 			throw new RuntimeException("TODO"); // TODO
 
 		if (credential.getAuthenticationType().equals(enAuthentication.BASIC)) {
@@ -557,7 +560,45 @@ public final class SecurityFactory {
 		
 		
 	}
+
 	
+	// ------------------------------------
+	
+	
+	private static MessageDigest messageDigest = null;
+	
+	private final static MessageDigest getMessageDigest() {
+		if(messageDigest == null) {
+			try {
+				messageDigest = MessageDigest.getInstance("SHA-512", "BC");
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+		return messageDigest;
+	}
+	
+	
+	public static String getHash(String base64) {
+		return Base64.encodeBase64String(_getHash(base64));
+	}
+
+	private static byte[] _getHash(String base64) {
+		if(StringUtils.isEmpty(base64))
+			return null;
+		
+		byte[] data = Base64.decodeBase64(base64);
+		return getMessageDigest().digest(data);
+	}
+
+	public static boolean checkHash(String base64, String hash64) {
+		if(StringUtils.isEmpty(base64) || StringUtils.isEmpty(hash64))
+			return false;
+		
+		byte[] digesta = _getHash(base64);
+		byte[] digestb = Base64.decodeBase64(hash64);
+		return MessageDigest.isEqual(digesta, digestb);
+	}
 
 	// ------------------------------------
 	

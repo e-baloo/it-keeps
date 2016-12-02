@@ -84,10 +84,10 @@ public class Main {
 		
 		jCredential cred = new jCredential();
 		cred.setId("marc");
-		cred.setPassword("marc");
+		cred.setPassword64(Base64.encodeAsString("marc"));
 		cred.setAuthenticationType(enAuthentication.BASIC);
 		cred.setUserName("Marc DONVAL");
-
+		
 		ItkeepsHttpClient clientRoot = new ItkeepsHttpClient(cred);
 
 		{

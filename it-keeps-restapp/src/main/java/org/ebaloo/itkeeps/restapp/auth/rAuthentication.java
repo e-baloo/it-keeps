@@ -16,9 +16,12 @@ import org.ebaloo.itkeeps.ApiPath;
 import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
+import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.model.jCredential;
 import org.ebaloo.itkeeps.api.model.jToken;
+import org.ebaloo.itkeeps.api.model.jUser;
 import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory;
+import org.ebaloo.itkeeps.core.domain.vertex.fUser;
 import org.ebaloo.itkeeps.core.domain.vertex.vCredential;
 import org.ebaloo.itkeeps.core.domain.vertex.vUser;
 import org.slf4j.Logger;
@@ -45,7 +48,7 @@ public class rAuthentication {
     public Response login(jCredential credentials) {
 
         try {
-            vUser user = authenticate(credentials);
+            jUser user = authenticate(credentials);
 
             String token = JwtFactory.getJwtString(user);
             
@@ -77,7 +80,7 @@ public class rAuthentication {
         try {
         	
     		Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-    		vUser user = vUser.get(null, vUser.class, requesteurRid, false);
+    		jUser user = fUser.read(requesteurRid, requesteurRid);
             String token = JwtFactory.getJwtString(user);
             return Response.ok(new jToken(token)).build();
 
@@ -104,7 +107,7 @@ public class rAuthentication {
     }
 
     
-    private vUser authenticate(jCredential jcredential) throws Exception {
+    private jUser authenticate(jCredential jcredential) throws Exception {
     	
     	if(logger.isTraceEnabled())
     		logger.trace("authenticate()");
@@ -115,12 +118,12 @@ public class rAuthentication {
     	if(credential == null) 
     		throw new RuntimeException("credential is null!");
     	
-    	vUser user = credential.getUser();
+    	jBaseLight user = credential.getUser();
     	
     	if(user == null) 
     		throw new RuntimeException("user is null!");
 
     	
-    	return user;
+    	return fUser.read(user.getRid(), user.getRid());
     }
 }

@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class jCredential {
+public class jCredential extends jObject {
 
 	
 	// ID
@@ -31,19 +31,19 @@ public class jCredential {
 
 	// PASSWORD 
 	
-	public static final String PASSWORD = "password";
+	public static final String PASSWORD64 = "password64";
 
 	@JsonIgnore
-	private String password = null;
+	private String password64 = null;
 
-	@JsonIgnore
-	public String getPassword() {
-		return password;
+	@JsonProperty(PASSWORD64)
+	public String getPassword64() {
+		return password64;
 	}
 
-	@JsonProperty(PASSWORD)
-	public void setPassword(String password) {
-		this.password = password;
+	@JsonProperty(PASSWORD64)
+	public void setPassword64(String password) {
+		this.password64 = password;
 	}
 
 
