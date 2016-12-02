@@ -7,8 +7,8 @@ public class enAclOwner extends enAbstract<Boolean> {
 
 	private static final HashMap<String, enAclOwner> map = new HashMap<String, enAclOwner>();
 
-	public static final enAclOwner FALSE = new enAclOwner("FASE", Boolean.FALSE);
-	public static final enAclOwner TRUE = new enAclOwner("TRUE", Boolean.TRUE);
+	public static final enAclOwner OWNER_FALSE = new enAclOwner("OWNER_FALSE", Boolean.FALSE);
+	public static final enAclOwner OWNER_TRUE = new enAclOwner("OWNER_TRUE", Boolean.TRUE);
 
 	private enAclOwner(String name, Boolean value) {
 		super(name, map.size(), value);

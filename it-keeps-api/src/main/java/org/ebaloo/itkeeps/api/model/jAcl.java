@@ -75,7 +75,7 @@ public class jAcl extends jBase {
 	public static final String OWNER = "owner";
 	
 	@JsonIgnore
-	private enAclOwner owner = enAclOwner.FALSE;
+	private enAclOwner owner = enAclOwner.OWNER_FALSE;
 	
 	@JsonIgnore
 	public final enAclOwner getOwner() {
@@ -84,7 +84,7 @@ public class jAcl extends jBase {
 
 	@JsonIgnore
 	public final void setOwner(enAclOwner value) {
-		owner = value == null ? enAclOwner.FALSE : value;
+		owner = value == null ? enAclOwner.OWNER_FALSE : value;
 	}
 
 	@JsonProperty(OWNER)
@@ -94,7 +94,7 @@ public class jAcl extends jBase {
 	
 	@JsonProperty(OWNER)
 	public final void _setAclOwner(Boolean value) {
-		this.owner = value == null ? enAclOwner.FALSE : value == Boolean.FALSE ? enAclOwner.FALSE : enAclOwner.TRUE;
+		this.owner = value == null ? enAclOwner.OWNER_FALSE : value == Boolean.FALSE ? enAclOwner.OWNER_FALSE : enAclOwner.OWNER_TRUE;
 	}
 
 

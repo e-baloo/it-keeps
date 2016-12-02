@@ -1,8 +1,12 @@
 package org.ebaloo.itkeeps.core.domain.vertex;
 
+import java.io.UnsupportedEncodingException;
+import java.security.Security;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.codec.binary.Base64;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.enumeration.enAclAdmin;
 import org.ebaloo.itkeeps.api.enumeration.enAclData;
@@ -12,10 +16,13 @@ import org.ebaloo.itkeeps.api.enumeration.enAuthentication;
 import org.ebaloo.itkeeps.api.model.jBase;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.model.jCredential;
+import org.ebaloo.itkeeps.commons.ConfigFactory;
 import org.ebaloo.itkeeps.core.database.GraphFactory;
 import org.ebaloo.itkeeps.core.domain.edge.notraverse.eAclNoTraverse;
 import org.ebaloo.itkeeps.core.domain.edge.traverse.eAclRelation;
 import org.ebaloo.itkeeps.core.tools.MetricsFactory;
+import org.jasypt.encryption.StringEncryptor;
+import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,9 +31,16 @@ import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 public final class SecurityFactory {
 
+	
+	static {
+		Security.addProvider(new BouncyCastleProvider());
+	}
+	
+	
+	
 	public final static class SecurityAcl {
 
-		private enAclOwner aclOwner = enAclOwner.FALSE;
+		private enAclOwner aclOwner = enAclOwner.OWNER_FALSE;
 		private Set<enAclData> aclData = new HashSet<enAclData>();
 		private Set<enAclAdmin> aclAdmin = new HashSet<enAclAdmin>();
 		private enAclRole aclRole = null;
@@ -54,7 +68,7 @@ public final class SecurityFactory {
 		
 		public boolean isAdminDelegate() {
 			
-			if (this.isAdminOwner())
+			if (this.isOwner())
 				return true;
 			
 			if(this.isRoleRoot())
@@ -66,13 +80,13 @@ public final class SecurityFactory {
 			return this.aclAdmin.contains(enAclAdmin.DELEGATE);
 		}
 
-		public boolean isAdminOwner() {
+		public boolean isOwner() {
 			return this.aclOwner.value();
 		}
 
 		public boolean isAdminGroupUpdate() {
 			
-			if (this.isAdminOwner())
+			if (this.isOwner())
 				return true;
 
 			if(this.isRoleRoot())
@@ -86,7 +100,7 @@ public final class SecurityFactory {
 
 		public boolean isAdminGroupCreate() {
 			
-			if (this.isAdminOwner())
+			if (this.isOwner())
 				return true;
 
 			if(this.isRoleRoot())
@@ -100,7 +114,7 @@ public final class SecurityFactory {
 
 		public boolean isAdminUserRead() {
 
-			if (this.isAdminOwner())
+			if (this.isOwner())
 				return true;
 
 			if(this.isRoleRoot())
@@ -114,7 +128,7 @@ public final class SecurityFactory {
 		
 		public boolean isAdminUserUpdate() {
 
-			if (this.isAdminOwner())
+			if (this.isOwner())
 				return true;
 
 			if(this.isRoleRoot())
@@ -128,7 +142,7 @@ public final class SecurityFactory {
 
 		public boolean isAdminUserCreate() {
 
-			if(this.isAdminOwner())
+			if(this.isOwner())
 				return true;
 
 			if(this.isRoleRoot())
@@ -160,7 +174,7 @@ public final class SecurityFactory {
 
 		public boolean isDataPathRead() {
 			
-			if(this.isAdminOwner())
+			if(this.isOwner())
 				return true;
 
 			if(this.isRoleRoot())
@@ -174,7 +188,7 @@ public final class SecurityFactory {
 
 		public boolean isDataPathUpdate() {
 			
-			if(this.isAdminOwner())
+			if(this.isOwner())
 				return true;
 
 			if(this.isRoleRoot())
@@ -188,7 +202,7 @@ public final class SecurityFactory {
 		
 		public boolean isDataPathCreate() {
 			
-			if(this.isAdminOwner())
+			if(this.isOwner())
 				return true;
 
 			if(this.isRoleRoot())
@@ -203,7 +217,7 @@ public final class SecurityFactory {
 
 		public boolean isDataEntryRead() {
 			
-			if(this.isAdminOwner())
+			if(this.isOwner())
 				return true;
 
 			if(this.isRoleRoot())
@@ -217,7 +231,7 @@ public final class SecurityFactory {
 
 		public boolean isDataEntryUpdate() {
 			
-			if(this.isAdminOwner())
+			if(this.isOwner())
 				return true;
 
 			if(this.isRoleRoot())
@@ -231,7 +245,7 @@ public final class SecurityFactory {
 		
 		public boolean isDataEntryCreate() {
 			
-			if(this.isAdminOwner())
+			if(this.isOwner())
 				return true;
 
 			if(this.isRoleRoot())
@@ -247,7 +261,7 @@ public final class SecurityFactory {
 
 		public boolean isAdminAclRead() {
 
-				if (this.isAdminOwner())
+				if (this.isOwner())
 					return true;
 
 				if(this.isRoleRoot())
@@ -261,7 +275,7 @@ public final class SecurityFactory {
 
 
 		public boolean isAdminGroupRead() {
-			if (this.isAdminOwner())
+			if (this.isOwner())
 				return true;
 
 			if(this.isRoleRoot())
@@ -275,7 +289,7 @@ public final class SecurityFactory {
 
 
 		public boolean isAdminAclCreate() {
-			if (this.isAdminOwner())
+			if (this.isOwner())
 				return true;
 
 			if(this.isRoleRoot())
@@ -289,7 +303,7 @@ public final class SecurityFactory {
 
 
 		public boolean isAdminAclUpdate() {
-			if (this.isAdminOwner())
+			if (this.isOwner())
 				return true;
 
 			if(this.isRoleRoot())
@@ -303,7 +317,7 @@ public final class SecurityFactory {
 
 
 		public boolean isDataEncryptedEntryRead() {
-			if(this.isAdminOwner())
+			if(this.isOwner())
 				return true;
 
 			if(this.aclData.contains(enAclData.DENY) || this.aclData.contains(enAclData.ENTRY_DENY) || this.aclData.contains(enAclData.ENCRYPTED_ENTRY_DENY))
@@ -313,7 +327,7 @@ public final class SecurityFactory {
 		}
 
 		public boolean isDataEncryptedEntryUpdate() {
-			if(this.isAdminOwner())
+			if(this.isOwner())
 				return true;
 
 			if(this.aclData.contains(enAclData.DENY) || this.aclData.contains(enAclData.ENTRY_DENY) || this.aclData.contains(enAclData.ENCRYPTED_ENTRY_DENY))
@@ -545,4 +559,40 @@ public final class SecurityFactory {
 	}
 	
 
+	// ------------------------------------
+	
+	private static StandardPBEStringEncryptor entriEncryptor = null;
+
+	static final StringEncryptor getEntryEncryptor() {
+
+		if (entriEncryptor == null) {
+
+			try {
+
+				entriEncryptor = new StandardPBEStringEncryptor();
+
+				entriEncryptor.setProvider(new BouncyCastleProvider());
+				
+				String provider = ConfigFactory.getString("encryptor.provider", "BC");
+				String algorithm = ConfigFactory.getString("encryptor.algorithm", "PBEWITHSHA256AND128BITAES-CBC-BC");
+				String password64 = ConfigFactory.getString("encryptor.password64",
+						"Q15KWVdrJlBhNSZSWnJuYkRhNnpYUCE3LXZ6UTgtYnY=");
+				int iterations = ConfigFactory.getInt("encryptor.iterations", 500);
+
+				String password = new String(Base64.decodeBase64(password64), "UTF-8");
+
+				entriEncryptor.setProviderName(provider);
+				entriEncryptor.setAlgorithm(algorithm);
+				entriEncryptor.setPassword(password);
+				entriEncryptor.setKeyObtentionIterations(iterations);
+
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
+
+		}
+		return entriEncryptor;
+	}
+	
 }

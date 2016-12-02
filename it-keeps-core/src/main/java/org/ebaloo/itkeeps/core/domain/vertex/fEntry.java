@@ -113,9 +113,7 @@ public final class fEntry {
 
 		vEntry entry = vBaseAbstract.get(null, vEntry.class, rid, false);
 		
-		
 		entry.updateEncrypted(sAcl, j);
-		
 	}
 	
 

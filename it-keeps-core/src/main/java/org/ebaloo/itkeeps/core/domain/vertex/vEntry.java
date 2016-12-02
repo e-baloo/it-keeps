@@ -7,6 +7,7 @@ import java.io.UnsupportedEncodingException;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.model.jEncryptedEntry;
 import org.ebaloo.itkeeps.api.model.jEntry;
@@ -64,8 +65,11 @@ public final class vEntry extends vBaseChildAcl {
 
 		if(enc == null) {
 			
-			enc = new vEncryptedEntry();
+			jEncryptedEntry j = new jEncryptedEntry();
+			j.setName(String.format("[[%s]]", this.getName()));
 			
+			enc = new vEncryptedEntry(j);
+
 			setEdges(
 					this.getGraph(),
 					vEntry.class, 
@@ -135,51 +139,30 @@ public final class vEntry extends vBaseChildAcl {
 		super.delete();
 	}
 
+	
+	/*
+	 * Algorithm : https://www.bouncycastle.org/specifications.html
+	 * 
+	 * 
+	 * 
+	 */
 	@DatabaseVertrex()
 	public final static class vEncryptedEntry extends vBaseSysteme {
 
-		private static StandardPBEStringEncryptor encryptor = null;
 
-		private static final StringEncryptor getEncryptor() {
 
-			if (encryptor == null) {
-
-				try {
-
-					StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
-
-					String algorithm = ConfigFactory.getString("encryptor.algorithm", "PBEWithMD5AndTripleDES");
-					String password64 = ConfigFactory.getString("encryptor.password64",
-							"Q15KWVdrJlBhNSZSWnJuYkRhNnpYUCE3LXZ6UTgtYnY=");
-					int iterations = ConfigFactory.getInt("encryptor.iterations", 500);
-
-					byte[] decoded = Base64.decodeBase64(password64);
-					String password = new String(decoded, "UTF-8");
-
-					encryptor.setAlgorithm(algorithm);
-					encryptor.setPassword(password);
-					encryptor.setKeyObtentionIterations(iterations);
-
-				} catch (UnsupportedEncodingException e) {
-					e.printStackTrace();
-					throw new RuntimeException(e);
-				}
-
-			}
-			return encryptor;
+		protected vEncryptedEntry() {
+			super();
 		}
 
-		private vEncryptedEntry() {
-		}
-
-		/*
-		private vEncryptedEntry(final SecurityAcl sAcl, final jEncryptedEntry j) {
+		
+		private vEncryptedEntry(final jEncryptedEntry j) {
 			super(j);
 
 			try {
 
 				this.setMediaType(j.getMediaType());
-				this.setData(sAcl, j.getData());
+				//this.setData(sAcl, j.getData());
 
 			} catch (Exception e) {
 				this.delete();
@@ -187,7 +170,7 @@ public final class vEntry extends vBaseChildAcl {
 			}
 
 		}
-		*/
+	
 
 		private final String getData(SecurityAcl sAcl) {
 
@@ -202,7 +185,8 @@ public final class vEntry extends vBaseChildAcl {
 			if (StringUtils.isEmpty(encData))
 				return StringUtils.EMPTY;
 
-			String data = getEncryptor().decrypt(encData);
+			
+			String data = SecurityFactory.getEntryEncryptor().decrypt(encData);
 
 			return data;
 		}
@@ -239,8 +223,8 @@ public final class vEntry extends vBaseChildAcl {
 				this.setProperty(jEncryptedEntry.DATA, StringUtils.EMPTY);
 				return;
 			}
-
-			String encData = getEncryptor().encrypt(value);
+			
+			String encData = SecurityFactory.getEntryEncryptor().encrypt(value);
 
 			this.setProperty(jEncryptedEntry.DATA, encData);
 

@@ -23,7 +23,7 @@ public class tTest {
 		/* Set Name */
 		
 		acl1.setName("acl1");
-		acl1.setOwner(enAclOwner.TRUE);
+		acl1.setOwner(enAclOwner.OWNER_TRUE);
 		acl1.getAclData().add(enAclData.PATH_CREATE);
 		acl1.getAclData().add(enAclData.ENTRY_CREATE);
 		acl1.getAclAdmin().add(enAclAdmin.DELEGATE);
