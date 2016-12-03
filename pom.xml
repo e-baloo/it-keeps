@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.e-ballo</groupId>
@@ -46,5 +47,7 @@
 		<module>it-keeps-httpclient</module>
 		<module>it-keeps-restapp</module>
 		<module>it-keeps-test</module>
-	</modules>
+		<module>it-keeps-webapp</module>
+    <module>ti-keeps-webapp</module>
+  </modules>
 </project>
