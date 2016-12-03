@@ -1,9 +1,11 @@
 
 import org.ebaloo.itkeeps.ApiPath;
 import org.ebaloo.itkeeps.api.enumeration.enAclRole;
+import org.ebaloo.itkeeps.api.model.jCredential;
 import org.ebaloo.itkeeps.api.model.jUser;
 import org.ebaloo.itkeeps.httpclient.ItkeepsHttpClient;
 import org.ebaloo.itkeeps.httpclient.ParameterEncoder;
+import org.glassfish.jersey.internal.util.Base64;
 
 public class tUser {
 
@@ -56,6 +58,16 @@ public class tUser {
 		
 		reload(client);
 		tGroup.reload(client);
+		
+		
+		jCredential credAdmin1 = new jCredential();
+		credAdmin1.setId("admin1");
+		credAdmin1.setPassword64(Base64.encodeAsString("admin1"));
+		//credAdmin1.set
+		//admin_1.getCredentials().add()
+		
+		
+		
 	}
 	
 	

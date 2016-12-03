@@ -27,31 +27,31 @@ public class jBaseLight extends jObject {
 	// GUID
 	
 	@JsonIgnore
-	private Optional<Rid> guid = Optional.empty();
+	private Optional<Rid> rid = Optional.empty();
 	
 	@JsonIgnore
 	public final Rid getRid() {
-		return this.guid.orElse(null);
+		return this.rid.orElse(null);
 	}
 
 	@JsonProperty(RID)
 	private final String _getRid() {
-		return guid.isPresent() ?  guid.get().toString() : null;
+		return rid.isPresent() ?  rid.get().toString() : null;
 	}
 
 	@JsonIgnore
 	public final void setRid(Rid guid) {
-		this.guid = Optional.of(guid);
+		this.rid = Optional.of(guid);
 	}
 
 	@JsonProperty(RID)
 	private final void _setRid(String guid) {
-		this.guid = StringUtils.isEmpty(guid) ? Optional.of(null) : Optional.of(new Rid(guid));
+		this.rid = StringUtils.isEmpty(guid) ? Optional.of(null) : Optional.of(new Rid(guid));
 	}
 
 	@JsonIgnore
 	public final boolean isPresentRid() {
-		return this.guid.isPresent();
+		return this.rid.isPresent();
 	}
 
 	
@@ -123,6 +123,33 @@ public class jBaseLight extends jObject {
 		@JsonIgnore
 		public final boolean isPresentVersion() {
 			return this.version.isPresent();
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			
+			if(!(obj instanceof jBaseLight) && !(obj instanceof Rid))
+				return false;
+			
+			if(!this.isPresentRid())
+				return false;
+			
+			Rid _rid = null;
+			
+			if(obj instanceof jBaseLight) {
+				jBaseLight j = (jBaseLight) obj;
+				
+				if(!j.isPresentRid())
+					return false;
+				
+				_rid = j.getRid();
+			} else {
+				_rid = (Rid) obj;
+			}
+			
+		
+			return this.getRid().equals(_rid);
+					
 		}
 		
 	

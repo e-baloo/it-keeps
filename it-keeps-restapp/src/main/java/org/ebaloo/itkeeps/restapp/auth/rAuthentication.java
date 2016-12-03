@@ -23,7 +23,6 @@ import org.ebaloo.itkeeps.api.model.jUser;
 import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory;
 import org.ebaloo.itkeeps.core.domain.vertex.fUser;
 import org.ebaloo.itkeeps.core.domain.vertex.vCredential;
-import org.ebaloo.itkeeps.core.domain.vertex.vUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

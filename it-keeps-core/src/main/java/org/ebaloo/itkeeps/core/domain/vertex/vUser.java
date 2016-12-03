@@ -68,6 +68,13 @@ public final class vUser extends vBaseChildAcl {
 				.map(e -> getJBaseLight(e)).collect(Collectors.toList());
 	}
 
+	/*
+	final List<jBaseLight> getCredential() {
+		return this.getEdges(vCredential.class, DirectionType.CHILD, false, eCredentialToUser.class).stream()
+				.map(e -> getJBaseLight(e)).collect(Collectors.toList());
+	}
+	*/
+	
 	private final List<jBaseLight> getGroups() {
 		return this.getEdges(vGroup.class, DirectionType.PARENT, false, eInGroup.class).stream()
 				.map(e -> getJBaseLight(e)).collect(Collectors.toList());
@@ -121,6 +128,7 @@ public final class vUser extends vBaseChildAcl {
 				DirectionType.PARENT, eAclNoTraverse.class, false);
 	}
 
+	/*
 	private final void setCredentials(List<jBaseLight> list) {
 
 		if (list == null)
@@ -133,6 +141,7 @@ public final class vUser extends vBaseChildAcl {
 				list.stream().map(e -> get(graph, vCredential.class, e, false)).collect(Collectors.toList()),
 				DirectionType.CHILD, eCredentialToUser.class, false);
 	}
+	*/
 
 	private final void setGroups(List<jBaseLight> list) {
 
@@ -167,8 +176,10 @@ public final class vUser extends vBaseChildAcl {
 		if (j.isPresentAclAdmin())
 			this.setAclAdmin(j.getAclAdmin());
 
+		/*
 		if (j.isPresentCredentials())
 			this.setCredentials(j.getCredentials());
+		*/
 
 		if (j.isPresentAclGroups())
 			this.setAclGroups(j.getAclGroups());

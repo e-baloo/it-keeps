@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class jCredential extends jObject {
+public class jCredential extends jBaseStandard {
 
 	
 	// ID
@@ -34,18 +34,23 @@ public class jCredential extends jObject {
 	public static final String PASSWORD64 = "password64";
 
 	@JsonIgnore
-	private String password64 = null;
+	private Optional<String> password64 = Optional.empty();
 
 	@JsonProperty(PASSWORD64)
 	public String getPassword64() {
-		return password64;
+		return password64.get();
 	}
 
 	@JsonProperty(PASSWORD64)
-	public void setPassword64(String password) {
-		this.password64 = password;
+	public void setPassword64(String value) {
+		this.password64 = Optional.ofNullable(value);
 	}
 
+	@JsonIgnore
+	public boolean isPresentPassword64() {
+		return this.password64.isPresent();
+	}
+	
 
 	// USER_NAME
 
@@ -69,6 +74,28 @@ public class jCredential extends jObject {
 		return this.userName.isPresent();
 	}
 
+	// USER
+
+	public static final String USER = "user";
+
+	@JsonIgnore
+	private Optional<jBaseLight> user = Optional.empty();
+	
+	@JsonProperty(USER)
+	public final jBaseLight getUser() {
+		return this.user.orElse(null);
+	}
+
+	@JsonProperty(USER_NAME)
+	public final void setUser(jBaseLight value) {
+		this.user = Optional.ofNullable(value);
+	}
+
+	@JsonIgnore
+	public final boolean isPresentUser() {
+		return this.user.isPresent();
+	}
+	
 	// AUTHENTICATION_TYPE
 	
 	public static final String AUTHENTICATION_TYPE = "authenticationType";

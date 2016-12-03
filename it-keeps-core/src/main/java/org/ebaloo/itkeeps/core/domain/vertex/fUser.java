@@ -15,7 +15,7 @@ import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.model.jUser;
 
 @DatabaseVertrex()
-public final class fUser extends vBaseChildAcl {
+public final class fUser {
 
 	@SuppressWarnings("unused")
 	private static Logger logger = LoggerFactory.getLogger(fUser.class);
@@ -92,6 +92,24 @@ public final class fUser extends vBaseChildAcl {
 
 		return fUser.read(requesteurRid, user.getRid());
 	}
+	
+	
+	/*
+	public static final List<jCredential> readCrednetial(Rid requesteurRid, Rid rid) {
+		
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, rid);
+		if(!sAcl.isRoleUser())
+			throw ExceptionPermission.NOT_USER;
+		
+		// TODO Security
+
+		vUser user = vBaseAbstract.get(null, vUser.class, rid, false);
+		
+		return user..readEncrypted(sAcl);
+	}
+	*/
+
+	
 
 	public static final jUser update(Rid requesteurRid, jUser j) {
 
@@ -116,7 +134,7 @@ public final class fUser extends vBaseChildAcl {
 	}
 
 	private static final void checkUpdate(SecurityAcl sAcl, final jUser j) {
-		checkUpdateCredentials(j, sAcl);
+		//checkUpdateCredentials(j, sAcl);
 		checkUpdateAclAdmin(j, sAcl);
 		checkUpdateAclGroups(j, sAcl);
 		checkUpdateRole(j, sAcl);
@@ -132,10 +150,12 @@ public final class fUser extends vBaseChildAcl {
 			throw ExceptionPermission.NOT_DELEGATE;
 	}
 
+	/*
 	private static final void checkUpdateCredentials(final jUser j, SecurityAcl sAcl) {
 		if (!j.isPresentCredentials())
 			return;
 	}
+	*/
 
 	private static final void checkUpdateAclAdmin(final jUser j, SecurityAcl sAcl) {
 		if (!j.isPresentAclAdmin())

@@ -5,7 +5,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.ebaloo.itkeeps.api.enumeration.enAuthentication;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.model.jCredential;
-import org.ebaloo.itkeeps.core.database.annotation.DatabaseProperty;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.edge.DirectionType;
 import org.ebaloo.itkeeps.core.domain.edge.notraverse.eCredentialToUser;
@@ -52,7 +51,7 @@ public final class vCredential extends vBase {
 				juser.setName(j.getUserName());
 
 				vUser user = new vUser(juser, true);
-				this.setUser(user);
+				this.setUser(getJBaseLight(user));
 
 			}
 
@@ -98,8 +97,8 @@ public final class vCredential extends vBase {
 	}
 
 	private void setPassowrdHash(final String hash) {
-
-		if (StringUtils.isNoneEmpty(hash)) {
+		
+		if (StringUtils.isEmpty(hash)) {
 			this.setProperty(HASH_PASSWORD, StringUtils.EMPTY);
 			return;
 		}
@@ -108,7 +107,7 @@ public final class vCredential extends vBase {
 	}
 
 	void setPassowrd64(final String base64) {
-
+		
 		if (StringUtils.isEmpty(base64)) {
 			this.setProperty(HASH_PASSWORD, StringUtils.EMPTY);
 			return;
@@ -117,104 +116,38 @@ public final class vCredential extends vBase {
 		this.setPassowrdHash(SecurityFactory.getHash(base64));
 	}
 
-	/*
-	 * AUTHENTICATION_TYPE
-	 */
 
 	private void setUser(jBaseLight user) {
-		this.setUser(get(this.getGraph(), vUser.class, user, false));
-	}
-
-	private void setUser(final vUser user) {
-		setEdges(this.getGraph(), vCredential.class, this, vUser.class, user, DirectionType.PARENT,
+		setEdges(this.getGraph(), vCredential.class, this, vUser.class, get(this.getGraph(), vUser.class, user, false), DirectionType.PARENT,
 				eCredentialToUser.class, false);
 	}
 
-	// API
 
-	/*
-	 * public Credential(final JUser j) { this(j, true); }
-	 * 
-	 * protected Credential(final JUser j, final boolean f) { super(j, false);
-	 * 
-	 * this.commit(); this.reload();
-	 * 
-	 * if(Credential.getById(this.getGraph(), j.getUserId()) != null) throw new
-	 * RuntimeException("TODO"); //TODO
-	 * 
-	 * if(StringUtils.isEmpty(j.getRole()))
-	 * j.setRole(SecurityRole.GUEST.toString());
-	 * 
-	 * this.setUserId(j.getUserId()); this.setRole(j.getRole());
-	 * 
-	 * if(f) this.setEnable(Boolean.TRUE); }
-	 * 
-	 * 
-	 * @Override public <T extends JBase> T apiFill(T j, Guid requesteurGuid) {
-	 * 
-	 * if(!(j instanceof JUser)) throw new RuntimeException("TODO"); //TODO
-	 * 
-	 * super.apiFill(j, requesteurGuid);
-	 * 
-	 * JUser juser = (JUser) j;
-	 * 
-	 * juser.setUserId(this.getUserId());
-	 * juser.setRole(this.getRole().toString());
-	 * juser.setInGroups(this.getInGroup().stream().map(e ->
-	 * Base.getJBaseLight(e)).collect(Collectors.toList()));
-	 * 
-	 * return j; }
-	 * 
-	 * @Override public <T extends JBase> void apiUpdate(T obj, Guid
-	 * requesteurGuid) {
-	 * 
-	 * if(!(obj instanceof JUser)) throw new RuntimeException("TODO"); //TODO
-	 * 
-	 * super.apiUpdate(obj, requesteurGuid);
-	 * 
-	 * 
-	 * Credential requesterUser = Credential.get(this.getGraph(),
-	 * ModelFactory.get(Credential.class), requesteurGuid, false);
-	 * 
-	 * switch(requesterUser.getRole()) {
-	 * 
-	 * case ROOT: // -> Ok is root break;
-	 * 
-	 * case ADMIN: //TODO Check it requesterUser have the right to update this
-	 * break;
-	 * 
-	 * case USER: if(!this.getGuid().equals(requesterUser.getGuid())) { throw
-	 * new RuntimeException("TODO"); //TODO } break;
-	 * 
-	 * case GUEST: default: throw new RuntimeException("TODO"); //TODO }
-	 * 
-	 * 
-	 * JUser juser = (JUser) obj;
-	 * 
-	 * if(juser.isPresentRole()) {
-	 * 
-	 * SecurityRole requesterRole = requesterUser.getRole(); SecurityRole jRole
-	 * = SecurityRole.valueOf(juser.getRole());
-	 * 
-	 * if(requesterRole.isRoot()) { this.setRole(jRole); } else
-	 * if(requesterRole.isAdmin() && !jRole.isRoot()) { this.setRole(jRole); }
-	 * else { throw new RuntimeException(""); //TODO } }
-	 * 
-	 * if(juser.isPresentUserId()) this.setIcon(juser.getIcon());
-	 * 
-	 * 
-	 * // ADMIN & ROOT
-	 * 
-	 * if(requesterUser.getRole().isAdmin()) {
-	 * 
-	 * 
-	 * if(juser.isChildGroups()) { this.setInGroupJBL(juser.getInGroups()); }
-	 * 
-	 * 
-	 * }
-	 * 
-	 * 
-	 * }
-	 */
+	
+	jCredential read() {
+		jCredential j = new jCredential();
+		
+		this.readBase(j);
+		
+		j.setId(this.getName());
+		j.setName(this.getName());
+		j.setUser(this.getUser());
+		j.setAuthenticationType(this.getAuthenticationType());
+		
+		return j;
+	}
+	
+
+	void update(jCredential j) {
+		
+		if(j.isPresentPassword64())
+			this.setPassowrd64(j.getPassword64());
+		
+		
+		if(j.isPresentUser() && (this.getUser() == null))
+			this.setUser(j.getUser());
+			
+		
+	}
 
 }
