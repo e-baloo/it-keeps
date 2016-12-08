@@ -10,7 +10,6 @@ import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
 import org.ebaloo.itkeeps.api.model.jBase;
 import org.ebaloo.itkeeps.api.model.jUser;
 import org.ebaloo.itkeeps.commons.ConfigFactory;
-import org.ebaloo.itkeeps.core.domain.vertex.vUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

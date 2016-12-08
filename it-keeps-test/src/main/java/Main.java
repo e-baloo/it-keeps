@@ -123,10 +123,10 @@ public class Main {
 
 		LogFactory.getMain().info(">>-------------------------------------------------------");
 
-		List<jBaseLight> list = fPath.readAll(tUser.admin_1.getRid());
+		List<jBaseLight> list = fPath.readAll(tUser.admin1.getRid());
 		LogFactory.getMain().info(String.format("%s - %s", list.size(), list ));
 
-		List<jBaseLight> list2 = fEntry.readAll(tUser.admin_1.getRid());
+		List<jBaseLight> list2 = fEntry.readAll(tUser.admin1.getRid());
 		LogFactory.getMain().info(String.format("%s - %s", list2.size(), list2 ));
 
 		LogFactory.getMain().info("---------------------------------------------------------");
@@ -138,10 +138,10 @@ public class Main {
 		
 		LogFactory.getMain().info("xxxx");
 		
-		fEntry.updateEncrypted(tUser.admin_1.getRid(), list2.get(0).getRid(), jen);
+		fEntry.updateEncrypted(tUser.admin1.getRid(), list2.get(0).getRid(), jen);
 		LogFactory.getMain().info("---------------------------------------------------------");
 		
-		LogFactory.getMain().info("=> " + Base64.decodeAsString(fEntry.readEncrypted(tUser.admin_1.getRid(), list2.get(0).getRid()).getData()));
+		LogFactory.getMain().info("=> " + Base64.decodeAsString(fEntry.readEncrypted(tUser.admin1.getRid(), list2.get(0).getRid()).getData()));
 		
 		
 

@@ -33,9 +33,9 @@ public final class vCredential extends vBase {
 			}
 
 			if (jblUser != null) {
-				if (vCredential.get(this.getGraph(), this.getClass(), j.getId(), false) != null) {
-					throw new RuntimeException("TODO"); // TODO
-				}
+				vCredential.get(this.getGraph(), this.getClass(), j.getId(), false);
+				
+				this.setUser(jblUser);
 			}
 
 			if (j.getAuthenticationType().equals(enAuthentication.BASIC)
@@ -56,6 +56,7 @@ public final class vCredential extends vBase {
 			}
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			this.delete();
 			throw e;
 		}

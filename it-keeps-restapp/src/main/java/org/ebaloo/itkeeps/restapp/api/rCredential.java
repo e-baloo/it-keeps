@@ -3,10 +3,8 @@ package org.ebaloo.itkeeps.restapp.api;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -20,83 +18,78 @@ import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
+import org.ebaloo.itkeeps.api.model.jCredential;
 import org.ebaloo.itkeeps.api.model.jUser;
+import org.ebaloo.itkeeps.core.domain.vertex.fCredential;
 import org.ebaloo.itkeeps.core.domain.vertex.fUser;
 import org.ebaloo.itkeeps.core.domain.vertex.vCredential;
 
 import com.codahale.metrics.annotation.Timed;
 
 @Path("/")
-public class rUser {
+public class rCredential {
 
 	@Context
 	SecurityContext securityContext;
-
-	@POST // CREATE
-	@Produces({ MediaType.APPLICATION_JSON })
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@aApplicationRolesAllowed(enRole.ADMIN)
-	@Timed
-	@Path(ApiPath.API_USER_CREATE)
-	public Response create(final jUser juser) {
-		Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-		jUser user = fUser.create(requesteurRid, juser);
-		return Response.ok().entity(user).build();
-	}
-
-	@DELETE // DELETE
-	@Produces({ MediaType.APPLICATION_JSON })
-	@aApplicationRolesAllowed(enRole.ADMIN)
-	@Timed
-	@Path(ApiPath.API_USER_DELETE + "{id}")
-	public Response delete(@PathParam("id") Rid rid) {
-		Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-		jUser j = fUser.delete(requesteurRid, rid);
-		return Response.ok().entity(j).build();
-	}
 
 	@GET // LIST
 	@Produces({ MediaType.APPLICATION_JSON })
 	@aApplicationRolesAllowed(enRole.ADMIN)
 	@Timed
-	@Path(ApiPath.API_USER_GET_ALL)
+	@Path(ApiPath.API_CRED_GET_ALL)
 	public Response readAll() {
 		Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-		List<jBaseLight> list = fUser.readAll(requesteurRid);
+		List<jBaseLight> list = fCredential.readAll(requesteurRid);
 		return Response.ok().entity(list).build();
 	}
-
 	
-
-
 	@GET // READ
 	@Produces({ MediaType.APPLICATION_JSON })
-	@Path(ApiPath.API_USER_GET_ID + "{id}")
+	@Path(ApiPath.API_CRED_GET_ID + "{id}")
 	@aApplicationRolesAllowed(enRole.USER)
 	@Timed
-	public Response readId(@PathParam("id") Rid id) {
+	public Response readCredId(@PathParam("id") String id) {
 
 		Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
 
-		jUser user = fUser.read(requesteurRid, id);
+		vCredential cred = vCredential.get(null, vCredential.class, id, false);
 
-		return Response.ok().entity(user).build();
+		if (cred == null)
+			throw new RuntimeException("readId(" + id + ") is null");
+
+		return Response.ok().entity(fUser.read(requesteurRid, cred.getUser().getRid())).build();
 	}
 
 
-	@PUT // UPDATE
+	@POST // CREATE
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@aApplicationRolesAllowed(enRole.USER)
 	@Timed
-	@Path(ApiPath.API_USER_UPDATE)
-	public Response update(final jUser j) {
-
+	@Path(ApiPath.API_CRED_CREATE)
+	public Response create(final jCredential j) {
 		Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-
-		jUser user = fUser.update(requesteurRid, j);
-
-		return Response.ok().entity(user).build();
+		jCredential cred = fCredential.create(requesteurRid, j);
+		return Response.ok().entity(cred).build();
 	}
 
+
+	@POST // CREATE
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@aApplicationRolesAllowed(enRole.USER)
+	@Timed
+	@Path(ApiPath.API_CRED_CREATE_ID + "{id}")
+	public Response createId(final jCredential j, @PathParam("id") String id) {
+
+		Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
+		Rid userRid = new Rid(id);
+
+		jCredential cred = fCredential.create(requesteurRid, userRid, j);
+		
+		return Response.ok().entity(cred).build();
+	}
+
+
+	
 }

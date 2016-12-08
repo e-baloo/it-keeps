@@ -17,6 +17,7 @@ public class ApiConfig {
     	
     	
     	parent.classesAdd(rUser.class);
+    	parent.classesAdd(rCredential.class);
     	parent.classesAdd(rGroup.class);
     	parent.classesAdd(rPath.class);
     	parent.classesAdd(rEntry.class);

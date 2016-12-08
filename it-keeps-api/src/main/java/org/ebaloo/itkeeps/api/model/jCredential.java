@@ -3,6 +3,7 @@ package org.ebaloo.itkeeps.api.model;
 
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ebaloo.itkeeps.api.enumeration.enAuthentication;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -38,7 +39,7 @@ public class jCredential extends jBaseStandard {
 
 	@JsonProperty(PASSWORD64)
 	public String getPassword64() {
-		return password64.get();
+		return password64.orElse(StringUtils.EMPTY);
 	}
 
 	@JsonProperty(PASSWORD64)
@@ -86,7 +87,7 @@ public class jCredential extends jBaseStandard {
 		return this.user.orElse(null);
 	}
 
-	@JsonProperty(USER_NAME)
+	@JsonProperty(USER)
 	public final void setUser(jBaseLight value) {
 		this.user = Optional.ofNullable(value);
 	}

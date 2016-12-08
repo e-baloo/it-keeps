@@ -1,6 +1,7 @@
 
 import org.ebaloo.itkeeps.ApiPath;
 import org.ebaloo.itkeeps.api.enumeration.enAclRole;
+import org.ebaloo.itkeeps.api.enumeration.enAuthentication;
 import org.ebaloo.itkeeps.api.model.jCredential;
 import org.ebaloo.itkeeps.api.model.jUser;
 import org.ebaloo.itkeeps.httpclient.ItkeepsHttpClient;
@@ -9,19 +10,21 @@ import org.glassfish.jersey.internal.util.Base64;
 
 public class tUser {
 
-	public static jUser gest_1 = new jUser();
-	public static jUser user_1 = new jUser();
-	public static jUser user_2 = new jUser();
-	public static jUser admin_1 = new jUser();
-
+	public static jUser gest1 = new jUser();
+	public static jUser user1 = new jUser();
+	public static jUser user2 = new jUser();
+	public static jUser admin1 = new jUser();
+	public static jCredential credUser1 = null; 
+	public static jCredential credUser2 = null; 
+	public static jCredential credAdmin1 = null; 
 	
 	
 	public static final void reload(ItkeepsHttpClient client) {
 
-		gest_1 = client.callJsonRead(ApiPath.API_USER_GET_ID + ParameterEncoder.encoding(gest_1.getRid()), jUser.class);
-		user_1 = client.callJsonRead(ApiPath.API_USER_GET_ID + ParameterEncoder.encoding(user_1.getRid()), jUser.class);
-		user_2 = client.callJsonRead(ApiPath.API_USER_GET_ID + ParameterEncoder.encoding(user_2.getRid()), jUser.class);
-		admin_1 = client.callJsonRead(ApiPath.API_USER_GET_ID + ParameterEncoder.encoding(admin_1.getRid()), jUser.class);
+		gest1 = client.callJsonRead(ApiPath.API_USER_GET_ID + ParameterEncoder.encoding(gest1.getRid()), jUser.class);
+		user1 = client.callJsonRead(ApiPath.API_USER_GET_ID + ParameterEncoder.encoding(user1.getRid()), jUser.class);
+		user2 = client.callJsonRead(ApiPath.API_USER_GET_ID + ParameterEncoder.encoding(user2.getRid()), jUser.class);
+		admin1 = client.callJsonRead(ApiPath.API_USER_GET_ID + ParameterEncoder.encoding(admin1.getRid()), jUser.class);
 		
 	}	
 	
@@ -29,40 +32,59 @@ public class tUser {
 		
 		/* Set Name */
 		
-		gest_1.setName("gest 1");
-		user_1.setName("user 1");
-		user_2.setName("user_2");
-		admin_1.setName("admin_1");
+		gest1.setName("gest1");
+		user1.setName("user1");
+		user2.setName("user2");
+		admin1.setName("admin1");
 
-		gest_1.setRole(enAclRole.GUEST);
-		user_1.setRole(enAclRole.USER);
-		user_2.setRole(enAclRole.USER);
-		admin_1.setRole(enAclRole.ADMIN);
+		gest1.setRole(enAclRole.GUEST);
+		user1.setRole(enAclRole.USER);
+		user2.setRole(enAclRole.USER);
+		admin1.setRole(enAclRole.ADMIN);
 
 		/* Create */
 		
-		gest_1 = client.callJsonCreat(ApiPath.API_USER_CREATE, gest_1, jUser.class);
-		user_1 = client.callJsonCreat(ApiPath.API_USER_CREATE, user_1, jUser.class);
-		user_2 = client.callJsonCreat(ApiPath.API_USER_CREATE, user_2, jUser.class);
-		admin_1 = client.callJsonCreat(ApiPath.API_USER_CREATE, admin_1, jUser.class);
+		gest1 = client.callJsonCreat(ApiPath.API_USER_CREATE, gest1, jUser.class);
+		user1 = client.callJsonCreat(ApiPath.API_USER_CREATE, user1, jUser.class);
+		user2 = client.callJsonCreat(ApiPath.API_USER_CREATE, user2, jUser.class);
+		admin1 = client.callJsonCreat(ApiPath.API_USER_CREATE, admin1, jUser.class);
 		
 		
-		user_1.getGroups().add(tGroup.jg_n1.getJBaseLight());
-		user_2.getGroups().add(tGroup.jg_n2.getJBaseLight());
-		admin_1.getGroups().add(tGroup.jg_r.getJBaseLight());
+		user1.getGroups().add(tGroup.jg_n1.getJBaseLight());
+		user2.getGroups().add(tGroup.jg_n2.getJBaseLight());
+		admin1.getGroups().add(tGroup.jg_r.getJBaseLight());
 
-		user_1 = client.callJsonUpdate(ApiPath.API_USER_UPDATE, user_1, jUser.class);
-		user_2 = client.callJsonUpdate(ApiPath.API_USER_UPDATE, user_2, jUser.class);
-		admin_1 = client.callJsonUpdate(ApiPath.API_USER_UPDATE, admin_1, jUser.class);
+		user1 = client.callJsonUpdate(ApiPath.API_USER_UPDATE, user1, jUser.class);
+		user2 = client.callJsonUpdate(ApiPath.API_USER_UPDATE, user2, jUser.class);
+		admin1 = client.callJsonUpdate(ApiPath.API_USER_UPDATE, admin1, jUser.class);
 
 		
 		reload(client);
 		tGroup.reload(client);
 		
 		
-		jCredential credAdmin1 = new jCredential();
-		credAdmin1.setId("admin1");
-		credAdmin1.setPassword64(Base64.encodeAsString("admin1"));
+		credAdmin1 = new jCredential();
+		credAdmin1.setId(admin1.getName());
+		credAdmin1.setPassword64(Base64.encodeAsString(admin1.getName()));
+		credAdmin1.setAuthenticationType(enAuthentication.BASIC);
+
+		credUser1 = new jCredential();
+		credUser1.setId(user1.getName());
+		credUser1.setPassword64(Base64.encodeAsString(user1.getName()));
+		credUser1.setAuthenticationType(enAuthentication.BASIC);
+
+		credUser2 = new jCredential();
+		credUser2.setId(user2.getName());
+		credUser2.setPassword64(Base64.encodeAsString(user2.getName()));
+		credUser2.setAuthenticationType(enAuthentication.BASIC);
+
+
+		client.callJsonCreat(ApiPath.API_CRED_CREATE_ID + ParameterEncoder.encoding(admin1.getRid()), credAdmin1, jCredential.class);
+		client.callJsonCreat(ApiPath.API_CRED_CREATE_ID + ParameterEncoder.encoding(user1.getRid()), credUser1, jCredential.class);
+		client.callJsonCreat(ApiPath.API_CRED_CREATE_ID + ParameterEncoder.encoding(user2.getRid()), credUser2, jCredential.class);
+		
+		reload(client);
+
 		//credAdmin1.set
 		//admin_1.getCredentials().add()
 		

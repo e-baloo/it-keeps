@@ -79,7 +79,11 @@ public final class ApiPath {
 	public  static final String API_IMAGE_DELETE = API_IMAGE + DELETE;
 
 	private static final String API_CRED = API + "cred/";
-	public  static final String API_CRED_GET_ID = API_CRED + ID;
+	public static final String API_CRED_GET_ALL = API_CRED + ALL;
+	public static final String API_CRED_GET_ID = API_CRED + ID;
+	public static final String API_CRED_DELETE_ID = API_CRED + DELETE;
+	public  static final String API_CRED_CREATE = API_CRED + CREATE;
+	public  static final String API_CRED_CREATE_ID = API_CRED + CREATE + ID;
 	
 	private static final String AUTH = "auth/";
 	public static final String AUTH_LOGIN = AUTH + "login/";
