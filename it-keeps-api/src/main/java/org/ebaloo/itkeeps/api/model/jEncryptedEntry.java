@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class jEncryptedEntry extends jBase {
 	
-	public static final String DATA = "data";
+	public static final String DATA64 = "data64";
 	public static final String MEDIA_TYPE = "mediaType";
 	
 	public jEncryptedEntry() {
@@ -39,13 +39,13 @@ public class jEncryptedEntry extends jBase {
 	@JsonIgnore
 	private String data = StringUtils.EMPTY;
 	
-	@JsonProperty(DATA)
-	public final String getData() {
+	@JsonProperty(DATA64)
+	public final String getData64() {
 		return data;
 	}
 
-	@JsonProperty(DATA)
-	public final void setData(String value) {
+	@JsonProperty(DATA64)
+	public final void setData64(String value) {
 		
 		if(StringUtils.isEmpty(value))
 			value = StringUtils.EMPTY;

@@ -165,7 +165,7 @@ public final class vEntry extends vBaseChildAcl {
 		}
 	
 
-		private final String getData(SecurityAcl sAcl) {
+		private final String getData64(SecurityAcl sAcl) {
 
 			if (sAcl.isRoleRoot())
 				return StringUtils.EMPTY;
@@ -173,7 +173,7 @@ public final class vEntry extends vBaseChildAcl {
 			if (!sAcl.isDataEncryptedEntryRead())
 				return StringUtils.EMPTY;
 
-			String encData = this.getProperty(jEncryptedEntry.DATA);
+			String encData = this.getProperty(jEncryptedEntry.DATA64);
 
 			if (StringUtils.isEmpty(encData))
 				return StringUtils.EMPTY;
@@ -198,13 +198,13 @@ public final class vEntry extends vBaseChildAcl {
 
 			this.readBase(j);
 
-			j.setData(this.getData(sAcl));
+			j.setData64(this.getData64(sAcl));
 			j.setMediaType(this.getMediaType());
 
 			return j;
 		}
 
-		private void setData(SecurityAcl sAcl, String value) {
+		private void setData64(SecurityAcl sAcl, String value) {
 
 			if (sAcl.isRoleRoot())
 				return;
@@ -213,13 +213,13 @@ public final class vEntry extends vBaseChildAcl {
 				return;
 
 			if (StringUtils.isEmpty(value)) {
-				this.setProperty(jEncryptedEntry.DATA, StringUtils.EMPTY);
+				this.setProperty(jEncryptedEntry.DATA64, StringUtils.EMPTY);
 				return;
 			}
 			
 			String encData = SecurityFactory.getEntryEncryptor().encrypt(value);
 
-			this.setProperty(jEncryptedEntry.DATA, encData);
+			this.setProperty(jEncryptedEntry.DATA64, encData);
 
 		}
 
@@ -231,7 +231,7 @@ public final class vEntry extends vBaseChildAcl {
 		
 		private void update(SecurityAcl sAcl, jEncryptedEntry j) {
 			this.updateBase(j);
-			this.setData(sAcl, j.getData());
+			this.setData64(sAcl, j.getData64());
 			this.setMediaType(j.getMediaType());
 		}
 

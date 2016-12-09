@@ -3,12 +3,10 @@ import java.net.URI;
 import java.util.List;
 
 import org.ebaloo.itkeeps.ApiPath;
-import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.enumeration.enAuthentication;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.model.jCredential;
 import org.ebaloo.itkeeps.api.model.jEncryptedEntry;
-import org.ebaloo.itkeeps.api.model.jGroup;
 import org.ebaloo.itkeeps.api.model.jObject;
 import org.ebaloo.itkeeps.api.model.jToken;
 import org.ebaloo.itkeeps.api.model.jUser;
@@ -27,7 +25,6 @@ import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 public class Main {
@@ -88,7 +85,7 @@ public class Main {
 			tGroup.run(clientRoot);
 			tPath.run(clientRoot);
 			tUser.run(clientRoot);
-			EntryTest.run(clientRoot);
+			tEntry.run(clientRoot);
 			tTest.run(clientRoot);
 
 			/*
@@ -110,7 +107,7 @@ public class Main {
 			jEncryptedEntry jen = new jEncryptedEntry();
 			jen.setName("test1 password");
 			jen.setMediaType("text");
-			jen.setData(Base64.encodeAsString("Marc DONVAL"));
+			jen.setData64(Base64.encodeAsString("Marc DONVAL"));
 
 			LogFactory.getMain().info("xxxx");
 
@@ -118,7 +115,7 @@ public class Main {
 			LogFactory.getMain().info("---------------------------------------------------------");
 
 			LogFactory.getMain().info("=> " + Base64
-					.decodeAsString(fEntry.readEncrypted(tUser.admin1.getRid(), list2.get(0).getRid()).getData()));
+					.decodeAsString(fEntry.readEncrypted(tUser.admin1.getRid(), list2.get(0).getRid()).getData64()));
 
 			LogFactory.getMain().info("---------------------------------------------------------");
 

@@ -6,7 +6,7 @@ import org.ebaloo.itkeeps.api.model.jEntry;
 import org.ebaloo.itkeeps.httpclient.ItkeepsHttpClient;
 import org.ebaloo.itkeeps.httpclient.ParameterEncoder;
 
-public class EntryTest {
+public class tEntry {
 
 	public static jEntry entry1 = new jEntry();
 	public static jEntry entry2 = new jEntry();
