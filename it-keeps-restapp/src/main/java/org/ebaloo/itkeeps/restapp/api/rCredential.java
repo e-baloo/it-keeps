@@ -43,23 +43,16 @@ public class rCredential {
 		return Response.ok().entity(list).build();
 	}
 	
-	@GET // READ
+
+	@GET // LIST
 	@Produces({ MediaType.APPLICATION_JSON })
-	@Path(ApiPath.API_CRED_GET_ID + "{id}")
 	@aApplicationRolesAllowed(enRole.USER)
 	@Timed
-	public Response readCredId(@PathParam("id") String id) {
-
+	@Path(ApiPath.API_CRED_GET_ID + "{id}")
+	public Response readId(@PathParam("id") Rid rid) {
 		Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-
-		vCredential cred = vCredential.get(null, vCredential.class, id, false);
-
-		if (cred == null)
-			throw new RuntimeException("readId(" + id + ") is null");
-
-		return Response.ok().entity(fUser.read(requesteurRid, cred.getUser().getRid())).build();
+		return Response.ok().entity(fCredential.read(requesteurRid, rid)).build();
 	}
-
 
 	@POST // CREATE
 	@Produces({ MediaType.APPLICATION_JSON })
@@ -86,6 +79,8 @@ public class rCredential {
 		Rid userRid = new Rid(id);
 
 		jCredential cred = fCredential.create(requesteurRid, userRid, j);
+		
+		System.out.println(cred.toString());
 		
 		return Response.ok().entity(cred).build();
 	}

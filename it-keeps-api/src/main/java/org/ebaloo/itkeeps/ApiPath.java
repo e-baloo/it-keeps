@@ -16,14 +16,20 @@ public final class ApiPath {
 	private static final String IMAGE = "img/";
 	public  static final String IMAGE_GET_ID = IMAGE + ID;
 	
-
+	private static final String USER = "user/";
+	private static final String CRED = "cred/";
 	private static final String API = "api/";
-	private static final String API_USER = API + "user/";
+	
+	private static final String API_USER = API + USER;
+
+	
 	public  static final String API_USER_GET_ALL = API_USER + ALL;
 	public  static final String API_USER_GET_ID = API_USER + ID;
 	public  static final String API_USER_UPDATE = API_USER + UPDATE;
 	public  static final String API_USER_CREATE = API_USER + CREATE;
 	public  static final String API_USER_DELETE = API_USER + DELETE;
+	public  static final String API_USER_GET_CRED_ID = API_USER + CRED + ID;
+
 
 	private static final String API_GROUP = API + "group/";
 	public  static final String API_GROUP_GET_ALL = API_GROUP + ALL;
@@ -78,7 +84,7 @@ public final class ApiPath {
 	public  static final String API_IMAGE_CREATE = API_IMAGE + CREATE;
 	public  static final String API_IMAGE_DELETE = API_IMAGE + DELETE;
 
-	private static final String API_CRED = API + "cred/";
+	private static final String API_CRED = API + CRED;
 	public static final String API_CRED_GET_ALL = API_CRED + ALL;
 	public static final String API_CRED_GET_ID = API_CRED + ID;
 	public static final String API_CRED_DELETE_ID = API_CRED + DELETE;

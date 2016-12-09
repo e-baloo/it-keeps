@@ -49,5 +49,6 @@
 		<module>it-keeps-test</module>
 		<module>it-keeps-webapp</module>
     <module>ti-keeps-webapp</module>
-  </modules>
+    <module>it-keeps-tools</module>
+	</modules>
 </project>

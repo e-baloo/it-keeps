@@ -21,6 +21,11 @@
     	<artifactId>it-keeps-restapp</artifactId>
     	<version>0.0.1-SNAPSHOT</version>
     </dependency>
+    <dependency>
+    	<groupId>org.e-ballo</groupId>
+    	<artifactId>it-keeps-tools</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+    </dependency>
     </dependencies>
   
   

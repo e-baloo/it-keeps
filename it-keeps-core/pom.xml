@@ -177,6 +177,12 @@
 			<version>${project.version}</version>
 		</dependency>
 		
+  		<dependency>
+  			<groupId>org.e-ballo</groupId>
+  			<artifactId>it-keeps-tools</artifactId>
+			<version>${project.version}</version>
+  		</dependency>
+		
 		
   	</dependencies>  
 	

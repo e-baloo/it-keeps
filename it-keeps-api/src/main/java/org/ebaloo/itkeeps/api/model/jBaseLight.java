@@ -128,6 +128,8 @@ public class jBaseLight extends jObject {
 		@Override
 		public boolean equals(Object obj) {
 			
+			System.out.println("jBaseLight.equals");
+			
 			if(!(obj instanceof jBaseLight) && !(obj instanceof Rid))
 				return false;
 			

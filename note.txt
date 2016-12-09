@@ -23,4 +23,9 @@ https://github.com/lixmal/keepass4web/tree/master/doc/img
 --------------
 https://github.com/cloudskol/restskol
 
+// For AngularJs
+
+http://jasonwatmore.com/post/2016/09/29/angular-2-user-registration-and-login-example-tutorial
+
+
 

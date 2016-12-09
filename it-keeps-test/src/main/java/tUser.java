@@ -6,7 +6,7 @@ import org.ebaloo.itkeeps.api.model.jCredential;
 import org.ebaloo.itkeeps.api.model.jUser;
 import org.ebaloo.itkeeps.httpclient.ItkeepsHttpClient;
 import org.ebaloo.itkeeps.httpclient.ParameterEncoder;
-import org.glassfish.jersey.internal.util.Base64;
+import org.ebaloo.itkeeps.tools.Base64;
 
 public class tUser {
 
@@ -65,17 +65,17 @@ public class tUser {
 		
 		credAdmin1 = new jCredential();
 		credAdmin1.setId(admin1.getName());
-		credAdmin1.setPassword64(Base64.encodeAsString(admin1.getName()));
+		credAdmin1.setPassword64(Base64.encodeAsString(credAdmin1.getId()));
 		credAdmin1.setAuthenticationType(enAuthentication.BASIC);
 
 		credUser1 = new jCredential();
 		credUser1.setId(user1.getName());
-		credUser1.setPassword64(Base64.encodeAsString(user1.getName()));
+		credUser1.setPassword64(Base64.encodeAsString(credUser1.getId()));
 		credUser1.setAuthenticationType(enAuthentication.BASIC);
 
 		credUser2 = new jCredential();
 		credUser2.setId(user2.getName());
-		credUser2.setPassword64(Base64.encodeAsString(user2.getName()));
+		credUser2.setPassword64(Base64.encodeAsString(credUser2.getId()));
 		credUser2.setAuthenticationType(enAuthentication.BASIC);
 
 
@@ -85,10 +85,6 @@ public class tUser {
 		
 		reload(client);
 
-		//credAdmin1.set
-		//admin_1.getCredentials().add()
-		
-		
 		
 	}
 	

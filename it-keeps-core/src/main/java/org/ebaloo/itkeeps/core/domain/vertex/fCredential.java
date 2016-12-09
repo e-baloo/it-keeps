@@ -2,6 +2,7 @@
 package org.ebaloo.itkeeps.core.domain.vertex;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
@@ -41,7 +42,7 @@ public final class fCredential {
 	
 	private static boolean isUserCerd(Rid requesteurRid, Rid credRid) {
 		jUser j = fUser.read(requesteurRid, requesteurRid);
-		return j.getCredentials().contains(credRid);
+		return j.getCredentials().stream().map(e -> e.getRid()).collect(Collectors.toList()).contains(credRid);
 	}
 	
 	

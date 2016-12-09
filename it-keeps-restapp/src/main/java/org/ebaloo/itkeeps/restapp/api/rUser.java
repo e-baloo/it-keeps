@@ -99,4 +99,21 @@ public class rUser {
 		return Response.ok().entity(user).build();
 	}
 
+	
+	@GET // READ
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Path(ApiPath.API_USER_GET_CRED_ID + "{id}")
+	@aApplicationRolesAllowed(enRole.GUEST)
+	@Timed
+	public Response readCredId(@PathParam("id") String id) {
+
+		Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
+
+		vCredential cred = vCredential.get(null, vCredential.class, id, false);
+
+		if (cred == null)
+			throw new RuntimeException("readId(" + id + ") is null");
+
+		return Response.ok().entity(fUser.read(requesteurRid, cred.getUser().getRid())).build();
+	}
 }
