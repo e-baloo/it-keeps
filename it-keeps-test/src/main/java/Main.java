@@ -109,7 +109,7 @@ public class Main {
 			jEncryptedEntry jen = new jEncryptedEntry();
 			jen.setName("test1 password");
 			jen.setMediaType("text");
-			jen.setData(Base64.encodeAsString("Marc DONVAL"));
+			jen.setData64(Base64.encodeAsString("Marc DONVAL"));
 
 			LogFactory.getMain().info("xxxx");
 
@@ -117,7 +117,7 @@ public class Main {
 			LogFactory.getMain().info("---------------------------------------------------------");
 
 			LogFactory.getMain().info("=> " + Base64
-					.decodeAsString(fEntry.readEncrypted(tUser.admin1.getRid(), list2.get(0).getRid()).getData()));
+					.decodeAsString(fEntry.readEncrypted(tUser.admin1.getRid(), list2.get(0).getRid()).getData64()));
 
 			LogFactory.getMain().info("---------------------------------------------------------");
 
