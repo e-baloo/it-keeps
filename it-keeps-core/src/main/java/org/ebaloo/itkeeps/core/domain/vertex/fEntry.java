@@ -31,23 +31,23 @@ import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 public final class fEntry {
 
 
-	public static jEntry create(Rid requesteurRid, jEntry j) {
-		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
+	public static jEntry create(Rid requesterRid, jEntry j) {
+
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, Rid.NULL);
 		if(!sAcl.isRoleUser())
 			throw ExceptionPermission.NOT_USER;
 
 		// TODO Security
 		
 		vEntry entry = new vEntry(j);
-		
-		return fEntry.read(requesteurRid, entry.getRid());
+
+		return fEntry.read(requesterRid, entry.getRid());
 	}
 
 
-	public static jEntry delete(Rid requesteurRid, Rid rid) {
-		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, rid);
+	public static jEntry delete(Rid requesterRid, Rid rid) {
+
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, rid);
 		if(!sAcl.isRoleUser())
 			throw ExceptionPermission.NOT_USER;
 
@@ -61,9 +61,9 @@ public final class fEntry {
 		return j;
 	}
 
-	public static jEntry read(Rid requesteurRid, Rid rid) {
-		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, rid);
+	public static jEntry read(Rid requesterRid, Rid rid) {
+
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, rid);
 		if(!sAcl.isRoleUser())
 			throw ExceptionPermission.NOT_USER;
 		
@@ -74,9 +74,9 @@ public final class fEntry {
 		return entry.read();
 	}
 
-	public static jEncryptedEntry readEncrypted(Rid requesteurRid, Rid rid) {
-		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, rid);
+	public static jEncryptedEntry readEncrypted(Rid requesterRid, Rid rid) {
+
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, rid);
 		if(!sAcl.isRoleUser())
 			throw ExceptionPermission.NOT_USER;
 		
@@ -87,9 +87,9 @@ public final class fEntry {
 		return entry.readEncrypted(sAcl);
 	}
 
-	public static jEntry update(Rid requesteurRid, jEntry j) {
-		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, j.getRid());
+	public static jEntry update(Rid requesterRid, jEntry j) {
+
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, j.getRid());
 		if(!sAcl.isRoleUser())
 			throw ExceptionPermission.NOT_USER;
 		
@@ -99,13 +99,13 @@ public final class fEntry {
 
 		entry.checkVersion(j);
 		entry.update(j);
-		
-		return fEntry.read(requesteurRid, j.getRid());
+
+		return fEntry.read(requesterRid, j.getRid());
 	}
-	
-	public static void updateEncrypted(Rid requesteurRid, Rid rid, jEncryptedEntry j) {
-		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, rid);
+
+	public static void updateEncrypted(Rid requesterRid, Rid rid, jEncryptedEntry j) {
+
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, rid);
 		if(!sAcl.isRoleUser())
 			throw ExceptionPermission.NOT_USER;
 		
@@ -115,15 +115,14 @@ public final class fEntry {
 		
 		entry.updateEncrypted(sAcl, j);
 	}
-	
 
 
-	public static List<jBaseLight> readAll(Rid requesteurRid) {
+	public static List<jBaseLight> readAll(Rid requesterRid) {
 		
 		long timed = System.currentTimeMillis();
-		
-		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
+
+
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, Rid.NULL);
 		if(!sAcl.isRoleUser())
 			throw ExceptionPermission.NOT_USER;
 
@@ -140,20 +139,20 @@ public final class fEntry {
 			sb.append("') FROM (SELECT FROM (TRAVERSE OUT('");
 			sb.append(eAclRelation.class.getSimpleName());
 			sb.append("') FROM ");
-			sb.append(requesteurRid.get());
+			sb.append(requesterRid.get());
 			sb.append(") WHERE @class = '");
 			sb.append(vAcl.class.getSimpleName());
 			sb.append("')) WHERE @class = '");
 			sb.append(vEntry.class.getSimpleName());
 			sb.append("'");
-			
-			//    String cmd = "SELECT FROM (TRAVERSE IN('eAclRelation') FROM (SELECT FROM (TRAVERSE OUT('eAclRelation') FROM " + requesteurRid.get() + ") WHERE @class = 'vAcl')) WHERE @class = 'vPath'";
+
+			//    String cmd = "SELECT FROM (TRAVERSE IN('eAclRelation') FROM (SELECT FROM (TRAVERSE OUT('eAclRelation') FROM " + requesterRid.get() + ") WHERE @class = 'vAcl')) WHERE @class = 'vPath'";
 			
 			OrientBaseGraph graph = GraphFactory.getOrientBaseGraph();
 			
 			for(OrientVertex ov : GraphFactory.command(graph, sb.toString())) {
 				Rid rid = RID.get(ov);
-				SecurityAcl sAclOv = SecurityFactory.getSecurityAcl(requesteurRid, rid);
+				SecurityAcl sAclOv = SecurityFactory.getSecurityAcl(requesterRid, rid);
 				if(sAclOv.isDataEntryRead()) {
 					vEntry entry = vBaseAbstract.get(graph, vEntry.class, rid, false);
 					list.add(entry.read().getJBaseLight());

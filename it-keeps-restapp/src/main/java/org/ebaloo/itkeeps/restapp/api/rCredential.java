@@ -2,12 +2,7 @@ package org.ebaloo.itkeeps.restapp.api;
 
 import java.util.List;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -35,8 +30,8 @@ public class rCredential {
 	@Timed
 	@Path(ApiPath.API_CRED_GET_ALL)
 	public Response readAll() {
-		Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-		List<jBaseLight> list = fCredential.readAll(requesteurRid);
+		Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
+		List<jBaseLight> list = fCredential.readAll(requesterRid);
 		return Response.ok().entity(list).build();
 	}
 	
@@ -47,8 +42,8 @@ public class rCredential {
 	@Timed
 	@Path(ApiPath.API_CRED_GET_ID + "{rid}")
 	public Response readId(@PathParam(value = "rid") Rid rid) {
-		Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-		return Response.ok().entity(fCredential.read(requesteurRid, rid)).build();
+		Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
+		return Response.ok().entity(fCredential.read(requesterRid, rid)).build();
 	}
 
 	@POST // CREATE
@@ -58,8 +53,8 @@ public class rCredential {
 	@Timed
 	@Path(ApiPath.API_CRED_CREATE)
 	public Response create(final jCredential j) {
-		Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-		jCredential cred = fCredential.create(requesteurRid, j);
+		Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
+		jCredential cred = fCredential.create(requesterRid, j);
 		return Response.ok().entity(cred).build();
 	}
 
@@ -71,11 +66,23 @@ public class rCredential {
 	@Timed
 	@Path(ApiPath.API_CRED_CREATE_ID + "{rid}")
 	public Response createId(final jCredential j, @PathParam(value = "rid") Rid rid) {
-		Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-		jCredential cred = fCredential.create(requesteurRid, rid, j);
+		Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
+		jCredential cred = fCredential.create(requesterRid, rid, j);
+		return Response.ok().entity(cred).build();
+	}
+
+	@DELETE
+	@Produces({MediaType.APPLICATION_JSON})
+	@Consumes({MediaType.APPLICATION_JSON})
+	@aApplicationRolesAllowed(enRole.USER)
+	@Timed
+	@Path(ApiPath.API_CRED_DELETE_ID + "{rid}")
+	public Response delete(@PathParam(value = "rid") Rid rid) {
+		Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
+		jCredential cred = fCredential.read(requesterRid, rid);
+		fCredential.delete(requesterRid, rid);
 		return Response.ok().entity(cred).build();
 	}
 
 
-	
 }

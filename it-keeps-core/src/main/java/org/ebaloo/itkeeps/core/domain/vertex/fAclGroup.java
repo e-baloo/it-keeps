@@ -21,18 +21,17 @@ import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.SecurityAcl;
 public final class fAclGroup {
 
 
-
-	public static jAclGroup create(Rid requesteurRid, jAclGroup j) {
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
+	public static jAclGroup create(Rid requesterRid, jAclGroup j) {
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, Rid.NULL);
 		if(!sAcl.isRoleRoot())
 			throw ExceptionPermission.NOT_ROOT;
 		vAclGroup aclGroup = new vAclGroup(j);
-		return fAclGroup.read(requesteurRid, aclGroup.getRid());
+		return fAclGroup.read(requesterRid, aclGroup.getRid());
 	}
 
 
-	public static jAclGroup delete(Rid requesteurRid, Rid rid) {
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
+	public static jAclGroup delete(Rid requesterRid, Rid rid) {
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, Rid.NULL);
 		if(!sAcl.isRoleRoot())
 			throw ExceptionPermission.NOT_ROOT;
 		
@@ -47,18 +46,18 @@ public final class fAclGroup {
 	}
 
 
-	public static jAclGroup read(Rid requesteurRid, Rid rid) {
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
+	public static jAclGroup read(Rid requesterRid, Rid rid) {
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, Rid.NULL);
 		if(!sAcl.isRoleRoot())
 			throw ExceptionPermission.NOT_ROOT;
 		vAclGroup aclGroup = vBaseAbstract.get(null, vAclGroup.class, rid, false);
 		return aclGroup == null ? null : aclGroup.read();
 	}
 
-	
-	public static jAclGroup update(Rid requesteurRid, jAclGroup j) {
-		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
+
+	public static jAclGroup update(Rid requesterRid, jAclGroup j) {
+
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, Rid.NULL);
 		if(!sAcl.isRoleRoot())
 			throw ExceptionPermission.NOT_ROOT;
 
@@ -66,16 +65,14 @@ public final class fAclGroup {
 
 		aclGroup.checkVersion(j);
 		aclGroup.update(j);
-		
-		return fAclGroup.read(requesteurRid, j.getRid());
+
+		return fAclGroup.read(requesterRid, j.getRid());
 	}
-	
-	
 
 
-	public static List<jAclGroup> readAll(Rid requesteurRid) {
-		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
+	public static List<jAclGroup> readAll(Rid requesterRid) {
+
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, Rid.NULL);
 		if(!sAcl.isRoleRoot())
 			throw ExceptionPermission.NOT_ROOT;
 

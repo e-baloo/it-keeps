@@ -30,23 +30,23 @@ import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 public final class fPath {
 
 
-	public static jPath create(Rid requesteurRid, jPath j) {
-		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
+	public static jPath create(Rid requesterRid, jPath j) {
+
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, Rid.NULL);
 		if(!sAcl.isRoleUser())
 			throw ExceptionPermission.NOT_USER;
 
 		// TODO Security
 		
 		vPath path = new vPath(j);
-		
-		return fPath.read(requesteurRid, path.getRid());
+
+		return fPath.read(requesterRid, path.getRid());
 	}
 
 
-	public static jPath delete(Rid requesteurRid, Rid rid) {
-		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, rid);
+	public static jPath delete(Rid requesterRid, Rid rid) {
+
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, rid);
 		if(!sAcl.isRoleUser())
 			throw ExceptionPermission.NOT_USER;
 		if(!sAcl.isDataPathCreate())
@@ -60,9 +60,9 @@ public final class fPath {
 		return j;
 	}
 
-	public static jPath read(Rid requesteurRid, Rid rid) {
-		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, rid);
+	public static jPath read(Rid requesterRid, Rid rid) {
+
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, rid);
 		if(!sAcl.isRoleUser())
 			throw ExceptionPermission.NOT_USER;
 		if(!sAcl.isDataPathRead())
@@ -76,9 +76,9 @@ public final class fPath {
 		return path.read();
 	}
 
-	public static jPath update(Rid requesteurRid, jPath j) {
-		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, j.getRid());
+	public static jPath update(Rid requesterRid, jPath j) {
+
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, j.getRid());
 		if(!sAcl.isRoleUser())
 			throw ExceptionPermission.NOT_USER;
 		if(!sAcl.isDataPathUpdate())
@@ -90,19 +90,17 @@ public final class fPath {
 
 		path.checkVersion(j);
 		path.update(j);
-		
-		return fPath.read(requesteurRid, j.getRid());
+
+		return fPath.read(requesterRid, j.getRid());
 	}
-	
-	
 
 
-	public static List<jBaseLight> readAll(Rid requesteurRid) {
+	public static List<jBaseLight> readAll(Rid requesterRid) {
 		
 		long timed = System.currentTimeMillis();
-		
-		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
+
+
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, Rid.NULL);
 		if(!sAcl.isRoleUser())
 			throw ExceptionPermission.NOT_USER;
 
@@ -119,20 +117,20 @@ public final class fPath {
 			sb.append("') FROM (SELECT FROM (TRAVERSE OUT('");
 			sb.append(eAclRelation.class.getSimpleName());
 			sb.append("') FROM ");
-			sb.append(requesteurRid.get());
+			sb.append(requesterRid.get());
 			sb.append(") WHERE @class = '");
 			sb.append(vAcl.class.getSimpleName());
 			sb.append("')) WHERE @class = '");
 			sb.append(vPath.class.getSimpleName());
 			sb.append("'");
-			
-			//    String cmd = "SELECT FROM (TRAVERSE IN('eAclRelation') FROM (SELECT FROM (TRAVERSE OUT('eAclRelation') FROM " + requesteurRid.get() + ") WHERE @class = 'vAcl')) WHERE @class = 'vPath'";
+
+			//    String cmd = "SELECT FROM (TRAVERSE IN('eAclRelation') FROM (SELECT FROM (TRAVERSE OUT('eAclRelation') FROM " + requesterRid.get() + ") WHERE @class = 'vAcl')) WHERE @class = 'vPath'";
 			
 			OrientBaseGraph graph = GraphFactory.getOrientBaseGraph();
 			
 			for(OrientVertex ov : GraphFactory.command(graph, sb.toString())) {
 				Rid rid = RID.get(ov);
-				SecurityAcl sAclOv = SecurityFactory.getSecurityAcl(requesteurRid, rid);
+				SecurityAcl sAclOv = SecurityFactory.getSecurityAcl(requesterRid, rid);
 				if(sAclOv.isDataPathRead()) {
 					vPath path = vBaseAbstract.get(graph, vPath.class, rid, false);
 					list.add(path.read().getJBaseLight());

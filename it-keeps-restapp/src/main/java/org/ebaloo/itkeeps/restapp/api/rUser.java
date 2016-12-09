@@ -39,8 +39,8 @@ public class rUser {
 	@Timed
 	@Path(ApiPath.API_USER_CREATE)
 	public Response create(final jUser juser) {
-		Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-		jUser user = fUser.create(requesteurRid, juser);
+		Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
+		jUser user = fUser.create(requesterRid, juser);
 		return Response.ok().entity(user).build();
 	}
 
@@ -50,8 +50,8 @@ public class rUser {
 	@Timed
 	@Path(ApiPath.API_USER_DELETE + "{rid}")
 	public Response delete(@PathParam(value = "rid") Rid rid) {
-		Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-		jUser j = fUser.delete(requesteurRid, rid);
+		Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
+		jUser j = fUser.delete(requesterRid, rid);
 		return Response.ok().entity(j).build();
 	}
 
@@ -61,8 +61,8 @@ public class rUser {
 	@Timed
 	@Path(ApiPath.API_USER_GET_ALL)
 	public Response readAll() {
-		Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-		List<jBaseLight> list = fUser.readAll(requesteurRid);
+		Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
+		List<jBaseLight> list = fUser.readAll(requesterRid);
 		return Response.ok().entity(list).build();
 	}
 
@@ -76,9 +76,9 @@ public class rUser {
 	@Timed
 	public Response readId(@PathParam(value = "rid") Rid rid) {
 
-		Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
+		Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
 
-		jUser user = fUser.read(requesteurRid, rid);
+		jUser user = fUser.read(requesterRid, rid);
 
 		return Response.ok().entity(user).build();
 	}
@@ -92,9 +92,9 @@ public class rUser {
 	@Path(ApiPath.API_USER_UPDATE)
 	public Response update(final jUser j) {
 
-		Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
+		Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
 
-		jUser user = fUser.update(requesteurRid, j);
+		jUser user = fUser.update(requesterRid, j);
 
 		return Response.ok().entity(user).build();
 	}
@@ -107,13 +107,13 @@ public class rUser {
 	@Timed
 	public Response readCredId(@PathParam(value = "id") String id) {
 
-		Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
+		Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
 
 		vCredential cred = vCredential.get(null, vCredential.class, id, false);
 
 		if (cred == null)
 			throw new RuntimeException("readId(" + id + ") is null");
 
-		return Response.ok().entity(fUser.read(requesteurRid, cred.getUser().getRid())).build();
+		return Response.ok().entity(fUser.read(requesterRid, cred.getUser().getRid())).build();
 	}
 }

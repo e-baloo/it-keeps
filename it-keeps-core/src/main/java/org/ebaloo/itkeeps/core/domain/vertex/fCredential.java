@@ -27,39 +27,39 @@ public final class fCredential {
 	
 	// API
 
-	
-	public static List<jBaseLight> readAll(Rid requesteurRid) {
-		jUser j = fUser.read(requesteurRid, requesteurRid);
+
+	public static List<jBaseLight> readAll(Rid requesterRid) {
+		jUser j = fUser.read(requesterRid, requesterRid);
 		return j.getCredentials();
 	}
 
-	
-	public static jCredential read(Rid requesteurRid, Rid credRid) {
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, null);
-		return isUserCerd(requesteurRid, credRid) || sAcl.isRoleRoot() ? vCredential.get(null, vCredential.class, credRid, false).read() : null;
+
+	public static jCredential read(Rid requesterRid, Rid credRid) {
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, null);
+		return isUserCerd(requesterRid, credRid) || sAcl.isRoleRoot() ? vCredential.get(null, vCredential.class, credRid, false).read() : null;
 	}
 
-	
-	private static boolean isUserCerd(Rid requesteurRid, Rid credRid) {
-		jUser j = fUser.read(requesteurRid, requesteurRid);
+
+	private static boolean isUserCerd(Rid requesterRid, Rid credRid) {
+		jUser j = fUser.read(requesterRid, requesterRid);
 
 		if(j.getCredentials() == null)
 			return false;
 
 		return j.getCredentials().stream().map(jBaseLight::getRid).collect(Collectors.toList()).contains(credRid);
 	}
-	
-	
-	public static jCredential delete(Rid requesteurRid, Rid credRid) {
 
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, null);
+
+	public static jCredential delete(Rid requesterRid, Rid credRid) {
+
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, null);
 
 		if (sAcl.isRoleGuest())
 			throw ExceptionPermission.IS_GUEST;
 
 		jCredential jc = null;
-		
-		if(isUserCerd(requesteurRid, credRid) || sAcl.isRoleRoot()) {
+
+		if (isUserCerd(requesterRid, credRid) || sAcl.isRoleRoot()) {
 			
 			vCredential vc = vCredential.get(null, vCredential.class, credRid, false);
 			
@@ -72,39 +72,38 @@ public final class fCredential {
 		return jc;
 	}
 
-	public static jCredential create(Rid requesteurRid, jCredential j) {
+	public static jCredential create(Rid requesterRid, jCredential j) {
 
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, null);
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, null);
 
 		if (sAcl.isRoleGuest())
 			throw ExceptionPermission.IS_GUEST;
 
-		jUser ju = fUser.read(requesteurRid, requesteurRid);
+		jUser ju = fUser.read(requesterRid, requesterRid);
 		
 		vCredential vc = new vCredential(j, ju.getJBaseLight());
-		
-		return fCredential.read(requesteurRid, vc.getRid());
-	}
-	
-	
-	public static jCredential create(Rid requesteurRid, Rid userRid , jCredential j) {
 
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, null);
+		return fCredential.read(requesterRid, vc.getRid());
+	}
+
+
+	public static jCredential create(Rid requesterRid, Rid userRid, jCredential j) {
+
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, null);
 
 		if (!sAcl.isRoleRoot())
 			throw ExceptionPermission.NOT_ROOT;
 
-		jUser ju = fUser.read(requesteurRid, userRid);
+		jUser ju = fUser.read(requesterRid, userRid);
 		
 		vCredential vc = new vCredential(j, ju.getJBaseLight());
 
-		return fCredential.read(requesteurRid, vc.getRid());
+		return fCredential.read(requesterRid, vc.getRid());
 	}
-	
-	
 
-	public static void update(Rid requesteurRid, jCredential j) {
-		fUser.read(requesteurRid, requesteurRid);
+
+	public static void update(Rid requesterRid, jCredential j) {
+		fUser.read(requesterRid, requesterRid);
 		vCredential cred = vCredential.get(null, vCredential.class, j.getRid(), false);
 		cred.update(j);
 	}

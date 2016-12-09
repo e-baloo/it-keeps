@@ -37,9 +37,9 @@ public class rAcl {
     @Timed
     @Path(ApiPath.API_ACL_GET_ID + "{rid}")
     public Response readId(@PathParam(value = "rid") Rid rid) {
-        Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-        jAcl acl = fAcl.read(requesteurRid, rid);
-    	return Response.ok().entity(acl).build();
+        Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
+        jAcl acl = fAcl.read(requesterRid, rid);
+        return Response.ok().entity(acl).build();
     }
 	
     
@@ -50,9 +50,9 @@ public class rAcl {
     @Timed
     @Path(ApiPath.API_ACL_UPDATE)
     public Response update(final jAcl j) {
-    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-    	fAcl.update(requesteurRid, j);
-     	return Response.ok().entity(fAcl.read(requesteurRid, j.getRid())).build();
+        Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
+        fAcl.update(requesterRid, j);
+        return Response.ok().entity(fAcl.read(requesterRid, j.getRid())).build();
     }
 
     
@@ -63,9 +63,9 @@ public class rAcl {
     @Timed
     @Path(ApiPath.API_ACL_CREATE)
     public Response create(final jAcl j) {
-    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-    	jAcl acl = fAcl.create(requesteurRid, j);
-    	return Response.ok().entity(fAcl.read(requesteurRid, acl.getRid())).build();
+        Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
+        jAcl acl = fAcl.create(requesterRid, j);
+        return Response.ok().entity(fAcl.read(requesterRid, acl.getRid())).build();
     }
 
     
@@ -75,8 +75,8 @@ public class rAcl {
     @Timed
     @Path(ApiPath.API_ACL_DELETE + "{rid}")
     public Response delete(@PathParam(value = "rid") Rid rid) {
-        Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-        jAcl j = fAcl.delete(requesteurRid, rid);
-    	return Response.ok().entity(j).build();
+        Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
+        jAcl j = fAcl.delete(requesterRid, rid);
+        return Response.ok().entity(j).build();
     }
 }

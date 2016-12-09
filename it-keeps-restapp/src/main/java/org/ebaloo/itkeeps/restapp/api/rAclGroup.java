@@ -38,9 +38,9 @@ public class rAclGroup {
     @Timed
     @Path(ApiPath.API_ACL_GRP_GET_ALL)
     public Response readAll() {
-    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-		List<jAclGroup> list = fAclGroup.readAll(requesteurRid);
-    	return Response.ok().entity(list).build();
+        Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
+        List<jAclGroup> list = fAclGroup.readAll(requesterRid);
+        return Response.ok().entity(list).build();
 	}
 	
 	
@@ -50,8 +50,8 @@ public class rAclGroup {
     @Timed
     @Path(ApiPath.API_ACL_GRP_GET_ID + "{rid}")
     public Response readId(@PathParam(value = "rid") Rid rid) {
-        Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-        jAclGroup j = fAclGroup.read(requesteurRid, rid);
+        Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
+        jAclGroup j = fAclGroup.read(requesterRid, rid);
         return Response.ok().entity(j).build();
     }
 	
@@ -62,9 +62,9 @@ public class rAclGroup {
     @Timed
     @Path(ApiPath.API_ACL_GRP_UPDATE)
     public Response update(jAclGroup j) {
-    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-    	j = fAclGroup.update(requesteurRid, j);
-    	return Response.ok().entity(j).build();
+        Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
+        j = fAclGroup.update(requesterRid, j);
+        return Response.ok().entity(j).build();
     }
 
     @POST // CREATE
@@ -75,11 +75,11 @@ public class rAclGroup {
     @Path(ApiPath.API_ACL_GRP_CREATE)
     public Response create(jAclGroup j) {
 
-    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
+        Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
 
-    	j = fAclGroup.create(requesteurRid, j);
-    	
-    	return Response.ok().entity(j).build();
+        j = fAclGroup.create(requesterRid, j);
+
+        return Response.ok().entity(j).build();
     }
     
     @DELETE //DELETE
@@ -88,9 +88,9 @@ public class rAclGroup {
     @Timed
     @Path(ApiPath.API_ACL_GRP_DELETE + "{rid}")
     public Response delete(@PathParam(value = "rid") Rid rid) {
-        Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-        jAclGroup j = fAclGroup.delete(requesteurRid, rid);
-    	return Response.ok().entity(j).build();
+        Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
+        jAclGroup j = fAclGroup.delete(requesterRid, rid);
+        return Response.ok().entity(j).build();
     }
     
 

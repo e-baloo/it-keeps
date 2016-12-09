@@ -84,12 +84,10 @@ public final class fGroup {
 		
 		return fGroup.read(requesteurRid, j.getRid());
 	}
-	
-	
 
 
-	public static List<jBaseLight> readAll(Rid requesteurRid) {
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
+	public static List<jBaseLight> readAll(Rid requesterRid) {
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, Rid.NULL);
 		if(!sAcl.isRoleAdmin())
 			throw ExceptionPermission.NOT_ADMIN;
 		if(!sAcl.isAdminGroupRead())

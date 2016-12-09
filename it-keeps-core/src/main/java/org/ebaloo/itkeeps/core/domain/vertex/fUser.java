@@ -23,9 +23,9 @@ public final class fUser {
 	
 	// API
 
-	
-	public static List<jBaseLight> readAll(Rid requesteurRid) {
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
+
+	public static List<jBaseLight> readAll(Rid requesterRid) {
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, Rid.NULL);
 		if(!sAcl.isRoleAdmin())
 			throw ExceptionPermission.NOT_ADMIN;
 		if(!sAcl.isAdminUserRead())
@@ -33,18 +33,16 @@ public final class fUser {
 		return vBase.getAllBase(null, vUser.class, false).stream().map(e -> e.read().getJBaseLight()).collect(Collectors.toList());
 	}
 
-	
-	
-	
-	public static jUser read(Rid requesteurRid, Rid userRid) {
 
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, userRid);
+	public static jUser read(Rid requesterRid, Rid userRid) {
+
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, userRid);
 
 		if (sAcl.isRoleGuest())
 			throw ExceptionPermission.IS_GUEST;
-		if ((!sAcl.isRoleRoot() || !sAcl.isRoleAdmin()) && !userRid.equals(requesteurRid))
+		if ((!sAcl.isRoleRoot() || !sAcl.isRoleAdmin()) && !userRid.equals(requesterRid))
 			throw ExceptionPermission.IS_USER;
-		if (!userRid.equals(requesteurRid) && !sAcl.isAdminUserRead())
+		if (!userRid.equals(requesterRid) && !sAcl.isAdminUserRead())
 			throw ExceptionPermission.NOT_USER_READ;
 
 		vUser user = vUser.get(null, vUser.class, userRid, false);
@@ -52,13 +50,13 @@ public final class fUser {
 		return user.read();
 	}
 
-	public static jUser delete(Rid requesteurRid, Rid userRid) {
+	public static jUser delete(Rid requesterRid, Rid userRid) {
 
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, userRid);
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, userRid);
 
 		if (sAcl.isRoleGuest())
 			throw ExceptionPermission.IS_GUEST;
-		if ((!sAcl.isRoleRoot() || !sAcl.isRoleAdmin()) && !userRid.equals(requesteurRid))
+		if ((!sAcl.isRoleRoot() || !sAcl.isRoleAdmin()) && !userRid.equals(requesterRid))
 			throw ExceptionPermission.IS_USER;
 		if (!sAcl.isAdminUserCreate())
 			throw ExceptionPermission.NOT_USER_CREATE;
@@ -72,9 +70,9 @@ public final class fUser {
 		return j;
 	}
 
-	public static jUser create(Rid requesteurRid, jUser j) {
+	public static jUser create(Rid requesterRid, jUser j) {
 
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, null);
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, null);
 
 		if (!sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
 			throw ExceptionPermission.IS_GUEST_OR_USER;
@@ -85,14 +83,14 @@ public final class fUser {
 
 		vUser user = new vUser(j);
 
-		return fUser.read(requesteurRid, user.getRid());
+		return fUser.read(requesterRid, user.getRid());
 	}
 	
 	
 	/*
-	public static final List<jCredential> readCrednetial(Rid requesteurRid, Rid rid) {
+	public static final List<jCredential> readCrednetial(Rid requesterRid, Rid rid) {
 		
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, rid);
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, rid);
 		if(!sAcl.isRoleUser())
 			throw ExceptionPermission.NOT_USER;
 		
@@ -104,17 +102,16 @@ public final class fUser {
 	}
 	*/
 
-	
 
-	public static jUser update(Rid requesteurRid, jUser j) {
+	public static jUser update(Rid requesterRid, jUser j) {
 
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, j.getRid());
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, j.getRid());
 
 		if (sAcl.isRoleGuest())
 			throw ExceptionPermission.IS_GUEST;
-		if (!j.getRid().equals(requesteurRid) && !sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
+		if (!j.getRid().equals(requesterRid) && !sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
 			throw ExceptionPermission.IS_USER;
-		if (!j.getRid().equals(requesteurRid) && !sAcl.isAdminUserUpdate())
+		if (!j.getRid().equals(requesterRid) && !sAcl.isAdminUserUpdate())
 			throw ExceptionPermission.NOT_USER_UPDATE;
 
 		checkUpdate(sAcl, j);
@@ -124,7 +121,7 @@ public final class fUser {
 		user.checkVersion(j);
 		user.update(j);
 
-		return fUser.read(requesteurRid, j.getRid());
+		return fUser.read(requesterRid, j.getRid());
 
 	}
 

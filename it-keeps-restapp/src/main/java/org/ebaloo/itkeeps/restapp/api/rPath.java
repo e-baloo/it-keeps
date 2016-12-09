@@ -35,9 +35,9 @@ public class rPath {
 	@aApplicationRolesAllowed(enRole.USER)
     @Path(ApiPath.API_PATH_GET_ALL)
     public Response read() {
-    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-		List<jBaseLight> list = fPath.readAll(requesteurRid);
-		return Response.ok().entity(list).build();
+        Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
+        List<jBaseLight> list = fPath.readAll(requesterRid);
+        return Response.ok().entity(list).build();
 	}
 
 
@@ -47,8 +47,8 @@ public class rPath {
 	@aApplicationRolesAllowed(enRole.USER)
     @Path(ApiPath.API_PATH_GET_ID + "{rid}")
     public Response read(@PathParam(value = "rid") Rid rid) {
-        Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-        jPath path = fPath.read(requesteurRid, rid);
+        Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
+        jPath path = fPath.read(requesterRid, rid);
         return Response.ok().entity(path).build();
     }
 
@@ -59,8 +59,8 @@ public class rPath {
     @aApplicationRolesAllowed(enRole.ADMIN)
     @Path(ApiPath.API_PATH_DELETE + "{rid}")
     public Response delete(@PathParam(value = "rid") Rid rid) {
-        Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-        jPath j = fPath.delete(requesteurRid, rid);
+        Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
+        jPath j = fPath.delete(requesterRid, rid);
         return Response.ok().entity(j).build();
     }
 
@@ -72,9 +72,9 @@ public class rPath {
 	@aApplicationRolesAllowed(enRole.ADMIN)
     @Path(ApiPath.API_PATH_UPDATE)
     public Response update(final jPath j) {
-    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-    	fPath.update(requesteurRid, j);
-    	return Response.ok().entity(fPath.read(requesteurRid, j.getRid())).build();
+        Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
+        fPath.update(requesterRid, j);
+        return Response.ok().entity(fPath.read(requesterRid, j.getRid())).build();
     }
 
 
@@ -85,9 +85,9 @@ public class rPath {
 	@aApplicationRolesAllowed(enRole.ADMIN)
     @Path(ApiPath.API_PATH_CREATE)
     public Response create(final jPath j) {
-    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-    	jPath path = fPath.create(requesteurRid, j);
-    	return Response.ok().entity(fPath.read(requesteurRid, path.getRid())).build();
+        Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
+        jPath path = fPath.create(requesterRid, j);
+        return Response.ok().entity(fPath.read(requesterRid, path.getRid())).build();
     }
     
     
