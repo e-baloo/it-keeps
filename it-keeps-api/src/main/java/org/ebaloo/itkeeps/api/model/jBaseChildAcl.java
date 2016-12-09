@@ -7,13 +7,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@SuppressWarnings("ALL")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class jBaseChildAcl extends jBaseStandard {
 
 	public static final String ACLS = jAcl.ACLs;
 
 
-	@JsonIgnore
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    @JsonIgnore
 	private Optional<List<jBaseLight>> acls = Optional.empty();
 
 

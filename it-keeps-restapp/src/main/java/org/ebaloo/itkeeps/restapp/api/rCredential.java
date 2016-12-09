@@ -46,7 +46,7 @@ public class rCredential {
 	@aApplicationRolesAllowed(enRole.USER)
 	@Timed
 	@Path(ApiPath.API_CRED_GET_ID + "{id}")
-	public Response readId(@PathParam("id") Rid rid) {
+	public Response readId(@PathParam() Rid rid) {
 		Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
 		return Response.ok().entity(fCredential.read(requesteurRid, rid)).build();
 	}
@@ -70,7 +70,7 @@ public class rCredential {
 	@aApplicationRolesAllowed(enRole.USER)
 	@Timed
 	@Path(ApiPath.API_CRED_CREATE_ID + "{id}")
-	public Response createId(final jCredential j, @PathParam("id") String id) {
+	public Response createId(final jCredential j, @PathParam() String id) {
 		Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
 		Rid userRid = new Rid(id);
 		jCredential cred = fCredential.create(requesteurRid, userRid, j);

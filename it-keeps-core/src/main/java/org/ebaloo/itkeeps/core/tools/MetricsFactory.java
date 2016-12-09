@@ -37,7 +37,7 @@ public class MetricsFactory {
 	private static final String PROP_METRIC_REG_JVM_FILES = "jvm.files";
 	private static final String PROP_METRIC_REG_JVM_BUFFERS = "jvm.buffers";
 
-	public static final void enableConsole() {
+	public static void enableConsole() {
 		ConsoleReporter reporter = ConsoleReporter.forRegistry(METRIC_REGISTRY).convertRatesTo(TimeUnit.SECONDS)
 				.convertDurationsTo(TimeUnit.MILLISECONDS).build();
 		reporter.start(15, TimeUnit.SECONDS);
@@ -45,7 +45,7 @@ public class MetricsFactory {
 
 	private static Boolean bEnableJvm = false;
 
-	public static final void enableJvm() {
+	public static void enableJvm() {
 
 		if (bEnableJvm)
 			return;
@@ -63,7 +63,7 @@ public class MetricsFactory {
 		bEnableJvm = true;
 	}
 
-	public static final MetricRegistry getMetricRegistry() {
+	public static MetricRegistry getMetricRegistry() {
 		return METRIC_REGISTRY;
 	}
 

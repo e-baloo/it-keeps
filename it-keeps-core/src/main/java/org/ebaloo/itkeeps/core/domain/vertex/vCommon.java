@@ -36,8 +36,8 @@ abstract class vCommon {
 		GraphFactory.executeNoReturn(graph, cmdSQL, args);
 	}
 
-	protected static final List<String> getAllSuperClassesNames(OrientVertex ov) {
-		List<String> list = new ArrayList<String>();
+	protected static List<String> getAllSuperClassesNames(OrientVertex ov) {
+		List<String> list = new ArrayList<>();
 
 		for (OClass oc : ov.getType().getAllSuperClasses()) {
 			list.add(oc.getName());
@@ -46,7 +46,7 @@ abstract class vCommon {
 		return list;
 	}
 
-	public static final boolean isORID(String str) {
+	public static boolean isORID(String str) {
 		return str.matches("#\\d+:\\d+");
 	}
 
@@ -238,7 +238,7 @@ abstract class vCommon {
 		Object value = iValue;
 
 		if (value instanceof String) {
-			value = value == null ? "" : StringUtils.strip((String) value);
+			value = StringUtils.strip((String) value);
 		}
 		this.getOrientVertex().setProperty(key, value);
 

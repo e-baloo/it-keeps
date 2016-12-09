@@ -7,7 +7,7 @@ import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
 
 public class enAclRole extends enAbstract<enRole> {
 
-	private static final HashMap<String, enAclRole> map = new HashMap<String, enAclRole>();
+	private static final HashMap<String, enAclRole> map = new HashMap<>();
 
 	public static final enAclRole ROOT = new enAclRole(enRole.ROOT);
 	public static final enAclRole ADMIN = new enAclRole(enRole.ADMIN);

@@ -165,7 +165,7 @@ public final class vEntry extends vBaseChildAcl {
 		}
 	
 
-		private final String getData(SecurityAcl sAcl) {
+		private String getData(SecurityAcl sAcl) {
 
 			if (sAcl.isRoleRoot())
 				return StringUtils.EMPTY;
@@ -178,10 +178,8 @@ public final class vEntry extends vBaseChildAcl {
 			if (StringUtils.isEmpty(encData))
 				return StringUtils.EMPTY;
 
-			
-			String data = SecurityFactory.getEntryEncryptor().decrypt(encData);
 
-			return data;
+			return SecurityFactory.getEntryEncryptor().decrypt(encData);
 		}
 
 		private String getMediaType() {

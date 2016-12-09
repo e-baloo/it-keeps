@@ -35,15 +35,15 @@ public final class vAcl extends vBase {
 	 * CHILD OBJECTS
 	 */
 	
-	final private List<jBaseLight> getChildObjects() {
+	private List<jBaseLight> getChildObjects() {
 		return this.getEdges(vBaseChildAcl.class, DirectionType.CHILD, true, eAclRelation.class).stream()
-			.map(e -> getJBaseLight(e)).collect(Collectors.toList());
+			.map(vBase::getJBaseLight).collect(Collectors.toList());
 	}
 	
-	final private void setChildObjects(List<jBaseLight> list) {
+	private void setChildObjects(List<jBaseLight> list) {
 		
 		if(list == null) 
-			list = new ArrayList<jBaseLight>();
+			list = new ArrayList<>();
 
 		// Optimization
 		OrientBaseGraph graph = this.getGraph();
@@ -64,11 +64,11 @@ public final class vAcl extends vBase {
 	 * ACL OWNER
 	 */
 	
-	final private enAclOwner getOwner() {
+	private enAclOwner getOwner() {
 		return enAclOwner.valueOf(this.getEdge(vAclOwner.class, DirectionType.PARENT, false, eAclNoTraverse.class).getName());
 	}
 	
-	final private void setOwner(final enAclOwner aclOwner) {
+	private void setOwner(final enAclOwner aclOwner) {
 		setEdges(this.getGraph(), vAcl.class, this, vAclOwner.class, vAclOwner.get(getGraph(), vAclOwner.class, aclOwner.name()), DirectionType.PARENT, eAclNoTraverse.class, false);
 	}
 	
@@ -76,7 +76,7 @@ public final class vAcl extends vBase {
 	 * ACL DATA
 	 */
 	
-	final private List<enAclData> getAclData() {
+	private List<enAclData> getAclData() {
 		return this.getEdges(
 				vAclData.class, 
 				DirectionType.PARENT, 
@@ -85,9 +85,9 @@ public final class vAcl extends vBase {
 					.stream().map(e -> enAclData.valueOf(e.getName())).collect(Collectors.toList());
 	}
 	
-	final private void setAclData(List<enAclData> list) {
+	private void setAclData(List<enAclData> list) {
 		if(list == null)
-			list = new ArrayList<enAclData>();
+			list = new ArrayList<>();
 		
 		setEdges(
 				this.getGraph(),
@@ -105,7 +105,7 @@ public final class vAcl extends vBase {
 	 * ACL ADMIN
 	 */
 	
-	final private List<enAclAdmin> getAclAdmin() {
+	private List<enAclAdmin> getAclAdmin() {
 		return this.getEdges(
 				vAclAdmin.class, 
 				DirectionType.PARENT, 
@@ -114,9 +114,9 @@ public final class vAcl extends vBase {
 					.stream().map(e -> enAclAdmin.valueOf(e.getName())).collect(Collectors.toList());
 	}
 	
-	final private void setAclAdmin(List<enAclAdmin> list) {
+	private void setAclAdmin(List<enAclAdmin> list) {
 		if(list == null)
-			list = new ArrayList<enAclAdmin>();
+			list = new ArrayList<>();
 		
 		setEdges(
 				this.getGraph(),

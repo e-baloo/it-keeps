@@ -22,7 +22,7 @@ public final class fAclGroup {
 
 
 
-	public static final jAclGroup create(Rid requesteurRid, jAclGroup j) {
+	public static jAclGroup create(Rid requesteurRid, jAclGroup j) {
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
 		if(!sAcl.isRoleRoot())
 			throw ExceptionPermission.NOT_ROOT;
@@ -31,7 +31,7 @@ public final class fAclGroup {
 	}
 
 
-	public static final jAclGroup delete(Rid requesteurRid, Rid rid) {
+	public static jAclGroup delete(Rid requesteurRid, Rid rid) {
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
 		if(!sAcl.isRoleRoot())
 			throw ExceptionPermission.NOT_ROOT;
@@ -47,7 +47,7 @@ public final class fAclGroup {
 	}
 
 
-	public static final jAclGroup read(Rid requesteurRid, Rid rid) {
+	public static jAclGroup read(Rid requesteurRid, Rid rid) {
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
 		if(!sAcl.isRoleRoot())
 			throw ExceptionPermission.NOT_ROOT;
@@ -56,7 +56,7 @@ public final class fAclGroup {
 	}
 
 	
-	public static final jAclGroup update(Rid requesteurRid,  jAclGroup j) {
+	public static jAclGroup update(Rid requesteurRid, jAclGroup j) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
 		if(!sAcl.isRoleRoot())
@@ -73,15 +73,13 @@ public final class fAclGroup {
 	
 
 
-	public static final List<jAclGroup> readAll(Rid requesteurRid) {
+	public static List<jAclGroup> readAll(Rid requesteurRid) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
 		if(!sAcl.isRoleRoot())
 			throw ExceptionPermission.NOT_ROOT;
 
-		List<jAclGroup> list = vBase.getAllBase(null, vAclGroup.class, false).stream().map(e -> e.read()).collect(Collectors.toList());
-		
-		return list;
+		return vBase.getAllBase(null, vAclGroup.class, false).stream().map(vAclGroup::read).collect(Collectors.toList());
 	}
 }
 

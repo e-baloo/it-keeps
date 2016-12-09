@@ -13,7 +13,7 @@ public class LogFactory {
 	public static final String LOG_LEVEL = "log.level";
 	public static final String DEFAULT_LOG_LEVEL = "INFO";
 	
-	   public static final void init(Class<?> _class) {
+	   public static void init(Class<?> _class) {
 		   
 		   if(_init)
 			   return;
@@ -35,7 +35,7 @@ public class LogFactory {
 	    }
 	
 	   
-	   public static final Logger getMain() {
+	   public static Logger getMain() {
 		   if(!_init)
 			   init(null);
 		   

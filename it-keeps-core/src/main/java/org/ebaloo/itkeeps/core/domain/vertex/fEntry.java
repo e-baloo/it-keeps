@@ -31,7 +31,7 @@ import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 public final class fEntry {
 
 
-	public static final jEntry create(Rid requesteurRid, jEntry j) {
+	public static jEntry create(Rid requesteurRid, jEntry j) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
 		if(!sAcl.isRoleUser())
@@ -45,7 +45,7 @@ public final class fEntry {
 	}
 
 
-	public static final jEntry delete(Rid requesteurRid, Rid rid) {
+	public static jEntry delete(Rid requesteurRid, Rid rid) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, rid);
 		if(!sAcl.isRoleUser())
@@ -61,7 +61,7 @@ public final class fEntry {
 		return j;
 	}
 
-	public static final jEntry read(Rid requesteurRid, Rid rid) {
+	public static jEntry read(Rid requesteurRid, Rid rid) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, rid);
 		if(!sAcl.isRoleUser())
@@ -74,7 +74,7 @@ public final class fEntry {
 		return entry.read();
 	}
 
-	public static final jEncryptedEntry readEncrypted(Rid requesteurRid, Rid rid) {
+	public static jEncryptedEntry readEncrypted(Rid requesteurRid, Rid rid) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, rid);
 		if(!sAcl.isRoleUser())
@@ -87,7 +87,7 @@ public final class fEntry {
 		return entry.readEncrypted(sAcl);
 	}
 
-	public static final jEntry update(Rid requesteurRid,  jEntry j) {
+	public static jEntry update(Rid requesteurRid, jEntry j) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, j.getRid());
 		if(!sAcl.isRoleUser())
@@ -103,7 +103,7 @@ public final class fEntry {
 		return fEntry.read(requesteurRid, j.getRid());
 	}
 	
-	public static final void updateEncrypted(Rid requesteurRid, Rid rid, jEncryptedEntry j) {
+	public static void updateEncrypted(Rid requesteurRid, Rid rid, jEncryptedEntry j) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, rid);
 		if(!sAcl.isRoleUser())
@@ -118,7 +118,7 @@ public final class fEntry {
 	
 
 
-	public static final List<jBaseLight> readAll(Rid requesteurRid) {
+	public static List<jBaseLight> readAll(Rid requesteurRid) {
 		
 		long timed = System.currentTimeMillis();
 		
@@ -128,7 +128,7 @@ public final class fEntry {
 			throw ExceptionPermission.NOT_USER;
 
 		
-		List<jBaseLight> list = new ArrayList<jBaseLight>();
+		List<jBaseLight> list = new ArrayList<>();
 		if(sAcl.isRoleRoot()) {
 			list = vBase.getAllBase(null, vEntry.class, false).stream().map(e -> e.read().getJBaseLight()).collect(Collectors.toList());
 		} else {

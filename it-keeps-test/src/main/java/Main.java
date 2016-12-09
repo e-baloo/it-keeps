@@ -1,14 +1,14 @@
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.List;
 
 import org.ebaloo.itkeeps.ApiPath;
-import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.enumeration.enAuthentication;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.model.jCredential;
 import org.ebaloo.itkeeps.api.model.jEncryptedEntry;
-import org.ebaloo.itkeeps.api.model.jGroup;
 import org.ebaloo.itkeeps.api.model.jObject;
 import org.ebaloo.itkeeps.api.model.jToken;
 import org.ebaloo.itkeeps.api.model.jUser;
@@ -27,7 +27,6 @@ import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 public class Main {
@@ -88,7 +87,7 @@ public class Main {
 			tGroup.run(clientRoot);
 			tPath.run(clientRoot);
 			tUser.run(clientRoot);
-			EntryTest.run(clientRoot);
+			tEntry.run(clientRoot);
 			tTest.run(clientRoot);
 
 			/*
@@ -149,6 +148,11 @@ public class Main {
 
 			LogFactory.getMain().info("---------------------------------------------------------");
 
+			{
+				BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+				System.out.print("Enter String");
+				br.readLine();
+			}
 
 
 			LogFactory.getMain().info("END");
@@ -158,14 +162,13 @@ public class Main {
 		} finally {
 			System.exit(0);
 		}
-
 	}
 
 	private static String srvUriPort = "8080";
 
 	private static URI srvBaseUri = null;
 
-	public static void startHttpServer() {
+	private static void startHttpServer() {
 
 		ConfigFactory.init();
 
@@ -186,12 +189,7 @@ public class Main {
 		ConfigFactory.getManiLogger().info("Application Starting...");
 
 		final HttpServer server = GrizzlyHttpServerFactory.createHttpServer(srvBaseUri, new ApplicationConfig());
-		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-			@Override
-			public void run() {
-				server.shutdownNow();
-			}
-		}));
+		Runtime.getRuntime().addShutdownHook(new Thread(server::shutdownNow));
 
 		ConfigFactory.getManiLogger().info("Application Started!");
 	}

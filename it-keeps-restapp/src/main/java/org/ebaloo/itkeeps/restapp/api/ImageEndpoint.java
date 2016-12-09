@@ -43,7 +43,7 @@ public class ImageEndpoint {
 
     	
     	
-		List<jImage> list = new ArrayList<jImage>();
+		List<jImage> list = new ArrayList<>();
 		
 		for(vImage image : vImage.getAllBase(null, vImage.class, false)) {
 		    	list.add(image.read(requesteurRid, false));
@@ -60,7 +60,7 @@ public class ImageEndpoint {
     @Path(ApiPath.API_IMAGE_GET_ID + "{id}")
     @aApplicationRolesAllowed(enRole.ADMIN)
     @Timed
-    public Response getImage(@PathParam("id") String id) {
+    public Response getImage(@PathParam() String id) {
 
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
 

@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@SuppressWarnings("ALL")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class jCredential extends jBaseStandard {
 
@@ -34,7 +35,8 @@ public class jCredential extends jBaseStandard {
 	
 	public static final String PASSWORD64 = "password64";
 
-	@JsonIgnore
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    @JsonIgnore
 	private Optional<String> password64 = Optional.empty();
 
 	@JsonProperty(PASSWORD64)
@@ -57,7 +59,8 @@ public class jCredential extends jBaseStandard {
 
 	public static final String USER_NAME = "userName";
 
-	@JsonIgnore
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    @JsonIgnore
 	private Optional<String> userName = Optional.empty();
 	
 	@JsonProperty(USER_NAME)
@@ -79,7 +82,8 @@ public class jCredential extends jBaseStandard {
 
 	public static final String USER = "user";
 
-	@JsonIgnore
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    @JsonIgnore
 	private Optional<jBaseLight> user = Optional.empty();
 	
 	@JsonProperty(USER)

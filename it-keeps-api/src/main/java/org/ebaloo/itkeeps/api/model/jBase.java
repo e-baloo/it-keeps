@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@SuppressWarnings({"ALL", "OptionalUsedAsFieldOrParameterType"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class jBase extends jObject {
 
@@ -81,6 +82,7 @@ public class jBase extends jObject {
 
 	// GUID
 	
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	@JsonIgnore
 	private Optional<Rid> rid = Optional.empty();
 	
@@ -90,7 +92,7 @@ public class jBase extends jObject {
 	}
 
 	@JsonProperty(RID)
-	private final String _getRid() {
+	private String _getRid() {
 		return rid.isPresent() ?  rid.get().toString() : null;
 	}
 
@@ -100,7 +102,7 @@ public class jBase extends jObject {
 	}
 
 	@JsonProperty(RID)
-	private final void _setRid(String rid) {
+	private void _setRid(String rid) {
 		this.rid = StringUtils.isEmpty(rid) ? Optional.empty() : Optional.of(new Rid(rid));
 	}
 
@@ -112,6 +114,7 @@ public class jBase extends jObject {
 	
 	// NAME
 	
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	@JsonIgnore
 	private Optional<String> name = Optional.empty();
 	
@@ -134,6 +137,7 @@ public class jBase extends jObject {
 
 
 	
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	public static class JObject {
 		
 		public JObject() {
@@ -142,6 +146,7 @@ public class jBase extends jObject {
 		
 		// TYPE
 		
+		@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 		@JsonIgnore
 		private Optional<String> type = Optional.empty();
 		
@@ -164,6 +169,7 @@ public class jBase extends jObject {
 		// VERSION
 		
 		
+		@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 		@JsonIgnore
 		private Optional<Integer> version = Optional.empty();
 		
@@ -185,6 +191,7 @@ public class jBase extends jObject {
 		
 		// CREATION_DATE
 		
+		@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 		@JsonIgnore
 		private Optional<DateTime> creationDate = Optional.empty();
 		
@@ -202,6 +209,7 @@ public class jBase extends jObject {
 
 	// DESCRIPTION
 	
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	@JsonIgnore
 	private Optional<String> description = Optional.empty();
 	

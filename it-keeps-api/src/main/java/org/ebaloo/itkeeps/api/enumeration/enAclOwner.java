@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class enAclOwner extends enAbstract<Boolean> {
 
-	private static final HashMap<String, enAclOwner> map = new HashMap<String, enAclOwner>();
+	private static final HashMap<String, enAclOwner> map = new HashMap<>();
 
 	public static final enAclOwner OWNER_FALSE = new enAclOwner("OWNER_FALSE", Boolean.FALSE);
 	public static final enAclOwner OWNER_TRUE = new enAclOwner("OWNER_TRUE", Boolean.TRUE);

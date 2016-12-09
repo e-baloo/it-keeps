@@ -43,7 +43,7 @@ public class Base64 {
      * @param buffer Array of bytes to be encoded.
      * @return Encoded result as an array of bytes.
      */
-    public static byte[] encode(final byte[] buffer) {
+    private static byte[] encode(final byte[] buffer) {
         final int ccount = buffer.length / 3;
         final int rest = buffer.length % 3;
         final byte[] result = new byte[(ccount + (rest > 0 ? 1 : 0)) * 4];
@@ -79,7 +79,7 @@ public class Base64 {
      * @return Array containing decoded data.
      */
     @SuppressWarnings("fallthrough")
-    public static byte[] decode(final byte[] buffer) {
+    private static byte[] decode(final byte[] buffer) {
         if (buffer.length < 4 && (buffer.length % 4) != 0) {
             return new byte[0];
         }
@@ -119,7 +119,7 @@ public class Base64 {
      * @param buffer Array of bytes to be encoded.
      * @return Resulting encoded string.
      */
-    public static String encodeAsString(final byte[] buffer) {
+    private static String encodeAsString(final byte[] buffer) {
         final byte[] result = encode(buffer);
         try {
             return new String(result, "ASCII");
@@ -145,7 +145,7 @@ public class Base64 {
      * @param buffer Array of bytes to be decoded.
      * @return Resulting decoded string.
      */
-    public static String decodeAsString(final byte[] buffer) {
+    private static String decodeAsString(final byte[] buffer) {
         final byte[] result = decode(buffer);
         try {
             return new String(result, "ASCII");

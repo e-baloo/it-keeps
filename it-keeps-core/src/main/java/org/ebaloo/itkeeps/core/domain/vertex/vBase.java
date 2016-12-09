@@ -56,7 +56,7 @@ public class vBase extends vBaseAbstract {
 	@DatabaseProperty(name = jBase.CREATION_DATE, isReadOnly = true, type = OType.DATETIME)
 	public final DateTime getCreationDate() {
 		
-		Date value = (Date) this.getProperty(jBase.CREATION_DATE);
+		Date value = this.getProperty(jBase.CREATION_DATE);
 
 		if (value == null) {
 			return null;
@@ -164,7 +164,7 @@ public class vBase extends vBaseAbstract {
 	}
 	*/
 	
-	public final static <T extends vBaseAbstract> List<T> getAllBase(OrientBaseGraph graph, final Class<T> target, final boolean isInstanceof) {
+	public static <T extends vBaseAbstract> List<T> getAllBase(OrientBaseGraph graph, final Class<T> target, final boolean isInstanceof) {
 
 		StringBuilder request = new StringBuilder();
 		

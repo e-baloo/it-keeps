@@ -77,7 +77,7 @@ public class rTools {
 			root.set(m.getKey(), STATS_MAPPER.valueToTree(m.getValue()));
 		}
 		
-		List<String> tag = new ArrayList<String>();
+		List<String> tag = new ArrayList<>();
 		
 		try {
 			tag.add(InetAddress.getLocalHost().getHostName());

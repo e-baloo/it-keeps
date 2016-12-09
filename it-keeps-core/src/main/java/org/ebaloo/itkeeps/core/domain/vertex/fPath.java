@@ -30,7 +30,7 @@ import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 public final class fPath {
 
 
-	public static final jPath create(Rid requesteurRid, jPath j) {
+	public static jPath create(Rid requesteurRid, jPath j) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
 		if(!sAcl.isRoleUser())
@@ -44,7 +44,7 @@ public final class fPath {
 	}
 
 
-	public static final jPath delete(Rid requesteurRid, Rid rid) {
+	public static jPath delete(Rid requesteurRid, Rid rid) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, rid);
 		if(!sAcl.isRoleUser())
@@ -60,7 +60,7 @@ public final class fPath {
 		return j;
 	}
 
-	public static final jPath read(Rid requesteurRid, Rid rid) {
+	public static jPath read(Rid requesteurRid, Rid rid) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, rid);
 		if(!sAcl.isRoleUser())
@@ -76,7 +76,7 @@ public final class fPath {
 		return path.read();
 	}
 
-	public static final jPath update(Rid requesteurRid,  jPath j) {
+	public static jPath update(Rid requesteurRid, jPath j) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, j.getRid());
 		if(!sAcl.isRoleUser())
@@ -97,7 +97,7 @@ public final class fPath {
 	
 
 
-	public static final List<jBaseLight> readAll(Rid requesteurRid) {
+	public static List<jBaseLight> readAll(Rid requesteurRid) {
 		
 		long timed = System.currentTimeMillis();
 		
@@ -107,7 +107,7 @@ public final class fPath {
 			throw ExceptionPermission.NOT_USER;
 
 		
-		List<jBaseLight> list = new ArrayList<jBaseLight>();
+		List<jBaseLight> list = new ArrayList<>();
 		if(sAcl.isRoleRoot()) {
 			list = vBase.getAllBase(null, vPath.class, false).stream().map(e -> e.read().getJBaseLight()).collect(Collectors.toList());
 		} else {

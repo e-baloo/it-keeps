@@ -45,7 +45,7 @@ public class ItkeepsHttpClient {
 	
 	private static String apiUrl = null;
 	
-	private static final String getApiUrl() {
+	private static String getApiUrl() {
 		
 		if(apiUrl == null)
 			apiUrl = ConfigFactory.getString("client.url");
@@ -74,7 +74,7 @@ public class ItkeepsHttpClient {
 		if (httpJsonClient == null) {
 			HttpClientBuilder builder = HttpClientBuilder.create();
 
-			ArrayList<Header> headersList = new ArrayList<Header>();
+			ArrayList<Header> headersList = new ArrayList<>();
 			headersList.add(new BasicHeader("accept", "application/json"));
 			headersList.add(new BasicHeader("content-type", "application/json"));
 
@@ -130,7 +130,7 @@ public class ItkeepsHttpClient {
 		
 		url = urlFormat(url);
 
-		HttpRequestBase request = null;
+		HttpRequestBase request;
 
 		switch (command) {
 		case CREATE:
@@ -207,7 +207,7 @@ public class ItkeepsHttpClient {
 		try {
 		url = urlFormat(url);
 
-		HttpRequestBase request = null;
+		HttpRequestBase request;
 		request = new HttpGet(url);
 
 		
@@ -218,8 +218,7 @@ public class ItkeepsHttpClient {
 			throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
 		}
 
-		JsonNode node = MAPPER.readValue(response.getEntity().getContent(), JsonNode.class);
-		return node;
+			return MAPPER.readValue(response.getEntity().getContent(), JsonNode.class);
 		} catch (Exception e){
 			throw new RuntimeException(e);
 		}

@@ -33,9 +33,10 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 
 	
 	private static final String BEARE = "Bearer";
-	
+
     @Inject
-    javax.inject.Provider<UriInfo> uriInfo;
+	private
+	javax.inject.Provider<UriInfo> uriInfo;
 
 	@Context
 	private ResourceInfo resourceInfo;

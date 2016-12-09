@@ -52,13 +52,13 @@ final class vAclGroup extends vBase {
 				vAclGroup.class, 
 				DirectionType.PARENT, 
 				false, 
-				eAclNoTraverse.class).stream().map(e -> getJBaseLight(e)).collect(Collectors.toList());
+				eAclNoTraverse.class).stream().map(vBase::getJBaseLight).collect(Collectors.toList());
 	}
 	
 	final void setParents(List<jBaseLight> list) {
 
 		if(list == null) 
-			list = new ArrayList<jBaseLight>();
+			list = new ArrayList<>();
 
 		// Optimization
 		OrientBaseGraph graph = this.getGraph();
@@ -90,7 +90,7 @@ final class vAclGroup extends vBase {
 	
 	final void setAclAdmin(List<enAclAdmin> list) {
 		if(list == null)
-			list = new ArrayList<enAclAdmin>();
+			list = new ArrayList<>();
 		
 		// Optimization
 		OrientBaseGraph graph = this.getGraph();
@@ -121,7 +121,7 @@ final class vAclGroup extends vBase {
 	
 	final void setAclData(List<enAclData> list) {
 		if(list == null)
-			list = new ArrayList<enAclData>();
+			list = new ArrayList<>();
 		
 		// Optimization
 		OrientBaseGraph graph = this.getGraph();

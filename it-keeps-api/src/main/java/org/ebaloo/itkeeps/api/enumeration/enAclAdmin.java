@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class enAclAdmin extends enAbstract<String> {
 
-	private static final HashMap<String, enAclAdmin> map = new HashMap<String, enAclAdmin>();
+	private static final HashMap<String, enAclAdmin> map = new HashMap<>();
 
 
 	public static final enAclAdmin DELEGATE =new enAclAdmin("DELEGATE");

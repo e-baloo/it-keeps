@@ -57,13 +57,13 @@ final class vPath extends vBaseChildAcl {
 				false,
 				eInPath.class
 				).stream()
-				.map(e -> getJBaseLight(e)).collect(Collectors.toList());
+				.map(vBase::getJBaseLight).collect(Collectors.toList());
 	}
 	
 	private void setChilds(List<jBaseLight> list) {
 		
 		if(list == null) 
-			list = new ArrayList<jBaseLight>();
+			list = new ArrayList<>();
 
 		// Optimization
 		OrientBaseGraph graph = this.getGraph();

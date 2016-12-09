@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class enAuthentication extends enAbstract<String> {
 
-	private static final HashMap<String, enAuthentication> map = new HashMap<String, enAuthentication>();
+	private static final HashMap<String, enAuthentication> map = new HashMap<>();
 
 	public static final enAuthentication BASIC = new enAuthentication("BASIC");
 	public static final enAuthentication TOKEN = new enAuthentication("TOKEN");

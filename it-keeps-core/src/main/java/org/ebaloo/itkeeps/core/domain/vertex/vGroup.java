@@ -30,13 +30,13 @@ public final class vGroup extends vBaseChildAcl {
 	 * PARENT
 	 */
 
-	private final jBaseLight getParent() {
+	private jBaseLight getParent() {
 		vGroup child = this.getEdge(vGroup.class, DirectionType.CHILD, false, eInGroup.class);
 		return child == null ? null : getJBaseLight(child);
 	}
 
 	
-	private final void setParent(final jBaseLight group) {
+	private void setParent(final jBaseLight group) {
 		vGroup child = get(this.getGraph(), vGroup.class, group, false);
 		setEdges(this.getGraph(), vGroup.class, this, vGroup.class, child, DirectionType.CHILD, eInGroup.class, false);
 	}
@@ -46,16 +46,16 @@ public final class vGroup extends vBaseChildAcl {
 	 * CHILDS
 	 */
 	
-	private final List<jBaseLight> getChilds() {
+	private List<jBaseLight> getChilds() {
 		return this.getEdges(vGroup.class, DirectionType.PARENT, false, eInGroup.class).stream()
-				.map(e -> getJBaseLight(e)).collect(Collectors.toList());
+				.map(vBase::getJBaseLight).collect(Collectors.toList());
 
 	}
 	
-	private final void setChilds(List<jBaseLight> list) {
+	private void setChilds(List<jBaseLight> list) {
 
 		if (list == null)
-			list = new ArrayList<jBaseLight>();
+			list = new ArrayList<>();
 
 		// Optimization
 		OrientBaseGraph graph = this.getGraph();

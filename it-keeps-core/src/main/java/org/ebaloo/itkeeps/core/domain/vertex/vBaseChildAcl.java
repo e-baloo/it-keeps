@@ -27,26 +27,27 @@ public class vBaseChildAcl extends vBaseStandard {
 	}
 
 	
-	private final List<vAcl> _getAcls() {
+	private List<vAcl> _getAcls() {
 		return this.getEdges(vAcl.class, DirectionType.PARENT, false, eAclRelation.class);
 	}
 	
 	protected final List<jBaseLight> getAcls() {
 		return _getAcls().stream()
-				.map(e -> getJBaseLight(e)).collect(Collectors.toList());
+				.map(vBase::getJBaseLight).collect(Collectors.toList());
 
 	}
 	
 	protected final void setAcls(List<jBaseLight> list) {
 
-		if (list == null)
-			list = new ArrayList<jBaseLight>();
+		if (list == null) {
+			list = new ArrayList<>();
+		}
 
 		// Optimization
 		OrientBaseGraph graph = this.getGraph();
 		
-		setEdges(graph, vBaseChildAcl.class, (vBaseChildAcl) this, vAcl.class,
-				list.stream().map(e -> (vAcl) get(graph, vAcl.class, e, false)).collect(Collectors.toList()),
+		setEdges(graph, vBaseChildAcl.class, this, vAcl.class,
+				list.stream().map(e -> get(graph, vAcl.class, e, false)).collect(Collectors.toList()),
 				DirectionType.PARENT, eAclRelation.class, false);
 
 	}
@@ -56,7 +57,7 @@ public class vBaseChildAcl extends vBaseStandard {
 	}
 	
 	protected void delete() {
-		_getAcls().forEach(e -> e.delete());
+		_getAcls().forEach(vBaseAbstract::delete);
 		
 		super.delete();
 	}

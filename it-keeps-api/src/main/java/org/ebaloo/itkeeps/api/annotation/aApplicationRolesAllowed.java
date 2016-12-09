@@ -12,7 +12,7 @@ import static java.lang.annotation.RetentionPolicy.*;
 public @interface aApplicationRolesAllowed {
 	enRole value();
 	
-	public enum enRole {
+	enum enRole {
 
 		GUEST,
 		USER,

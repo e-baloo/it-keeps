@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@SuppressWarnings("ALL")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class jBaseLight extends jObject {
 
@@ -26,7 +27,8 @@ public class jBaseLight extends jObject {
 
 	// GUID
 	
-	@JsonIgnore
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    @JsonIgnore
 	private Optional<Rid> rid = Optional.empty();
 	
 	@JsonIgnore
@@ -35,7 +37,7 @@ public class jBaseLight extends jObject {
 	}
 
 	@JsonProperty(RID)
-	private final String _getRid() {
+	private String _getRid() {
 		return rid.isPresent() ?  rid.get().toString() : null;
 	}
 
@@ -45,7 +47,7 @@ public class jBaseLight extends jObject {
 	}
 
 	@JsonProperty(RID)
-	private final void _setRid(String guid) {
+	private void _setRid(String guid) {
 		this.rid = StringUtils.isEmpty(guid) ? Optional.of(null) : Optional.of(new Rid(guid));
 	}
 
@@ -57,7 +59,8 @@ public class jBaseLight extends jObject {
 	
 	// NAME
 	
-	@JsonIgnore
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    @JsonIgnore
 	private Optional<String> name = Optional.empty();
 	
 	@JsonProperty(NAME)
@@ -81,7 +84,8 @@ public class jBaseLight extends jObject {
 		
 		// TYPE
 		
-		@JsonIgnore
+		@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+        @JsonIgnore
 		private Optional<String> type = Optional.empty();
 		
 		@JsonProperty(CLASS_TYPE)
@@ -103,7 +107,8 @@ public class jBaseLight extends jObject {
 		// VERSION
 		
 		
-		@JsonIgnore
+		@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+        @JsonIgnore
 		private Optional<Integer> version = Optional.empty();
 		
 		@JsonProperty(VERSION)

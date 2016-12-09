@@ -34,12 +34,12 @@ abstract class vBaseAbstract extends vCommon {
 	private static Logger logger = LoggerFactory.getLogger(vBaseAbstract.class);
 	
 
-	protected final static <T extends vBaseAbstract> List<T> commandBaseAbstract(OrientBaseGraph graph, final Class<T> target, final String cmdSQL, Object... args) {
+	protected static <T extends vBaseAbstract> List<T> commandBaseAbstract(OrientBaseGraph graph, final Class<T> target, final String cmdSQL, Object... args) {
 		return GraphFactory.command(graph, cmdSQL, args).stream().map(e -> vBaseAbstract.getInstance(target, e)).collect(Collectors.toList());
 	}
 
 	
-	public static final <T extends vBaseAbstract> T get(OrientBaseGraph graph, final Class<T> target, final jBaseLight baselight, boolean isInstanceof)  
+	public static <T extends vBaseAbstract> T get(OrientBaseGraph graph, final Class<T> target, final jBaseLight baselight, boolean isInstanceof)
  	{
     	if(baselight == null || !baselight.isPresentRid())
     		return null;
@@ -50,7 +50,7 @@ abstract class vBaseAbstract extends vCommon {
 	
    
 
-	public static final <T extends vBaseAbstract> T get(final OrientBaseGraph graph, final Class<T> target, final Rid rid, boolean isInstanceof)  
+	public static <T extends vBaseAbstract> T get(final OrientBaseGraph graph, final Class<T> target, final Rid rid, boolean isInstanceof)
 	{
     	if(rid == null)
     		return null;
@@ -71,7 +71,7 @@ abstract class vBaseAbstract extends vCommon {
 	}
 	
 	
-	public static final <T extends vBaseAbstract> T get(final OrientBaseGraph graph, final Class<T> target, final String name, boolean isInstanceof)  
+	public static <T extends vBaseAbstract> T get(final OrientBaseGraph graph, final Class<T> target, final String name, boolean isInstanceof)
 	{
     	if(StringUtils.isEmpty(name))
     		return null;
@@ -102,7 +102,7 @@ abstract class vBaseAbstract extends vCommon {
     	StringBuilder request = new StringBuilder();
     	
     	request.append("SELECT FROM [");
-    	request.append(ridList.stream().map(e -> e.get()).collect(Collectors.joining(",")));
+    	request.append(ridList.stream().map(Rid::get).collect(Collectors.joining(",")));
     	request.append("] WHERE @class INSTANCEOF ");
     	request.append(vBase.class.getSimpleName());
 
@@ -125,29 +125,29 @@ abstract class vBaseAbstract extends vCommon {
 	 * 
 	 */
 
-	protected final static <T extends vBaseAbstract, D extends vBaseAbstract, R extends eRelation> void setEdges(OrientBaseGraph graph, final Class<T> srcTarget, T src, final Class<D> dstTarget, D dst, DirectionType direction, Class<R> relation, boolean instanceOf) {
+	protected static <T extends vBaseAbstract, D extends vBaseAbstract, R extends eRelation> void setEdges(OrientBaseGraph graph, final Class<T> srcTarget, T src, final Class<D> dstTarget, D dst, DirectionType direction, Class<R> relation, boolean instanceOf) {
 
-		List<T> listSrc = new ArrayList<T>();
+		List<T> listSrc = new ArrayList<>();
 		if(src != null)
 			listSrc.add(src);
 
-		List<D> listDst = new ArrayList<D>();
+		List<D> listDst = new ArrayList<>();
 		if(dst != null)
 			listDst.add(dst);
 
 		setEdges(graph, srcTarget, listSrc, dstTarget, listDst, direction, relation, instanceOf);
 	}
 
-	protected final static <T extends vBaseAbstract, D extends vBaseAbstract, R extends eRelation> void setEdges(OrientBaseGraph graph, final Class<T> srcTarget, T src, final Class<D> dstTarget, List<D> dst, DirectionType direction, Class<R> relation, boolean instanceOf) {
+	protected static <T extends vBaseAbstract, D extends vBaseAbstract, R extends eRelation> void setEdges(OrientBaseGraph graph, final Class<T> srcTarget, T src, final Class<D> dstTarget, List<D> dst, DirectionType direction, Class<R> relation, boolean instanceOf) {
 
-		List<T> listSrc = new ArrayList<T>();
+		List<T> listSrc = new ArrayList<>();
 		if(src != null)
 			listSrc.add(src);
 		
 		setEdges(graph, srcTarget, listSrc, dstTarget, dst, direction, relation, instanceOf);
 	}
 	
-	protected final static <T extends vBaseAbstract, D extends vBaseAbstract, R extends eRelation> void setEdges(OrientBaseGraph graph, final Class<T> srcTarget, List<T> src, final Class<D> dstTarget, List<D> dst, DirectionType direction, Class<R> relation, boolean instanceOf) {
+	protected static <T extends vBaseAbstract, D extends vBaseAbstract, R extends eRelation> void setEdges(OrientBaseGraph graph, final Class<T> srcTarget, List<T> src, final Class<D> dstTarget, List<D> dst, DirectionType direction, Class<R> relation, boolean instanceOf) {
 
 		if(direction == null) 
 			throw new RuntimeException("direction is null!");
@@ -156,21 +156,21 @@ abstract class vBaseAbstract extends vCommon {
 			throw new RuntimeException("relation is null!");
 
 		if(src == null)
-			src = new ArrayList<T>();
+			src = new ArrayList<>();
 		
 		if(dst == null)
-			dst = new ArrayList<D>();
+			dst = new ArrayList<>();
 		
 
-		List<String> ovSrc = null;
-		List<String> ovDstNew =  null;
-		List<String> ovDstBck =  null;
-		List<String> ovDstRemove = new ArrayList<String>();
-		List<String> ovDstAdd = new ArrayList<String>();
+		List<String> ovSrc;
+		List<String> ovDstNew;
+		List<String> ovDstBck;
+		List<String> ovDstRemove = new ArrayList<>();
+		List<String> ovDstAdd = new ArrayList<>();
 
 			
-			List<String> srcOrid = src.stream().map(e -> e.getORID()).collect(Collectors.toList());
-			List<String> dstOrid = dst.stream().map(e -> e.getORID()).collect(Collectors.toList());
+			List<String> srcOrid = src.stream().map(vCommon::getORID).collect(Collectors.toList());
+			List<String> dstOrid = dst.stream().map(vCommon::getORID).collect(Collectors.toList());
 
 			StringBuilder sb = new StringBuilder();
 			
@@ -275,7 +275,7 @@ abstract class vBaseAbstract extends vCommon {
 		List<String> list = this.getProperty(property);
 		
 		if(list == null)
-			list = new ArrayList<String>();
+			list = new ArrayList<>();
 		
 		return list;
 	}
@@ -283,7 +283,7 @@ abstract class vBaseAbstract extends vCommon {
 	protected final void setListString(final String property, List<String> list) {
 		
 		if(list == null)
-			list = new ArrayList<String>();
+			list = new ArrayList<>();
 
 		this.setProperty(property, list);
 	}
@@ -297,7 +297,7 @@ abstract class vBaseAbstract extends vCommon {
 		Map<String, String> map = this.getProperty(property);
 		
 		if(map == null)
-			map = new HashMap<String, String>();
+			map = new HashMap<>();
 		
 		return map;
 	}
@@ -305,7 +305,7 @@ abstract class vBaseAbstract extends vCommon {
 	protected final void setMapString(final String property, Map<String, String> map) {
 
 		if(map == null)
-			map = new HashMap<String, String>();
+			map = new HashMap<>();
 		
 		this.setProperty(property, map);
 	}
@@ -358,11 +358,11 @@ abstract class vBaseAbstract extends vCommon {
 	}
 
 	
-	public static final String eToLog(DirectionType dir) {
+	public static String eToLog(DirectionType dir) {
 		return eToLog(dir.getDirection());
 	}
 	
-	public static final String eToLog(Direction dir) {
+	public static String eToLog(Direction dir) {
 		switch(dir) {
 		
 		case IN:
@@ -396,11 +396,11 @@ abstract class vBaseAbstract extends vCommon {
 			StringBuilder request = new StringBuilder();
 			
 			request.append("SELECT FROM ");
-			request.append("(TRAVERSE " + relationship.getDirection().toString() + "('" + (relation != null ? relation.getSimpleName() : "") + "') FROM " + this.getORID() + " WHILE $depth <= 1)");
+			request.append("(TRAVERSE ").append(relationship.getDirection().toString()).append("('").append(relation != null ? relation.getSimpleName() : "").append("') FROM ").append(this.getORID()).append(" WHILE $depth <= 1)");
 			request.append(" WHERE ");
 			request.append(WhereClause.IsntanceOf(target, isInstanceof));
 			request.append(" AND ");
-			request.append("(@rid <> " + this.getORID() + ")");
+			request.append("(@rid <> ").append(this.getORID()).append(")");
 			
 			
 			
@@ -523,7 +523,7 @@ abstract class vBaseAbstract extends vCommon {
 	 */
 	
 	
-	public final static <T extends vBaseAbstract> T getInstance(final Class<T> target, final OrientVertex ov){
+	public static <T extends vBaseAbstract> T getInstance(final Class<T> target, final OrientVertex ov){
 		
 		try {
 			
@@ -549,7 +549,7 @@ abstract class vBaseAbstract extends vCommon {
 	
 	public static class WhereClause {
 		
-		public final static <T extends vBaseAbstract> String IsntanceOf(final Class<T> target, final boolean instanceOf) {
+		public static <T extends vBaseAbstract> String IsntanceOf(final Class<T> target, final boolean instanceOf) {
 			return String.format(" (@class %s '%s') ", instanceOf ? "INSTANCEOF" : "=", target.getSimpleName());
 		}
 		

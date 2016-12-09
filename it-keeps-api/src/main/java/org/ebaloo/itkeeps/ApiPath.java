@@ -19,7 +19,12 @@ public final class ApiPath {
 	private static final String USER = "user/";
 	private static final String CRED = "cred/";
 	private static final String API = "api/";
-	
+	private static final String GROUP = "group/";
+	private static final String ENUM = "enum/";
+	private static final String ACL = "acl/";
+	private static final String AUTH = "auth/";
+
+
 	private static final String API_USER = API + USER;
 
 	
@@ -31,19 +36,19 @@ public final class ApiPath {
 	public  static final String API_USER_GET_CRED_ID = API_USER + CRED + ID;
 
 
-	private static final String API_GROUP = API + "group/";
+	private static final String API_GROUP = API + GROUP;
 	public  static final String API_GROUP_GET_ALL = API_GROUP + ALL;
 	public  static final String API_GROUP_GET_ID = API_GROUP + ID;
 	public  static final String API_GROUP_UPDATE = API_GROUP + UPDATE;
 	public  static final String API_GROUP_CREATE = API_GROUP + CREATE;
 	public  static final String API_GROUP_DELETE = API_GROUP + DELETE;
 
-	private static final String API_ENUM = API + "enum/";
-	public  static final String API_ENUM_ACL = API_ENUM + "acl/";
-	public  static final String API_ENUM_AUTH = API_ENUM + "auth/";
+	private static final String API_ENUM = API + ENUM;
+	public  static final String API_ENUM_ACL = API_ENUM + ACL;
+	public  static final String API_ENUM_AUTH = API_ENUM + AUTH;
 	
 	
-	private static final String API_ACL = API + "acl/";
+	private static final String API_ACL = API + ACL;
 	public  static final String API_ACL_GET_ALL = API_ACL + ALL;
 	public  static final String API_ACL_GET_ID = API_ACL + ID;
 	public  static final String API_ACL_UPDATE = API_ACL + UPDATE;
@@ -77,7 +82,7 @@ public final class ApiPath {
 	public  static final String API_ENTRY_ENC_UPDATE = API_ENTRY_ENC;
 
 
-	private static final String API_IMAGE = API + "image/";
+	private static final String API_IMAGE = API + IMAGE;
 	public  static final String API_IMAGE_GET_ALL = API_IMAGE + ALL;
 	public  static final String API_IMAGE_GET_ID = API_IMAGE + ID;
 	public  static final String API_IMAGE_UPDATE = API_IMAGE + UPDATE;
@@ -91,7 +96,7 @@ public final class ApiPath {
 	public  static final String API_CRED_CREATE = API_CRED + CREATE;
 	public  static final String API_CRED_CREATE_ID = API_CRED + CREATE + ID;
 	
-	private static final String AUTH = "auth/";
+
 	public static final String AUTH_LOGIN = AUTH + "login/";
 	public static final String AUTH_RENEW = AUTH + "renew/";
 	public static final String AUTH_CHECK = AUTH + "check/";

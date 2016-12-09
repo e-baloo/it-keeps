@@ -5,6 +5,7 @@ import java.util.Optional;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@SuppressWarnings("ALL")
 public class jImage extends jBase {
 	
 	public static final String BASE64 = "base64";
@@ -17,7 +18,8 @@ public class jImage extends jBase {
 
 	// IAMGE TYPE
 	
-	@JsonIgnore
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    @JsonIgnore
 	private Optional<String> imageType = Optional.empty();
 	
 	@JsonProperty(IMAGE_TYPE)
@@ -38,7 +40,8 @@ public class jImage extends jBase {
 	
 	// BASE64
 	
-	@JsonIgnore
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    @JsonIgnore
 	private Optional<String> base64 = Optional.empty();
 	
 	@JsonProperty(BASE64)

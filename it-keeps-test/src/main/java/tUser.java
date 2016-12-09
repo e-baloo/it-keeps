@@ -19,7 +19,7 @@ public class tUser {
 	public static jCredential credAdmin1 = null; 
 	
 	
-	public static final void reload(ItkeepsHttpClient client) {
+	public static void reload(ItkeepsHttpClient client) {
 
 		gest1 = client.callJsonRead(ApiPath.API_USER_GET_ID + ParameterEncoder.encoding(gest1.getRid()), jUser.class);
 		user1 = client.callJsonRead(ApiPath.API_USER_GET_ID + ParameterEncoder.encoding(user1.getRid()), jUser.class);
@@ -28,7 +28,7 @@ public class tUser {
 		
 	}	
 	
-	public static final void run(ItkeepsHttpClient client) {
+	public static void run(ItkeepsHttpClient client) {
 		
 		/* Set Name */
 		

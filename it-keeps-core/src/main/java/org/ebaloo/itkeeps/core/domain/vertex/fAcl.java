@@ -22,7 +22,7 @@ import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.SecurityAcl;
 public final class fAcl {
 
 
-	public static final jAcl create(Rid requesteurRid, jAcl j) {
+	public static jAcl create(Rid requesteurRid, jAcl j) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
 		
@@ -37,7 +37,7 @@ public final class fAcl {
 	}
 
 
-	public static final jAcl delete(Rid requesteurRid, Rid rid) {
+	public static jAcl delete(Rid requesteurRid, Rid rid) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
 		if(!sAcl.isRoleAdmin())
@@ -54,7 +54,7 @@ public final class fAcl {
 		return j;
 	}
 
-	public static final jAcl read(Rid requesteurRid, Rid rid) {
+	public static jAcl read(Rid requesteurRid, Rid rid) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
 		if(!sAcl.isRoleAdmin())
@@ -70,7 +70,7 @@ public final class fAcl {
 		return acl.read();
 	}
 	
-	public static final jAcl update(Rid requesteurRid,  jAcl j) {
+	public static jAcl update(Rid requesteurRid, jAcl j) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
 		if(!sAcl.isRoleAdmin())
@@ -89,15 +89,14 @@ public final class fAcl {
 	
 
 
-	public static final List<jBaseLight> readAll(Rid requesteurRid) {
+	public static List<jBaseLight> readAll(Rid requesteurRid) {
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
 		if(!sAcl.isRoleAdmin())
 			throw ExceptionPermission.NOT_ADMIN;
 		if(!sAcl.isAdminAclRead())
 			throw ExceptionPermission.DENY;
 
-		List<jBaseLight> list = vBase.getAllBase(null, vAcl.class, false).stream().map(e -> e.read().getJBaseLight()).collect(Collectors.toList());
-		return list;
+		return vBase.getAllBase(null, vAcl.class, false).stream().map(e -> e.read().getJBaseLight()).collect(Collectors.toList());
 	}
 }
 

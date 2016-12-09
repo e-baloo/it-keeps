@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@SuppressWarnings("ALL")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class jGroup extends jBaseChildAcl {
 
@@ -22,7 +23,8 @@ public class jGroup extends jBaseChildAcl {
 	
 	// PARENT_GROUP
 	
-	@JsonIgnore
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    @JsonIgnore
 	private Optional<jBaseLight> parentGroup = Optional.empty();
 	
 	@JsonProperty(PARENT_GROUP)
@@ -43,7 +45,8 @@ public class jGroup extends jBaseChildAcl {
 	
 	// CHILDS_GROUPS
 	
-	@JsonIgnore
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    @JsonIgnore
 	private Optional<List<jBaseLight>> childGroups = Optional.empty();
 	
 	@JsonProperty(CHILDS_GROUPS)

@@ -120,7 +120,7 @@ public abstract class vBaseStandard extends vBase {
 	 */
 
 
-	protected static final String stripOtherName(String value) {
+	protected static String stripOtherName(String value) {
 		
 		value = StringUtils.strip(value);
 		value = value.toLowerCase();
@@ -141,9 +141,9 @@ public abstract class vBaseStandard extends vBase {
 	protected final void setOtherName(List<String> list) {
 		
 		if(list == null)
-			list = new ArrayList<String>();
+			list = new ArrayList<>();
 		
-		list = list.stream().map(e -> stripOtherName(e)).collect(Collectors.toList());
+		list = list.stream().map(vBaseStandard::stripOtherName).collect(Collectors.toList());
 		
 		this.setListString(jBaseStandard.OTHER_NAME, list);
 	}
@@ -151,11 +151,11 @@ public abstract class vBaseStandard extends vBase {
 	
 	
 	
-	protected static final <T extends vBaseAbstract> T getByOtherName(OrientBaseGraph graph, Class<T> target, final String iValue) {
+	protected static <T extends vBaseAbstract> T getByOtherName(OrientBaseGraph graph, Class<T> target, final String iValue) {
 		return getByOtherName(graph, target, iValue, false);
 	}
 
-	protected static final <T extends vBaseAbstract> T getByOtherName(OrientBaseGraph graph, Class<T> target, final String iValue, final boolean isInstanceOf) {
+	protected static <T extends vBaseAbstract> T getByOtherName(OrientBaseGraph graph, Class<T> target, final String iValue, final boolean isInstanceOf) {
 		
 		if(StringUtils.isBlank(iValue)) {
 			return null;
@@ -188,7 +188,7 @@ public abstract class vBaseStandard extends vBase {
 			return null;
 		}
 
-		return (T) list.get(0);
+		return list.get(0);
 
 	}
 	

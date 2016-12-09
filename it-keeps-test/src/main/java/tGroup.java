@@ -15,7 +15,7 @@ public class tGroup {
 
 	
 	
-	public static final void reload(ItkeepsHttpClient client) {
+	public static void reload(ItkeepsHttpClient client) {
 		
 		jg_r = client.callJsonRead(ApiPath.API_GROUP_GET_ID + ParameterEncoder.encoding(jg_r.getRid()), jGroup.class);
 		jg_n1 = client.callJsonRead(ApiPath.API_GROUP_GET_ID + ParameterEncoder.encoding(jg_n1.getRid()), jGroup.class);
@@ -27,7 +27,7 @@ public class tGroup {
 		
 	}	
 	
-	public static final void run(ItkeepsHttpClient client) {
+	public static void run(ItkeepsHttpClient client) {
 		
 		/* Set Name */
 		

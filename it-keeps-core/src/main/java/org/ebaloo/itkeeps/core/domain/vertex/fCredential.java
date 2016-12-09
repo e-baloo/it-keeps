@@ -28,13 +28,13 @@ public final class fCredential {
 	// API
 
 	
-	public static final List<jBaseLight> readAll(Rid requesteurRid) {
+	public static List<jBaseLight> readAll(Rid requesteurRid) {
 		jUser j = fUser.read(requesteurRid, requesteurRid);
 		return j.getCredentials();
 	}
 
 	
-	public static final jCredential read(Rid requesteurRid, Rid credRid) {
+	public static jCredential read(Rid requesteurRid, Rid credRid) {
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, null);
 		return isUserCerd(requesteurRid, credRid) || sAcl.isRoleRoot() ? vCredential.get(null, vCredential.class, credRid, false).read() : null;
 	}
@@ -42,11 +42,15 @@ public final class fCredential {
 	
 	private static boolean isUserCerd(Rid requesteurRid, Rid credRid) {
 		jUser j = fUser.read(requesteurRid, requesteurRid);
-		return j.getCredentials().stream().map(e -> e.getRid()).collect(Collectors.toList()).contains(credRid);
+
+		if(j.getCredentials() == null)
+			return false;
+
+		return j.getCredentials().stream().map(jBaseLight::getRid).collect(Collectors.toList()).contains(credRid);
 	}
 	
 	
-	public static final jCredential delete(Rid requesteurRid, Rid credRid) {
+	public static jCredential delete(Rid requesteurRid, Rid credRid) {
 
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, null);
 
@@ -68,7 +72,7 @@ public final class fCredential {
 		return jc;
 	}
 
-	public static final jCredential create(Rid requesteurRid, jCredential j) {
+	public static jCredential create(Rid requesteurRid, jCredential j) {
 
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, null);
 
@@ -83,7 +87,7 @@ public final class fCredential {
 	}
 	
 	
-	public static final jCredential create(Rid requesteurRid, Rid userRid , jCredential j) {
+	public static jCredential create(Rid requesteurRid, Rid userRid , jCredential j) {
 
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, null);
 
@@ -99,7 +103,7 @@ public final class fCredential {
 	
 	
 
-	public static final void update(Rid requesteurRid, jCredential j) {
+	public static void update(Rid requesteurRid, jCredential j) {
 		fUser.read(requesteurRid, requesteurRid);
 		vCredential cred = vCredential.get(null, vCredential.class, j.getRid(), false);
 		cred.update(j);

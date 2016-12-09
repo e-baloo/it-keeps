@@ -51,7 +51,7 @@ public class rEntry {
     @Path(ApiPath.API_ENTRY_GET_ID + "{id}")
 	@aApplicationRolesAllowed(enRole.USER)
     @Timed
-    public Response readId(@PathParam("id") Rid rid) {
+    public Response readId(@PathParam() Rid rid) {
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
     	jEntry entry = fEntry.read(requesteurRid, rid);
     	return Response.ok().entity(entry).build();
@@ -62,7 +62,7 @@ public class rEntry {
     @Path(ApiPath.API_ENTRY_ENC_GET + "{id}")
 	@aApplicationRolesAllowed(enRole.USER)
     @Timed
-    public Response readEncId(@PathParam("id") Rid rid) {
+    public Response readEncId(@PathParam() Rid rid) {
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
     	jEncryptedEntry encEntry = fEntry.readEncrypted(requesteurRid, rid);
     	return Response.ok().entity(encEntry).build();
@@ -86,7 +86,7 @@ public class rEntry {
 	@aApplicationRolesAllowed(enRole.USER)
     @Timed
     @Path(ApiPath.API_ENTRY_ENC_UPDATE)
-    public Response updateEnc(@PathParam("id") Rid rid, final jEncryptedEntry j) {
+    public Response updateEnc(@PathParam() Rid rid, final jEncryptedEntry j) {
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
     	fEntry.updateEncrypted(requesteurRid, rid, j);
     	return Response.ok().entity(fEntry.readEncrypted(requesteurRid, rid)).build();

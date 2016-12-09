@@ -29,7 +29,7 @@ public class ApplicationConfig extends ResourceConfig implements InterfaceApplic
 
 	private static final Logger logger = LoggerFactory.getLogger(ApplicationConfig.class.getName());
 
-	private Set<Class<?>> classes = new HashSet<Class<?>>();
+	private Set<Class<?>> classes = new HashSet<>();
 
 	public void classesAdd(Class<?> c) {
 		classes.add(c);

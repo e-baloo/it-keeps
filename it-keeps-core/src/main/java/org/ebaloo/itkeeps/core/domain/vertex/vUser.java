@@ -40,7 +40,7 @@ public final class vUser extends vBaseChildAcl {
 
 	}
 
-	vUser(jUser j, boolean force) {
+	vUser(final jUser j, boolean force) {
 		super(j);
 
 		try {
@@ -53,19 +53,19 @@ public final class vUser extends vBaseChildAcl {
 
 	}
 
-	private final List<enAclAdmin> getAclAdmin() {
+	private List<enAclAdmin> getAclAdmin() {
 		return this.getEdges(vAclAdmin.class, DirectionType.PARENT, true, eAclNoTraverse.class).stream()
 				.map(e -> enAclAdmin.valueOf(e.getName())).collect(Collectors.toList());
 	}
 
-	private final List<jBaseLight> getAclGroups() {
+	private List<jBaseLight> getAclGroups() {
 		return this.getEdges(vAclGroup.class, DirectionType.PARENT, false, eAclNoTraverse.class).stream()
-				.map(e -> getJBaseLight(e)).collect(Collectors.toList());
+				.map(vBase::getJBaseLight).collect(Collectors.toList());
 	}
 
-	private final List<jBaseLight> getCredentials() {
+	private List<jBaseLight> getCredentials() {
 		return this.getEdges(vCredential.class, DirectionType.CHILD, false, eCredentialToUser.class).stream()
-				.map(e -> getJBaseLight(e)).collect(Collectors.toList());
+				.map(vBase::getJBaseLight).collect(Collectors.toList());
 	}
 
 	/*
@@ -75,9 +75,9 @@ public final class vUser extends vBaseChildAcl {
 	}
 	*/
 	
-	private final List<jBaseLight> getGroups() {
+	private List<jBaseLight> getGroups() {
 		return this.getEdges(vGroup.class, DirectionType.PARENT, false, eInGroup.class).stream()
-				.map(e -> getJBaseLight(e)).collect(Collectors.toList());
+				.map(vBase::getJBaseLight).collect(Collectors.toList());
 
 	}
 
@@ -105,9 +105,9 @@ public final class vUser extends vBaseChildAcl {
 		return j;
 	}
 
-	private final void setAclAdmin(List<enAclAdmin> list) {
+	private void setAclAdmin(List<enAclAdmin> list) {
 		if (list == null)
-			list = new ArrayList<enAclAdmin>();
+			list = new ArrayList<>();
 
 		setEdges(this.getGraph(),
 				vUser.class, this, vAclAdmin.class, list.stream()
@@ -115,10 +115,10 @@ public final class vUser extends vBaseChildAcl {
 				DirectionType.PARENT, eAclNoTraverse.class, false);
 	}
 
-	private final void setAclGroups(List<jBaseLight> list) {
+	private void setAclGroups(List<jBaseLight> list) {
 
 		if (list == null)
-			list = new ArrayList<jBaseLight>();
+			list = new ArrayList<>();
 
 		// Optimization
 		OrientBaseGraph graph = this.getGraph();
@@ -143,10 +143,10 @@ public final class vUser extends vBaseChildAcl {
 	}
 	*/
 
-	private final void setGroups(List<jBaseLight> list) {
+	private void setGroups(List<jBaseLight> list) {
 
 		if (list == null)
-			list = new ArrayList<jBaseLight>();
+			list = new ArrayList<>();
 
 		// Optimization
 		OrientBaseGraph graph = this.getGraph();

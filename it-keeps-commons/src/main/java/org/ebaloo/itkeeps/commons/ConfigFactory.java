@@ -12,7 +12,7 @@ public final class ConfigFactory {
 	private static Logger mainLogger = null;
 
 	
-	public static final Logger getManiLogger() {
+	public static Logger getManiLogger() {
 		
 		if(mainLogger == null) {
 
@@ -34,7 +34,7 @@ public final class ConfigFactory {
     private static Config singleton = null;
     
     
-    public static synchronized final Config getConfig() {
+    private static synchronized Config getConfig() {
 
         if (singleton == null) {
             singleton = getConfigFactory();
@@ -43,7 +43,7 @@ public final class ConfigFactory {
     	return singleton;
     }
     
-    private static final Config getConfigFactory() {
+    private static Config getConfigFactory() {
     	return com.typesafe.config.ConfigFactory.load();
     }
     
@@ -82,7 +82,7 @@ public final class ConfigFactory {
 		
 	}
 
-	public static int getInt(String path) {
+	private static int getInt(String path) {
 		return getConfig().getInt(path);
 	}
 

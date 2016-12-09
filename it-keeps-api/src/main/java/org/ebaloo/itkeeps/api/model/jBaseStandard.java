@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@SuppressWarnings("ALL")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class jBaseStandard extends jBase{
 
@@ -25,7 +26,8 @@ public class jBaseStandard extends jBase{
 	
 	// ICON
 	
-	@JsonIgnore
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    @JsonIgnore
 	private Optional<String> icon = Optional.empty();
 	
 	@JsonProperty(ICON)
@@ -46,7 +48,8 @@ public class jBaseStandard extends jBase{
 
 	// OTHER NAME
 	
-	@JsonIgnore
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    @JsonIgnore
 	private Optional<List<String>> otherName = Optional.empty();
 	
 	@JsonProperty(OTHER_NAME)
@@ -67,7 +70,8 @@ public class jBaseStandard extends jBase{
 	
 	// TYPE
 	
-	@JsonIgnore
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    @JsonIgnore
 	private Optional<Map<String, String>> externalRef = Optional.empty();
 	
 	@JsonProperty(EXTERNAL_REF)

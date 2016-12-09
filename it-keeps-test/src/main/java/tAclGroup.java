@@ -26,7 +26,7 @@ public class tAclGroup {
 	public static jAclGroup aclGrp_TestDelete = new jAclGroup();
 	
 	
-	public static final void run(ItkeepsHttpClient client) {
+	public static void run(ItkeepsHttpClient client) {
 		
 		/* Set Name */
 		aclGrp_dataPathCreate.setName("aclGrp Data Path CREATE");

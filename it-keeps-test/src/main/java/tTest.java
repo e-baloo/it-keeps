@@ -12,13 +12,13 @@ public class tTest {
 
 	
 	
-	public static final void reload(ItkeepsHttpClient client) {
+	public static void reload(ItkeepsHttpClient client) {
 		
 		acl1 = client.callJsonRead(ApiPath.API_ACL_GET_ID + ParameterEncoder.encoding(acl1.getRid()), jAcl.class);
 		
 	}	
 	
-	public static final void run(ItkeepsHttpClient client) {
+	public static void run(ItkeepsHttpClient client) {
 		
 		/* Set Name */
 		

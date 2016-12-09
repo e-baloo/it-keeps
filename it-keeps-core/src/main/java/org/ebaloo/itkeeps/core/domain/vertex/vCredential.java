@@ -77,7 +77,7 @@ public final class vCredential extends vBase {
 	}
 
 	enAuthentication getAuthenticationType() {
-		return (enAuthentication) enAuthentication.valueOf(this.getProperty(jCredential.AUTHENTICATION_TYPE));
+		return enAuthentication.valueOf(this.getProperty(jCredential.AUTHENTICATION_TYPE));
 	}
 
 	/*

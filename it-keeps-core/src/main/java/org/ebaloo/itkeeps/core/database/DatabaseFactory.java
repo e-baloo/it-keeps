@@ -113,11 +113,11 @@ public class DatabaseFactory {
 
 		private static void initVertex(OrientBaseGraph graph) {
 
-			Map<String, Class<?>> map = new TreeMap<String, Class<?>>();
+			Map<String, Class<?>> map = new TreeMap<>();
 
 			for (Class<?> clasz : ReflectionsFactory.getReflections(vBase.class).getTypesAnnotatedWith(DatabaseVertrex.class)) {
 				if (clasz != null && clasz.getSuperclass() != null) {
-					map.put(getAllSuperclass(clasz), (Class<?>) clasz);
+					map.put(getAllSuperclass(clasz), clasz);
 				}
 			}
 
@@ -128,14 +128,14 @@ public class DatabaseFactory {
 
 		public static void initEdge(OrientBaseGraph graph) {
 
-			Map<String, Class<?>> map = new TreeMap<String, Class<?>>();
+			Map<String, Class<?>> map = new TreeMap<>();
 
 			for (Class<?> clasz : ReflectionsFactory.getReflections(eRelation.class).getTypesAnnotatedWith(DatabaseEdge.class)) {
 				
 				logger.info(clasz.getName());
 				
 				if (clasz.getSuperclass() != null) {
-					map.put(getAllSuperclass(clasz), (Class<?>) clasz);
+					map.put(getAllSuperclass(clasz), clasz);
 				}
 			}
 
@@ -159,18 +159,11 @@ public class DatabaseFactory {
 
 				if (oClass == null) {
 					logger.warn("Add Edge @" + clasz.getSimpleName() + " child of @" + oClassParent);
-					oClass = graph.createEdgeType(clasz.getSimpleName(), oClassParent.getName());
+					graph.createEdgeType(clasz.getSimpleName(), oClassParent.getName());
 				} else {
 					if (logger.isDebugEnabled())
 						logger.debug("Edge @" + clasz.getSimpleName() + " exist, child of @" + oClassParent);
 				}
-
-				/*
-				if (oClass.isAbstract() != classAnotation.isAbstract()) {
-					oClass.setAbstract(classAnotation.isAbstract());
-					logger.warn("Update Edge @" + oClass + " set isAbstract at " + classAnotation.isAbstract());
-				}
-				*/
 
 			}
 
@@ -206,72 +199,11 @@ public class DatabaseFactory {
 
 				if (oClass == null) {
 					logger.warn("Add Vertrex @" + className + " child of @" + oParentClass);
-					oClass = graph.createVertexType(className, oParentClass.getName());
+					graph.createVertexType(className, oParentClass.getName());
 				} else {
 					if (logger.isDebugEnabled())
 						logger.debug("Vertrex @" + className + " exist, child of @" + oParentClass);
 				}
-
-				/*
-				if (oClass.isAbstract() != classAnotation.isAbstract()) {
-					oClass.setAbstract(classAnotation.isAbstract());
-					logger.warn("Update Vertrex @" + oClass + " set isAbstract at " + classAnotation.isAbstract());
-				}
-				*/	
-
-				//ArrayList<DatabaseProperty> listDatabaseProperty = new ArrayList<DatabaseProperty>();
-
-				/*
-				for (Field field : clasz.getFields()) {
-					if (field.isAnnotationPresent(DatabaseProperty.class)) {
-						listDatabaseProperty.add(field.getAnnotation(DatabaseProperty.class));
-					}
-				}
-				*/
-
-				/*
-				for (Method method : clasz.getMethods()) {
-					if (method.isAnnotationPresent(DatabaseProperty.class)) {
-						listDatabaseProperty.add(method.getAnnotation(DatabaseProperty.class));
-					}
-				}
-				*/
-
-				/*
-				for (DatabaseProperty propertyAnnotation : listDatabaseProperty) {
-
-					OProperty oProperty = oClass.getProperty(propertyAnnotation.name());
-					
-					mapSchemaProperty.put(propertyAnnotation.name(), propertyAnnotation);
-					
-
-					if (oProperty == null) {
-						oProperty = oClass.createProperty(propertyAnnotation.name(), propertyAnnotation.type());
-						logger.warn("Add property Vertrex @" + oClass + "." + propertyAnnotation.name());
-					} else {
-						if (logger.isDebugEnabled())
-							logger.debug("Proprety @" + oClass + "." + propertyAnnotation.name() + " exist.");
-
-						if (oProperty.getType() != propertyAnnotation.type()) {
-							logger.warn("Change type for Vertrex @" + oClass + "." + propertyAnnotation.name()
-									+ " from " + oProperty.getType() + "to " + propertyAnnotation.type());
-							oProperty.setType(propertyAnnotation.type());
-						}
-					}
-
-					if (oProperty.isNotNull() != propertyAnnotation.isNotNull()) {
-						oProperty.setNotNull(propertyAnnotation.isNotNull());
-						logger.warn("Set defnotNull for Vertrex @" + oClass + "." + propertyAnnotation.name() + " to "
-								+ propertyAnnotation.isNotNull());
-					}
-
-					if (oProperty.isReadonly() != propertyAnnotation.isReadOnly()) {
-						oProperty.setReadonly(propertyAnnotation.isReadOnly());
-						logger.warn("Set readOnly for Vertrex @" + oClass + "." + propertyAnnotation.name() + " to "
-								+ propertyAnnotation.isReadOnly());
-					}
-
-				}*/
 
 			}
 		}

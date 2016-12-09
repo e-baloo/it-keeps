@@ -133,8 +133,8 @@ public final class GraphFactory {
 			
 			
 			// TODO REPORT TO TAKE-IT
-			List<OrientVertex> list = new ArrayList<OrientVertex>();
-			iterable.forEach(e -> list.add(e));
+			List<OrientVertex> list = new ArrayList<>();
+			iterable.forEach(list::add);
 			
 			long elapsedSeconds = (System.currentTimeMillis() - tStart);
 
@@ -154,15 +154,7 @@ public final class GraphFactory {
 				}
 				 */
 				message.append(String.format(" [%s]", cmdSQL));
-				if(args != null) {
-					message.append(" {");
-					for(Object arg : args) {
-						message.append(arg.toString());
-						message.append(", ");
-					}
-					message.delete(message.length() - 2, message.length());
-					message.append("}");
-				}
+				addMessageArgs(message,args);
 				logger.debug(message.toString());
 			}
 			
@@ -174,7 +166,17 @@ public final class GraphFactory {
 		
 	}
     
-	
+	private static void addMessageArgs(final StringBuilder message, final Object... args) {
+		if(args != null) {
+			message.append(" {");
+			for(Object arg : args) {
+				message.append(arg.toString());
+				message.append(", ");
+			}
+			message.delete(message.length() - 2, message.length());
+			message.append("}");
+		}
+	}
 	
 	
 	
@@ -189,7 +191,7 @@ public final class GraphFactory {
 			if(graph == null)
 				graph = GraphFactory.getOrientBaseGraph();
 			
-			Integer value = (Integer) graph.command(new OCommandSQL(cmdSQL)).execute(args);
+			Integer value = graph.command(new OCommandSQL(cmdSQL)).execute(args);
 	
 			graph.commit();
 			
@@ -208,15 +210,7 @@ public final class GraphFactory {
 				}
 				 */
 				message.append(String.format(" [%s]", cmdSQL));
-				if(args != null) {
-					message.append(" {");
-					for(Object arg : args) {
-						message.append(arg.toString());
-						message.append(", ");
-					}
-					message.delete(message.length() - 2, message.length());
-					message.append("}");
-				}
+				addMessageArgs(message,args);
 				logger.debug(message.toString());
 			}
 		
@@ -258,15 +252,7 @@ public final class GraphFactory {
 				}
 				 */
 				message.append(String.format(" [%s]", cmdSQL));
-				if(args != null) {
-					message.append(" {");
-					for(Object arg : args) {
-						message.append(arg.toString());
-						message.append(", ");
-					}
-					message.delete(message.length() - 2, message.length());
-					message.append("}");
-				}
+				addMessageArgs(message,args);
 				logger.debug(message.toString());
 			}
 		} finally {

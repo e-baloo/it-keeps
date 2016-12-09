@@ -23,7 +23,7 @@ public enum DirectionType {
 	
 	private final Direction direction;
 	
-	private DirectionType(Direction direction)
+	DirectionType(Direction direction)
 	{
 		this.direction = direction;
 	}

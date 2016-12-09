@@ -28,7 +28,7 @@ public final class JwtFactory {
 	public static final String CONF_TOKEN_KEY = "token.key";
 	public static final String CONF_TOKEN_TIMEOUT = "token.timeout";
 	
-	private static final String getKey() {
+	private static String getKey() {
 
 		if(__key == null) {
 		
@@ -93,7 +93,7 @@ public final class JwtFactory {
 		final long iat = System.currentTimeMillis() / 1000L; // issued at claim 
 		final long exp = iat + 60L * getTimeout(); // expires claim. In this case the token expires in 60 seconds
 
-		final HashMap<String, Object> claims = new HashMap<String, Object>();
+		final HashMap<String, Object> claims = new HashMap<>();
 		claims.put("exp", exp);
 		claims.put("iat", iat);
 		claims.put("iss", "IT-Keeps");		
@@ -109,7 +109,7 @@ public final class JwtFactory {
 		return signer.sign(claims);
 	}
 
-	public static final Map<String, Object> isValid(final String token) {
+	public static Map<String, Object> isValid(final String token) {
 
 		if (logger.isTraceEnabled())
 			logger.trace("isValid()");
@@ -126,7 +126,7 @@ public final class JwtFactory {
 		}
 	}
 
-	public static final String getUserName(Map<String, Object> claims) {
+	public static String getUserName(Map<String, Object> claims) {
 
 		if (logger.isTraceEnabled())
 			logger.trace("getJwtString()");
@@ -162,7 +162,7 @@ public final class JwtFactory {
 	}
 	*/
 
-	public static final String getRid(Map<String, Object> claims) {
+	public static String getRid(Map<String, Object> claims) {
 
 		if (logger.isTraceEnabled())
 			logger.trace("getRid()");

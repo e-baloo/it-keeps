@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@SuppressWarnings("ALL")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class jPath extends jBaseChildAcl {
 
@@ -22,7 +23,8 @@ public class jPath extends jBaseChildAcl {
 	
 	// PARENT_GROUP
 	
-	@JsonIgnore
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    @JsonIgnore
 	private Optional<jBaseLight> parent = Optional.empty();
 	
 	@JsonProperty(PARENT_PATH)
@@ -43,7 +45,8 @@ public class jPath extends jBaseChildAcl {
 	
 	// CHILD_GROUPS
 	
-	@JsonIgnore
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    @JsonIgnore
 	private Optional<List<jBaseLight>> childs = Optional.empty();
 	
 	@JsonProperty(CHILDS_PATHS)

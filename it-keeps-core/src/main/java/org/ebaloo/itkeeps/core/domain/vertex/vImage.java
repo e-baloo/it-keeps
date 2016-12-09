@@ -127,7 +127,7 @@ public final class vImage extends vBaseSysteme {
 	
 	public synchronized static vImage getImage(String id) {
 
-		vImage image = null;
+		vImage image;
 		
 		if(!Rid.is(id) && getCache().isKeyInCache(id)) {
 			id = (String) getCache().get(id).getObjectValue();
@@ -178,12 +178,7 @@ public final class vImage extends vBaseSysteme {
 			
 			
 			MetricsFactory.getMetricRegistry().register(MetricRegistry.name(vImage.class.getSimpleName(), "images", "cache", "count"),
-                    new Gauge<Integer>() {
-                        @Override
-                        public Integer getValue() {
-                            return cache.getSize();
-                        }
-                    });
+					(Gauge<Integer>) () -> cache.getSize());
 			
 			manager.addCache(cache);
 			
@@ -208,12 +203,10 @@ public final class vImage extends vBaseSysteme {
 
 		this.readBase(j);
 		
-		jImage jimage = (jImage) j;
-		
-		jimage.setImageType(this.getImageType());
+		j.setImageType(this.getImageType());
 		
 		if(full)
-			jimage.setBase64(this.getBase64());
+			j.setBase64(this.getBase64());
 		
 		return j;
 	}
@@ -223,16 +216,14 @@ public final class vImage extends vBaseSysteme {
 
 		this.updateBase(j);
 		
-		jImage jimage = (jImage) j;
-		
-		
-		if(jimage.isPresentImageType())
-			this.setImageType(this.getImageType());
+		if(j.isPresentImageType())
+			this.setImageType(j.getImageType());
 
-		if(jimage.isPresentBase64())
-			this.setBase64(this.getBase64());
-		
-		
+		if(j.isPresentBase64()) {
+			this.setBase64(j.getBase64());
+		}
+
+
 		return read(requesteurRid);
 	}
 	

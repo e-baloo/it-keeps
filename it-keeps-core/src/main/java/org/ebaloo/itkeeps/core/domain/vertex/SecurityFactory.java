@@ -43,28 +43,26 @@ public final class SecurityFactory {
 	public final static class SecurityAcl {
 
 		private enAclOwner aclOwner = enAclOwner.OWNER_FALSE;
-		private Set<enAclData> aclData = new HashSet<enAclData>();
-		private Set<enAclAdmin> aclAdmin = new HashSet<enAclAdmin>();
+		private Set<enAclData> aclData = new HashSet<>();
+		private Set<enAclAdmin> aclAdmin = new HashSet<>();
 		private enAclRole aclRole = null;
 
 		
 		public String toString() {
-			
-			StringBuilder sb = new StringBuilder();
-			
-			sb.append("[");
-			sb.append(SecurityAcl.class.getSimpleName());
-			sb.append(":");
-			sb.append(aclRole);
-			sb.append(":");
-			sb.append(aclOwner);
-			sb.append(":");
-			sb.append(aclAdmin);
-			sb.append(":");
-			sb.append(aclData);
-			sb.append("]");
-			
-			return sb.toString();
+
+			String sb = "[" +
+					SecurityAcl.class.getSimpleName() +
+					":" +
+					aclRole +
+					":" +
+					aclOwner +
+					":" +
+					aclAdmin +
+					":" +
+					aclData +
+					"]";
+
+			return sb;
 		}
 		
 		
@@ -351,7 +349,7 @@ public final class SecurityFactory {
 	
 	
 	
-	private static final void checkRootUserExist(jCredential jcredential) {
+	private static void checkRootUserExist(jCredential jcredential) {
 
 		try {
 
@@ -505,7 +503,7 @@ public final class SecurityFactory {
 		throw new RuntimeException("The type : " + type + " is unknow !");
 	}
 
-	public static final void validateCredential(jCredential credential) {
+	public static void validateCredential(jCredential credential) {
 
 		if (logger.isTraceEnabled())
 			logger.trace("validateCredential()");
@@ -521,6 +519,10 @@ public final class SecurityFactory {
 			logger.trace("validateCredential()");
 
 		vCredential credential = vCredential.get(null, vCredential.class, jcredential.getId(), false);
+
+		if(credential == null) {
+			throw new RuntimeException("TODO"); // TODO
+		}
 
 		if (!user.equals(credential._getUser()))
 			throw new RuntimeException("TODO"); // TODO
@@ -566,7 +568,7 @@ public final class SecurityFactory {
 	
 	private static MessageDigest messageDigest = null;
 	
-	private final static MessageDigest getMessageDigest() {
+	private static MessageDigest getMessageDigest() {
 		if(messageDigest == null) {
 			try {
 				messageDigest = MessageDigest.getInstance("SHA-512", "BC");
@@ -603,7 +605,7 @@ public final class SecurityFactory {
 	
 	private static StandardPBEStringEncryptor entriEncryptor = null;
 
-	static final StringEncryptor getEntryEncryptor() {
+	static StringEncryptor getEntryEncryptor() {
 
 		if (entriEncryptor == null) {
 

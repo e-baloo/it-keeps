@@ -30,11 +30,11 @@ abstract class vEnumAbstract<K extends enAbstract> extends vBaseAbstract {
 	private static Logger logger = LoggerFactory.getLogger(vEnumAbstract.class);
 	
 	
-	private static final HashMap<String, vEnumAbstract> map = new HashMap<String, vEnumAbstract>();
+	private static final HashMap<String, vEnumAbstract> map = new HashMap<>();
 	
    
 
-	public static final <T extends vEnumAbstract> T get(final OrientBaseGraph graph, final Class<T> target, final String name)  
+	public static <T extends vEnumAbstract> T get(final OrientBaseGraph graph, final Class<T> target, final String name)
 	{
     	if(StringUtils.isEmpty(name))
     		return null;
@@ -114,6 +114,10 @@ abstract class vEnumAbstract<K extends enAbstract> extends vBaseAbstract {
 		
 		if(this.name == null) {
 			this.name = this.getProperty(NAME);
+
+			if(this.name == null) {
+				this.name = StringUtils.EMPTY;
+			}
 		}
 		
 		return this.name;
@@ -191,7 +195,7 @@ abstract class vEnumAbstract<K extends enAbstract> extends vBaseAbstract {
 			logger.debug("init() value = " + value.toString());
 			
 			
-			U eac = get((OrientBaseGraph) null, targetClass, value.name());
+			U eac = get(null, targetClass, value.name());
 			
 			if(eac == null) {
 				eac = targetClass.newInstance();

@@ -32,7 +32,7 @@ public class ParameterEncoder {
 		if (dontNeedEncoding.get(c)) {
 			return String.valueOf(c);
 		}
-		StringBuffer resultBuffer = new StringBuffer();
+		StringBuilder resultBuffer = new StringBuilder();
 		resultBuffer.append("%");
 		char ch = Character.forDigit((c >> 4) & 0xF, 16);
 		if (Character.isLetter(ch)) {
@@ -47,19 +47,15 @@ public class ParameterEncoder {
 		return resultBuffer.toString();
 	}
 
-	public static final String encoding(final String url) {
-		return encoding(url, "UTF-8");
-	}
 
-	
-	public static final String encoding(final String url, final String enc) {
+	public static String encoding(final String url) {
 		try {
-		StringBuffer stringBuffer = new StringBuffer();
+		StringBuilder stringBuffer = new StringBuilder();
 		
-		byte[] buff = url.getBytes(enc);
-		for (int i = 0; i < buff.length; i++) {
-			stringBuffer.append(char2Unicode((char) buff[i]));
-		}
+		byte[] buff = url.getBytes("UTF-8");
+			for (byte aBuff : buff) {
+				stringBuffer.append(char2Unicode((char) aBuff));
+			}
 		return stringBuffer.toString();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -69,7 +65,7 @@ public class ParameterEncoder {
 	}
 
 	public static String encoding(Rid rid) {
-		return encoding(rid.get(), "UTF-8");
+		return encoding(rid.get());
 	}
 
 }

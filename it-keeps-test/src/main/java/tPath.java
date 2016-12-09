@@ -17,7 +17,7 @@ public class tPath {
 
 	
 	
-	public static final void reload(ItkeepsHttpClient client) {
+	public static void reload(ItkeepsHttpClient client) {
 		
 		jg_r1 = client.callJsonRead(ApiPath.API_PATH_GET_ID + ParameterEncoder.encoding(jg_r1.getRid()), jPath.class);
 		jg_r2 = client.callJsonRead(ApiPath.API_PATH_GET_ID + ParameterEncoder.encoding(jg_r2.getRid()), jPath.class);
@@ -31,7 +31,7 @@ public class tPath {
 		
 	}	
 	
-	public static final void run(ItkeepsHttpClient client) {
+	public static void run(ItkeepsHttpClient client) {
 		
 		/* Set Name */
 		

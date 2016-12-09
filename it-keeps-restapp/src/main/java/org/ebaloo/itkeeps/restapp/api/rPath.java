@@ -51,7 +51,7 @@ public class rPath {
 	@aApplicationRolesAllowed(enRole.USER)
     @Timed
     @Path(ApiPath.API_PATH_GET_ID + "{rid}")
-    public Response read(@PathParam("rid") Rid RID) {
+    public Response read(@PathParam() Rid RID) {
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
 		jPath path = fPath.read(requesteurRid, RID);
     	return Response.ok().entity(path).build();

@@ -9,13 +9,13 @@ public class Rid {
 
 	public static final String RDI_NAME = "@rid";
 
-	public static final void check(final String rid) {
+	public static void check(final String rid) {
 		if (!Rid.is(rid))
 			throw new RuntimeException(String.format("'%s' is not valid %s", rid, Rid.class.getSimpleName()));
 	}
 
-	public static final boolean is(final String orid) {
-		return orid == null ? false : orid.matches("#\\d+:\\d+");
+	public static boolean is(final String orid) {
+		return orid != null && orid.matches("#\\d+:\\d+");
 	}
 
 	@JsonIgnore

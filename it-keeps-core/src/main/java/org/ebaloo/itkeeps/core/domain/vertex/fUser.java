@@ -28,20 +28,19 @@ public final class fUser {
 	// API
 
 	
-	public static final List<jBaseLight> readAll(Rid requesteurRid) {
+	public static List<jBaseLight> readAll(Rid requesteurRid) {
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
 		if(!sAcl.isRoleAdmin())
 			throw ExceptionPermission.NOT_ADMIN;
 		if(!sAcl.isAdminUserRead())
 			throw ExceptionPermission.DENY;
-		List<jBaseLight> list = vBase.getAllBase(null, vUser.class, false).stream().map(e -> e.read().getJBaseLight()).collect(Collectors.toList());
-		return list;
+		return vBase.getAllBase(null, vUser.class, false).stream().map(e -> e.read().getJBaseLight()).collect(Collectors.toList());
 	}
 
 	
 	
 	
-	public static final jUser read(Rid requesteurRid, Rid userRid) {
+	public static jUser read(Rid requesteurRid, Rid userRid) {
 
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, userRid);
 
@@ -57,7 +56,7 @@ public final class fUser {
 		return user.read();
 	}
 
-	public static final jUser delete(Rid requesteurRid, Rid userRid) {
+	public static jUser delete(Rid requesteurRid, Rid userRid) {
 
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, userRid);
 
@@ -77,7 +76,7 @@ public final class fUser {
 		return j;
 	}
 
-	public static final jUser create(Rid requesteurRid, jUser j) {
+	public static jUser create(Rid requesteurRid, jUser j) {
 
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, null);
 
@@ -111,7 +110,7 @@ public final class fUser {
 
 	
 
-	public static final jUser update(Rid requesteurRid, jUser j) {
+	public static jUser update(Rid requesteurRid, jUser j) {
 
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, j.getRid());
 
@@ -133,7 +132,7 @@ public final class fUser {
 
 	}
 
-	private static final void checkUpdate(SecurityAcl sAcl, final jUser j) {
+	private static void checkUpdate(SecurityAcl sAcl, final jUser j) {
 		//checkUpdateCredentials(j, sAcl);
 		checkUpdateAclAdmin(j, sAcl);
 		checkUpdateAclGroups(j, sAcl);
@@ -141,7 +140,7 @@ public final class fUser {
 		checkUpdateGroups(j, sAcl);
 	}
 
-	private static final void checkUpdateAclGroups(final jUser j, SecurityAcl sAcl) {
+	private static void checkUpdateAclGroups(final jUser j, SecurityAcl sAcl) {
 		if (!j.isPresentAclGroups())
 			return;
 		if (!sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
@@ -157,7 +156,7 @@ public final class fUser {
 	}
 	*/
 
-	private static final void checkUpdateAclAdmin(final jUser j, SecurityAcl sAcl) {
+	private static void checkUpdateAclAdmin(final jUser j, SecurityAcl sAcl) {
 		if (!j.isPresentAclAdmin())
 			return;
 		if (!sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
@@ -166,19 +165,20 @@ public final class fUser {
 			throw ExceptionPermission.NOT_DELEGATE;
 	}
 
-	private static final void checkUpdateRole(final jUser j, SecurityAcl sAcl) {
+	private static void checkUpdateRole(final jUser j, SecurityAcl sAcl) {
 		if (!j.isPresentRole())
 			return;
 		enAclRole role = j.getRole();
 		if (!sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
 			throw ExceptionPermission.IS_GUEST_OR_USER;
-		if (role.isRoot() && !sAcl.isRoleRoot())
+		if (role != null && role.isRoot() && !sAcl.isRoleRoot()) {
 			throw ExceptionPermission.NOT_ROOT;
+		}
 		if (!sAcl.isAdminDelegate())
 			throw ExceptionPermission.NOT_DELEGATE;
 	}
 
-	private static final void checkUpdateGroups(final jUser j, SecurityAcl sAcl) {
+	private static void checkUpdateGroups(final jUser j, SecurityAcl sAcl) {
 		if (!j.isPresentGroups())
 			return;
 		if (!sAcl.isRoleRoot() || !sAcl.isRoleAdmin())

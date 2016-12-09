@@ -52,12 +52,7 @@ public class Main {
         	
     		
             final HttpServer server = GrizzlyHttpServerFactory.createHttpServer(baseUri, new ApplicationConfig());
-            Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    server.shutdownNow();
-                }
-            }));
+            Runtime.getRuntime().addShutdownHook(new Thread(server::shutdownNow));
             
             
     		ConfigFactory.getManiLogger().info("Application Started!");

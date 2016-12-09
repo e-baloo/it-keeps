@@ -49,7 +49,7 @@ public class rUser {
 	@aApplicationRolesAllowed(enRole.ADMIN)
 	@Timed
 	@Path(ApiPath.API_USER_DELETE + "{id}")
-	public Response delete(@PathParam("id") Rid rid) {
+	public Response delete(@PathParam() Rid rid) {
 		Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
 		jUser j = fUser.delete(requesteurRid, rid);
 		return Response.ok().entity(j).build();
@@ -74,7 +74,7 @@ public class rUser {
 	@Path(ApiPath.API_USER_GET_ID + "{id}")
 	@aApplicationRolesAllowed(enRole.USER)
 	@Timed
-	public Response readId(@PathParam("id") Rid id) {
+	public Response readId(@PathParam() Rid id) {
 
 		Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
 
@@ -105,7 +105,7 @@ public class rUser {
 	@Path(ApiPath.API_USER_GET_CRED_ID + "{id}")
 	@aApplicationRolesAllowed(enRole.GUEST)
 	@Timed
-	public Response readCredId(@PathParam("id") String id) {
+	public Response readCredId(@PathParam() String id) {
 
 		Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
 

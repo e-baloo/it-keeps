@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@SuppressWarnings("ALL")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class jEntry extends jBaseChildAcl {
 
@@ -21,7 +22,8 @@ public class jEntry extends jBaseChildAcl {
 
 	// PATH
 	
-	@JsonIgnore
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    @JsonIgnore
 	private Optional<jBaseLight> path = Optional.empty();
 	
 	@JsonProperty(PATH)

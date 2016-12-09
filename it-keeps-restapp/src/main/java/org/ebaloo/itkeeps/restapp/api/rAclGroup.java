@@ -49,7 +49,7 @@ public class rAclGroup {
 	@aApplicationRolesAllowed(enRole.ROOT)
     @Timed
     @Path(ApiPath.API_ACL_GRP_GET_ID + "{rid}")
-    public Response readId(@PathParam("rid") Rid guid) {
+    public Response readId(@PathParam() Rid guid) {
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
     	jAclGroup j = fAclGroup.read(requesteurRid, guid);
     	return Response.ok().entity(j).build();
@@ -87,7 +87,7 @@ public class rAclGroup {
 	@aApplicationRolesAllowed(enRole.ROOT)
     @Timed
     @Path(ApiPath.API_ACL_GRP_DELETE + "{id}")
-    public Response delete(@PathParam("id") Rid rid) {
+    public Response delete(@PathParam() Rid rid) {
     	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
     	jAclGroup j = fAclGroup.delete(requesteurRid, rid);
     	return Response.ok().entity(j).build();

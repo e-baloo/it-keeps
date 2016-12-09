@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class enAclData extends enAbstract<String> {
 
-	private static final HashMap<String, enAclData> map = new HashMap<String, enAclData>();
+	private static final HashMap<String, enAclData> map = new HashMap<>();
 
 	public static final enAclData PATH_CREATE = new enAclData("PATH_CREATE");
 	public static final enAclData PATH_UPDATE = new enAclData("PATH_UPDATE");
