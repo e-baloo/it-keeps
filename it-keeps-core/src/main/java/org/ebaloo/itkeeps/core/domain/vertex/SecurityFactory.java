@@ -33,311 +33,8 @@ import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 public final class SecurityFactory {
 
-	
-	static {
-		Security.addProvider(new BouncyCastleProvider());
-	}
-	
-	
-	
-	public final static class SecurityAcl {
 
-		private enAclOwner aclOwner = enAclOwner.OWNER_FALSE;
-		private Set<enAclData> aclData = new HashSet<>();
-		private Set<enAclAdmin> aclAdmin = new HashSet<>();
-		private enAclRole aclRole = null;
-
-		
-		public String toString() {
-
-			String sb = "[" +
-					SecurityAcl.class.getSimpleName() +
-					":" +
-					aclRole +
-					":" +
-					aclOwner +
-					":" +
-					aclAdmin +
-					":" +
-					aclData +
-					"]";
-
-			return sb;
-		}
-		
-		
-		public boolean isAdminDelegate() {
-			
-			if (this.isOwner())
-				return true;
-			
-			if(this.isRoleRoot())
-				return true;
-
-			if (this.aclAdmin.contains(enAclAdmin.DELEGATE_DENY))
-				return false;
-
-			return this.aclAdmin.contains(enAclAdmin.DELEGATE);
-		}
-
-		public boolean isOwner() {
-			return this.aclOwner.value();
-		}
-
-		public boolean isAdminGroupUpdate() {
-			
-			if (this.isOwner())
-				return true;
-
-			if(this.isRoleRoot())
-				return true;
-			
-			if(this.aclAdmin.contains(enAclAdmin.GROUP_DENY))
-				return false;
-			
-			return this.aclAdmin.contains(enAclAdmin.GROUP_UPDATE) || this.aclAdmin.contains(enAclAdmin.GROUP_CREATE);
-		}
-
-		public boolean isAdminGroupCreate() {
-			
-			if (this.isOwner())
-				return true;
-
-			if(this.isRoleRoot())
-				return true;
-			
-			if(this.aclAdmin.contains(enAclAdmin.GROUP_DENY))
-				return false;
-			
-			return this.aclAdmin.contains(enAclAdmin.GROUP_CREATE);
-		}
-
-		public boolean isAdminUserRead() {
-
-			if (this.isOwner())
-				return true;
-
-			if(this.isRoleRoot())
-				return true;
-			
-			if(this.aclAdmin.contains(enAclAdmin.USER_DENY))
-				return false;
-			
-			return this.aclAdmin.contains(enAclAdmin.USER_READ) || this.aclAdmin.contains(enAclAdmin.USER_UPDATE) || this.aclAdmin.contains(enAclAdmin.USER_CREATE);
-		}
-		
-		public boolean isAdminUserUpdate() {
-
-			if (this.isOwner())
-				return true;
-
-			if(this.isRoleRoot())
-				return true;
-			
-			if(this.aclAdmin.contains(enAclAdmin.USER_DENY))
-				return false;
-			
-			return this.aclAdmin.contains(enAclAdmin.USER_UPDATE) || this.aclAdmin.contains(enAclAdmin.USER_CREATE);
-		}
-
-		public boolean isAdminUserCreate() {
-
-			if(this.isOwner())
-				return true;
-
-			if(this.isRoleRoot())
-				return true;
-			
-			if(this.aclAdmin.contains(enAclAdmin.USER_DENY))
-				return false;
-			
-			return this.aclAdmin.contains(enAclAdmin.USER_CREATE);
-		}
-
-		
-		public boolean isRoleAdmin() {
-			return aclRole.isAdmin();
-		}
-
-		public boolean isRoleGuest() {
-			return this.aclRole.isGuest();
-		}
-
-		public boolean isRoleRoot() {
-			return aclRole.isRoot();
-		}
-
-		public boolean isRoleUser() {
-			return aclRole.isUser();
-		}
-
-
-		public boolean isDataPathRead() {
-			
-			if(this.isOwner())
-				return true;
-
-			if(this.isRoleRoot())
-				return true;
-
-			if(this.aclData.contains(enAclData.DENY) || this.aclData.contains(enAclData.PATH_DENY))
-				return false;
-
-			return this.aclData.contains(enAclData.PATH_CREATE) || this.aclData.contains(enAclData.PATH_UPDATE) || this.aclData.contains(enAclData.PATH_READ);
-		}
-
-		public boolean isDataPathUpdate() {
-			
-			if(this.isOwner())
-				return true;
-
-			if(this.isRoleRoot())
-				return true;
-
-			if(this.aclData.contains(enAclData.DENY) || this.aclData.contains(enAclData.PATH_DENY))
-				return false;
-
-			return this.aclData.contains(enAclData.PATH_CREATE) || this.aclData.contains(enAclData.PATH_UPDATE);
-		}
-		
-		public boolean isDataPathCreate() {
-			
-			if(this.isOwner())
-				return true;
-
-			if(this.isRoleRoot())
-				return true;
-
-			if(this.aclData.contains(enAclData.DENY) || this.aclData.contains(enAclData.PATH_DENY))
-				return false;
-
-			return this.aclData.contains(enAclData.PATH_CREATE);
-		}
-
-
-		public boolean isDataEntryRead() {
-			
-			if(this.isOwner())
-				return true;
-
-			if(this.isRoleRoot())
-				return true;
-
-			if(this.aclData.contains(enAclData.DENY) || this.aclData.contains(enAclData.ENTRY_DENY))
-				return false;
-
-			return this.aclData.contains(enAclData.ENTRY_CREATE) || this.aclData.contains(enAclData.ENTRY_UPDATE) || this.aclData.contains(enAclData.ENTRY_READ);
-		}
-
-		public boolean isDataEntryUpdate() {
-			
-			if(this.isOwner())
-				return true;
-
-			if(this.isRoleRoot())
-				return true;
-
-			if(this.aclData.contains(enAclData.DENY) || this.aclData.contains(enAclData.ENTRY_DENY))
-				return false;
-
-			return (this.aclData.contains(enAclData.ENTRY_CREATE) || this.aclData.contains(enAclData.ENTRY_UPDATE));
-		}
-		
-		public boolean isDataEntryCreate() {
-			
-			if(this.isOwner())
-				return true;
-
-			if(this.isRoleRoot())
-				return true;
-
-			if(this.aclData.contains(enAclData.DENY) || this.aclData.contains(enAclData.PATH_DENY))
-				return false;
-
-			return this.aclData.contains(enAclData.PATH_CREATE);
-		}
-
-
-
-		public boolean isAdminAclRead() {
-
-				if (this.isOwner())
-					return true;
-
-				if(this.isRoleRoot())
-					return true;
-				
-				if(this.aclAdmin.contains(enAclAdmin.ACL_DENY))
-					return false;
-				
-				return this.aclAdmin.contains(enAclAdmin.ACL_READ) || this.aclAdmin.contains(enAclAdmin.ACL_UPDATE) || this.aclAdmin.contains(enAclAdmin.ACL_CREATE);
-			}		
-
-
-		public boolean isAdminGroupRead() {
-			if (this.isOwner())
-				return true;
-
-			if(this.isRoleRoot())
-				return true;
-			
-			if(this.aclAdmin.contains(enAclAdmin.GROUP_DENY))
-				return false;
-			
-			return this.aclAdmin.contains(enAclAdmin.GROUP_READ) || this.aclAdmin.contains(enAclAdmin.GROUP_UPDATE) || this.aclAdmin.contains(enAclAdmin.GROUP_CREATE);
-		}
-
-
-		public boolean isAdminAclCreate() {
-			if (this.isOwner())
-				return true;
-
-			if(this.isRoleRoot())
-				return true;
-			
-			if(this.aclAdmin.contains(enAclAdmin.ACL_DENY))
-				return false;
-			
-			return this.aclAdmin.contains(enAclAdmin.ACL_CREATE);
-		}
-
-
-		public boolean isAdminAclUpdate() {
-			if (this.isOwner())
-				return true;
-
-			if(this.isRoleRoot())
-				return true;
-			
-			if(this.aclAdmin.contains(enAclAdmin.ACL_DENY))
-				return false;
-			
-			return this.aclAdmin.contains(enAclAdmin.ACL_UPDATE) || this.aclAdmin.contains(enAclAdmin.ACL_CREATE);
-		}
-
-
-		public boolean isDataEncryptedEntryRead() {
-			if(this.isOwner())
-				return true;
-
-			if(this.aclData.contains(enAclData.DENY) || this.aclData.contains(enAclData.ENTRY_DENY) || this.aclData.contains(enAclData.ENCRYPTED_ENTRY_DENY))
-				return false;
-
-			return this.aclData.contains(enAclData.ENCRYPTED_ENTRY_READ) || this.aclData.contains(enAclData.ENCRYPTED_ENTRY_UPDATE);
-		}
-
-		public boolean isDataEncryptedEntryUpdate() {
-			if(this.isOwner())
-				return true;
-
-			if(this.aclData.contains(enAclData.DENY) || this.aclData.contains(enAclData.ENTRY_DENY) || this.aclData.contains(enAclData.ENCRYPTED_ENTRY_DENY))
-				return false;
-
-			return this.aclData.contains(enAclData.ENCRYPTED_ENTRY_UPDATE);
-		}
-
-	}
-
+	public static final Timer TIMER_GET_SECURITY_ACL = MetricsFactory.getMetricRegistry().timer(SecurityFactory.class.getName() + ".getSecurityAcl");
 	private static final Logger logger = LoggerFactory.getLogger(SecurityFactory.class.getName());
 	private static final String V_ACL_OWNER = vAclOwner.class.getSimpleName();
 	private static final String V_ACL_ADMIN = vAclAdmin.class.getSimpleName();
@@ -346,9 +43,13 @@ public final class SecurityFactory {
 	private static final String V_ACL_ENUM = vAclEnum.class.getSimpleName();
 	private static final String E_ACL_NO_TRAVERSE = eAclNoTraverse.class.getSimpleName();
 	private static final String E_ACL_RELATION = eAclRelation.class.getSimpleName();
+	private static MessageDigest messageDigest = null;
+	private static StandardPBEStringEncryptor entriEncryptor = null;
 	
-	
-	
+	static {
+		Security.addProvider(new BouncyCastleProvider());
+	}
+
 	private static void checkRootUserExist(jCredential jcredential) {
 
 		try {
@@ -377,35 +78,7 @@ public final class SecurityFactory {
 		}
 
 	}
-	
-	
-	
-	public static class RID {
-		
-		static Rid get(vBaseChildAcl base) {
-			return base.getRid();
-		}
-		
-		static Rid get(OrientVertex ov) {
-			return new Rid(ov.getIdentity().toString());
-		}
 
-		static Rid get(jBaseLight j) {
-			return j.getRid();
-		}
-
-		static <T extends jBase> Rid get(jBase j) {
-			return j.getRid();
-		}
-
-		static Rid get(Rid rid) {
-			return rid;
-		}
-		
-	}
-	
-	public static final Timer TIMER_GET_SECURITY_ACL = MetricsFactory.getMetricRegistry().timer(SecurityFactory.class.getName() + ".getSecurityAcl");
-		
 	static SecurityAcl getSecurityAcl(final Rid src, final Rid dst) {
 
 		final Timer.Context timerContext = TIMER_GET_SECURITY_ACL.time();
@@ -414,14 +87,14 @@ public final class SecurityFactory {
 
 			if (src == null)
 				throw new RuntimeException("TODO"); // TODO
-	
+
 			SecurityAcl sAcl = new SecurityAcl();
-	
+
 			String userOrid = src.get();
-	
+
 			{
 				StringBuilder request = new StringBuilder();
-	
+
 				request.append("SELECT FROM (TRAVERSE OUT('");
 				request.append(E_ACL_NO_TRAVERSE);
 				request.append("') FROM ");
@@ -429,15 +102,15 @@ public final class SecurityFactory {
 				request.append(" WHILE $depth <= 1) WHERE @class INSTANCEOF '");
 				request.append(V_ACL_ENUM);
 				request.append("'");
-	
+
 				for (OrientVertex ov : GraphFactory.command(null, request.toString())) {
 					put(sAcl, ov);
 				}
 			}
-	
+
 			if ((dst != null) && (dst.get() != null)) {
 				StringBuilder request = new StringBuilder();
-	
+
 				request.append("SELECT FROM (TRAVERSE OUT('");
 				request.append(E_ACL_NO_TRAVERSE);
 				request.append("') FROM (SELECT FROM (TRAVERSE OUT('");
@@ -455,14 +128,14 @@ public final class SecurityFactory {
 				request.append("')) WHERE @class INSTANCEOF '");
 				request.append(V_ACL_ENUM);
 				request.append("'");
-	
+
 				for (OrientVertex ov : GraphFactory.command(null, request.toString())) {
 					put(sAcl, ov);
 				}
 			}
 
 			return sAcl;
-			
+
 		} finally {
 			timerContext.stop();
 		}
@@ -520,12 +193,18 @@ public final class SecurityFactory {
 
 		vCredential credential = vCredential.get(null, vCredential.class, jcredential.getId(), false);
 
-		if(credential == null) {
+		if (credential == null) {
 			throw new RuntimeException("TODO"); // TODO
 		}
 
 		if (!user.equals(credential._getUser()))
 			throw new RuntimeException("TODO"); // TODO
+
+		enAuthentication authentication = credential.getAuthenticationType();
+
+		if (authentication == null) {
+			throw new RuntimeException("TODO"); // TODO
+		}
 
 		if (credential.getAuthenticationType().equals(enAuthentication.BASIC)) {
 			;
@@ -535,41 +214,9 @@ public final class SecurityFactory {
 
 		// TODO
 	}
-	
-	
-	public static final class ExceptionPermission {
-		
 
-		public static final RuntimeException IS_GUEST = new RuntimeException("requester is '" + enAclRole.GUEST.name() + "'");
-		
-		// TODO remove
-		public static final RuntimeException IS_GUEST_OR_USER = new RuntimeException("requester is '" + enAclRole.GUEST.name() + "' or '" + enAclRole.USER.name() + "'");
-		// TODO remove
-		public static final RuntimeException IS_USER = new RuntimeException("requester is '" + enAclRole.USER.name() + "'");
-
-		public static final RuntimeException NOT_ROOT = new RuntimeException("requester is not '" + enAclRole.ROOT.name() + "'");
-		public static final RuntimeException NOT_ADMIN = new RuntimeException("requester is not '" + enAclRole.ADMIN.name() + "'");
-		public static final RuntimeException NOT_USER = new RuntimeException("requester is not '" + enAclRole.USER.name() + "'");
-		
-		public static final RuntimeException NOT_DELEGATE =  new RuntimeException("requester have not '" + enAclAdmin.DELEGATE.name() + "' permission");
-		public static final RuntimeException NOT_GROUP_UPDATE = new RuntimeException("requester have not '" + enAclAdmin.GROUP_UPDATE.name() + "' permission");
-		public static final RuntimeException NOT_USER_CREATE = new RuntimeException("requester have not '" + enAclAdmin.USER_CREATE.name() + "' permission");
-		public static final RuntimeException NOT_USER_UPDATE = new RuntimeException("requester have not '" + enAclAdmin.USER_UPDATE.name() + "' permission");
-		public static final RuntimeException NOT_USER_READ = new RuntimeException("requester have not '" + enAclAdmin.USER_READ.name() + "' permission");
-
-		public static final RuntimeException DENY = new RuntimeException("requester have '" + enAclData.DENY.name() + "'");;
-		
-		
-	}
-
-	
-	// ------------------------------------
-	
-	
-	private static MessageDigest messageDigest = null;
-	
 	private static MessageDigest getMessageDigest() {
-		if(messageDigest == null) {
+		if (messageDigest == null) {
 			try {
 				messageDigest = MessageDigest.getInstance("SHA-512", "BC");
 			} catch (Exception e) {
@@ -578,32 +225,30 @@ public final class SecurityFactory {
 		}
 		return messageDigest;
 	}
-	
-	
+
+
+	// ------------------------------------
+
 	public static String getHash(String base64) {
 		return Base64.encodeBase64String(_getHash(base64));
 	}
 
 	private static byte[] _getHash(String base64) {
-		if(StringUtils.isEmpty(base64))
+		if (StringUtils.isEmpty(base64))
 			return null;
-		
+
 		byte[] data = Base64.decodeBase64(base64);
 		return getMessageDigest().digest(data);
 	}
 
 	public static boolean checkHash(String base64, String hash64) {
-		if(StringUtils.isEmpty(base64) || StringUtils.isEmpty(hash64))
+		if (StringUtils.isEmpty(base64) || StringUtils.isEmpty(hash64))
 			return false;
-		
+
 		byte[] digesta = _getHash(base64);
 		byte[] digestb = Base64.decodeBase64(hash64);
 		return MessageDigest.isEqual(digesta, digestb);
 	}
-
-	// ------------------------------------
-	
-	private static StandardPBEStringEncryptor entriEncryptor = null;
 
 	static StringEncryptor getEntryEncryptor() {
 
@@ -614,7 +259,7 @@ public final class SecurityFactory {
 				entriEncryptor = new StandardPBEStringEncryptor();
 
 				entriEncryptor.setProvider(new BouncyCastleProvider());
-				
+
 				String provider = ConfigFactory.getString("encryptor.provider", "BC");
 				String algorithm = ConfigFactory.getString("encryptor.algorithm", "PBEWITHSHA256AND128BITAES-CBC-BC");
 				String password64 = ConfigFactory.getString("encryptor.password64",
@@ -635,6 +280,353 @@ public final class SecurityFactory {
 
 		}
 		return entriEncryptor;
+	}
+
+	public final static class SecurityAcl {
+
+		private enAclOwner aclOwner = enAclOwner.OWNER_FALSE;
+		private Set<enAclData> aclData = new HashSet<>();
+		private Set<enAclAdmin> aclAdmin = new HashSet<>();
+		private enAclRole aclRole = null;
+
+
+		public String toString() {
+
+			return "[" +
+					SecurityAcl.class.getSimpleName() +
+					":" +
+					aclRole +
+					":" +
+					aclOwner +
+					":" +
+					aclAdmin +
+					":" +
+					aclData +
+					"]";
+		}
+
+
+		public boolean isAdminDelegate() {
+
+			if (this.isOwner())
+				return true;
+
+			if(this.isRoleRoot())
+				return true;
+
+			if (this.aclAdmin.contains(enAclAdmin.DELEGATE_DENY))
+				return false;
+
+			return this.aclAdmin.contains(enAclAdmin.DELEGATE);
+		}
+
+		public boolean isOwner() {
+			return this.aclOwner.value();
+		}
+
+		public boolean isAdminGroupUpdate() {
+
+			if (this.isOwner())
+				return true;
+
+			if(this.isRoleRoot())
+				return true;
+
+			if(this.aclAdmin.contains(enAclAdmin.GROUP_DENY))
+				return false;
+
+			return this.aclAdmin.contains(enAclAdmin.GROUP_UPDATE) || this.aclAdmin.contains(enAclAdmin.GROUP_CREATE);
+		}
+
+		public boolean isAdminGroupCreate() {
+
+			if (this.isOwner())
+				return true;
+
+			if(this.isRoleRoot())
+				return true;
+
+			if(this.aclAdmin.contains(enAclAdmin.GROUP_DENY))
+				return false;
+
+			return this.aclAdmin.contains(enAclAdmin.GROUP_CREATE);
+		}
+
+		public boolean isAdminUserRead() {
+
+			if (this.isOwner())
+				return true;
+
+			if(this.isRoleRoot())
+				return true;
+
+			if(this.aclAdmin.contains(enAclAdmin.USER_DENY))
+				return false;
+
+			return this.aclAdmin.contains(enAclAdmin.USER_READ) || this.aclAdmin.contains(enAclAdmin.USER_UPDATE) || this.aclAdmin.contains(enAclAdmin.USER_CREATE);
+		}
+
+		public boolean isAdminUserUpdate() {
+
+			if (this.isOwner())
+				return true;
+
+			if(this.isRoleRoot())
+				return true;
+
+			if(this.aclAdmin.contains(enAclAdmin.USER_DENY))
+				return false;
+
+			return this.aclAdmin.contains(enAclAdmin.USER_UPDATE) || this.aclAdmin.contains(enAclAdmin.USER_CREATE);
+		}
+
+		public boolean isAdminUserCreate() {
+
+			if(this.isOwner())
+				return true;
+
+			if(this.isRoleRoot())
+				return true;
+
+			if(this.aclAdmin.contains(enAclAdmin.USER_DENY))
+				return false;
+
+			return this.aclAdmin.contains(enAclAdmin.USER_CREATE);
+		}
+
+
+		public boolean isRoleAdmin() {
+			return aclRole.isAdmin();
+		}
+
+		public boolean isRoleGuest() {
+			return this.aclRole.isGuest();
+		}
+
+		public boolean isRoleRoot() {
+			return aclRole.isRoot();
+		}
+
+		public boolean isRoleUser() {
+			return aclRole.isUser();
+		}
+
+
+		public boolean isDataPathRead() {
+
+			if(this.isOwner())
+				return true;
+
+			if(this.isRoleRoot())
+				return true;
+
+			if(this.aclData.contains(enAclData.DENY) || this.aclData.contains(enAclData.PATH_DENY))
+				return false;
+
+			return this.aclData.contains(enAclData.PATH_CREATE) || this.aclData.contains(enAclData.PATH_UPDATE) || this.aclData.contains(enAclData.PATH_READ);
+		}
+
+		public boolean isDataPathUpdate() {
+
+			if(this.isOwner())
+				return true;
+
+			if(this.isRoleRoot())
+				return true;
+
+			if(this.aclData.contains(enAclData.DENY) || this.aclData.contains(enAclData.PATH_DENY))
+				return false;
+
+			return this.aclData.contains(enAclData.PATH_CREATE) || this.aclData.contains(enAclData.PATH_UPDATE);
+		}
+
+		public boolean isDataPathCreate() {
+
+			if(this.isOwner())
+				return true;
+
+			if(this.isRoleRoot())
+				return true;
+
+			if(this.aclData.contains(enAclData.DENY) || this.aclData.contains(enAclData.PATH_DENY))
+				return false;
+
+			return this.aclData.contains(enAclData.PATH_CREATE);
+		}
+
+
+		public boolean isDataEntryRead() {
+
+			if(this.isOwner())
+				return true;
+
+			if(this.isRoleRoot())
+				return true;
+
+			if(this.aclData.contains(enAclData.DENY) || this.aclData.contains(enAclData.ENTRY_DENY))
+				return false;
+
+			return this.aclData.contains(enAclData.ENTRY_CREATE) || this.aclData.contains(enAclData.ENTRY_UPDATE) || this.aclData.contains(enAclData.ENTRY_READ);
+		}
+
+		public boolean isDataEntryUpdate() {
+
+			if(this.isOwner())
+				return true;
+
+			if(this.isRoleRoot())
+				return true;
+
+			if(this.aclData.contains(enAclData.DENY) || this.aclData.contains(enAclData.ENTRY_DENY))
+				return false;
+
+			return (this.aclData.contains(enAclData.ENTRY_CREATE) || this.aclData.contains(enAclData.ENTRY_UPDATE));
+		}
+
+		public boolean isDataEntryCreate() {
+
+			if(this.isOwner())
+				return true;
+
+			if(this.isRoleRoot())
+				return true;
+
+			if(this.aclData.contains(enAclData.DENY) || this.aclData.contains(enAclData.PATH_DENY))
+				return false;
+
+			return this.aclData.contains(enAclData.PATH_CREATE);
+		}
+
+
+
+		public boolean isAdminAclRead() {
+
+				if (this.isOwner())
+					return true;
+
+				if(this.isRoleRoot())
+					return true;
+
+			if (this.aclAdmin.contains(enAclAdmin.ACL_DENY))
+					return false;
+
+			return this.aclAdmin.contains(enAclAdmin.ACL_READ) || this.aclAdmin.contains(enAclAdmin.ACL_UPDATE) || this.aclAdmin.contains(enAclAdmin.ACL_CREATE);
+		}
+
+
+		public boolean isAdminGroupRead() {
+			if (this.isOwner())
+				return true;
+
+			if(this.isRoleRoot())
+				return true;
+
+			if(this.aclAdmin.contains(enAclAdmin.GROUP_DENY))
+				return false;
+
+			return this.aclAdmin.contains(enAclAdmin.GROUP_READ) || this.aclAdmin.contains(enAclAdmin.GROUP_UPDATE) || this.aclAdmin.contains(enAclAdmin.GROUP_CREATE);
+		}
+
+
+		public boolean isAdminAclCreate() {
+			if (this.isOwner())
+				return true;
+
+			if(this.isRoleRoot())
+				return true;
+
+			if(this.aclAdmin.contains(enAclAdmin.ACL_DENY))
+				return false;
+
+			return this.aclAdmin.contains(enAclAdmin.ACL_CREATE);
+		}
+
+
+		public boolean isAdminAclUpdate() {
+			if (this.isOwner())
+				return true;
+
+			if(this.isRoleRoot())
+				return true;
+
+			if(this.aclAdmin.contains(enAclAdmin.ACL_DENY))
+				return false;
+
+			return this.aclAdmin.contains(enAclAdmin.ACL_UPDATE) || this.aclAdmin.contains(enAclAdmin.ACL_CREATE);
+		}
+
+
+		public boolean isDataEncryptedEntryRead() {
+			if(this.isOwner())
+				return true;
+
+			if(this.aclData.contains(enAclData.DENY) || this.aclData.contains(enAclData.ENTRY_DENY) || this.aclData.contains(enAclData.ENCRYPTED_ENTRY_DENY))
+				return false;
+
+			return this.aclData.contains(enAclData.ENCRYPTED_ENTRY_READ) || this.aclData.contains(enAclData.ENCRYPTED_ENTRY_UPDATE);
+		}
+
+		public boolean isDataEncryptedEntryUpdate() {
+			if(this.isOwner())
+				return true;
+
+			if(this.aclData.contains(enAclData.DENY) || this.aclData.contains(enAclData.ENTRY_DENY) || this.aclData.contains(enAclData.ENCRYPTED_ENTRY_DENY))
+				return false;
+
+			return this.aclData.contains(enAclData.ENCRYPTED_ENTRY_UPDATE);
+		}
+
+	}
+
+	// ------------------------------------
+	
+	public static class RID {
+
+		static Rid get(vBaseChildAcl base) {
+			return base.getRid();
+		}
+
+		static Rid get(OrientVertex ov) {
+			return new Rid(ov.getIdentity().toString());
+		}
+
+		static Rid get(jBaseLight j) {
+			return j.getRid();
+		}
+
+		static <T extends jBase> Rid get(jBase j) {
+			return j.getRid();
+		}
+
+		static Rid get(Rid rid) {
+			return rid;
+		}
+
+	}
+
+	public static final class ExceptionPermission {
+
+
+		public static final RuntimeException IS_GUEST = new RuntimeException("requester is '" + enAclRole.GUEST.name() + "'");
+
+		// TODO remove
+		public static final RuntimeException IS_GUEST_OR_USER = new RuntimeException("requester is '" + enAclRole.GUEST.name() + "' or '" + enAclRole.USER.name() + "'");
+		// TODO remove
+		public static final RuntimeException IS_USER = new RuntimeException("requester is '" + enAclRole.USER.name() + "'");
+
+		public static final RuntimeException NOT_ROOT = new RuntimeException("requester is not '" + enAclRole.ROOT.name() + "'");
+		public static final RuntimeException NOT_ADMIN = new RuntimeException("requester is not '" + enAclRole.ADMIN.name() + "'");
+		public static final RuntimeException NOT_USER = new RuntimeException("requester is not '" + enAclRole.USER.name() + "'");
+
+		public static final RuntimeException NOT_DELEGATE =  new RuntimeException("requester have not '" + enAclAdmin.DELEGATE.name() + "' permission");
+		public static final RuntimeException NOT_GROUP_UPDATE = new RuntimeException("requester have not '" + enAclAdmin.GROUP_UPDATE.name() + "' permission");
+		public static final RuntimeException NOT_USER_CREATE = new RuntimeException("requester have not '" + enAclAdmin.USER_CREATE.name() + "' permission");
+		public static final RuntimeException NOT_USER_UPDATE = new RuntimeException("requester have not '" + enAclAdmin.USER_UPDATE.name() + "' permission");
+		public static final RuntimeException NOT_USER_READ = new RuntimeException("requester have not '" + enAclAdmin.USER_READ.name() + "' permission");
+
+		public static final RuntimeException DENY = new RuntimeException("requester have '" + enAclData.DENY.name() + "'");;
+
+
 	}
 	
 }

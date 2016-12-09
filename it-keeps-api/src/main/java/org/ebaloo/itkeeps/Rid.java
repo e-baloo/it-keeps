@@ -5,19 +5,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public class Rid {
 
-	public static Rid NULL = new Rid();
-
 	public static final String RDI_NAME = "@rid";
-
-	public static void check(final String rid) {
-		if (!Rid.is(rid))
-			throw new RuntimeException(String.format("'%s' is not valid %s", rid, Rid.class.getSimpleName()));
-	}
-
-	public static boolean is(final String orid) {
-		return orid != null && orid.matches("#\\d+:\\d+");
-	}
-
+	public static Rid NULL = new Rid();
 	@JsonIgnore
 	private String rid;
 
@@ -27,6 +16,15 @@ public class Rid {
 
 	public Rid(final String rid) {
 		this.set(rid);
+	}
+
+	public static void check(final String rid) {
+		if (!Rid.is(rid))
+			throw new RuntimeException(String.format("'%s' is not valid %s", rid, Rid.class.getSimpleName()));
+	}
+
+	public static boolean is(final String orid) {
+		return orid != null && orid.matches("#\\d+:\\d+");
 	}
 
 	@JsonValue
@@ -45,12 +43,7 @@ public class Rid {
 	}
 	
     public boolean equals(Object obj) {
-    	if(obj == null)
-    		return false;
-    	if(!(obj instanceof Rid))
-    		return false;
-    		
-        return this.get().equals(((Rid) obj).get());
-    }
+		return obj != null && obj instanceof Rid && this.get().equals(((Rid) obj).get());
+	}
 
 }

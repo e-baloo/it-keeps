@@ -11,8 +11,8 @@ public class ApiConfig {
     public static void init(InterfaceApplicationConfig parent) {
     	
     	parent.classesAdd(rEnum.class);
-    	
-    	parent.classesAdd(ImageEndpoint.class);
+
+		parent.classesAdd(rImage.class);
 
     	
     	

@@ -24,8 +24,8 @@ public class ImageEndpoint {
     @PermitAll
     @Path(ApiPath.IMAGE_GET_ID + "{id}")
     @Timed
-    public Response getImage(@PathParam() String id) {
-    	
+    public Response getImage(@PathParam(value = "id") String id) {
+
         vImage img = vImage.getImage(id);
 
         if(img == null) {

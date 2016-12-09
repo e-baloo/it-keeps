@@ -48,8 +48,8 @@ public class rUser {
 	@Produces({ MediaType.APPLICATION_JSON })
 	@aApplicationRolesAllowed(enRole.ADMIN)
 	@Timed
-	@Path(ApiPath.API_USER_DELETE + "{id}")
-	public Response delete(@PathParam() Rid rid) {
+	@Path(ApiPath.API_USER_DELETE + "{rid}")
+	public Response delete(@PathParam(value = "rid") Rid rid) {
 		Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
 		jUser j = fUser.delete(requesteurRid, rid);
 		return Response.ok().entity(j).build();
@@ -71,14 +71,14 @@ public class rUser {
 
 	@GET // READ
 	@Produces({ MediaType.APPLICATION_JSON })
-	@Path(ApiPath.API_USER_GET_ID + "{id}")
+	@Path(ApiPath.API_USER_GET_ID + "{rid}")
 	@aApplicationRolesAllowed(enRole.USER)
 	@Timed
-	public Response readId(@PathParam() Rid id) {
+	public Response readId(@PathParam(value = "rid") Rid rid) {
 
 		Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
 
-		jUser user = fUser.read(requesteurRid, id);
+		jUser user = fUser.read(requesteurRid, rid);
 
 		return Response.ok().entity(user).build();
 	}
@@ -105,7 +105,7 @@ public class rUser {
 	@Path(ApiPath.API_USER_GET_CRED_ID + "{id}")
 	@aApplicationRolesAllowed(enRole.GUEST)
 	@Timed
-	public Response readCredId(@PathParam() String id) {
+	public Response readCredId(@PathParam(value = "id") String id) {
 
 		Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
 

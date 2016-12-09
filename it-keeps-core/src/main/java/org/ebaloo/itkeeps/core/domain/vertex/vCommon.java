@@ -23,6 +23,8 @@ import com.orientechnologies.orient.core.metadata.schema.OClass;
 abstract class vCommon {
 
 	private static Logger logger = LoggerFactory.getLogger(vCommon.class);
+	private OrientVertex orientVertex = null;
+	private String orid = null;
 
 	protected static List<OrientVertex> command(OrientBaseGraph graph, String cmdSQL, Object... args) {
 		return GraphFactory.command(graph, cmdSQL, args);
@@ -50,24 +52,6 @@ abstract class vCommon {
 		return str.matches("#\\d+:\\d+");
 	}
 
-
-	private OrientVertex orientVertex = null;
-
-
-	protected final void checkOrientVertex() {
-		if (this.orientVertex == null) {
-			
-			if(logger.isDebugEnabled())
-				logger.debug("checkOrientVertex() : 2nd chance!");
-			
-			this.reload();
-
-			if (this.orientVertex == null) {
-				throw new RuntimeException("The \"OrientVertex value\" value is null!");
-			}
-		}
-	}
-
 	/*
 	protected final void commit() {
 
@@ -77,6 +61,20 @@ abstract class vCommon {
 
 	}
 	*/
+
+	protected final void checkOrientVertex() {
+		if (this.orientVertex == null) {
+
+			if(logger.isDebugEnabled())
+				logger.debug("checkOrientVertex() : 2nd chance!");
+
+			this.reload();
+
+			if (this.orientVertex == null) {
+				throw new RuntimeException("The \"OrientVertex value\" value is null!");
+			}
+		}
+	}
 
 	protected final int deleteAllEdges(final Direction direction) {
 
@@ -97,7 +95,7 @@ abstract class vCommon {
 		case BOTH:
 		default:
 
-			new RuntimeException(new Exception("BOTH or emty is not otorized"));
+			new RuntimeException("BOTH is not permit or unknown!");
 			break;
 
 		}
@@ -111,6 +109,10 @@ abstract class vCommon {
 		return ret;
 	}
 
+	/*
+	 * ORID
+	 */
+	
 	protected final OrientBaseGraph getGraph() {
 
 		if (!this.hasOrientVertex()) {
@@ -119,12 +121,6 @@ abstract class vCommon {
 
 		return this.getOrientVertex().getGraph();
 	}
-
-	/*
-	 * ORID
-	 */
-	
-	private String orid = null;
 
 	public final String getORID() {
 
@@ -146,6 +142,40 @@ abstract class vCommon {
 	protected final OrientVertex getOrientVertex() {
 		this.checkOrientVertex();
 		return this.orientVertex;
+	}
+
+	protected final void setOrientVertex(vCommon commonOrientVertrex) {
+
+		if (commonOrientVertrex == null)
+			throw new RuntimeException("The \"commonOrientVertrex\" value is null!");
+
+
+		this.setOrientVertex(commonOrientVertrex.getOrientVertex());
+
+	}
+
+	protected final void setOrientVertex(OrientVertex ov) {
+
+		if (ov == null)
+			throw new RuntimeException("The \"ov\" value is null!");
+
+
+		if (this.orientVertex != null)
+			throw new RuntimeException("The \"OrientVertex\" value is not null!");
+
+
+		String classSimpleName = this.getClass().getSimpleName();
+
+		List<String> listClasses = getAllSuperClassesNames(ov);
+		listClasses.add(ov.getType().getName());
+
+		if (listClasses.contains(classSimpleName)) {
+			this.orientVertex = ov;
+			this.getORID();
+		} else {
+			throw new RuntimeException("The class \"" + classSimpleName + "\"] is not in " + listClasses);
+		}
+
 	}
 
 	protected final String getOrientVertexType() {
@@ -194,42 +224,6 @@ abstract class vCommon {
 		}
 
 		this.orientVertex = list.get(0);
-
-	}
-
-
-
-	protected final void setOrientVertex(vCommon commonOrientVertrex) {
-
-		if (commonOrientVertrex == null)
-			throw new RuntimeException("The \"commonOrientVertrex\" value is null!");
-		
-
-		this.setOrientVertex(commonOrientVertrex.getOrientVertex());
-
-	}
-
-	protected final void setOrientVertex(OrientVertex ov) {
-		
-		if (ov == null) 
-			throw new RuntimeException("The \"ov\" value is null!");
-		
-
-		if (this.orientVertex != null) 
-			throw new RuntimeException("The \"OrientVertex\" value is not null!");
-		
-
-		String classSimpleName = this.getClass().getSimpleName();
-
-		List<String> listClasses = getAllSuperClassesNames(ov);
-		listClasses.add(ov.getType().getName());
-
-		if (listClasses.contains(classSimpleName)) {
-			this.orientVertex = ov;
-			this.getORID();
-		} else {
-			throw new RuntimeException("The class \"" + classSimpleName + "\"] is not in " + listClasses);
-		}
 
 	}
 

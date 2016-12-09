@@ -28,14 +28,8 @@ public abstract class enAbstract<K> {
 	
 	@Override
 	public boolean equals(Object other) {
-		if (other == null)
-			return false;
+        return other != null && this.getClass().isInstance(other) && this == other;
 
-		if (!this.getClass().isInstance(other)) {
-			return false;
-		}
-
-		return this == other;
 	}
 	
 	

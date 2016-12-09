@@ -17,10 +17,6 @@ import org.ebaloo.itkeeps.api.model.jUser;
 @DatabaseVertrex()
 public final class fUser {
 
-	@SuppressWarnings("unused")
-	private static Logger logger = LoggerFactory.getLogger(fUser.class);
-
-	
 
 	
 	

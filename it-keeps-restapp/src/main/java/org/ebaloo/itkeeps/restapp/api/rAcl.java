@@ -33,12 +33,12 @@ public class rAcl {
 	
     @GET //READ
     @Produces({MediaType.APPLICATION_JSON})
-    @Path(ApiPath.API_ACL_GET_ID + "{id}")
 	@aApplicationRolesAllowed(enRole.ADMIN)
     @Timed
-    public Response readId(@PathParam() Rid rid) {
-    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-    	jAcl acl = fAcl.read(requesteurRid, rid);
+    @Path(ApiPath.API_ACL_GET_ID + "{rid}")
+    public Response readId(@PathParam(value = "rid") Rid rid) {
+        Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
+        jAcl acl = fAcl.read(requesteurRid, rid);
     	return Response.ok().entity(acl).build();
     }
 	
@@ -74,9 +74,9 @@ public class rAcl {
 	@aApplicationRolesAllowed(enRole.ADMIN)
     @Timed
     @Path(ApiPath.API_ACL_DELETE + "{rid}")
-    public Response delete(@PathParam() Rid rid) {
-    	Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-    	jAcl j = fAcl.delete(requesteurRid, rid);
+    public Response delete(@PathParam(value = "rid") Rid rid) {
+        Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
+        jAcl j = fAcl.delete(requesteurRid, rid);
     	return Response.ok().entity(j).build();
     }
 }
