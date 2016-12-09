@@ -19,10 +19,7 @@ import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.model.jCredential;
-import org.ebaloo.itkeeps.api.model.jUser;
 import org.ebaloo.itkeeps.core.domain.vertex.fCredential;
-import org.ebaloo.itkeeps.core.domain.vertex.fUser;
-import org.ebaloo.itkeeps.core.domain.vertex.vCredential;
 
 import com.codahale.metrics.annotation.Timed;
 
@@ -74,14 +71,9 @@ public class rCredential {
 	@Timed
 	@Path(ApiPath.API_CRED_CREATE_ID + "{id}")
 	public Response createId(final jCredential j, @PathParam("id") String id) {
-
 		Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
 		Rid userRid = new Rid(id);
-
 		jCredential cred = fCredential.create(requesteurRid, userRid, j);
-		
-		System.out.println(cred.toString());
-		
 		return Response.ok().entity(cred).build();
 	}
 
