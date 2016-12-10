@@ -23,7 +23,7 @@
       <module name="it-keeps-httpclient" target="1.8" />
       <module name="it-keeps-restapp" target="1.8" />
       <module name="it-keeps-test" target="1.8" />
-      <module name="it-keeps-tools" target="1.5" />
+      <module name="it-keeps-tools" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

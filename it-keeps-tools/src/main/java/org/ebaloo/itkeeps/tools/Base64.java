@@ -5,19 +5,6 @@ import java.io.UnsupportedEncodingException;
 public class Base64 {
 
     private static final byte[] CHAR_SET;
-
-    static {
-        final String s = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-        byte[] cs;
-
-        try {
-            cs = s.getBytes("ASCII");
-        } catch (final UnsupportedEncodingException ex) {
-            cs = s.getBytes();
-        }
-        CHAR_SET = cs;
-    }
-
     private static final byte[] BASE64INDEXES = {
             64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
             64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
@@ -37,6 +24,18 @@ public class Base64 {
             64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64
     };
 
+    static {
+        final String s = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+        byte[] cs;
+
+        try {
+            cs = s.getBytes("ASCII");
+        } catch (final UnsupportedEncodingException ex) {
+            cs = s.getBytes();
+        }
+        CHAR_SET = cs;
+    }
+
     /**
      * Encodes array of bytes using base64 encoding.
      *
@@ -44,11 +43,11 @@ public class Base64 {
      * @return Encoded result as an array of bytes.
      */
     private static byte[] encode(final byte[] buffer) {
-        final int ccount = buffer.length / 3;
+        final int count = buffer.length / 3;
         final int rest = buffer.length % 3;
-        final byte[] result = new byte[(ccount + (rest > 0 ? 1 : 0)) * 4];
+        final byte[] result = new byte[(count + (rest > 0 ? 1 : 0)) * 4];
 
-        for (int i = 0; i < ccount; i++) {
+        for (int i = 0; i < count; i++) {
             result[i * 4] = CHAR_SET[(buffer[i * 3] >> 2) & 0xff];
             result[i * 4 + 1] = CHAR_SET[(((buffer[i * 3] & 0x03) << 4) | (buffer[i * 3 + 1] >> 4)) & 0xff];
             result[i * 4 + 2] = CHAR_SET[(((buffer[i * 3 + 1] & 0x0f) << 2) | (buffer[i * 3 + 2] >> 6)) & 0xff];
@@ -59,21 +58,21 @@ public class Base64 {
 
         if (rest > 0) {
             if (rest == 2) {
-                result[ccount * 4 + 2] = CHAR_SET[((buffer[ccount * 3 + 1] & 0x0f) << 2) & 0xff];
-                temp = buffer[ccount * 3 + 1] >> 4;
+                result[count * 4 + 2] = CHAR_SET[((buffer[count * 3 + 1] & 0x0f) << 2) & 0xff];
+                temp = buffer[count * 3 + 1] >> 4;
             } else {
-                result[ccount * 4 + 2] = CHAR_SET[CHAR_SET.length - 1];
+                result[count * 4 + 2] = CHAR_SET[CHAR_SET.length - 1];
             }
-            result[ccount * 4 + 3] = CHAR_SET[CHAR_SET.length - 1];
-            result[ccount * 4 + 1] = CHAR_SET[(((buffer[ccount * 3] & 0x03) << 4) | temp) & 0xff];
-            result[ccount * 4] = CHAR_SET[(buffer[ccount * 3] >> 2) & 0xff];
+            result[count * 4 + 3] = CHAR_SET[CHAR_SET.length - 1];
+            result[count * 4 + 1] = CHAR_SET[(((buffer[count * 3] & 0x03) << 4) | temp) & 0xff];
+            result[count * 4] = CHAR_SET[(buffer[count * 3] >> 2) & 0xff];
         }
 
         return result;
     }
 
     /**
-     * Decodes Base64 data into octects.
+     * Decodes Base64 data into octets.
      *
      * @param buffer Byte array containing Base64 data
      * @return Array containing decoded data.
@@ -84,17 +83,17 @@ public class Base64 {
             return new byte[0];
         }
 
-        final int ccount = buffer.length / 4;
+        final int count = buffer.length / 4;
         final int paddingCount = (buffer[buffer.length - 1] == '=' ? 1 : 0) + (buffer[buffer.length - 2] == '=' ? 1 : 0);
-        final byte[] result = new byte[3 * (ccount - 1) + (3 - paddingCount)];
+        final byte[] result = new byte[3 * (count - 1) + (3 - paddingCount)];
 
-        for (int i = 0; i < (ccount - 1); i++) {
+        for (int i = 0; i < (count - 1); i++) {
             result[i * 3] = (byte) ((BASE64INDEXES[buffer[i * 4]] << 2) | (BASE64INDEXES[buffer[i * 4 + 1]] >> 4));
             result[i * 3 + 1] = (byte) ((BASE64INDEXES[buffer[i * 4 + 1]] << 4) | (BASE64INDEXES[buffer[i * 4 + 2]] >> 2));
             result[i * 3 + 2] = (byte) ((BASE64INDEXES[buffer[i * 4 + 2]] << 6) | BASE64INDEXES[buffer[i * 4 + 3]]);
         }
 
-        final int i = ccount - 1;
+        final int i = count - 1;
         switch (paddingCount) {
             case 0:
                 result[i * 3 + 2] = (byte) ((BASE64INDEXES[buffer[i * 4 + 2]] << 6) | BASE64INDEXES[buffer[i * 4 + 3]]);
