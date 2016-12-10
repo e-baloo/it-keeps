@@ -34,7 +34,7 @@ public final class fImage {
 
         vImage image = new vImage(j);
 
-        return fImage.read(requesterRid, image.getRid().toString());
+        return fImage.read(requesterRid, image.getRid().getSimple());
     }
 
 
@@ -83,7 +83,7 @@ public final class fImage {
         image.checkVersion(j);
         image.update(j);
 
-        return fImage.read(requesterRid, j.getRid().toString());
+        return fImage.read(requesterRid, j.getRid().getSimple());
     }
 
 

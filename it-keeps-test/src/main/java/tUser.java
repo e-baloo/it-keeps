@@ -64,18 +64,18 @@ public class tUser {
 		
 		
 		credAdmin1 = new jCredential();
-		credAdmin1.setId(admin1.getName());
-		credAdmin1.setPassword64(Base64.encodeAsString(credAdmin1.getId()));
+		credAdmin1.setCred(admin1.getName());
+		credAdmin1.setPassword64(Base64.encodeAsString(credAdmin1.getCred()));
 		credAdmin1.setAuthenticationType(enAuthentication.BASIC);
 
 		credUser1 = new jCredential();
-		credUser1.setId(user1.getName());
-		credUser1.setPassword64(Base64.encodeAsString(credUser1.getId()));
+		credUser1.setCred(user1.getName());
+		credUser1.setPassword64(Base64.encodeAsString(credUser1.getCred()));
 		credUser1.setAuthenticationType(enAuthentication.BASIC);
 
 		credUser2 = new jCredential();
-		credUser2.setId(user2.getName());
-		credUser2.setPassword64(Base64.encodeAsString(credUser2.getId()));
+		credUser2.setCred(user2.getName());
+		credUser2.setPassword64(Base64.encodeAsString(credUser2.getCred()));
 		credUser2.setAuthenticationType(enAuthentication.BASIC);
 
 

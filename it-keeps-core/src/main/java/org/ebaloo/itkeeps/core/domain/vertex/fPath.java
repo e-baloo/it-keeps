@@ -117,7 +117,7 @@ public final class fPath {
 			sb.append("') FROM (SELECT FROM (TRAVERSE OUT('");
 			sb.append(eAclRelation.class.getSimpleName());
 			sb.append("') FROM ");
-			sb.append(requesterRid.get());
+			sb.append(requesterRid.getFull());
 			sb.append(") WHERE @class = '");
 			sb.append(vAcl.class.getSimpleName());
 			sb.append("')) WHERE @class = '");

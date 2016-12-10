@@ -19,51 +19,45 @@ import com.auth0.jwt.JWTVerifier;
 
 public final class JwtFactory {
 
-	private static final Logger logger = LoggerFactory.getLogger(JwtFactory.class.getName());
-
-	private static String __key = null;
-	private static final String DEFAULT_KEY = "tpONIG5BlO4wTRHFD8ehIvwbAdUMPAVmXNdPU6qYcVSb8zL85xkgmDr7sHHzNBIHpWI3l4a1rXPhnUs4lt57bjIVwHUW3Ot7gyfN6zoh6iJm83eCMkbXF73K7qRIv801";
-	private static final String GENERAT_KEY = "{random}";
-	
 	public static final String CONF_TOKEN_KEY = "token.key";
 	public static final String CONF_TOKEN_TIMEOUT = "token.timeout";
-	
+	private static final Logger logger = LoggerFactory.getLogger(JwtFactory.class.getName());
+	private static final String DEFAULT_KEY = "tpONIG5BlO4wTRHFD8ehIvwbAdUMPAVmXNdPU6qYcVSb8zL85xkgmDr7sHHzNBIHpWI3l4a1rXPhnUs4lt57bjIVwHUW3Ot7gyfN6zoh6iJm83eCMkbXF73K7qRIv801";
+	private static final String GENERAT_KEY = "{random}";
+	private static final String USER_NAME = "user.name";
+	private static final String USER_ROLE = "user.role";
+	private static String __key = null;
+	private static long DEFAULT_TIMEOUT = 10;
+	private static Long timeout = null;
+
 	private static String getKey() {
 
 		if(__key == null) {
-		
+
 			String key = DEFAULT_KEY;
-			
+
 			if(ConfigFactory.hasPath(CONF_TOKEN_KEY)) {
-				
+
 				key = ConfigFactory.getString(CONF_TOKEN_KEY);
-				
+
 				if(StringUtils.isEmpty(key) || StringUtils.equals(key, GENERAT_KEY)) {
-					
+
 					logger.warn("Generat Password !!!");
-					
+
 					String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 					key = RandomStringUtils.random( 128, 0, 0, false, false, characters.toCharArray(), new SecureRandom() );
-					
+
 				}
-				
-				
+
+
 			}
-			
+
 			__key = key;
 		}
-		
+
 
 		return __key;
 	}
-	
-	
-	private static final String USER_NAME = "user.name";
-	private static final String USER_ROLE = "user.role";
-	
-	
-	private static long DEFAULT_TIMEOUT = 10;
-	private static Long timeout = null;
 
 	public static long getTimeout() {
 		
@@ -96,10 +90,10 @@ public final class JwtFactory {
 		final HashMap<String, Object> claims = new HashMap<>();
 		claims.put("exp", exp);
 		claims.put("iat", iat);
-		claims.put("iss", "IT-Keeps");		
-		
-		
-		claims.put(jBase.RID, user.getRid().toString());
+		claims.put("iss", "IT-Keeps");
+
+
+		claims.put(jBase.RID, user.getRid().getSimple());
 		claims.put(jBase.NAME, user.getName());
 		
 		//claims.put(USER_ROLE, user.getRole().toString());

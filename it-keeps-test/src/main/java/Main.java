@@ -31,6 +31,9 @@ import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 public class Main {
 
+	private static String srvUriPort = "8080";
+	private static URI srvBaseUri = null;
+
 	public static void main(String[] args) throws JsonProcessingException {
 
 		try {
@@ -66,7 +69,7 @@ public class Main {
 			}
 
 			jCredential cred = new jCredential();
-			cred.setId("marc");
+			cred.setCred("marc");
 			cred.setPassword64(Base64.encodeAsString("marc"));
 			cred.setAuthenticationType(enAuthentication.BASIC);
 			cred.setUserName("Marc DONVAL");
@@ -74,7 +77,7 @@ public class Main {
 			ItkeepsHttpClient clientRoot = new ItkeepsHttpClient(cred);
 
 			{
-				jUser rootUser = clientRoot.callJsonRead(ApiPath.API_USER_GET_CRED_ID + cred.getId(), jUser.class);
+				jUser rootUser = clientRoot.callJsonRead(ApiPath.API_USER_GET_CRED_ID + cred.getCred(), jUser.class);
 				LogFactory.getMain()
 						.debug(jObject.MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(rootUser));
 
@@ -93,7 +96,7 @@ public class Main {
 			/*
 			 * for(OrientVertex ov : GraphFactory.command(null, "SELECT FROM V"
 			 * )) { System.out.println(ov.getRecord().toJSON()); }
-			 * 
+			 *
 			 */
 
 			LogFactory.getMain().info(">>-------------------------------------------------------");
@@ -131,14 +134,14 @@ public class Main {
 
 				jCredential c = new jCredential();
 				c.setAuthenticationType(enAuthentication.BASIC);
-				c.setId(tUser.credUser1.getId());
-				c.setPassword64(Base64.encodeAsString(c.getId()));
+				c.setCred(tUser.credUser1.getCred());
+				c.setPassword64(Base64.encodeAsString(c.getCred()));
 
 				ItkeepsHttpClient clientUser1 = new ItkeepsHttpClient(c);
 
 				JsonNode j = clientUser1.callJsonRead(ApiPath.API_CRED_GET_ALL);
 
-				String rid = j.iterator().next().get("@rid").asText();
+				String rid = j.iterator().next().get("id").asText();
 
 				jCredential jc = clientUser1.callJsonRead(ApiPath.API_CRED_GET_ID + ParameterEncoder.encoding(rid),
 						jCredential.class);
@@ -163,10 +166,6 @@ public class Main {
 			System.exit(0);
 		}
 	}
-
-	private static String srvUriPort = "8080";
-
-	private static URI srvBaseUri = null;
 
 	private static void startHttpServer() {
 

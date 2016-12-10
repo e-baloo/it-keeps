@@ -80,10 +80,10 @@ public final class vImage extends vBaseSysteme {
 		if(image != null) {
 
 			getCache().remove(image.getName());
-			getCache().remove(image.getRid().toString());
+			getCache().remove(image.getRid().getSimple());
 
-			getCache().put(new Element(image.getName(), image.getRid().toString()));
-			getCache().put(new Element(image.getRid().toString(), image));
+			getCache().put(new Element(image.getName(), image.getRid().getSimple()));
+			getCache().put(new Element(image.getRid().getSimple(), image));
 		}
 
 		return image;
@@ -134,7 +134,7 @@ public final class vImage extends vBaseSysteme {
 		this.setProperty(jImage.BASE64, value);
 
 		getCache().remove(this.getName());
-		getCache().remove(this.getRid().toString());
+		getCache().remove(this.getRid().getSimple());
 
 	}
 
@@ -168,7 +168,7 @@ public final class vImage extends vBaseSysteme {
 		this.setProperty(jImage.IMAGE_TYPE, value);
 
 		getCache().remove(this.getName());
-		getCache().remove(this.getRid().toString());
+		getCache().remove(this.getRid().getSimple());
 
 	}
 

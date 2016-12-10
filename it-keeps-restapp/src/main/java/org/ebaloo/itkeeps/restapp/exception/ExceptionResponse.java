@@ -7,42 +7,32 @@ import javax.ws.rs.core.Response;
 
 
 public final class ExceptionResponse {
-	
-	private final int status;
 
+    private static final String MESSAGE = "HTTP %s - %s";
+    private final int status;
 	private final String message;
-
-	private final String now = Instant.now().toString();
 
 
 	public ExceptionResponse(Response.Status status) {
-		
-		this.status = status.getStatusCode();
-		this.message = "HTTP " + status.getStatusCode() + " " + status.getReasonPhrase();
-		
-	}
+        this(status.getStatusCode(), String.format(MESSAGE, status.getStatusCode(), status.getReasonPhrase()));
+    }
+
 
 	public ExceptionResponse(int status, String message) {
-		
 		this.status = status;
 		this.message = message;
-		
 	}
 	
 	
 	public final Response getResponse() {
-		
 		return Response
 			.status(this.status)
             .entity(this.toString())
             .type(MediaType.TEXT_PLAIN)
             .build();
-		
 	}
 	
 	public String toString() {
-		return this.message + " @" + this.now;
-	}
-	
-	
+        return this.message;
+    }
 }

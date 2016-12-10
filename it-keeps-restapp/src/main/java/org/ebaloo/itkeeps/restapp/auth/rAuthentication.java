@@ -36,8 +36,14 @@ import com.codahale.metrics.annotation.Timed;
 public class rAuthentication {
 
 	private static final Logger logger = LoggerFactory.getLogger(rAuthentication.class.getName());
+    @Context
+    SecurityContext securityContext;
 
-	
+    
+/*
+    @Timed
+*/
+    
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
@@ -50,24 +56,15 @@ public class rAuthentication {
             jUser user = authenticate(credentials);
 
             String token = JwtFactory.getJwtString(user);
-            
+
             return Response.ok(new jToken(token)).build();
 
         } catch (Exception e) {
         	e.printStackTrace();
             return Response.status(Response.Status.UNAUTHORIZED).build();
-        }      
+        }
     }
 
-    
-/*
-    @Timed
-*/
-    
-	@Context
-	SecurityContext securityContext;
-
-	
 	@GET
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
@@ -112,9 +109,9 @@ public class rAuthentication {
     		logger.trace("authenticate()");
     	
     	SecurityFactory.validateCredential(jcredential);
-    	
-    	vCredential credential = vCredential.get(null, vCredential.class, jcredential.getId(), false);
-    	if(credential == null) 
+
+        vCredential credential = vCredential.get(null, vCredential.class, jcredential.getCred(), false);
+        if(credential == null)
     		throw new RuntimeException("credential is null!");
     	
     	jBaseLight user = credential.getUser();

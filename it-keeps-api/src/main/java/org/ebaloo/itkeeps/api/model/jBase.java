@@ -29,71 +29,71 @@ public class jBase extends jObject {
 	public static final String CLASS_TYPE = jBaseLight.CLASS_TYPE;
 	public static final String RID = jBaseLight.RID;
 	public static final String VERSION = jBaseLight.VERSION;
-	
-	
-	public jBase() {
-		
-	}
-	
-	@JsonIgnore
-	public final jBaseLight getJBaseLight() {
-		
-		jBaseLight j = new jBaseLight();
-		
-		if(this.isPresentRid())
-			j.setRid(this.getRid());
-		
-		if(this.isPresentName())
-			j.setName(this.getName());
-
-		if(this.isPresentJObject()) {
-			
-			if(this.getJObject().isPresentType())
-				j.setType(this.getJObject().getType());
-			
-			if(this.getJObject().isPresentVersion())
-				j.setVersion(this.getJObject().getVersion());
-		}
-
-		
-		return j;
-		
-	}
-
-	
 	public static final String _OBJECT = "_object";
-
 	@JsonProperty(_OBJECT)
 	private JObject jobject = null;
-	
-	public JObject getJObject() {
-		
-		if(jobject == null)
-			jobject = new JObject();
-		
-		return jobject;
-	}
-	
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	@JsonIgnore
-	public boolean isPresentJObject() {
-		return jobject != null;
+	private Optional<Rid> rid = Optional.empty();
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+	@JsonIgnore
+	private Optional<String> name = Optional.empty();
+
+	ressWarnings("OptionalUsedAsFieldOrParameterType")
+
+	@JsonIgnore
+	private Optional<String> description = Optional.empty();
+
+	@J
+	
+	public jBase() {
+
 	}
 
 
 	// GUID
 	
-	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	@JsonIgnore
-	private Optional<Rid> rid = Optional.empty();
+	public final jBaseLight getJBaseLight() {
+
+		jBaseLight j = new jBaseLight();
+
+		if(this.isPresentRid())
+			j.setRid(this.getRid());
+
+		if(this.isPresentName())
+			j.setName(this.getName());
+
+		if(this.isPresentJObject()) {
+
+			if(this.getJObject().isPresentType())
+				j.setType(this.getJObject().getType());
+
+			if(this.getJObject().isPresentVersion())
+				j.setVersion(this.getJObject().getVersion());
+		}
+
+
+		return j;
+
+	}
 	
+	public JObject getJObject() {
+
+		if(jobject == null)
+			jobject = new JObject();
+
+		return jobject;
+	}
+
+	@JsonIgnore
+	public boolean isPresentJObject() {
+		return jobject != null;
+	}
+
 	@JsonIgnore
 	public final Rid getRid() {
 		return this.rid.orElse(null);
-	}
-
-	@JsonProperty(RID)
-	private String _getRid() {
-		return rid.isPresent() ?  rid.get().toString() : null;
 	}
 
 	@JsonIgnore
@@ -101,6 +101,14 @@ public class jBase extends jObject {
 		this.rid = Optional.ofNullable(rid);
 	}
 
+	@JsonProperty(RID)
+	private String _getRid() {
+		return rid.isPresent() ? rid.get().getSimple() : null;
+	}
+
+
+	// NAME
+	
 	@JsonProperty(RID)
 	private void _setRid(String rid) {
 		this.rid = StringUtils.isEmpty(rid) ? Optional.empty() : Optional.of(new Rid(rid));
@@ -111,13 +119,6 @@ public class jBase extends jObject {
 		return this.rid.isPresent();
 	}
 
-	
-	// NAME
-	
-	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-	@JsonIgnore
-	private Optional<String> name = Optional.empty();
-	
 	@JsonProperty(NAME)
 	public final String getName() {
 		return name.orElse(null);
@@ -132,28 +133,58 @@ public class jBase extends jObject {
 	public final boolean isPresentName() {
 		return this.name.isPresent();
 	}
-	
-	
+
+	DESCRIPTION
+
+			@Supp
+	Property(DESCRIPTION)
+
+	public String getDescription() {
+		return this.description.orElse(null);
+	}
+
+	@Jsson
+	Property(DESCRIPTION)
+
+	public void setDescription(String value) {
+		this.description = Optional.ofNullable(value);
+	}
+
+	@Json
+	Ignore
+
+	public boolean isPresentDescription() {
+		return this.description.isPresent();
+	}
 
 
-	
+	on
 	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	public static class JObject {
-		
-		public JObject() {
-			
-		}
-		
-		// TYPE
-		
+
 		@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 		@JsonIgnore
 		private Optional<String> type = Optional.empty();
-		
+
+		// TYPE
+		@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+		@JsonIgnore
+		private Optional<Integer> version = Optional.empty();
+		@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+		@JsonIgnore
+		private Optional<DateTime> creationDate = Optional.empty();
+
+		public JObject() {
+
+		}
+
 		@JsonProperty(CLASS_TYPE)
 		public final String getType() {
 			return this.type.orElse(null);
 		}
+
+
+		// VERSION
 
 		@JsonProperty(CLASS_TYPE)
 		public final void setType(String value) {
@@ -165,14 +196,6 @@ public class jBase extends jObject {
 			return this.type.isPresent();
 		}
 
-		
-		// VERSION
-		
-		
-		@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-		@JsonIgnore
-		private Optional<Integer> version = Optional.empty();
-		
 		@JsonProperty(VERSION)
 		public final Integer getVersion() {
 			return this.version.orElse(null);
@@ -183,18 +206,14 @@ public class jBase extends jObject {
 			this.version = Optional.ofNullable(value);
 		}
 
+
+		// CREATION_DATE
+
 		@JsonIgnore
 		public final boolean isPresentVersion() {
 			return this.version.isPresent();
 		}
-		
-		
-		// CREATION_DATE
-		
-		@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-		@JsonIgnore
-		private Optional<DateTime> creationDate = Optional.empty();
-		
+
 		@JsonProperty(CREATION_DATE)
 		public final DateTime getCreationDate() {
 			return this.creationDate.orElse(null);
@@ -207,29 +226,6 @@ public class jBase extends jObject {
 	}
 
 
-	// DESCRIPTION
-	
-	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-	@JsonIgnore
-	private Optional<String> description = Optional.empty();
-	
-	@JsonProperty(DESCRIPTION)
-	public String getDescription() {
-		return this.description.orElse(null);
-	}
-
-	@JsonProperty(DESCRIPTION)
-	public void setDescription(String value) {
-		this.description = Optional.ofNullable(value);
-	}
-
-	@JsonIgnore
-	public boolean isPresentDescription() {
-		return this.description.isPresent();
-	}
-
-	
-	
-
+	//
 
 }

@@ -14,31 +14,32 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class jBaseLight extends jObject {
 
 	public static final String NAME = "name";
-	public static final String CLASS_TYPE = "classType";
+	public static final String CLASS_TYPE = "type";
 	public static final String RID = Rid.RDI_NAME;
-	public static final String VERSION = "version";
-	
-	public jBaseLight() {
-		
-	}
-	
-	
-
-
-	// GUID
-	
+	public static final String VERSION = "ver";
 	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @JsonIgnore
 	private Optional<Rid> rid = Optional.empty();
-	
+
+
+	// GUID
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+	@JsonIgnore
+	private Optional<String> name = Optional.empty();
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+	@JsonIgnore
+	private Optional<String> type = Optional.empty();
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+	@JsonIgnore
+	private Optional<Integer> version = Optional.empty();
+
+	public jBaseLight() {
+
+	}
+
 	@JsonIgnore
 	public final Rid getRid() {
 		return this.rid.orElse(null);
-	}
-
-	@JsonProperty(RID)
-	private String _getRid() {
-		return rid.isPresent() ?  rid.get().toString() : null;
 	}
 
 	@JsonIgnore
@@ -46,6 +47,14 @@ public class jBaseLight extends jObject {
 		this.rid = Optional.of(guid);
 	}
 
+
+	// NAME
+
+	@JsonProperty(RID)
+	private String _getRid() {
+		return rid.isPresent() ? rid.get().getSimple() : null;
+	}
+	
 	@JsonProperty(RID)
 	private void _setRid(String guid) {
 		this.rid = StringUtils.isEmpty(guid) ? Optional.of(null) : Optional.of(new Rid(guid));
@@ -56,18 +65,14 @@ public class jBaseLight extends jObject {
 		return this.rid.isPresent();
 	}
 
-	
-	// NAME
-	
-	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    @JsonIgnore
-	private Optional<String> name = Optional.empty();
-	
 	@JsonProperty(NAME)
 	public final String getName() {
 		return name.orElse(null);
 	}
 
+
+	// TYPE
+		
 	@JsonProperty(NAME)
 	public final void setName(String name) {
 		this.name = Optional.of(name == null ? "" : name);
@@ -77,17 +82,7 @@ public class jBaseLight extends jObject {
 	public final boolean isPresentName() {
 		return this.name.isPresent();
 	}
-	
-	
 
-
-		
-		// TYPE
-		
-		@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-        @JsonIgnore
-		private Optional<String> type = Optional.empty();
-		
 		@JsonProperty(CLASS_TYPE)
 		public final String getType() {
 			return this.type.orElse(null);
@@ -98,18 +93,13 @@ public class jBaseLight extends jObject {
 			this.type = Optional.of(value == null ? "" : value);
 		}
 
+
+	// VERSION
+		
 		@JsonIgnore
 		public final boolean isPresentType() {
 			return this.type.isPresent();
 		}
-
-		
-		// VERSION
-		
-		
-		@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-        @JsonIgnore
-		private Optional<Integer> version = Optional.empty();
 		
 		@JsonProperty(VERSION)
 		public final Integer getVersion() {

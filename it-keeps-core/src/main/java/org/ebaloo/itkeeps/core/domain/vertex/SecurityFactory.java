@@ -90,7 +90,7 @@ public final class SecurityFactory {
 
 			SecurityAcl sAcl = new SecurityAcl();
 
-			String userOrid = src.get();
+			String userOrid = src.getFull();
 
 			{
 				StringBuilder request = new StringBuilder();
@@ -108,7 +108,7 @@ public final class SecurityFactory {
 				}
 			}
 
-			if ((dst != null) && (dst.get() != null)) {
+			if ((dst != null) && (dst.getFull() != null)) {
 				StringBuilder request = new StringBuilder();
 
 				request.append("SELECT FROM (TRAVERSE OUT('");
@@ -120,7 +120,7 @@ public final class SecurityFactory {
 				request.append(") WHERE @rid IN (SELECT @rid FROM (TRAVERSE OUT('");
 				request.append(E_ACL_RELATION);
 				request.append("') FROM ");
-				request.append(dst.get());
+				request.append(dst.getFull());
 				request.append(") WHERE @class = '");
 				request.append(vAcl.class.getSimpleName());
 				request.append("') AND @class = '");
@@ -187,12 +187,12 @@ public final class SecurityFactory {
 	}
 
 	/*
-    public static void validateCredential(vUser user, jCredential jcredential) {
+	public static void validateCredential(vUser user, jCredential jcredential) {
 
 		if (logger.isTraceEnabled())
 			logger.trace("validateCredential()");
 
-		vCredential credential = vCredential.get(null, vCredential.class, jcredential.getId(), false);
+		vCredential credential = vCredential.get(null, vCredential.class, jcredential.getCred(), false);
 
 		if (credential == null) {
 			throw new RuntimeException("TODO"); // TODO

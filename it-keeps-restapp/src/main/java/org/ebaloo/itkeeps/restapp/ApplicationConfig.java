@@ -8,12 +8,7 @@ import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Provider;
 
 import org.ebaloo.itkeeps.core.tools.MetricsFactory;
-import org.ebaloo.itkeeps.restapp.api.ApiConfig;
-import org.ebaloo.itkeeps.restapp.auth.AuthenticationConfig;
 import org.ebaloo.itkeeps.restapp.exception.ApplicationExceptionMapper;
-import org.ebaloo.itkeeps.restapp.img.ImageConfig;
-import org.ebaloo.itkeeps.restapp.test.TestConfig;
-import org.ebaloo.itkeeps.restapp.tools.ToolsConfig;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.media.sse.SseFeature;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -31,10 +26,6 @@ public class ApplicationConfig extends ResourceConfig implements InterfaceApplic
 
 	private Set<Class<?>> classes = new HashSet<>();
 
-	public void classesAdd(Class<?> c) {
-		classes.add(c);
-	}
-
 	public ApplicationConfig() {
 
 		if (logger.isTraceEnabled())
@@ -42,6 +33,10 @@ public class ApplicationConfig extends ResourceConfig implements InterfaceApplic
 
 		initializeApplication();
 	}
+
+    public void classesAdd(Class<?> c) {
+        classes.add(c);
+    }
 
 	private void initializeApplication() {
 
@@ -68,12 +63,11 @@ public class ApplicationConfig extends ResourceConfig implements InterfaceApplic
 	}
 
 	private void registerResources() {
-		ToolsConfig.init(this);
-		AuthenticationConfig.init(this);
-		TestConfig.init(this);
-		ImageConfig.init(this);
-		ApiConfig.init(this);
-	}
+        org.ebaloo.itkeeps.restapp.tools.Index.init(this);
+        org.ebaloo.itkeeps.restapp.auth.Index.init(this);
+        org.ebaloo.itkeeps.restapp.img.Index.init(this);
+        org.ebaloo.itkeeps.restapp.api.Index.init(this);
+    }
 
 	private void registerProviders() {
 		classes.add(ApplicationExceptionMapper.class);

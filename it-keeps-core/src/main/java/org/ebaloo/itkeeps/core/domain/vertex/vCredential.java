@@ -25,15 +25,15 @@ public final class vCredential extends vBase {
 	 */
 
 	vCredential(final jCredential j, final jBaseLight jblUser) {
-		super(j.getId());
+		super(j.getCred());
 
 		try {
-			if (StringUtils.isEmpty(j.getId())) {
+			if (StringUtils.isEmpty(j.getCred())) {
 				throw new RuntimeException("TODO"); // TODO
 			}
 
 			if (jblUser != null) {
-				vCredential.get(this.getGraph(), this.getClass(), j.getId(), false);
+				vCredential.get(this.getGraph(), this.getClass(), j.getCred(), false);
 				
 				this.setUser(jblUser);
 			}
@@ -84,6 +84,10 @@ public final class vCredential extends vBase {
 	 * PASSWORD
 	 */
 
+	private void setAuthenticationType(enAuthentication authType) {
+		this.setProperty(jCredential.AUTHENTICATION_TYPE, authType.name());
+	}
+
 	vUser _getUser() {
 		return this.getEdge(vUser.class, DirectionType.PARENT, false, eCredentialToUser.class);
 	}
@@ -92,13 +96,13 @@ public final class vCredential extends vBase {
 		return getJBaseLight(this._getUser());
 	}
 
-	
-	private void setAuthenticationType(enAuthentication authType) {
-		this.setProperty(jCredential.AUTHENTICATION_TYPE, authType.name());
+	private void setUser(jBaseLight user) {
+		setEdges(this.getGraph(), vCredential.class, this, vUser.class, get(this.getGraph(), vUser.class, user, false), DirectionType.PARENT,
+				eCredentialToUser.class, false);
 	}
 
 	private void setPassowrdHash(final String hash) {
-		
+
 		if (StringUtils.isEmpty(hash)) {
 			this.setProperty(HASH_PASSWORD, StringUtils.EMPTY);
 			return;
@@ -108,7 +112,7 @@ public final class vCredential extends vBase {
 	}
 
 	void setPassowrd64(final String base64) {
-		
+
 		if (StringUtils.isEmpty(base64)) {
 			this.setProperty(HASH_PASSWORD, StringUtils.EMPTY);
 			return;
@@ -117,20 +121,12 @@ public final class vCredential extends vBase {
 		this.setPassowrdHash(SecurityFactory.getHash(base64));
 	}
 
-
-	private void setUser(jBaseLight user) {
-		setEdges(this.getGraph(), vCredential.class, this, vUser.class, get(this.getGraph(), vUser.class, user, false), DirectionType.PARENT,
-				eCredentialToUser.class, false);
-	}
-
-
-	
 	jCredential read() {
 		jCredential j = new jCredential();
 		
 		this.readBase(j);
-		
-		j.setId(this.getName());
+
+		j.setCred(this.getName());
 		j.setName(this.getName());
 		j.setUser(this.getUser());
 		j.setAuthenticationType(this.getAuthenticationType());

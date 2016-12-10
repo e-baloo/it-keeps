@@ -29,20 +29,14 @@ import com.codahale.metrics.Timer;
 @Provider
 public class AuthorizationRequestFilter implements ContainerRequestFilter {
 
-	private static final Logger logger = LoggerFactory.getLogger(AuthorizationRequestFilter.class.getName());
-
-	
+    public static final Timer TIMER_FILTER = MetricsFactory.getMetricRegistry().timer(AuthorizationRequestFilter.class.getName() + ".filter");
+    private static final Logger logger = LoggerFactory.getLogger(AuthorizationRequestFilter.class.getName());
 	private static final String BEARE = "Bearer";
-
     @Inject
 	private
 	javax.inject.Provider<UriInfo> uriInfo;
-
 	@Context
 	private ResourceInfo resourceInfo;
-
-	
-	public static final Timer TIMER_FILTER = MetricsFactory.getMetricRegistry().timer(AuthorizationRequestFilter.class.getName() + ".filter");
 	
 	@Override
 	public void filter(ContainerRequestContext requestContext) {
@@ -58,9 +52,9 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 			if (method.isAnnotationPresent(PermitAll.class)) {
 				if (logger.isTraceEnabled())
 					logger.trace(path + "@PermitAll -> PASS");
-				
-	            requestContext.setSecurityContext(new SecurityContextAuthorizer(uriInfo, null, null));
-				return;
+
+                requestContext.setSecurityContext(new SecurityContextAuthorize(uriInfo, null, null));
+                return;
 			}
 	
 			// Get the HTTP Authorization header from the request
@@ -89,9 +83,9 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 			} catch (Exception e) {
 	
 				if (logger.isTraceEnabled())
-					logger.trace("'token' is invalide -> DENY");
-	
-				requestContext.abortWith((new ExceptionResponse(Response.Status.UNAUTHORIZED)).getResponse());
+                    logger.trace("'token' is invalid -> DENY");
+
+                requestContext.abortWith((new ExceptionResponse(Response.Status.UNAUTHORIZED)).getResponse());
 				return;
 			}
 			
@@ -107,22 +101,23 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 	              
 	            if(logger.isTraceEnabled())
 	            	logger.trace(String.format("requesterRole : %s / applicationRole: %s = %s", requesterRole, applicationRole, requesterRole.isInRole(applicationRole)));
+
 	            if(!requesterRole.isInRole(applicationRole)) {
 	            
 	    			if (logger.isTraceEnabled())
-	    				logger.trace("'token.role' is invalide -> DENY");
-	            	
-	    			requestContext.abortWith((new ExceptionResponse(Response.Status.UNAUTHORIZED)).getResponse());
+                        logger.trace("'token.role' is invalid -> DENY");
+
+                    requestContext.abortWith((new ExceptionResponse(Response.Status.UNAUTHORIZED)).getResponse());
 	    			return;
 	            }
 	            	
 	        }
 			
 			if (logger.isTraceEnabled())
-				logger.trace("'token.role' is valide -> PASS");
-			
-			requestContext.setSecurityContext(new SecurityContextAuthorizer(uriInfo, rid, requesterRole));
-		} finally {
+                logger.trace("'token.role' is valid -> PASS");
+
+            requestContext.setSecurityContext(new SecurityContextAuthorize(uriInfo, rid, requesterRole));
+        } finally {
 			timerContext.stop();
 		}
 	}

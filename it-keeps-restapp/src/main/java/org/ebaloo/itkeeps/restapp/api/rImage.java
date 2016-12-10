@@ -55,7 +55,7 @@ public class rImage {
     public Response updateEnc(final jImage j) {
         Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
         fImage.update(requesterRid, j);
-        return Response.ok().entity(fImage.read(requesterRid, j.getRid().toString())).build();
+        return Response.ok().entity(fImage.read(requesterRid, j.getRid().getSimple())).build();
     }
 
 
@@ -68,7 +68,7 @@ public class rImage {
     public Response create(final jImage j) {
         Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
         jImage image = fImage.create(requesterRid, j);
-        return Response.ok().entity(fImage.read(requesterRid, image.getRid().toString())).build();
+        return Response.ok().entity(fImage.read(requesterRid, image.getRid().getSimple())).build();
     }
 
 

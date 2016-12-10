@@ -14,30 +14,42 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class jCredential extends jBaseStandard {
 
-	
-	// ID
 
-	public static final String ID = "id";
+    // CRED
 
-	@JsonProperty(ID)
-	private String id = null;
+    public static final String CRED = "cred";
+    public static final String PASSWORD64 = "password64";
+    public static final String USER_NAME = "userName";
+    public static final String USER = "user";
 
-	public String getId() {
-		return id;
-	}
 
-	@JsonIgnore
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	// PASSWORD 
-	
-	public static final String PASSWORD64 = "password64";
-
-	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    // PASSWORD
+    public static final String AUTHENTICATION_TYPE = "authenticationType";
+    @JsonProperty(CRED)
+    private String cred = null;
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @JsonIgnore
 	private Optional<String> password64 = Optional.empty();
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    @JsonIgnore
+    private Optional<String> userName = Optional.empty();
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    @JsonIgnore
+    private Optional<jBaseLight> user = Optional.empty();
+
+
+    // USER_NAME
+    @JsonIgnore
+    private enAuthentication authenticationType = enAuthentication.BASIC;
+
+    public String getCred() {
+        return cred;
+    }
+
+    @JsonIgnore
+    public void setCred(String id) {
+        this.cred = id;
+    }
 
 	@JsonProperty(PASSWORD64)
 	public String getPassword64() {
@@ -49,26 +61,19 @@ public class jCredential extends jBaseStandard {
 		this.password64 = Optional.ofNullable(value);
 	}
 
+    // USER
+
 	@JsonIgnore
 	public boolean isPresentPassword64() {
 		return this.password64.isPresent();
 	}
-	
 
-	// USER_NAME
-
-	public static final String USER_NAME = "userName";
-
-	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    @JsonIgnore
-	private Optional<String> userName = Optional.empty();
-	
 	@JsonProperty(USER_NAME)
 	public final String getUserName() {
 		return this.userName.orElse(null);
 	}
 
-	@JsonProperty(USER_NAME)
+    @JsonProperty(USER_NAME)
 	public final void setUserName(String value) {
 		this.userName = Optional.ofNullable(value);
 	}
@@ -78,35 +83,22 @@ public class jCredential extends jBaseStandard {
 		return this.userName.isPresent();
 	}
 
-	// USER
-
-	public static final String USER = "user";
-
-	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    @JsonIgnore
-	private Optional<jBaseLight> user = Optional.empty();
-	
 	@JsonProperty(USER)
 	public final jBaseLight getUser() {
 		return this.user.orElse(null);
 	}
 
-	@JsonProperty(USER)
+    // AUTHENTICATION_TYPE
+
+    @JsonProperty(USER)
 	public final void setUser(jBaseLight value) {
 		this.user = Optional.ofNullable(value);
 	}
 
-	@JsonIgnore
+    @JsonIgnore
 	public final boolean isPresentUser() {
 		return this.user.isPresent();
 	}
-	
-	// AUTHENTICATION_TYPE
-	
-	public static final String AUTHENTICATION_TYPE = "authenticationType";
-	
-	@JsonIgnore
-	private enAuthentication authenticationType = enAuthentication.BASIC;
 	
 	@JsonIgnore
 	public final enAuthentication getAuthenticationType() {
