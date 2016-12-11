@@ -66,28 +66,28 @@ public class tAclGroup {
 		
 		
 		aclGrp_dataCreate.setName("aclGrp Data CREATE");
-		aclGrp_dataCreate.getParents().add(aclGrp_dataPathCreate.getJBaseLight());
-		aclGrp_dataCreate.getParents().add(aclGrp_dataEntryCreate.getJBaseLight());
-		aclGrp_dataCreate = client.callJsonCreat(ApiPath.API_ACL_GRP_CREATE, aclGrp_dataCreate, jAclGroup.class);
+        aclGrp_dataCreate.getParents().add(aclGrp_dataPathCreate.getLight());
+        aclGrp_dataCreate.getParents().add(aclGrp_dataEntryCreate.getLight());
+        aclGrp_dataCreate = client.callJsonCreat(ApiPath.API_ACL_GRP_CREATE, aclGrp_dataCreate, jAclGroup.class);
 
 		aclGrp_dataUpdate.setName("aclGrp Data UPDATE");
-		aclGrp_dataUpdate.getParents().add(aclGrp_dataPathUpdate.getJBaseLight());
-		aclGrp_dataUpdate.getParents().add(aclGrp_dataEntryUpdate.getJBaseLight());
-		aclGrp_dataUpdate = client.callJsonCreat(ApiPath.API_ACL_GRP_CREATE, aclGrp_dataUpdate, jAclGroup.class);
+        aclGrp_dataUpdate.getParents().add(aclGrp_dataPathUpdate.getLight());
+        aclGrp_dataUpdate.getParents().add(aclGrp_dataEntryUpdate.getLight());
+        aclGrp_dataUpdate = client.callJsonCreat(ApiPath.API_ACL_GRP_CREATE, aclGrp_dataUpdate, jAclGroup.class);
 
 		aclGrp_dataRead.setName("aclGrp Data READ");
-		aclGrp_dataRead.getParents().add(aclGrp_dataPathRead.getJBaseLight());
-		aclGrp_dataRead.getParents().add(aclGrp_dataEntryRead.getJBaseLight());
-		aclGrp_dataRead = client.callJsonCreat(ApiPath.API_ACL_GRP_CREATE, aclGrp_dataRead, jAclGroup.class);
+        aclGrp_dataRead.getParents().add(aclGrp_dataPathRead.getLight());
+        aclGrp_dataRead.getParents().add(aclGrp_dataEntryRead.getLight());
+        aclGrp_dataRead = client.callJsonCreat(ApiPath.API_ACL_GRP_CREATE, aclGrp_dataRead, jAclGroup.class);
 
 		aclGrp_dataDeny.setName("aclGrp Data DENY");
 		aclGrp_dataDeny = client.callJsonCreat(ApiPath.API_ACL_GRP_CREATE, aclGrp_dataDeny, jAclGroup.class);
 		aclGrp_dataDeny.getAclData().add(enAclData.DENY);
 		aclGrp_dataDeny = client.callJsonUpdate(ApiPath.API_ACL_GRP_UPDATE, aclGrp_dataDeny, jAclGroup.class);
-		aclGrp_dataDeny.getParents().add(aclGrp_dataPathDeny.getJBaseLight());
-		aclGrp_dataDeny = client.callJsonUpdate(ApiPath.API_ACL_GRP_UPDATE, aclGrp_dataDeny, jAclGroup.class);
-		aclGrp_dataDeny.getParents().add(aclGrp_dataEntryDeny.getJBaseLight());
-		aclGrp_dataDeny = client.callJsonUpdate(ApiPath.API_ACL_GRP_UPDATE, aclGrp_dataDeny, jAclGroup.class);
+        aclGrp_dataDeny.getParents().add(aclGrp_dataPathDeny.getLight());
+        aclGrp_dataDeny = client.callJsonUpdate(ApiPath.API_ACL_GRP_UPDATE, aclGrp_dataDeny, jAclGroup.class);
+        aclGrp_dataDeny.getParents().add(aclGrp_dataEntryDeny.getLight());
+        aclGrp_dataDeny = client.callJsonUpdate(ApiPath.API_ACL_GRP_UPDATE, aclGrp_dataDeny, jAclGroup.class);
 
 		
 		aclGrp_TestDelete.setName("aclGrp Test Delete");

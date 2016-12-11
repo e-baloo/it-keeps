@@ -26,44 +26,26 @@ import com.orientechnologies.orient.core.metadata.schema.OType;
 @DatabaseVertrex(isAbstract = true)
 public class vBase extends vBaseAbstract {
 
-	@SuppressWarnings("unused")
+    public static final String ICON_NAME_PREFIX = "icon:";
+    @SuppressWarnings("unused")
 	private static Logger logger = LoggerFactory.getLogger(vBase.class);
-
-
-
-	protected vBase() {
-	}
 
 	/*
 	protected Base(final BaseAbstract abase) {
 		super(abase);
 	}
 	*/
-
-	protected vBase(final String name) {
-		super(true);
-		this.setProperty(jBase.CREATION_DATE, DateTime.now(DateTimeZone.UTC).toDate());
-		this.setProperty(jBase.NAME, StringUtils.isEmpty(name) ? this.getORID() : name );		
-	}
+    private String name = null;
 
 
 	
 
 	/*
-	 * CREATION_DATE
+     * CREATION_DATE
 	 */
-	
-	@DatabaseProperty(name = jBase.CREATION_DATE, isReadOnly = true, type = OType.DATETIME)
-	public final DateTime getCreationDate() {
-		
-		Date value = this.getProperty(jBase.CREATION_DATE);
 
-		if (value == null) {
-			return null;
-		}
-
-		return new DateTime(value);
-	}
+    protected vBase() {
+    }
 
 
 
@@ -75,14 +57,24 @@ public class vBase extends vBaseAbstract {
 	 */
 
 	
-	@DatabaseProperty(name = jBase.DESCRIPTION)
-	public final String getDescription() {
-		return this.getProperty(jBase.DESCRIPTION);
-	}
+	protected vBase(final String name) {
+		super(true);
+		this.setProperty(jBase.CREATION_DATE, DateTime.now(DateTimeZone.UTC).toDate());
+        this.setProperty(jBase.NAME, StringUtils.isEmpty(name) ? this.getORID() : name);
+    }
 
-	public final void setDescription(final String value) {
-		this.setProperty(jBase.DESCRIPTION, value);
-	}
+    protected vBase(final jBase j) {
+        super(true);
+
+
+        try {
+            this.setProperty(jBase.CREATION_DATE, DateTime.now(DateTimeZone.UTC).toDate());
+            this.updateBase(j);
+        } catch (Exception e) {
+            this.delete();
+            throw e;
+        }
+    }
 
 	
 	
@@ -230,11 +222,19 @@ public class vBase extends vBaseAbstract {
 	}
 	*/
 
+    public static jBaseLight getJBaseLight(final vBase base) {
+        if (base == null)
+            return null;
 
-	
+        jBaseLight j = new jBaseLight();
 
+        j.setId(base.getRid());
+        j.setName(base.getName());
+        j.setType(base.getType());
+        j.setVersion(base.getObjectVersion());
 
-	public static final String ICON_NAME_PREFIX = "icon:";
+        return j;
+    }
 
 
 	
@@ -280,40 +280,28 @@ public class vBase extends vBaseAbstract {
 		return baseAbstract;
 	}
 	*/
-	
-	
-    public static jBaseLight getJBaseLight (final vBase base)  
-    {
-    	if(base == null)
-    		return null;
-    	
-    	jBaseLight j = new jBaseLight();
-    	
-    	j.setRid(base.getRid());
-    	j.setName(base.getName());
-    	j.setType(base.getType());
-    	j.setVersion(base.getObjectVersion());
 
-    	return j;
-	}
+    @DatabaseProperty(name = jBase.CREATION_DATE, isReadOnly = true, type = OType.DATETIME)
+    public final DateTime getCreationDate() {
+
+        Date value = this.getProperty(jBase.CREATION_DATE);
+
+        if (value == null) {
+            return null;
+        }
+
+        return new DateTime(value);
+    }
 
 	
 	
 
 	// API Methose
-    
-	protected vBase(final jBase j) {
-		super(true);
 
-
-		try {
-			this.setProperty(jBase.CREATION_DATE, DateTime.now(DateTimeZone.UTC).toDate());
-			this.updateBase(j);
-		} catch (Exception e) {
-			this.delete();
-			throw e;
-		}
-	}
+    @DatabaseProperty(name = jBase.DESCRIPTION)
+    public final String getDescription() {
+        return this.getProperty(jBase.DESCRIPTION);
+    }
 	
 	/*
 	public static <T extends jBase> T create(T j, Guid requesteurGuid) {
@@ -321,38 +309,29 @@ public class vBase extends vBaseAbstract {
 	}
     */
 
-	protected <T extends jBase> void readBase(T j) {
-		
-		j.getJObject().setType(this.getType());
-		j.getJObject().setVersion(this.getObjectVersion());
-		j.getJObject().setCreationDate(this.getCreationDate());
+    public final void setDescription(final String value) {
+        this.setProperty(jBase.DESCRIPTION, value);
+    }
+
+    protected <T extends jBase> void readBase(T j) {
+
+        j.setType(this.getType());
+        j.setVersion(this.getObjectVersion());
+        j.setCreationDate(this.getCreationDate());
 
 		j.setRid(this.getRid());
 		j.setName(this.getName());
 		j.setDescription(this.getDescription());
-		
+
 	}
-	
 	
 	final <T extends jBase> void checkVersion(T j) {
-		if(!j.isPresentJObject())
-			throw new RuntimeException("json not have '" + jBase._OBJECT + "' seting");
-		if(!j.getJObject().isPresentVersion())
-			throw new RuntimeException("json not have '" + jBase._OBJECT + "." + jBase.VERSION + "' seting");
-		if(j.getJObject().getVersion() != this.getObjectVersion()) 
-			throw new RuntimeException("json '" + jBase._OBJECT + "." + jBase.VERSION + " is differtne with 'this'");
-	}
-	
-	
-	protected <T extends jBase> void updateBase(T j) {
-		
-		if(j.isPresentName())
-			this.setName(j.getName());
 
-		if(j.isPresentDescription())
-			this.setDescription(j.getDescription());
-		
-	}
+        if (!j.isPresentVersion())
+            throw new RuntimeException("json not have '" + jBase.VERSION + "' setting");
+        if (j.getVersion() != this.getObjectVersion())
+            throw new RuntimeException("json '" + jBase.VERSION + "' is different with 'this'");
+    }
 
 	
 	
@@ -363,10 +342,18 @@ public class vBase extends vBaseAbstract {
 	
 
 	/*
-	 * NAME
+     * NAME
 	 */
 	
-	private String name = null;
+	protected <T extends jBase> void updateBase(T j) {
+
+        if(j.isPresentName())
+			this.setName(j.getName());
+
+		if(j.isPresentDescription())
+			this.setDescription(j.getDescription());
+
+    }
 	
 	@DatabaseProperty(name = jBase.NAME, isNotNull = true)
 	public String getName() {

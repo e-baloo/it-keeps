@@ -46,8 +46,8 @@ public final class fCredential {
 		if(j.getCredentials() == null)
 			return false;
 
-		return j.getCredentials().stream().map(jBaseLight::getRid).collect(Collectors.toList()).contains(credRid);
-	}
+        return j.getCredentials().stream().map(jBaseLight::getId).collect(Collectors.toList()).contains(credRid);
+    }
 
 
 	public static jCredential delete(Rid requesterRid, Rid credRid) {
@@ -80,8 +80,8 @@ public final class fCredential {
 			throw ExceptionPermission.IS_GUEST;
 
 		jUser ju = fUser.read(requesterRid, requesterRid);
-		
-		vCredential vc = new vCredential(j, ju.getJBaseLight());
+
+        vCredential vc = new vCredential(j, ju.getLight());
 
 		return fCredential.read(requesterRid, vc.getRid());
 	}
@@ -95,8 +95,8 @@ public final class fCredential {
 			throw ExceptionPermission.NOT_ROOT;
 
 		jUser ju = fUser.read(requesterRid, userRid);
-		
-		vCredential vc = new vCredential(j, ju.getJBaseLight());
+
+        vCredential vc = new vCredential(j, ju.getLight());
 
 		return fCredential.read(requesterRid, vc.getRid());
 	}

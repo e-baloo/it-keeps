@@ -53,7 +53,7 @@ abstract class vBaseAbstract extends vCommon {
     	if(baselight == null || !baselight.isPresentRid())
     		return null;
 
-		return get(graph, target, baselight.getRid(), isInstanceof);
+		return get(graph, target, baselight.getId(), isInstanceof);
 	}
 
 	public static <T extends vBaseAbstract> T get(final OrientBaseGraph graph, final Class<T> target, final Rid rid, boolean isInstanceof)

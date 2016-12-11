@@ -58,53 +58,6 @@ public final class vUser extends vBaseChildAcl {
 				.map(e -> enAclAdmin.valueOf(e.getName())).collect(Collectors.toList());
 	}
 
-	private List<jBaseLight> getAclGroups() {
-		return this.getEdges(vAclGroup.class, DirectionType.PARENT, false, eAclNoTraverse.class).stream()
-				.map(vBase::getJBaseLight).collect(Collectors.toList());
-	}
-
-	private List<jBaseLight> getCredentials() {
-		return this.getEdges(vCredential.class, DirectionType.CHILD, false, eCredentialToUser.class).stream()
-				.map(vBase::getJBaseLight).collect(Collectors.toList());
-	}
-
-	/*
-	final List<jBaseLight> getCredential() {
-		return this.getEdges(vCredential.class, DirectionType.CHILD, false, eCredentialToUser.class).stream()
-				.map(e -> getJBaseLight(e)).collect(Collectors.toList());
-	}
-	*/
-	
-	private List<jBaseLight> getGroups() {
-		return this.getEdges(vGroup.class, DirectionType.PARENT, false, eInGroup.class).stream()
-				.map(vBase::getJBaseLight).collect(Collectors.toList());
-
-	}
-
-	final enAclRole getRole() {
-		vAclRole role = this.getEdge(vAclRole.class, DirectionType.PARENT, false, eAclNoTraverse.class);
-		if (role == null)
-			return enAclRole.GUEST;
-		return enAclRole.valueOf(role.getName());
-	}
-
-	final jUser read() {
-
-		jUser j = new jUser();
-
-		this.readBaseStandard(j);
-
-		j.setCredentials(this.getCredentials());
-		j.setAclAdmin(this.getAclAdmin());
-		j.setRole(this.getRole());
-		j.setGroups(this.getGroups());
-		j.setAclGroups(this.getAclGroups());
-
-		this.readAcl(j);
-		
-		return j;
-	}
-
 	private void setAclAdmin(List<enAclAdmin> list) {
 		if (list == null)
 			list = new ArrayList<>();
@@ -115,6 +68,18 @@ public final class vUser extends vBaseChildAcl {
 				DirectionType.PARENT, eAclNoTraverse.class, false);
 	}
 
+    private List<jBaseLight> getAclGroups() {
+        return this.getEdges(vAclGroup.class, DirectionType.PARENT, false, eAclNoTraverse.class).stream()
+                .map(vBase::getJBaseLight).collect(Collectors.toList());
+    }
+
+	/*
+    final List<jBaseLight> getCredential() {
+		return this.getEdges(vCredential.class, DirectionType.CHILD, false, eCredentialToUser.class).stream()
+				.map(e -> getLight(e)).collect(Collectors.toList());
+	}
+	*/
+	
 	private void setAclGroups(List<jBaseLight> list) {
 
 		if (list == null)
@@ -128,20 +93,16 @@ public final class vUser extends vBaseChildAcl {
 				DirectionType.PARENT, eAclNoTraverse.class, false);
 	}
 
-	/*
-	private final void setCredentials(List<jBaseLight> list) {
+    private List<jBaseLight> getCredentials() {
+        return this.getEdges(vCredential.class, DirectionType.CHILD, false, eCredentialToUser.class).stream()
+                .map(vBase::getJBaseLight).collect(Collectors.toList());
+    }
 
-		if (list == null)
-			list = new ArrayList<jBaseLight>();
+    private List<jBaseLight> getGroups() {
+        return this.getEdges(vGroup.class, DirectionType.PARENT, false, eInGroup.class).stream()
+                .map(vBase::getJBaseLight).collect(Collectors.toList());
 
-		// Optimization
-		OrientBaseGraph graph = this.getGraph();
-
-		setEdges(graph, vUser.class, this, vCredential.class,
-				list.stream().map(e -> get(graph, vCredential.class, e, false)).collect(Collectors.toList()),
-				DirectionType.CHILD, eCredentialToUser.class, false);
 	}
-	*/
 
 	private void setGroups(List<jBaseLight> list) {
 
@@ -157,11 +118,50 @@ public final class vUser extends vBaseChildAcl {
 
 	}
 
+    final enAclRole getRole() {
+        vAclRole role = this.getEdge(vAclRole.class, DirectionType.PARENT, false, eAclNoTraverse.class);
+        if (role == null)
+            return enAclRole.GUEST;
+        return enAclRole.valueOf(role.getName());
+    }
+
+	/*
+    private final void setCredentials(List<jBaseLight> list) {
+
+		if (list == null)
+			list = new ArrayList<jBaseLight>();
+
+		// Optimization
+		OrientBaseGraph graph = this.getGraph();
+
+		setEdges(graph, vUser.class, this, vCredential.class,
+				list.stream().map(e -> get(graph, vCredential.class, e, false)).collect(Collectors.toList()),
+				DirectionType.CHILD, eCredentialToUser.class, false);
+	}
+	*/
+
 	final void setRole(final enAclRole aclRole) {
 		setEdges(this.getGraph(), vUser.class, this, vAclRole.class,
 				vAclRole.get(this.getGraph(), vAclRole.class, aclRole.name()), DirectionType.PARENT,
 				eAclNoTraverse.class, false);
 	}
+
+    final jUser read() {
+
+        jUser j = new jUser();
+
+        this.readBaseStandard(j);
+
+        j.setCredentials(this.getCredentials());
+        j.setAclAdmin(this.getAclAdmin());
+        j.setRole(this.getRole());
+        j.setGroups(this.getGroups());
+        j.setAclGroups(this.getAclGroups());
+
+        this.readAcl(j);
+
+        return j;
+    }
 
 	final void update(final jUser j) {
 

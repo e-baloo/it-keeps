@@ -27,8 +27,8 @@ public class tTest {
 		acl1.getAclData().add(enAclData.PATH_CREATE);
 		acl1.getAclData().add(enAclData.ENTRY_CREATE);
 		acl1.getAclAdmin().add(enAclAdmin.DELEGATE);
-		acl1.getChildObjects().add(tGroup.jg_n1.getJBaseLight());
-		acl1.getChildObjects().add(tPath.jg_r2_n1.getJBaseLight());
+        acl1.getChildObjects().add(tGroup.jg_n1.getLight());
+        acl1.getChildObjects().add(tPath.jg_r2_n1.getLight());
 
 		/* Create */
 		

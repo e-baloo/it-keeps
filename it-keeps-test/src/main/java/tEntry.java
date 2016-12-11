@@ -49,12 +49,12 @@ public class tEntry {
 		entry2 = client.callJsonCreat(ApiPath.API_ENTRY_CREATE, entry2, jEntry.class);
 		entry3 = client.callJsonCreat(ApiPath.API_ENTRY_CREATE, entry3, jEntry.class);
 		entry4 = client.callJsonCreat(ApiPath.API_ENTRY_CREATE, entry4, jEntry.class);
-		
-		
-		entry1.setPath(tPath.jg_r1_n1_1.getJBaseLight());
-		entry2.setPath(tPath.jg_r1_n1_2.getJBaseLight());
-		entry3.setPath(tPath.jg_r2_n1_1.getJBaseLight());
-		entry4.setPath(tPath.jg_r2_n1.getJBaseLight());
+
+
+        entry1.setPath(tPath.jg_r1_n1_1.getLight());
+        entry2.setPath(tPath.jg_r1_n1_2.getLight());
+        entry3.setPath(tPath.jg_r2_n1_1.getLight());
+        entry4.setPath(tPath.jg_r2_n1.getLight());
 
 
 		entry1 = client.callJsonUpdate(ApiPath.API_ENTRY_UPDATE, entry1, jEntry.class);

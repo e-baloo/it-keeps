@@ -14,7 +14,6 @@ import org.ebaloo.itkeeps.api.enumeration.enAclAdmin;
 import org.ebaloo.itkeeps.api.enumeration.enAclData;
 import org.ebaloo.itkeeps.api.enumeration.enAclOwner;
 import org.ebaloo.itkeeps.api.enumeration.enAclRole;
-import org.ebaloo.itkeeps.api.enumeration.enAuthentication;
 import org.ebaloo.itkeeps.api.model.jBase;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.model.jCredential;
@@ -592,7 +591,7 @@ public final class SecurityFactory {
 		}
 
 		static Rid get(jBaseLight j) {
-			return j.getRid();
+			return j.getId();
 		}
 
 		static <T extends jBase> Rid get(jBase j) {

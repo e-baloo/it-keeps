@@ -116,11 +116,11 @@ public class Main {
 
 			LogFactory.getMain().info("xxxx");
 
-			fEntry.updateEncrypted(tUser.admin1.getRid(), list2.get(0).getRid(), jen);
-			LogFactory.getMain().info("---------------------------------------------------------");
+            fEntry.updateEncrypted(tUser.admin1.getRid(), list2.get(0).getId(), jen);
+            LogFactory.getMain().info("---------------------------------------------------------");
 
 			LogFactory.getMain().info("=> " + Base64
-					.decodeAsString(fEntry.readEncrypted(tUser.admin1.getRid(), list2.get(0).getRid()).getData64()));
+                    .decodeAsString(fEntry.readEncrypted(tUser.admin1.getRid(), list2.get(0).getId()).getData64()));
 
 			LogFactory.getMain().info("---------------------------------------------------------");
 

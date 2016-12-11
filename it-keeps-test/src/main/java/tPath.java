@@ -56,22 +56,22 @@ public class tPath {
 		jg_r2_n1 = client.callJsonCreat(ApiPath.API_PATH_CREATE, jg_r2_n1, jPath.class);
 		jg_r2_n1_1 = client.callJsonCreat(ApiPath.API_PATH_CREATE, jg_r2_n1_1, jPath.class);
 		jg_r2_n1_2 = client.callJsonCreat(ApiPath.API_PATH_CREATE, jg_r2_n1_2, jPath.class);
-		
-		
-		jg_r1_n1.getChilds().add(jg_r1_n1_1.getJBaseLight());
-		jg_r1_n1.getChilds().add(jg_r1_n1_2.getJBaseLight());
-		jg_r1_n1 = client.callJsonUpdate(ApiPath.API_PATH_UPDATE, jg_r1_n1, jPath.class);
-		
-		jg_r2_n1.getChilds().add(jg_r2_n1_1.getJBaseLight());
-		jg_r2_n1.getChilds().add(jg_r2_n1_2.getJBaseLight());
-		jg_r2_n1 = client.callJsonUpdate(ApiPath.API_PATH_UPDATE, jg_r2_n1, jPath.class);
-		
-		jg_r1.getChilds().add(jg_r1_n1.getJBaseLight());
-		jg_r1.getChilds().add(jg_r1_n2.getJBaseLight());
-		jg_r1 = client.callJsonUpdate(ApiPath.API_PATH_UPDATE, jg_r1, jPath.class);
-		
-		jg_r2.getChilds().add(jg_r2_n1.getJBaseLight());
-		jg_r2 = client.callJsonUpdate(ApiPath.API_PATH_UPDATE, jg_r2, jPath.class);
+
+
+        jg_r1_n1.getChilds().add(jg_r1_n1_1.getLight());
+        jg_r1_n1.getChilds().add(jg_r1_n1_2.getLight());
+        jg_r1_n1 = client.callJsonUpdate(ApiPath.API_PATH_UPDATE, jg_r1_n1, jPath.class);
+
+        jg_r2_n1.getChilds().add(jg_r2_n1_1.getLight());
+        jg_r2_n1.getChilds().add(jg_r2_n1_2.getLight());
+        jg_r2_n1 = client.callJsonUpdate(ApiPath.API_PATH_UPDATE, jg_r2_n1, jPath.class);
+
+        jg_r1.getChilds().add(jg_r1_n1.getLight());
+        jg_r1.getChilds().add(jg_r1_n2.getLight());
+        jg_r1 = client.callJsonUpdate(ApiPath.API_PATH_UPDATE, jg_r1, jPath.class);
+
+        jg_r2.getChilds().add(jg_r2_n1.getLight());
+        jg_r2 = client.callJsonUpdate(ApiPath.API_PATH_UPDATE, jg_r2, jPath.class);
 		
 		reload(client);
 		

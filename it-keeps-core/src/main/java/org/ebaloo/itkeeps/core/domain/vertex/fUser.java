@@ -9,8 +9,6 @@ import org.ebaloo.itkeeps.api.enumeration.enAclRole;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.ExceptionPermission;
 import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.SecurityAcl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.model.jUser;
 
@@ -30,8 +28,8 @@ public final class fUser {
 			throw ExceptionPermission.NOT_ADMIN;
 		if(!sAcl.isAdminUserRead())
 			throw ExceptionPermission.DENY;
-		return vBase.getAllBase(null, vUser.class, false).stream().map(e -> e.read().getJBaseLight()).collect(Collectors.toList());
-	}
+        return vBase.getAllBase(null, vUser.class, false).stream().map(e -> e.read().getLight()).collect(Collectors.toList());
+    }
 
 
 	public static jUser read(Rid requesterRid, Rid userRid) {

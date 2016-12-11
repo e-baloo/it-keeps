@@ -114,6 +114,6 @@ public class rUser {
 		if (cred == null)
 			throw new RuntimeException("readId(" + id + ") is null");
 
-		return Response.ok().entity(fUser.read(requesterRid, cred.getUser().getRid())).build();
-	}
+        return Response.ok().entity(fUser.read(requesterRid, cred.getUser().getId())).build();
+    }
 }

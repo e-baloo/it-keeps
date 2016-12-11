@@ -119,7 +119,7 @@ public class rAuthentication {
     	if(user == null) 
     		throw new RuntimeException("user is null!");
 
-    	
-    	return fUser.read(user.getRid(), user.getRid());
+
+        return fUser.read(user.getId(), user.getId());
     }
 }

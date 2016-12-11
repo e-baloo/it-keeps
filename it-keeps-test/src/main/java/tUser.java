@@ -48,11 +48,11 @@ public class tUser {
 		user1 = client.callJsonCreat(ApiPath.API_USER_CREATE, user1, jUser.class);
 		user2 = client.callJsonCreat(ApiPath.API_USER_CREATE, user2, jUser.class);
 		admin1 = client.callJsonCreat(ApiPath.API_USER_CREATE, admin1, jUser.class);
-		
-		
-		user1.getGroups().add(tGroup.jg_n1.getJBaseLight());
-		user2.getGroups().add(tGroup.jg_n2.getJBaseLight());
-		admin1.getGroups().add(tGroup.jg_r.getJBaseLight());
+
+
+        user1.getGroups().add(tGroup.jg_n1.getLight());
+        user2.getGroups().add(tGroup.jg_n2.getLight());
+        admin1.getGroups().add(tGroup.jg_r.getLight());
 
 		user1 = client.callJsonUpdate(ApiPath.API_USER_UPDATE, user1, jUser.class);
 		user2 = client.callJsonUpdate(ApiPath.API_USER_UPDATE, user2, jUser.class);

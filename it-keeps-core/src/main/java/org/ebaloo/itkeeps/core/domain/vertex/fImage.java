@@ -10,7 +10,6 @@ import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.ExceptionPermission
 import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory.SecurityAcl;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -97,7 +96,7 @@ public final class fImage {
         // TODO Security
 
 
-        return vImage.getAllBase(null, vImage.class, false).stream().map(e -> e.read(false).getJBaseLight()).collect(Collectors.toList());
+        return vImage.getAllBase(null, vImage.class, false).stream().map(e -> e.read(false).getLight()).collect(Collectors.toList());
     }
 }
 

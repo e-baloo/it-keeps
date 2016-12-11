@@ -45,7 +45,7 @@ public final class vCredential extends vBase {
 
 			this.setAuthenticationType(j.getAuthenticationType());
 
-			if ((jblUser == null) || jblUser.getRid() == null) {
+            if ((jblUser == null) || jblUser.getId() == null) {
 
 				jUser juser = new jUser();
 				juser.setName(j.getUserName());

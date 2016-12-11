@@ -129,7 +129,7 @@ public final class fEntry {
 		
 		List<jBaseLight> list = new ArrayList<>();
 		if(sAcl.isRoleRoot()) {
-			list = vBase.getAllBase(null, vEntry.class, false).stream().map(e -> e.read().getJBaseLight()).collect(Collectors.toList());
+			list = vBase.getAllBase(null, vEntry.class, false).stream().map(e -> e.read().getLight()).collect(Collectors.toList());
 		} else {
 			
 			StringBuilder sb = new StringBuilder();
@@ -155,7 +155,7 @@ public final class fEntry {
 				SecurityAcl sAclOv = SecurityFactory.getSecurityAcl(requesterRid, rid);
 				if(sAclOv.isDataEntryRead()) {
 					vEntry entry = vBaseAbstract.get(graph, vEntry.class, rid, false);
-					list.add(entry.read().getJBaseLight());
+					list.add(entry.read().getLight());
 				}
 			}
 		}

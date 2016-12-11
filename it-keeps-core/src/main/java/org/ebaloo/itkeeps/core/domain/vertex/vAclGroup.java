@@ -31,34 +31,51 @@ final class vAclGroup extends vBase {
 	/*
 	 * CHILD
 	 */
-	
-	final jBaseLight getChild() {
+
+    vAclGroup(final jAclGroup j) {
+        super(j);
+
+
+        try {
+            this.update(j);
+        } catch (Exception e) {
+            this.delete();
+            throw e;
+        }
+    }
+
+    final jBaseLight getChild() {
 		vAclGroup child = this.getEdge(vAclGroup.class, DirectionType.CHILD, false, eAclNoTraverse.class);
 		return child == null ? null : getJBaseLight(child);
 	}
+
+	
+	/*
+	 * PARENTS
+	 */
 	
 	final void setChild(final jBaseLight group) {
 		vAclGroup child = get(this.getGraph(), vAclGroup.class, group, false);
 		setEdges(this.getGraph(), vAclGroup.class, this, vAclGroup.class, child, DirectionType.CHILD, eAclNoTraverse.class, false);
 	}
 	
-	
-	/*
-	 * PARENTS
-	 */
-	
 	final List<jBaseLight> getParents() {
 		return this.getEdges(
-				vAclGroup.class, 
-				DirectionType.PARENT, 
-				false, 
-				eAclNoTraverse.class).stream().map(vBase::getJBaseLight).collect(Collectors.toList());
+                vAclGroup.class,
+                DirectionType.PARENT,
+                false,
+                eAclNoTraverse.class).stream().map(vBase::getJBaseLight).collect(Collectors.toList());
 	}
+
+	
+	/*
+     * ACL ADMIN
+	 */
 	
 	final void setParents(List<jBaseLight> list) {
 
-		if(list == null) 
-			list = new ArrayList<>();
+        if (list == null)
+            list = new ArrayList<>();
 
 		// Optimization
 		OrientBaseGraph graph = this.getGraph();
@@ -73,88 +90,68 @@ final class vAclGroup extends vBase {
 				eAclNoTraverse.class,
 				false);
 	}
-
-	
-	/*
-	 * ACL ADMIN
-	 */
 	
 	final List<enAclAdmin> getAclAdmin() {
 		return this.getEdges(
-				vAclAdmin.class, 
-				DirectionType.PARENT, 
-				true, 
-				eAclNoTraverse.class)
+                vAclAdmin.class,
+                DirectionType.PARENT,
+                true,
+                eAclNoTraverse.class)
 					.stream().map(e -> enAclAdmin.valueOf(e.getName())).collect(Collectors.toList());
 	}
+
+	/*
+	 * ACL DATA
+	 */
 	
 	final void setAclAdmin(List<enAclAdmin> list) {
 		if(list == null)
 			list = new ArrayList<>();
-		
+
 		// Optimization
 		OrientBaseGraph graph = this.getGraph();
 
 		setEdges(
 				graph,
-				vAclGroup.class, 
-				this, 
-				vAclAdmin.class,
+                vAclGroup.class,
+                this,
+                vAclAdmin.class,
 				list.stream().map(e -> vAclAdmin.get(graph, vAclAdmin.class, e.name())).collect(Collectors.toList()),
 				DirectionType.PARENT,
 				eAclNoTraverse.class,
 				false);
 	}
 	
-	/*
-	 * ACL DATA
-	 */
-	
 	final List<enAclData> getAclData() {
 		return this.getEdges(
-				vAclData.class, 
-				DirectionType.PARENT, 
-				true, 
-				eAclNoTraverse.class)
+                vAclData.class,
+                DirectionType.PARENT,
+                true,
+                eAclNoTraverse.class)
 					.stream().map(e -> enAclData.valueOf(e.getName())).collect(Collectors.toList());
 	}
-	
-	final void setAclData(List<enAclData> list) {
+
+
+    // API
+
+    final void setAclData(List<enAclData> list) {
 		if(list == null)
 			list = new ArrayList<>();
-		
+
 		// Optimization
 		OrientBaseGraph graph = this.getGraph();
-			
+
 		setEdges(
 				graph,
-				vAclGroup.class, 
-				this,
+                vAclGroup.class,
+                this,
 				vAclData.class,
 				list.stream().map(e -> vAclData.get(graph, vAclData.class, e.name())).collect(Collectors.toList()),
 				DirectionType.PARENT,
 				eAclNoTraverse.class,
 				false);
 	}
-	
-	
-	
-	// API
-	
-	vAclGroup(final jAclGroup j) {
-		super(j);
 
-		
-		try{
-			this.update(j);
-		} catch (Exception e) {
-			this.delete();
-			throw e;
-		}
-	}
-
-
-	
 	final jAclGroup read() {
 		
 		jAclGroup j = new jAclGroup();
@@ -170,7 +167,7 @@ final class vAclGroup extends vBase {
 	}
 	
 /*
-	public static final jAclGroup create(Rid requesteurRid, jAclGroup j) {
+    public static final jAclGroup create(Rid requesteurRid, jAclGroup j) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
 		if(!sAcl.isRoleRoot())
@@ -178,7 +175,7 @@ final class vAclGroup extends vBase {
 
 		vAclGroup aclGroup = new vAclGroup(j);
 		
-		return vAclGroup.read(requesteurRid, aclGroup.getRid());
+		return vAclGroup.read(requesteurRid, aclGroup.getId());
 	}
 	*/
 
@@ -213,18 +210,18 @@ final class vAclGroup extends vBase {
 	*/
 
 	/*
-	public static final jAclGroup update(Rid requesteurRid,  jAclGroup j) {
+    public static final jAclGroup update(Rid requesteurRid,  jAclGroup j) {
 		
 		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesteurRid, Rid.NULL);
 		if(!sAcl.isRoleRoot())
 			throw ExceptionPermission.NOT_ROOT;
 
-		vAclGroup aclGroup = vAclGroup.get(null, vAclGroup.class, j.getRid(), false);
+		vAclGroup aclGroup = vAclGroup.get(null, vAclGroup.class, j.getId(), false);
 
 		aclGroup.checkVersion(j);
 		aclGroup.update(j);
 		
-		return vAclGroup.read(requesteurRid, j.getRid());
+		return vAclGroup.read(requesteurRid, j.getId());
 	}
 	*/
 	

@@ -107,7 +107,7 @@ public final class fPath {
 		
 		List<jBaseLight> list = new ArrayList<>();
 		if(sAcl.isRoleRoot()) {
-			list = vBase.getAllBase(null, vPath.class, false).stream().map(e -> e.read().getJBaseLight()).collect(Collectors.toList());
+			list = vBase.getAllBase(null, vPath.class, false).stream().map(e -> e.read().getLight()).collect(Collectors.toList());
 		} else {
 			
 			StringBuilder sb = new StringBuilder();
@@ -133,7 +133,7 @@ public final class fPath {
 				SecurityAcl sAclOv = SecurityFactory.getSecurityAcl(requesterRid, rid);
 				if(sAclOv.isDataPathRead()) {
 					vPath path = vBaseAbstract.get(graph, vPath.class, rid, false);
-					list.add(path.read().getJBaseLight());
+					list.add(path.read().getLight());
 				}
 			}
 		}

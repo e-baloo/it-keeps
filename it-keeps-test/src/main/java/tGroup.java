@@ -48,20 +48,20 @@ public class tGroup {
 		jg_n1_2 = client.callJsonCreat(ApiPath.API_GROUP_CREATE, jg_n1_2, jGroup.class);
 		jg_n2_1 = client.callJsonCreat(ApiPath.API_GROUP_CREATE, jg_n2_1, jGroup.class);
 		jg_n2_2 = client.callJsonCreat(ApiPath.API_GROUP_CREATE, jg_n2_2, jGroup.class);
-		
-		
-		jg_n1.getChilds().add(jg_n1_1.getJBaseLight());
-		jg_n1.getChilds().add(jg_n1_2.getJBaseLight());
-		jg_n1 = client.callJsonUpdate(ApiPath.API_GROUP_UPDATE, jg_n1, jGroup.class);
 
-		jg_n2.getChilds().add(jg_n2_1.getJBaseLight());
-		jg_n2.getChilds().add(jg_n2_2.getJBaseLight());
-		jg_n2 = client.callJsonUpdate(ApiPath.API_GROUP_UPDATE, jg_n2, jGroup.class);
 
-		
-		jg_r.getChilds().add(jg_n1.getJBaseLight());
-		jg_r.getChilds().add(jg_n2.getJBaseLight());
-		jg_r = client.callJsonUpdate(ApiPath.API_GROUP_UPDATE, jg_r, jGroup.class);
+        jg_n1.getChilds().add(jg_n1_1.getLight());
+        jg_n1.getChilds().add(jg_n1_2.getLight());
+        jg_n1 = client.callJsonUpdate(ApiPath.API_GROUP_UPDATE, jg_n1, jGroup.class);
+
+        jg_n2.getChilds().add(jg_n2_1.getLight());
+        jg_n2.getChilds().add(jg_n2_2.getLight());
+        jg_n2 = client.callJsonUpdate(ApiPath.API_GROUP_UPDATE, jg_n2, jGroup.class);
+
+
+        jg_r.getChilds().add(jg_n1.getLight());
+        jg_r.getChilds().add(jg_n2.getLight());
+        jg_r = client.callJsonUpdate(ApiPath.API_GROUP_UPDATE, jg_r, jGroup.class);
 		
 		reload(client);
 	}

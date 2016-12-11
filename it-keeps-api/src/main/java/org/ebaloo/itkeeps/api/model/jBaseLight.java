@@ -15,9 +15,11 @@ public class jBaseLight extends jObject {
 
 	public static final String NAME = "name";
 	public static final String CLASS_TYPE = "type";
-	public static final String RID = Rid.RDI_NAME;
-	public static final String VERSION = "ver";
-	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public static final String ID = Rid.RDI_NAME;
+    public static final String VERSION = "ver";
+
+
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @JsonIgnore
 	private Optional<Rid> rid = Optional.empty();
 
@@ -38,26 +40,24 @@ public class jBaseLight extends jObject {
 	}
 
 	@JsonIgnore
-	public final Rid getRid() {
-		return this.rid.orElse(null);
+    public final Rid getId() {
+        return this.rid.orElse(null);
 	}
 
 	@JsonIgnore
-	public final void setRid(Rid guid) {
-		this.rid = Optional.of(guid);
+    public final void setId(Rid id) {
+        this.rid = Optional.of(id);
+    }
+
+
+    @JsonProperty(value = ID, index = 10)
+    private String _getId() {
+        return rid.isPresent() ? rid.get().getSimple() : null;
 	}
 
-
-	// NAME
-
-	@JsonProperty(RID)
-	private String _getRid() {
-		return rid.isPresent() ? rid.get().getSimple() : null;
-	}
-	
-	@JsonProperty(RID)
-	private void _setRid(String guid) {
-		this.rid = StringUtils.isEmpty(guid) ? Optional.of(null) : Optional.of(new Rid(guid));
+    @JsonProperty(value = ID, index = 10)
+    private void _setId(String guid) {
+        this.rid = StringUtils.isEmpty(guid) ? Optional.of(null) : Optional.of(new Rid(guid));
 	}
 
 	@JsonIgnore
@@ -65,16 +65,14 @@ public class jBaseLight extends jObject {
 		return this.rid.isPresent();
 	}
 
-	@JsonProperty(NAME)
-	public final String getName() {
+    @JsonProperty(value = NAME, index = 100)
+    public final String getName() {
 		return name.orElse(null);
 	}
 
 
-	// TYPE
-		
-	@JsonProperty(NAME)
-	public final void setName(String name) {
+    @JsonProperty(value = NAME, index = 100)
+    public final void setName(String name) {
 		this.name = Optional.of(name == null ? "" : name);
 	}
 
@@ -138,16 +136,16 @@ public class jBaseLight extends jObject {
 				
 				if(!j.isPresentRid())
 					return false;
-				
-				_rid = j.getRid();
-			} else {
+
+                _rid = j.getId();
+            } else {
 				_rid = (Rid) obj;
 			}
-			
-		
-			return this.getRid().equals(_rid);
-					
-		}
+
+
+            return this.getId().equals(_rid);
+
+        }
 		
 	
 

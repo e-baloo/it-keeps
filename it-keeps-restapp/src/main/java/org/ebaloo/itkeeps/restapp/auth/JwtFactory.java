@@ -159,7 +159,7 @@ public final class JwtFactory {
 	public static String getRid(Map<String, Object> claims) {
 
 		if (logger.isTraceEnabled())
-			logger.trace("getRid()");
+			logger.trace("getId()");
 
 
 		return claims.get(jBase.RID).toString(); 

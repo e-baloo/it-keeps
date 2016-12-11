@@ -93,8 +93,8 @@ public final class fGroup {
 		if(!sAcl.isAdminGroupRead())
 			throw ExceptionPermission.DENY;
 
-		return vBase.getAllBase(null, vGroup.class, false).stream().map(e -> e.read().getJBaseLight()).collect(Collectors.toList());
-	}
+        return vBase.getAllBase(null, vGroup.class, false).stream().map(e -> e.read().getLight()).collect(Collectors.toList());
+    }
 }
 
 
