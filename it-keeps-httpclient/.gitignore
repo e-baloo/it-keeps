@@ -1,2 +1,4 @@
 /target/
 it-keeps-httpclient.iml
+/bin/
+.project

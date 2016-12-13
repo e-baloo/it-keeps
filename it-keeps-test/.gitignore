@@ -1,2 +1,4 @@
 /target/
 it-keeps-test.iml
+/bin/
+.project

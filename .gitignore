@@ -1,2 +1,6 @@
 /target/
-it-keeps-tools.iml
+.idea/
+.settings/
+it-keeps.iml
+.project
+

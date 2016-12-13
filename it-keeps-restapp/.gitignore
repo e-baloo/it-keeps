@@ -1,2 +1,4 @@
 /target/
 it-keeps-restapp.iml
+/bin/
+.project

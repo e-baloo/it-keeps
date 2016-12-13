@@ -1,2 +1,4 @@
 /target/
 it-keeps-core.iml
+/bin/
+.project
