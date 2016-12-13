@@ -35,7 +35,8 @@ public class rEnum {
     @PermitAll
     @Path(ApiPath.API_ENUM_AUTH)
     public Response enumAuth() {
-    	return Response.ok().entity(new jEnumAuthentication()).build();
+        System.out.print("enumAuth()");
+        return Response.ok().entity(new jEnumAuthentication()).build();
     }
     
 }
