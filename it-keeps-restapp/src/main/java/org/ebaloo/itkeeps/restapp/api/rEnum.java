@@ -21,19 +21,19 @@ import com.codahale.metrics.annotation.Timed;
 public class rEnum {
 
     @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    @Path(ApiPath.API_ENUM_ACL)
-	@aApplicationRolesAllowed(enRole.USER)
     @Timed
+    @Produces({MediaType.APPLICATION_JSON})
+	@aApplicationRolesAllowed(enRole.USER)
+    @Path(ApiPath.API_ENUM_ACL)
     public Response enumAcl() {
     	return Response.ok().entity(new jEnumAcl()).build();
     }
 	
     @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    @Path(ApiPath.API_ENUM_AUTH)
-    @PermitAll
     @Timed
+    @Produces({MediaType.APPLICATION_JSON})
+    @PermitAll
+    @Path(ApiPath.API_ENUM_AUTH)
     public Response enumAuth() {
     	return Response.ok().entity(new jEnumAuthentication()).build();
     }
