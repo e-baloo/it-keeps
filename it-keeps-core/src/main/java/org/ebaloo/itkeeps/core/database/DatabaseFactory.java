@@ -8,11 +8,8 @@ import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
-import org.ebaloo.itkeeps.api.enumeration.enAclAdmin;
-import org.ebaloo.itkeeps.api.enumeration.enAclData;
-import org.ebaloo.itkeeps.api.enumeration.enAclOwner;
-import org.ebaloo.itkeeps.api.enumeration.enAclRole;
-import org.ebaloo.itkeeps.api.enumeration.enAuthentication;
+import org.ebaloo.itkeeps.api.enumeration.*;
+import org.ebaloo.itkeeps.api.enumeration.enAuthenticationType;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseEdge;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
 import org.ebaloo.itkeeps.core.domain.edge.eRelation;
@@ -69,7 +66,7 @@ public class DatabaseFactory {
 			*/
 
 			
-			vAuthentication.init(enAuthentication.class, vAuthentication.class);
+			vAuthentication.init(enAuthenticationType.class, vAuthentication.class);
 			logger.info(" - init Authentication done.");
 
 			vAclData.init(enAclData.class, vAclData.class);

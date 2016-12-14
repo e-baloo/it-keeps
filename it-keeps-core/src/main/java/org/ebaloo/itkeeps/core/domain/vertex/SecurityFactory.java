@@ -200,13 +200,13 @@ public final class SecurityFactory {
 		if (!user.equals(credential._getUser()))
 			throw new RuntimeException("TODO"); // TODO
 
-		enAuthentication authentication = credential.getAuthenticationType();
+		enAuthenticationType authentication = credential.getAuthenticationType();
 
 		if (authentication == null) {
 			throw new RuntimeException("TODO"); // TODO
 		}
 
-		if (credential.getAuthenticationType().equals(enAuthentication.BASIC)) {
+		if (credential.getAuthenticationType().equals(enAuthenticationType.BASIC)) {
 			;
 		} else {
 			throw new RuntimeException("TODO"); // TODO

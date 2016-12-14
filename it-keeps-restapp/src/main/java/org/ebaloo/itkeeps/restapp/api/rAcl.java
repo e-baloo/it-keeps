@@ -14,14 +14,20 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.ebaloo.itkeeps.ApiPath;
 import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
+import org.ebaloo.itkeeps.api.enumeration.*;
 import org.ebaloo.itkeeps.api.model.jAcl;
+import org.ebaloo.itkeeps.api.model.jEnumAcl;
 import org.ebaloo.itkeeps.core.domain.vertex.fAcl;
 
 import com.codahale.metrics.annotation.Timed;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Path("/")
@@ -30,7 +36,47 @@ public class rAcl {
     @Context
     SecurityContext securityContext;
 
-	
+
+    @GET
+    @Timed
+    @Produces({MediaType.APPLICATION_JSON})
+    @aApplicationRolesAllowed(enRole.USER)
+    @Path(ApiPath.API_ACL_DATA_ENUM)
+    public Response getAclDataEnum() {
+        return Response.ok().entity(enAclData.values().stream().map(enAbstract::name).collect(Collectors.toList())).build();
+    }
+
+    @GET
+    @Timed
+    @Produces({MediaType.APPLICATION_JSON})
+    @aApplicationRolesAllowed(enRole.USER)
+    @Path(ApiPath.API_ACL_OWNER_ENUM)
+    public Response getAclOwnerEnum() {
+        return Response.ok().entity(enAclOwner.values().stream().map(enAbstract::name).collect(Collectors.toList())).build();
+    }
+
+    @GET
+    @Timed
+    @Produces({MediaType.APPLICATION_JSON})
+    @aApplicationRolesAllowed(enRole.USER)
+    @Path(ApiPath.API_ACL_ADMIN_ENUM)
+    public Response getAclAdminEnum() {
+        return Response.ok().entity(enAclAdmin.values().stream().map(enAbstract::name).collect(Collectors.toList())).build();
+    }
+
+
+    @GET
+    @Timed
+    @Produces({MediaType.APPLICATION_JSON})
+    @aApplicationRolesAllowed(enRole.USER)
+    @Path(ApiPath.API_ACL_ROLE_ENUM)
+    public Response getAclRoleEnum() {
+        return Response.ok().entity(enAclRole.values().stream().map(enAbstract::name).collect(Collectors.toList())).build();
+    }
+
+
+
+
     @GET //READ
     @Produces({MediaType.APPLICATION_JSON})
 	@aApplicationRolesAllowed(enRole.ADMIN)

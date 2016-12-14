@@ -16,10 +16,9 @@ import org.ebaloo.itkeeps.ApiPath;
 import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
-import org.ebaloo.itkeeps.api.model.jBaseLight;
-import org.ebaloo.itkeeps.api.model.jCredential;
-import org.ebaloo.itkeeps.api.model.jToken;
-import org.ebaloo.itkeeps.api.model.jUser;
+import org.ebaloo.itkeeps.api.enumeration.enAbstract;
+import org.ebaloo.itkeeps.api.enumeration.enAuthenticationType;
+import org.ebaloo.itkeeps.api.model.*;
 import org.ebaloo.itkeeps.core.domain.vertex.SecurityFactory;
 import org.ebaloo.itkeeps.core.domain.vertex.fUser;
 import org.ebaloo.itkeeps.core.domain.vertex.vCredential;
@@ -28,28 +27,32 @@ import org.slf4j.LoggerFactory;
 
 import com.codahale.metrics.annotation.Timed;
 
+import java.util.stream.Collectors;
 
 
-
-
-@Path("/")
+@Path("")
 public class rAuthentication {
 
 	private static final Logger logger = LoggerFactory.getLogger(rAuthentication.class.getName());
     @Context
     SecurityContext securityContext;
 
-    
-/*
+    @GET
     @Timed
-*/
-    
+    @Produces({MediaType.APPLICATION_JSON})
+    @PermitAll
+    @Path(ApiPath.AUTH_TYPE_ENUM)
+    public Response getAuthTypeEnum() {
+        return Response.ok().entity(enAuthenticationType.values().stream().map(enAbstract::name).collect(Collectors.toList())).build();
+    }
+
+
     @POST
+    @Timed
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     @PermitAll
     @Path(ApiPath.AUTH_LOGIN)
-    @Timed
     public Response login(jCredential credentials) {
 
         try {
@@ -75,8 +78,8 @@ public class rAuthentication {
 
         try {
         	
-    		Rid requesteurRid = new Rid(securityContext.getUserPrincipal().getName());
-    		jUser user = fUser.read(requesteurRid, requesteurRid);
+    		Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
+    		jUser user = fUser.read(requesterRid, requesterRid);
             String token = JwtFactory.getJwtString(user);
             return Response.ok(new jToken(token)).build();
 

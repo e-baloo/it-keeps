@@ -1,7 +1,7 @@
 
 import org.ebaloo.itkeeps.ApiPath;
 import org.ebaloo.itkeeps.api.enumeration.enAclRole;
-import org.ebaloo.itkeeps.api.enumeration.enAuthentication;
+import org.ebaloo.itkeeps.api.enumeration.enAuthenticationType;
 import org.ebaloo.itkeeps.api.model.jCredential;
 import org.ebaloo.itkeeps.api.model.jUser;
 import org.ebaloo.itkeeps.httpclient.ItkeepsHttpClient;
@@ -66,17 +66,17 @@ public class tUser {
 		credAdmin1 = new jCredential();
 		credAdmin1.setCred(admin1.getName());
 		credAdmin1.setPassword64(Base64.encodeAsString(credAdmin1.getCred()));
-		credAdmin1.setAuthenticationType(enAuthentication.BASIC);
+		credAdmin1.setAuthenticationType(enAuthenticationType.BASIC);
 
 		credUser1 = new jCredential();
 		credUser1.setCred(user1.getName());
 		credUser1.setPassword64(Base64.encodeAsString(credUser1.getCred()));
-		credUser1.setAuthenticationType(enAuthentication.BASIC);
+		credUser1.setAuthenticationType(enAuthenticationType.BASIC);
 
 		credUser2 = new jCredential();
 		credUser2.setCred(user2.getName());
 		credUser2.setPassword64(Base64.encodeAsString(credUser2.getCred()));
-		credUser2.setAuthenticationType(enAuthentication.BASIC);
+		credUser2.setAuthenticationType(enAuthenticationType.BASIC);
 
 
 		client.callJsonCreat(ApiPath.API_CRED_CREATE_ID + ParameterEncoder.encoding(admin1.getRid()), credAdmin1, jCredential.class);

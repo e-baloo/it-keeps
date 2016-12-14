@@ -2,7 +2,7 @@
 package org.ebaloo.itkeeps.core.domain.vertex;
 
 import org.apache.commons.lang3.StringUtils;
-import org.ebaloo.itkeeps.api.enumeration.enAuthentication;
+import org.ebaloo.itkeeps.api.enumeration.enAuthenticationType;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.model.jCredential;
 import org.ebaloo.itkeeps.core.database.annotation.DatabaseVertrex;
@@ -38,8 +38,8 @@ public final class vCredential extends vBase {
 				this.setUser(jblUser);
 			}
 
-			if (j.getAuthenticationType().equals(enAuthentication.BASIC)
-					|| j.getAuthenticationType().equals(enAuthentication.TOKEN)) {
+			if (j.getAuthenticationType().equals(enAuthenticationType.BASIC)
+					|| j.getAuthenticationType().equals(enAuthenticationType.TOKEN)) {
 				this.setPassowrd64(j.getPassword64());
 			}
 
@@ -76,15 +76,15 @@ public final class vCredential extends vBase {
 		return SecurityFactory.checkHash(value, hash);
 	}
 
-	enAuthentication getAuthenticationType() {
-		return enAuthentication.valueOf(this.getProperty(jCredential.AUTHENTICATION_TYPE));
+	enAuthenticationType getAuthenticationType() {
+		return enAuthenticationType.valueOf(this.getProperty(jCredential.AUTHENTICATION_TYPE));
 	}
 
 	/*
 	 * PASSWORD
 	 */
 
-	private void setAuthenticationType(enAuthentication authType) {
+	private void setAuthenticationType(enAuthenticationType authType) {
 		this.setProperty(jCredential.AUTHENTICATION_TYPE, authType.name());
 	}
 

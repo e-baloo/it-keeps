@@ -5,7 +5,7 @@ import java.net.URI;
 import java.util.List;
 
 import org.ebaloo.itkeeps.ApiPath;
-import org.ebaloo.itkeeps.api.enumeration.enAuthentication;
+import org.ebaloo.itkeeps.api.enumeration.enAuthenticationType;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.model.jCredential;
 import org.ebaloo.itkeeps.api.model.jEncryptedEntry;
@@ -52,7 +52,7 @@ public class Main {
 			{
 
 				{
-					JsonNode jn = guestClient.callJsonRead(ApiPath.API_ENUM_AUTH);
+					JsonNode jn = guestClient.callJsonRead(ApiPath.AUTH_TYPE_ENUM);
 					LogFactory.getMain().debug(jObject.MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(jn));
 				}
 
@@ -71,7 +71,7 @@ public class Main {
 			jCredential cred = new jCredential();
 			cred.setCred("marc");
 			cred.setPassword64(Base64.encodeAsString("marc"));
-			cred.setAuthenticationType(enAuthentication.BASIC);
+			cred.setAuthenticationType(enAuthenticationType.BASIC);
 			cred.setUserName("Marc DONVAL");
 
 			ItkeepsHttpClient clientRoot = new ItkeepsHttpClient(cred);
@@ -133,7 +133,7 @@ public class Main {
 			{
 
 				jCredential c = new jCredential();
-				c.setAuthenticationType(enAuthentication.BASIC);
+				c.setAuthenticationType(enAuthenticationType.BASIC);
 				c.setCred(tUser.credUser1.getCred());
 				c.setPassword64(Base64.encodeAsString(c.getCred()));
 

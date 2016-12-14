@@ -4,7 +4,7 @@ package org.ebaloo.itkeeps.api.model;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.ebaloo.itkeeps.api.enumeration.enAuthentication;
+import org.ebaloo.itkeeps.api.enumeration.enAuthenticationType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -40,7 +40,7 @@ public class jCredential extends jBaseStandard {
 
     // USER_NAME
     @JsonIgnore
-    private enAuthentication authenticationType = enAuthentication.BASIC;
+    private enAuthenticationType authenticationType = enAuthenticationType.BASIC;
 
     public String getCred() {
         return cred;
@@ -101,12 +101,12 @@ public class jCredential extends jBaseStandard {
 	}
 	
 	@JsonIgnore
-	public final enAuthentication getAuthenticationType() {
+	public final enAuthenticationType getAuthenticationType() {
 		return this.authenticationType;
 	}
 
 	@JsonIgnore
-	public final void setAuthenticationType(enAuthentication value) {
+	public final void setAuthenticationType(enAuthenticationType value) {
 		authenticationType = value;
 	}
 
@@ -117,7 +117,7 @@ public class jCredential extends jBaseStandard {
 
 	@JsonProperty(AUTHENTICATION_TYPE)
 	public final void _setAuthenticationType(String name) {
-		authenticationType = (enAuthentication) enAuthentication.valueOf(name);
+		authenticationType = (enAuthenticationType) enAuthenticationType.valueOf(name);
 	}
 	
 
