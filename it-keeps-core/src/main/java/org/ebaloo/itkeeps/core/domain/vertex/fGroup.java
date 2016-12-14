@@ -77,12 +77,12 @@ public final class fGroup {
 		if(!sAcl.isAdminGroupUpdate())
 			throw ExceptionPermission.DENY;
 		
-		vGroup group = vBaseAbstract.get(null, vGroup.class, j.getRid(), false);
+		vGroup group = vBaseAbstract.get(null, vGroup.class, j.getId(), false);
 
 		group.checkVersion(j);
 		group.update(j);
 		
-		return fGroup.read(requesteurRid, j.getRid());
+		return fGroup.read(requesteurRid, j.getId());
 	}
 
 

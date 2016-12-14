@@ -12,12 +12,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @SuppressWarnings("ALL")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class jCredential extends jBaseStandard {
+public class jCredential extends jBase {
 
 
     // CRED
 
-    public static final String CRED = "cred";
+    //public static final String CRED = "cred";
     public static final String PASSWORD64 = "password64";
     public static final String USER_NAME = "userName";
     public static final String USER = "user";
@@ -25,8 +25,10 @@ public class jCredential extends jBaseStandard {
 
     // PASSWORD
     public static final String AUTHENTICATION_TYPE = "authenticationType";
-    @JsonProperty(CRED)
-    private String cred = null;
+
+    //@JsonProperty(CRED)
+    //private String cred = null;
+
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @JsonIgnore
 	private Optional<String> password64 = Optional.empty();
@@ -42,14 +44,14 @@ public class jCredential extends jBaseStandard {
     @JsonIgnore
     private enAuthenticationType authenticationType = enAuthenticationType.BASIC;
 
-    public String getCred() {
+    /*public String getCred() {
         return cred;
-    }
+    }*/
 
-    @JsonIgnore
-    public void setCred(String id) {
-        this.cred = id;
-    }
+    //@JsonIgnore
+    //public void setCred(String id) {
+    //    this.cred = id;
+    //}
 
 	@JsonProperty(PASSWORD64)
 	public String getPassword64() {

@@ -103,23 +103,23 @@ public final class fUser {
 
 	public static jUser update(Rid requesterRid, jUser j) {
 
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, j.getRid());
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, j.getId());
 
 		if (sAcl.isRoleGuest())
 			throw ExceptionPermission.IS_GUEST;
-		if (!j.getRid().equals(requesterRid) && !sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
+		if (!j.getId().equals(requesterRid) && !sAcl.isRoleRoot() || !sAcl.isRoleAdmin())
 			throw ExceptionPermission.IS_USER;
-		if (!j.getRid().equals(requesterRid) && !sAcl.isAdminUserUpdate())
+		if (!j.getId().equals(requesterRid) && !sAcl.isAdminUserUpdate())
 			throw ExceptionPermission.NOT_USER_UPDATE;
 
 		checkUpdate(sAcl, j);
 
-		vUser user = vUser.get(null, vUser.class, j.getRid(), false);
+		vUser user = vUser.get(null, vUser.class, j.getId(), false);
 
 		user.checkVersion(j);
 		user.update(j);
 
-		return fUser.read(requesterRid, j.getRid());
+		return fUser.read(requesterRid, j.getId());
 
 	}
 

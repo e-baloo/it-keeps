@@ -93,7 +93,7 @@ public final class JwtFactory {
 		claims.put("iss", "IT-Keeps");
 
 
-		claims.put(jBase.RID, user.getRid().getSimple());
+		claims.put(jBase.RID, user.getId().getSimple());
 		claims.put(jBase.NAME, user.getName());
 		
 		//claims.put(USER_ROLE, user.getRole().toString());

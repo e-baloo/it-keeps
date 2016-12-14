@@ -71,7 +71,7 @@ public class rGroup {
     public Response update(final jGroup j) {
         Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
         fGroup.update(requesterRid, j);
-        return Response.ok().entity(fGroup.read(requesterRid, j.getRid())).build();
+        return Response.ok().entity(fGroup.read(requesterRid, j.getId())).build();
     }
 
 
@@ -84,7 +84,7 @@ public class rGroup {
     public Response create(final jGroup j) {
         Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
         jGroup group = fGroup.create(requesterRid, j);
-        return Response.ok().entity(fGroup.read(requesterRid, group.getRid())).build();
+        return Response.ok().entity(fGroup.read(requesterRid, group.getId())).build();
     }
     
     

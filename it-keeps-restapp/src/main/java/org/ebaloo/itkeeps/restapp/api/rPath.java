@@ -15,11 +15,9 @@ import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
 import org.ebaloo.itkeeps.api.model.jBaseLight;
 import org.ebaloo.itkeeps.api.model.jPath;
-import org.ebaloo.itkeeps.api.model.jUser;
 import org.ebaloo.itkeeps.core.domain.vertex.fPath;
 
 import com.codahale.metrics.annotation.Timed;
-import org.ebaloo.itkeeps.core.domain.vertex.fUser;
 
 
 @Path("")
@@ -74,7 +72,7 @@ public class rPath {
     public Response update(final jPath j) {
         Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
         fPath.update(requesterRid, j);
-        return Response.ok().entity(fPath.read(requesterRid, j.getRid())).build();
+        return Response.ok().entity(fPath.read(requesterRid, j.getId())).build();
     }
 
 
@@ -87,7 +85,7 @@ public class rPath {
     public Response create(final jPath j) {
         Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
         jPath path = fPath.create(requesterRid, j);
-        return Response.ok().entity(fPath.read(requesterRid, path.getRid())).build();
+        return Response.ok().entity(fPath.read(requesterRid, path.getId())).build();
     }
     
     

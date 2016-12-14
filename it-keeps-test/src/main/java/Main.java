@@ -69,15 +69,15 @@ public class Main {
 			}
 
 			jCredential cred = new jCredential();
-			cred.setCred("marc");
-			cred.setPassword64(Base64.encodeAsString("marc"));
+			cred.setName("marc");
+			cred.setPassword64(Base64.encodeAsString(cred.getName()));
 			cred.setAuthenticationType(enAuthenticationType.BASIC);
 			cred.setUserName("Marc DONVAL");
 
 			ItkeepsHttpClient clientRoot = new ItkeepsHttpClient(cred);
 
 			{
-				jUser rootUser = clientRoot.callJsonRead(ApiPath.API_USER_GET_CRED_ID + cred.getCred(), jUser.class);
+				jUser rootUser = clientRoot.callJsonRead(ApiPath.API_USER_GET_CRED_ID + cred.getName(), jUser.class);
 				LogFactory.getMain()
 						.debug(jObject.MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(rootUser));
 
@@ -101,10 +101,10 @@ public class Main {
 
 			LogFactory.getMain().info(">>-------------------------------------------------------");
 
-			List<jBaseLight> list = fPath.readAll(tUser.admin1.getRid());
+			List<jBaseLight> list = fPath.readAll(tUser.admin1.getId());
 			LogFactory.getMain().info(String.format("%s - %s", list.size(), list));
 
-			List<jBaseLight> list2 = fEntry.readAll(tUser.admin1.getRid());
+			List<jBaseLight> list2 = fEntry.readAll(tUser.admin1.getId());
 			LogFactory.getMain().info(String.format("%s - %s", list2.size(), list2));
 
 			LogFactory.getMain().info("---------------------------------------------------------");
@@ -116,11 +116,11 @@ public class Main {
 
 			LogFactory.getMain().info("xxxx");
 
-            fEntry.updateEncrypted(tUser.admin1.getRid(), list2.get(0).getId(), jen);
+            fEntry.updateEncrypted(tUser.admin1.getId(), list2.get(0).getId(), jen);
             LogFactory.getMain().info("---------------------------------------------------------");
 
 			LogFactory.getMain().info("=> " + Base64
-                    .decodeAsString(fEntry.readEncrypted(tUser.admin1.getRid(), list2.get(0).getId()).getData64()));
+                    .decodeAsString(fEntry.readEncrypted(tUser.admin1.getId(), list2.get(0).getId()).getData64()));
 
 			LogFactory.getMain().info("---------------------------------------------------------");
 
@@ -134,8 +134,8 @@ public class Main {
 
 				jCredential c = new jCredential();
 				c.setAuthenticationType(enAuthenticationType.BASIC);
-				c.setCred(tUser.credUser1.getCred());
-				c.setPassword64(Base64.encodeAsString(c.getCred()));
+				c.setName(tUser.credUser1.getName());
+				c.setPassword64(Base64.encodeAsString(c.getName()));
 
 				ItkeepsHttpClient clientUser1 = new ItkeepsHttpClient(c);
 

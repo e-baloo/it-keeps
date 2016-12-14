@@ -71,7 +71,7 @@ public class rEntry {
     public Response update(final jEntry j) {
         Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
         fEntry.update(requesterRid, j);
-        return Response.ok().entity(fEntry.read(requesterRid, j.getRid())).build();
+        return Response.ok().entity(fEntry.read(requesterRid, j.getId())).build();
     }
 
     @Timed
@@ -95,7 +95,7 @@ public class rEntry {
     public Response create(final jEntry j) {
         Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
         jEntry entry = fEntry.create(requesterRid, j);
-        return Response.ok().entity(fEntry.read(requesterRid, entry.getRid())).build();
+        return Response.ok().entity(fEntry.read(requesterRid, entry.getId())).build();
     }
 
 

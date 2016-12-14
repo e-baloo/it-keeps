@@ -17,13 +17,13 @@ public class tGroup {
 	
 	public static void reload(ItkeepsHttpClient client) {
 		
-		jg_r = client.callJsonRead(ApiPath.API_GROUP_GET_ID + ParameterEncoder.encoding(jg_r.getRid()), jGroup.class);
-		jg_n1 = client.callJsonRead(ApiPath.API_GROUP_GET_ID + ParameterEncoder.encoding(jg_n1.getRid()), jGroup.class);
-		jg_n1_1 = client.callJsonRead(ApiPath.API_GROUP_GET_ID + ParameterEncoder.encoding(jg_n1_1.getRid()), jGroup.class);
-		jg_n1_2 = client.callJsonRead(ApiPath.API_GROUP_GET_ID + ParameterEncoder.encoding(jg_n1_2.getRid()), jGroup.class);
-		jg_n2 = client.callJsonRead(ApiPath.API_GROUP_GET_ID + ParameterEncoder.encoding(jg_n2.getRid()), jGroup.class);
-		jg_n2_1 = client.callJsonRead(ApiPath.API_GROUP_GET_ID + ParameterEncoder.encoding(jg_n2_1.getRid()), jGroup.class);
-		jg_n2_2 = client.callJsonRead(ApiPath.API_GROUP_GET_ID + ParameterEncoder.encoding(jg_n2_2.getRid()), jGroup.class);
+		jg_r = client.callJsonRead(ApiPath.API_GROUP_GET_ID + ParameterEncoder.encoding(jg_r.getId()), jGroup.class);
+		jg_n1 = client.callJsonRead(ApiPath.API_GROUP_GET_ID + ParameterEncoder.encoding(jg_n1.getId()), jGroup.class);
+		jg_n1_1 = client.callJsonRead(ApiPath.API_GROUP_GET_ID + ParameterEncoder.encoding(jg_n1_1.getId()), jGroup.class);
+		jg_n1_2 = client.callJsonRead(ApiPath.API_GROUP_GET_ID + ParameterEncoder.encoding(jg_n1_2.getId()), jGroup.class);
+		jg_n2 = client.callJsonRead(ApiPath.API_GROUP_GET_ID + ParameterEncoder.encoding(jg_n2.getId()), jGroup.class);
+		jg_n2_1 = client.callJsonRead(ApiPath.API_GROUP_GET_ID + ParameterEncoder.encoding(jg_n2_1.getId()), jGroup.class);
+		jg_n2_2 = client.callJsonRead(ApiPath.API_GROUP_GET_ID + ParameterEncoder.encoding(jg_n2_2.getId()), jGroup.class);
 		
 	}	
 	

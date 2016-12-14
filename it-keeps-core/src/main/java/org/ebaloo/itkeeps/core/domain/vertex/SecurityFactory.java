@@ -595,7 +595,7 @@ public final class SecurityFactory {
 		}
 
 		static <T extends jBase> Rid get(jBase j) {
-			return j.getRid();
+			return j.getId();
 		}
 
 		static Rid get(Rid rid) {

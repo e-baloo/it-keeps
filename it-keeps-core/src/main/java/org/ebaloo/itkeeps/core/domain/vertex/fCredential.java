@@ -104,7 +104,7 @@ public final class fCredential {
 
 	public static void update(Rid requesterRid, jCredential j) {
 		fUser.read(requesterRid, requesterRid);
-		vCredential cred = vCredential.get(null, vCredential.class, j.getRid(), false);
+		vCredential cred = vCredential.get(null, vCredential.class, j.getId(), false);
 		cred.update(j);
 	}
 

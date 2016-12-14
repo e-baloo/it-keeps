@@ -101,7 +101,7 @@ public class jBase extends jObject {
 //	}
 
 	@JsonIgnore
-	public final Rid getRid() {
+	public final Rid getId() {
         return this.getLight().getId();
     }
 
@@ -113,12 +113,12 @@ public class jBase extends jObject {
 //	private Optional<String> name = Optional.empty();
 
 	@JsonIgnore
-	public final void setRid(Rid rid) {
+	public final void setId(Rid rid) {
         this.getLight().setId(rid);
     }
 
 	@JsonIgnore
-	public final boolean isPresentRid() {
+	public final boolean isPresentId() {
         return this.getLight().isPresentRid();
     }
 

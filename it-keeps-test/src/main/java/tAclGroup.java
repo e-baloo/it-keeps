@@ -99,7 +99,7 @@ public class tAclGroup {
 		
 		aclGrp_TestDelete = client.callJsonCreat(ApiPath.API_ACL_GRP_CREATE, aclGrp_TestDelete, jAclGroup.class);
 		
-		aclGrp_TestDelete = client.callJsonDelete(ApiPath.API_ACL_GRP_DELETE + ParameterEncoder.encoding(aclGrp_TestDelete.getRid()), jAclGroup.class);
+		aclGrp_TestDelete = client.callJsonDelete(ApiPath.API_ACL_GRP_DELETE + ParameterEncoder.encoding(aclGrp_TestDelete.getId()), jAclGroup.class);
 		
 		
 		

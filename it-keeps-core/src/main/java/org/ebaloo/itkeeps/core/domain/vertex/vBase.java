@@ -319,7 +319,7 @@ public class vBase extends vBaseAbstract {
         j.setVersion(this.getObjectVersion());
         j.setCreationDate(this.getCreationDate());
 
-		j.setRid(this.getRid());
+		j.setId(this.getRid());
 		j.setName(this.getName());
 		j.setDescription(this.getDescription());
 

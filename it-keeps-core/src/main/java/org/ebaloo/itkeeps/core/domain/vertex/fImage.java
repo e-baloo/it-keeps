@@ -77,12 +77,12 @@ public final class fImage {
 
         // TODO Security
 
-        vImage image = vImage.get(null, vImage.class, j.getRid(), false);
+        vImage image = vImage.get(null, vImage.class, j.getId(), false);
 
         image.checkVersion(j);
         image.update(j);
 
-        return fImage.read(requesterRid, j.getRid().getSimple());
+        return fImage.read(requesterRid, j.getId().getSimple());
     }
 
 

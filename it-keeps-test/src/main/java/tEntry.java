@@ -17,10 +17,10 @@ public class tEntry {
 	
 	public static void reload(ItkeepsHttpClient client) {
 		
-		entry1 = client.callJsonRead(ApiPath.API_ENTRY_GET_ID + ParameterEncoder.encoding(entry1.getRid()), jEntry.class);
-		entry2 = client.callJsonRead(ApiPath.API_ENTRY_GET_ID + ParameterEncoder.encoding(entry2.getRid()), jEntry.class);
-		entry3 = client.callJsonRead(ApiPath.API_ENTRY_GET_ID + ParameterEncoder.encoding(entry3.getRid()), jEntry.class);
-		entry4 = client.callJsonRead(ApiPath.API_ENTRY_GET_ID + ParameterEncoder.encoding(entry4.getRid()), jEntry.class);
+		entry1 = client.callJsonRead(ApiPath.API_ENTRY_GET_ID + ParameterEncoder.encoding(entry1.getId()), jEntry.class);
+		entry2 = client.callJsonRead(ApiPath.API_ENTRY_GET_ID + ParameterEncoder.encoding(entry2.getId()), jEntry.class);
+		entry3 = client.callJsonRead(ApiPath.API_ENTRY_GET_ID + ParameterEncoder.encoding(entry3.getId()), jEntry.class);
+		entry4 = client.callJsonRead(ApiPath.API_ENTRY_GET_ID + ParameterEncoder.encoding(entry4.getId()), jEntry.class);
 		
 	}	
 	

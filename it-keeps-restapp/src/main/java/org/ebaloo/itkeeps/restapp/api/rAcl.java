@@ -14,19 +14,16 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.ebaloo.itkeeps.ApiPath;
 import org.ebaloo.itkeeps.Rid;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed;
 import org.ebaloo.itkeeps.api.annotation.aApplicationRolesAllowed.enRole;
 import org.ebaloo.itkeeps.api.enumeration.*;
 import org.ebaloo.itkeeps.api.model.jAcl;
-import org.ebaloo.itkeeps.api.model.jEnumAcl;
 import org.ebaloo.itkeeps.core.domain.vertex.fAcl;
 
 import com.codahale.metrics.annotation.Timed;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -98,7 +95,7 @@ public class rAcl {
     public Response update(final jAcl j) {
         Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
         fAcl.update(requesterRid, j);
-        return Response.ok().entity(fAcl.read(requesterRid, j.getRid())).build();
+        return Response.ok().entity(fAcl.read(requesterRid, j.getId())).build();
     }
 
     
@@ -111,7 +108,7 @@ public class rAcl {
     public Response create(final jAcl j) {
         Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
         jAcl acl = fAcl.create(requesterRid, j);
-        return Response.ok().entity(fAcl.read(requesterRid, acl.getRid())).build();
+        return Response.ok().entity(fAcl.read(requesterRid, acl.getId())).build();
     }
 
     

@@ -53,17 +53,30 @@ public class rAuthentication {
     @Consumes({MediaType.APPLICATION_JSON})
     @PermitAll
     @Path(ApiPath.AUTH_LOGIN)
-    public Response login(jCredential credentials) {
+    public Response login(jCredential credential) {
 
         try {
-            jUser user = authenticate(credentials);
-
+            jUser user = authenticate(credential);
             String token = JwtFactory.getJwtString(user);
-
             return Response.ok(new jToken(token)).build();
-
         } catch (Exception e) {
         	e.printStackTrace();
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+    }
+
+    @POST
+    @Timed
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.TEXT_PLAIN})
+    @PermitAll
+    @Path(ApiPath.AUTH_LOGIN)
+    public Response login(String strCredentials) {
+        try {
+            jCredential credentials = jCredential.MAPPER.readValue(strCredentials, jCredential.class);
+            return this.login(credentials);
+        } catch (Exception e) {
+            e.printStackTrace();
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
     }
@@ -113,7 +126,7 @@ public class rAuthentication {
     	
     	SecurityFactory.validateCredential(jcredential);
 
-        vCredential credential = vCredential.get(null, vCredential.class, jcredential.getCred(), false);
+        vCredential credential = vCredential.get(null, vCredential.class, jcredential.getName(), false);
         if(credential == null)
     		throw new RuntimeException("credential is null!");
     	

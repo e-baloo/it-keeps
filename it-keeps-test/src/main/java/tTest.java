@@ -14,7 +14,7 @@ public class tTest {
 	
 	public static void reload(ItkeepsHttpClient client) {
 		
-		acl1 = client.callJsonRead(ApiPath.API_ACL_GET_ID + ParameterEncoder.encoding(acl1.getRid()), jAcl.class);
+		acl1 = client.callJsonRead(ApiPath.API_ACL_GET_ID + ParameterEncoder.encoding(acl1.getId()), jAcl.class);
 		
 	}	
 	

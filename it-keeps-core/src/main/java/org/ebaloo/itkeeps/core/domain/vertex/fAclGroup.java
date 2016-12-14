@@ -61,12 +61,12 @@ public final class fAclGroup {
 		if(!sAcl.isRoleRoot())
 			throw ExceptionPermission.NOT_ROOT;
 
-		vAclGroup aclGroup = vBaseAbstract.get(null, vAclGroup.class, j.getRid(), false);
+		vAclGroup aclGroup = vBaseAbstract.get(null, vAclGroup.class, j.getId(), false);
 
 		aclGroup.checkVersion(j);
 		aclGroup.update(j);
 
-		return fAclGroup.read(requesterRid, j.getRid());
+		return fAclGroup.read(requesterRid, j.getId());
 	}
 
 

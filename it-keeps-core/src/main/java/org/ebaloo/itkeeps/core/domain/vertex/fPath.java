@@ -78,7 +78,7 @@ public final class fPath {
 
 	public static jPath update(Rid requesterRid, jPath j) {
 
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, j.getRid());
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, j.getId());
 		if(!sAcl.isRoleUser())
 			throw ExceptionPermission.NOT_USER;
 		if(!sAcl.isDataPathUpdate())
@@ -86,12 +86,12 @@ public final class fPath {
 		
 		// TODO Security
 
-		vPath path = vBaseAbstract.get(null, vPath.class, j.getRid(), false);
+		vPath path = vBaseAbstract.get(null, vPath.class, j.getId(), false);
 
 		path.checkVersion(j);
 		path.update(j);
 
-		return fPath.read(requesterRid, j.getRid());
+		return fPath.read(requesterRid, j.getId());
 	}
 
 

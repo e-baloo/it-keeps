@@ -89,18 +89,18 @@ public final class fEntry {
 
 	public static jEntry update(Rid requesterRid, jEntry j) {
 
-		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, j.getRid());
+		SecurityAcl sAcl = SecurityFactory.getSecurityAcl(requesterRid, j.getId());
 		if(!sAcl.isRoleUser())
 			throw ExceptionPermission.NOT_USER;
 		
 		// TODO Security
 
-		vEntry entry = vBaseAbstract.get(null, vEntry.class, j.getRid(), false);
+		vEntry entry = vBaseAbstract.get(null, vEntry.class, j.getId(), false);
 
 		entry.checkVersion(j);
 		entry.update(j);
 
-		return fEntry.read(requesterRid, j.getRid());
+		return fEntry.read(requesterRid, j.getId());
 	}
 
 	public static void updateEncrypted(Rid requesterRid, Rid rid, jEncryptedEntry j) {

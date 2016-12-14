@@ -78,12 +78,12 @@ public final class fAcl {
 		if(!sAcl.isAdminAclUpdate())
 			throw ExceptionPermission.DENY;
 		
-		vAcl acl = vBaseAbstract.get(null, vAcl.class, j.getRid(), false);
+		vAcl acl = vBaseAbstract.get(null, vAcl.class, j.getId(), false);
 
 		acl.checkVersion(j);
 		acl.update(j);
 
-        return fAcl.read(requesterRid, j.getRid());
+        return fAcl.read(requesterRid, j.getId());
     }
 
 

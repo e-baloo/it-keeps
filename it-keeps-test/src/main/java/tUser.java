@@ -21,10 +21,10 @@ public class tUser {
 	
 	public static void reload(ItkeepsHttpClient client) {
 
-		gest1 = client.callJsonRead(ApiPath.API_USER_GET_ID + ParameterEncoder.encoding(gest1.getRid()), jUser.class);
-		user1 = client.callJsonRead(ApiPath.API_USER_GET_ID + ParameterEncoder.encoding(user1.getRid()), jUser.class);
-		user2 = client.callJsonRead(ApiPath.API_USER_GET_ID + ParameterEncoder.encoding(user2.getRid()), jUser.class);
-		admin1 = client.callJsonRead(ApiPath.API_USER_GET_ID + ParameterEncoder.encoding(admin1.getRid()), jUser.class);
+		gest1 = client.callJsonRead(ApiPath.API_USER_GET_ID + ParameterEncoder.encoding(gest1.getId()), jUser.class);
+		user1 = client.callJsonRead(ApiPath.API_USER_GET_ID + ParameterEncoder.encoding(user1.getId()), jUser.class);
+		user2 = client.callJsonRead(ApiPath.API_USER_GET_ID + ParameterEncoder.encoding(user2.getId()), jUser.class);
+		admin1 = client.callJsonRead(ApiPath.API_USER_GET_ID + ParameterEncoder.encoding(admin1.getId()), jUser.class);
 		
 	}	
 	
@@ -64,24 +64,24 @@ public class tUser {
 		
 		
 		credAdmin1 = new jCredential();
-		credAdmin1.setCred(admin1.getName());
-		credAdmin1.setPassword64(Base64.encodeAsString(credAdmin1.getCred()));
+		credAdmin1.setName(admin1.getName());
+		credAdmin1.setPassword64(Base64.encodeAsString(credAdmin1.getName()));
 		credAdmin1.setAuthenticationType(enAuthenticationType.BASIC);
 
 		credUser1 = new jCredential();
-		credUser1.setCred(user1.getName());
-		credUser1.setPassword64(Base64.encodeAsString(credUser1.getCred()));
+		credUser1.setName(user1.getName());
+		credUser1.setPassword64(Base64.encodeAsString(credUser1.getName()));
 		credUser1.setAuthenticationType(enAuthenticationType.BASIC);
 
 		credUser2 = new jCredential();
-		credUser2.setCred(user2.getName());
-		credUser2.setPassword64(Base64.encodeAsString(credUser2.getCred()));
+		credUser2.setName(user2.getName());
+		credUser2.setPassword64(Base64.encodeAsString(credUser2.getName()));
 		credUser2.setAuthenticationType(enAuthenticationType.BASIC);
 
 
-		client.callJsonCreat(ApiPath.API_CRED_CREATE_ID + ParameterEncoder.encoding(admin1.getRid()), credAdmin1, jCredential.class);
-		client.callJsonCreat(ApiPath.API_CRED_CREATE_ID + ParameterEncoder.encoding(user1.getRid()), credUser1, jCredential.class);
-		client.callJsonCreat(ApiPath.API_CRED_CREATE_ID + ParameterEncoder.encoding(user2.getRid()), credUser2, jCredential.class);
+		client.callJsonCreat(ApiPath.API_CRED_CREATE_ID + ParameterEncoder.encoding(admin1.getId()), credAdmin1, jCredential.class);
+		client.callJsonCreat(ApiPath.API_CRED_CREATE_ID + ParameterEncoder.encoding(user1.getId()), credUser1, jCredential.class);
+		client.callJsonCreat(ApiPath.API_CRED_CREATE_ID + ParameterEncoder.encoding(user2.getId()), credUser2, jCredential.class);
 		
 		reload(client);
 
