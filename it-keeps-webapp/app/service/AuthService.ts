@@ -13,7 +13,7 @@ export class AuthService {
   }
 
   getEnumAuthType(): Observable<any> {
-    return this.http.get('http://localhost:8001/api/enum/auth').map((res: Response) => res.json());
+    return this.http.get('http://localhost:8001/auth/type/enum').map((res: Response) => res.json());
   }
 
 }
