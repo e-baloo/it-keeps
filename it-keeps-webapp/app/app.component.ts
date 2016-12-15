@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from "./auth/service/AuthService";
 import {jCredential} from "./model/Credential";
-import {JwtHelper} from "angular2-jwt";
 import {AclService} from "./service/AclService";
 
 @Component({
@@ -16,20 +15,27 @@ import {AclService} from "./service/AclService";
 </select>
 
 <p>{{aclRole}}</p>
+<p>{{aclAdmin}}</p>
+<p>{{aclData}}</p>
+<p>{{aclOwner}}</p>
 <p>jToken == {{token}}</p>`,
 })
 export class AppComponent implements OnInit {
   authType: string[];
-  aclRole: string[];
   token: any;
   typeSelected: string = 'BASIC';
+  private aclAdmin: string[];
+  private aclRole: string[];
+  private aclData: string[];
+  private aclOwner: string[];
+
 
 //
   constructor(private authService: AuthService, private aclService: AclService) {
   }
 
   ngOnInit() {
-    this.authService.getEnumAuthType().subscribe(
+    this.authService.getAuthTypeEnum().subscribe(
       data => this.authType = data
     );
 
@@ -49,26 +55,14 @@ export class AppComponent implements OnInit {
   }
 
   onChange(value:any) {
-    console.log(this.typeSelected);
+    AuthService.log();
 
-    this.useJwtHelper();
-
-    this.aclService.getEnumAclRole().subscribe(roles => this.aclRole = roles )
+    this.aclService.getEnumRole().subscribe(roles => this.aclRole = roles )
+    this.aclService.getEnumAdmin().subscribe(admin => this.aclAdmin = admin )
+    this.aclService.getEnumData().subscribe(data => this.aclData = data )
+    this.aclService.getEnumOwner().subscribe(owner => this.aclOwner = owner )
   }
 
 
-
-  useJwtHelper() {
-    let jwtHelper: JwtHelper = new JwtHelper();
-
-    let token = localStorage.getItem('token');
-
-    console.log(
-      token,
-      jwtHelper.decodeToken(token),
-      jwtHelper.getTokenExpirationDate(token),
-      jwtHelper.isTokenExpired(token)
-    );
-  }
 
 }

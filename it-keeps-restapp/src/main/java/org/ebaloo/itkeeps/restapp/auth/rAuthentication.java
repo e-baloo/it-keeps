@@ -50,13 +50,12 @@ public class rAuthentication {
     @POST
     @Timed
     @Produces({MediaType.APPLICATION_JSON})
-    @Consumes({MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
     @PermitAll
     @Path(ApiPath.AUTH_LOGIN)
-    public Response login(String credentials) {
+    public Response login(jCredential credentials) {
         try {
-            jCredential cred = jCredential.MAPPER.readValue(credentials, jCredential.class);
-            jUser user = authenticate(cred);
+            jUser user = authenticate(credentials);
             String token = JwtFactory.getJwtString(user);
             return Response.ok(new jToken(token)).build();
 

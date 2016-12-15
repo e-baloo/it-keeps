@@ -42,7 +42,7 @@ public final class JwtFactory {
 
 				if(StringUtils.isEmpty(key) || StringUtils.equals(key, GENERAT_KEY)) {
 
-					logger.warn("Generat Password !!!");
+					logger.warn("Generate Password !!!");
 
 					String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 					key = RandomStringUtils.random( 128, 0, 0, false, false, characters.toCharArray(), new SecureRandom() );
