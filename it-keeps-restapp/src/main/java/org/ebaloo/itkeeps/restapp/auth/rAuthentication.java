@@ -50,40 +50,26 @@ public class rAuthentication {
     @POST
     @Timed
     @Produces({MediaType.APPLICATION_JSON})
-    @Consumes({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON})
     @PermitAll
     @Path(ApiPath.AUTH_LOGIN)
-    public Response login(jCredential credential) {
-
+    public Response login(String credentials) {
         try {
-            jUser user = authenticate(credential);
+            jCredential cred = jCredential.MAPPER.readValue(credentials, jCredential.class);
+            jUser user = authenticate(cred);
             String token = JwtFactory.getJwtString(user);
             return Response.ok(new jToken(token)).build();
-        } catch (Exception e) {
-        	e.printStackTrace();
-            return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
-    }
 
-    @POST
-    @Timed
-    @Produces({MediaType.APPLICATION_JSON})
-    @Consumes({MediaType.TEXT_PLAIN})
-    @PermitAll
-    @Path(ApiPath.AUTH_LOGIN)
-    public Response login(String strCredentials) {
-        try {
-            jCredential credentials = jCredential.MAPPER.readValue(strCredentials, jCredential.class);
-            return this.login(credentials);
         } catch (Exception e) {
             e.printStackTrace();
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
     }
 
+
 	@GET
     @Produces({MediaType.APPLICATION_JSON})
-    @Consumes({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON})
 	@aApplicationRolesAllowed(enRole.GUEST)
     @Path(ApiPath.AUTH_RENEW)
     @Timed
@@ -105,12 +91,13 @@ public class rAuthentication {
 	
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    @Consumes({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON})
     @PermitAll
     @Path(ApiPath.AUTH_CHECK)
     @Timed
-    public Response check(jToken token) {
+    public Response check(String txt) {
         try {
+            jToken token = jToken.MAPPER.readValue(txt, jToken.class);
         	JwtFactory.isValid(token.getToken());
             return Response.status(Response.Status.OK).entity(Boolean.TRUE).build();
         } catch (Exception e) {

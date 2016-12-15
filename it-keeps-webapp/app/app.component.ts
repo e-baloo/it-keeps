@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from "./auth/service/AuthService";
 import {jCredential} from "./model/Credential";
-import {jToken} from "./model/Token";
+import {JwtHelper} from "angular2-jwt";
+import {AclService} from "./service/AclService";
 
 @Component({
   selector: 'my-app',
@@ -14,15 +15,17 @@ import {jToken} from "./model/Token";
   </option>
 </select>
 
-<p>jToken == {{token?.getToken()}}</p>`,
+<p>{{aclRole}}</p>
+<p>jToken == {{token}}</p>`,
 })
 export class AppComponent implements OnInit {
   authType: string[];
-  token: jToken;
+  aclRole: string[];
+  token: any;
   typeSelected: string = 'BASIC';
 
 //
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private aclService: AclService) {
   }
 
   ngOnInit() {
@@ -47,7 +50,25 @@ export class AppComponent implements OnInit {
 
   onChange(value:any) {
     console.log(this.typeSelected);
+
+    this.useJwtHelper();
+
+    this.aclService.getEnumAclRole().subscribe(roles => this.aclRole = roles )
   }
 
+
+
+  useJwtHelper() {
+    let jwtHelper: JwtHelper = new JwtHelper();
+
+    let token = localStorage.getItem('token');
+
+    console.log(
+      token,
+      jwtHelper.decodeToken(token),
+      jwtHelper.getTokenExpirationDate(token),
+      jwtHelper.isTokenExpired(token)
+    );
+  }
 
 }

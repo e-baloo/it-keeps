@@ -24,6 +24,7 @@ import org.ebaloo.itkeeps.core.domain.vertex.fAcl;
 
 import com.codahale.metrics.annotation.Timed;
 
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 
@@ -40,7 +41,10 @@ public class rAcl {
     @aApplicationRolesAllowed(enRole.USER)
     @Path(ApiPath.API_ACL_DATA_ENUM)
     public Response getAclDataEnum() {
-        return Response.ok().entity(enAclData.values().stream().map(enAbstract::name).collect(Collectors.toList())).build();
+        return Response.ok().entity(enAclData.values().stream()
+                .sorted(Comparator.comparingInt(s -> s.ordinal()))
+                .map(enAbstract::name)
+                .collect(Collectors.toList())).build();
     }
 
     @GET
@@ -49,7 +53,10 @@ public class rAcl {
     @aApplicationRolesAllowed(enRole.USER)
     @Path(ApiPath.API_ACL_OWNER_ENUM)
     public Response getAclOwnerEnum() {
-        return Response.ok().entity(enAclOwner.values().stream().map(enAbstract::name).collect(Collectors.toList())).build();
+        return Response.ok().entity(enAclOwner.values().stream()
+                .sorted(Comparator.comparingInt(s -> s.ordinal()))
+                .map(enAbstract::name)
+                .collect(Collectors.toList())).build();
     }
 
     @GET
@@ -58,8 +65,12 @@ public class rAcl {
     @aApplicationRolesAllowed(enRole.USER)
     @Path(ApiPath.API_ACL_ADMIN_ENUM)
     public Response getAclAdminEnum() {
-        return Response.ok().entity(enAclAdmin.values().stream().map(enAbstract::name).collect(Collectors.toList())).build();
+        return Response.ok().entity(enAclAdmin.values().stream()
+                .sorted(Comparator.comparingInt(s -> s.ordinal()))
+                .map(enAbstract::name)
+                .collect(Collectors.toList())).build();
     }
+
 
 
     @GET
@@ -68,18 +79,22 @@ public class rAcl {
     @aApplicationRolesAllowed(enRole.USER)
     @Path(ApiPath.API_ACL_ROLE_ENUM)
     public Response getAclRoleEnum() {
-        return Response.ok().entity(enAclRole.values().stream().map(enAbstract::name).collect(Collectors.toList())).build();
+        return Response.ok().entity(enAclRole.values().stream()
+                .sorted(Comparator.comparingInt(s -> s.ordinal()))
+                .map(enAbstract::name)
+                .collect(Collectors.toList())).build();
     }
 
 
 
+    private static final String ID = "id";
 
     @GET //READ
     @Produces({MediaType.APPLICATION_JSON})
 	@aApplicationRolesAllowed(enRole.ADMIN)
     @Timed
-    @Path(ApiPath.API_ACL_GET_ID + "{rid}")
-    public Response readId(@PathParam(value = "rid") Rid rid) {
+    @Path(ApiPath.API_ACL_GET_ID + "{" + ID + "}")
+    public Response readId(@PathParam(value = ID) Rid rid) {
         Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
         jAcl acl = fAcl.read(requesterRid, rid);
         return Response.ok().entity(acl).build();
@@ -88,14 +103,19 @@ public class rAcl {
     
     @PUT // UPDATE
     @Produces({MediaType.APPLICATION_JSON})
-    @Consumes({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON})
 	@aApplicationRolesAllowed(enRole.ADMIN)
     @Timed
     @Path(ApiPath.API_ACL_UPDATE)
-    public Response update(final jAcl j) {
-        Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
-        fAcl.update(requesterRid, j);
-        return Response.ok().entity(fAcl.read(requesterRid, j.getId())).build();
+    public Response update(final String txt) {
+        try {
+            jAcl j = jAcl.MAPPER.readValue(txt, jAcl.class);
+            Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
+            fAcl.update(requesterRid, j);
+            return Response.ok().entity(fAcl.read(requesterRid, j.getId())).build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     
@@ -116,8 +136,8 @@ public class rAcl {
     @Produces({MediaType.APPLICATION_JSON})
 	@aApplicationRolesAllowed(enRole.ADMIN)
     @Timed
-    @Path(ApiPath.API_ACL_DELETE + "{rid}")
-    public Response delete(@PathParam(value = "rid") Rid rid) {
+    @Path(ApiPath.API_ACL_DELETE + "{" + ID + "}")
+    public Response delete(@PathParam(value = ID) Rid rid) {
         Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());
         jAcl j = fAcl.delete(requesterRid, rid);
         return Response.ok().entity(j).build();
