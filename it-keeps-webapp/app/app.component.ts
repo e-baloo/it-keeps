@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {AuthService} from "./auth/service/AuthService";
-import {jCredential} from "./model/Credential";
+import {AuthService} from "./auth/service/auth..service";
+import {jCredential} from "./model/jCredential";
 import {AclService} from "./service/AclService";
 
 @Component({
@@ -55,12 +55,17 @@ export class AppComponent implements OnInit {
   }
 
   onChange(value:any) {
-    AuthService.log();
+    this.authService.log();
 
-    this.aclService.getEnumRole().subscribe(roles => this.aclRole = roles )
-    this.aclService.getEnumAdmin().subscribe(admin => this.aclAdmin = admin )
-    this.aclService.getEnumData().subscribe(data => this.aclData = data )
-    this.aclService.getEnumOwner().subscribe(owner => this.aclOwner = owner )
+    this.aclService.getEnumRole().subscribe(roles => this.aclRole = roles );
+    this.aclService.getEnumAdmin().subscribe(admin => this.aclAdmin = admin );
+    this.aclService.getEnumData().subscribe(data => this.aclData = data );
+    this.aclService.getEnumOwner().subscribe(owner => this.aclOwner = owner );
+
+    console.log("ID   : " + this.authService.getUserIt());
+    console.log("NAME : " + this.authService.getUserName());
+    console.log("ROLE : " + this.authService.getUserRole());
+
   }
 
 

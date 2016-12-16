@@ -1,4 +1,4 @@
-import {Base} from "./Base";
+import {Base} from "./jBase";
 /**
  * Created by donval on 14/12/2016.
  */

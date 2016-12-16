@@ -3,7 +3,7 @@ import {BrowserModule}  from '@angular/platform-browser';
 import {HttpModule}     from '@angular/http';
 import {FormsModule}    from '@angular/forms';
 import {AppComponent}   from './app.component';
-import {AuthService}    from "./auth/service/AuthService";
+import {AuthService}    from "./auth/service/auth..service";
 import {AUTH_PROVIDERS, provideAuth } from 'angular2-jwt';
 import {AclService}     from "./service/AclService";
 

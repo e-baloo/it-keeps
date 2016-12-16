@@ -24,8 +24,8 @@ public final class JwtFactory {
 	private static final Logger logger = LoggerFactory.getLogger(JwtFactory.class.getName());
 	private static final String DEFAULT_KEY = "tpONIG5BlO4wTRHFD8ehIvwbAdUMPAVmXNdPU6qYcVSb8zL85xkgmDr7sHHzNBIHpWI3l4a1rXPhnUs4lt57bjIVwHUW3Ot7gyfN6zoh6iJm83eCMkbXF73K7qRIv801";
 	private static final String GENERAT_KEY = "{random}";
-	private static final String USER_NAME = "user.name";
-	private static final String USER_ROLE = "user.role";
+	private static final String USER_NAME = "name";
+	private static final String USER_ROLE = "role";
 	private static String __key = null;
 	private static long DEFAULT_TIMEOUT = 10;
 	private static Long timeout = null;

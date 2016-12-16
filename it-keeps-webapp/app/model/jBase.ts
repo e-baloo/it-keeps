@@ -1,4 +1,4 @@
-import {jLight} from "./Light";
+import {jLight} from "./jLight";
 /**
  * Created by donval on 14/12/2016.
  */
