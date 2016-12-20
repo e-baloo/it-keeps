@@ -8,6 +8,7 @@ export class jCredential extends Base {
 
   private password64: string;
   private userName: string;
+  private authenticationType: string;
 
 
   getPassword64(): string {
@@ -32,5 +33,15 @@ export class jCredential extends Base {
   setUserName(value: string) {
     this.userName = value;
   }
+
+  setAuthenticationType(authenticationType: string) {
+    this.authenticationType = authenticationType;
+  }
+
+  getAuthenticationType(): string {
+    return this.authenticationType;
+  }
+
+
 
 }

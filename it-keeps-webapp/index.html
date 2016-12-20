@@ -1,10 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Angular QuickStart</title>
+  <base href="/" />
+  <title>IT-Keeps</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap css & js -->
+  <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Application css -->
   <link rel="stylesheet" href="styles.css">
+
+  <!-- Bootstrap & JQuery script -->
+  <script src="node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="node_modules/bootstrap-show-password/bootstrap-show-password.js"></script>
+
 
   <!-- Polyfill(s) for older browsers -->
   <script src="node_modules/core-js/client/shim.min.js"></script>
@@ -22,6 +34,6 @@
 </head>
 
 <body>
-<my-app>Loading AppComponent content here ...</my-app>
+  <my-app>Loading...</my-app>
 </body>
 </html>

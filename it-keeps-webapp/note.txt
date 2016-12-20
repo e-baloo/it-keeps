@@ -6,3 +6,15 @@ http://themes.laborator.co/#theme=neon
 https://bootswatch.com/cyborg/
 
 
+
+
+https://scotch.io/tutorials/how-to-implement-a-custom-validator-directive-confirm-password-in-angular-2
+
+
+https://devblog.dymel.pl/2016/06/13/communication-angular2-components/
+
+
+
+
+
+

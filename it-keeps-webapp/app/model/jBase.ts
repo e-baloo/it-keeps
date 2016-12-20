@@ -15,4 +15,15 @@ export class Base {
     return this.light;
   }
 
+  getName(): string {
+    return this.getLight().getName();
+  }
+
+  setName(value: string) {
+    this.getLight().setName(value);
+  }
+
+  getId(): string {
+    return this.getLight().getId();
+  }
 }

@@ -6,14 +6,13 @@ import {Injectable} from '@angular/core';
 import {Http, Response, RequestOptions, Headers,} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/Rx';
-import {jCredential} from "../../model/jCredential";
-import {JwtHelper, AuthHttp} from "angular2-jwt";
+import {jCredential} from "../model/jCredential";
+import {JwtHelper} from "angular2-jwt";
 
 @Injectable()
 export class AuthService {
 
 	private static _instance:AuthService = null;
-
 
 	constructor(private http: Http) {
 		if(!AuthService._instance){
@@ -21,13 +20,25 @@ export class AuthService {
 		}
 	}
 
-	public static getInstance():AuthService
-	{
+	public static getInstance():AuthService {
 		return AuthService._instance;
 	}
-
-
-	public static readonly TOKEN_NAME: string = 'token';
+  
+  
+  private privateGetToken(): string {
+    return localStorage.getItem(AuthService.TOKEN_NAME);
+  }
+  
+  private privateSetToken(token: string): void {
+    localStorage.setItem(AuthService.TOKEN_NAME, token);
+  }
+  
+  private privateRemoveToken(): void {
+    localStorage.removeItem(AuthService.TOKEN_NAME);
+  }
+  
+  
+  public static readonly TOKEN_NAME: string = 'token';
 	private static readonly jwtHelper: JwtHelper = new JwtHelper();
 
 
@@ -39,9 +50,7 @@ export class AuthService {
 	}
 
 	public getAuthTypeEnum(): Observable<string[]> {
-
 		return this.http.get(this.getBackendUrl() + 'type/enum').map((res: Response) => <string[]> res.json());
-
 	}
 
 	public login(cred: jCredential): Observable<boolean> {
@@ -54,33 +63,61 @@ export class AuthService {
 	}
 
 	public renew(): void {
-    let headers = new Headers({'Content-Type': 'application/json'});
-    headers.append('x-access-token', this._getToken());
-    let options = new RequestOptions({headers: headers});
-    this.http.get(this.getBackendUrl() + 'renew/', options)
-      .map((response: Response) => response.json())
-      .subscribe(
-        json => this.setToken(json),
-        error => console.error(error)
-      );
+    if(this.privateGetToken()) {
+  
+      let headers = new Headers({'Content-Type': 'application/json'});
+      headers.append('x-access-token', this.privateGetToken());
+      let options = new RequestOptions({headers: headers});
+  
+      this.http.put(this.getBackendUrl() + 'renew/', null, options)
+        .map((response: Response) => response.json())
+        .subscribe(
+          json => this.setToken(json),
+          function (error) {
+            this.privateRemoveToken();
+            console.error("renew : " + error);
+          }
+        );
+    }
   }
-
+  
+  public logout(): void {
+	  if(this.privateGetToken()) {
+	    
+      let headers = new Headers({'Content-Type': 'application/json'});
+      headers.append('x-access-token', this.privateGetToken());
+      let options = new RequestOptions({headers: headers});
+    
+      this.privateRemoveToken();
+    
+      this.http.delete(this.getBackendUrl() + 'logout/', options)
+        .map((response: Response) => response.json())
+        .subscribe(
+          json => this.privateRemoveToken(),
+          function (error) {
+            this.privateRemoveToken();
+            console.error("logout : " + error);
+          }
+        );
+    }
+    
+  }
 
 	private setToken(json: any): boolean {
     if(!json) {
-      localStorage.removeItem(AuthService.TOKEN_NAME);
+      this.privateRemoveToken();
       return false;
     }
 
 		let token = json.token;
 
     if(!token) {
-      localStorage.removeItem(AuthService.TOKEN_NAME);
+      this.privateRemoveToken();
       return false;
     }
-
-    localStorage.removeItem(AuthService.TOKEN_NAME);
-    localStorage.setItem(AuthService.TOKEN_NAME, token);
+    
+    this.privateRemoveToken();
+    this.privateSetToken(token);
     return true;
 
 	}
@@ -98,21 +135,17 @@ export class AuthService {
 	}
 
 
-	private _getToken(): string {
-		return localStorage.getItem(AuthService.TOKEN_NAME);
-	}
-
 
 	public getToken(): string {
 
-		let token  = this._getToken();
+		let token  = this.privateGetToken();
 
 		if(!token) {
 			return null;
 		}
 
 		if(AuthService.jwtHelper.isTokenExpired(token)) {
-			localStorage.removeItem(AuthService.TOKEN_NAME);
+		  this.privateRemoveToken();
 			return null;
 		}
 
@@ -130,14 +163,12 @@ export class AuthService {
 	}
 
 
-	public logout(): void {
-		localStorage.removeItem(AuthService.TOKEN_NAME);
-	}
+
 
 
 	public log() {
 
-		let token = this._getToken();
+		let token = this.privateGetToken();
 
 		console.log(
 			token,
@@ -148,8 +179,8 @@ export class AuthService {
 
 	}
 
-	public getUserIt(): string {
-    let token = this._getToken();
+	public getUserId(): string {
+    let token = this.privateGetToken();
 
     if(!token) {
       return null;
@@ -159,7 +190,7 @@ export class AuthService {
   }
 
   public getUserName(): string {
-    let token = this._getToken();
+    let token = this.privateGetToken();
 
     if(!token) {
       return null;
@@ -169,7 +200,7 @@ export class AuthService {
   }
 
   public getUserRole(): string {
-    let token = this._getToken();
+    let token = this.privateGetToken();
 
     if(!token) {
       return null;

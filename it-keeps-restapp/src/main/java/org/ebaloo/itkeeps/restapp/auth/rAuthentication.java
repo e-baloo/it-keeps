@@ -2,11 +2,7 @@ package org.ebaloo.itkeeps.restapp.auth;
 
 
 import javax.annotation.security.PermitAll;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -66,7 +62,7 @@ public class rAuthentication {
     }
 
 
-	@GET
+	@PUT
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON})
 	@aApplicationRolesAllowed(enRole.GUEST)
@@ -87,7 +83,18 @@ public class rAuthentication {
         }      
     }
 
-	
+    @DELETE
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    @aApplicationRolesAllowed(enRole.GUEST)
+    @Path(ApiPath.AUTH_LOGOUT)
+    @Timed
+    public Response logout() {
+        // TODO
+        return Response.ok().build();
+    }
+
+
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON})

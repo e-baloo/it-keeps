@@ -14,7 +14,7 @@
     "tsc:w": "tsc -w"
   },
   "keywords": [],
-  "author": "",
+  "author": "Marc DONVAL",
   "license": "MIT",
   "dependencies": {
     "@angular/common": "~2.3.0",
@@ -28,7 +28,10 @@
     "angular-in-memory-web-api": "~0.2.0",
     "angular2-jwt": "^0.1.26",
     "bootstrap": "^3.3.7",
+    "bootstrap-show-password": "^1.0.3",
     "core-js": "^2.4.1",
+    "guards": "^0.3.0",
+    "jquery": "^3.1.1",
     "reflect-metadata": "^0.1.8",
     "rxjs": "5.0.0-rc.4",
     "systemjs": "0.19.40",

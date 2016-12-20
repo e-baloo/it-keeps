@@ -15,11 +15,13 @@ public final class ApiPath {
     private static final String ADMIN = "admin/";
     private static final String ROLE = "role/";
     private static final String LOGIN = "login/";
+    private static final String LOGOUT = "logout/";
     private static final String RENEW = "renew/";
     private static final String CHECK = "check/";
 
 
     public static final String AUTH_LOGIN = AUTH + LOGIN;
+    public static final String AUTH_LOGOUT= AUTH + LOGOUT;
     public static final String AUTH_RENEW = AUTH + RENEW;
     public static final String AUTH_CHECK = AUTH + CHECK;
 

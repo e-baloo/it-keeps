@@ -81,7 +81,7 @@ public class Main {
 				LogFactory.getMain()
 						.debug(jObject.MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(rootUser));
 
-				jToken token = clientRoot.callJsonRead(ApiPath.AUTH_RENEW, jToken.class);
+				jToken token = clientRoot.callJsonUpdate(ApiPath.AUTH_RENEW, null, jToken.class);
 				LogFactory.getMain().debug(jObject.MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(token));
 			}
 
