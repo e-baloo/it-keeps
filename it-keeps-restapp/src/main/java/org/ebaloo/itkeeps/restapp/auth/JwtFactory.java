@@ -96,8 +96,8 @@ public final class JwtFactory {
 		claims.put(jBase.RID, user.getId().getSimple());
 		claims.put(jBase.NAME, user.getName());
 		
-		//claims.put(USER_ROLE, user.getRole().toString());
-		claims.put(USER_ROLE, enRole.ROOT.toString());
+		claims.put(USER_ROLE, user.getRole().name());
+		//claims.put(USER_ROLE, enRole.ROOT.toString());
 		
 		
 		return signer.sign(claims);

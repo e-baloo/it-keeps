@@ -130,6 +130,14 @@ public class Main {
 
 			LogFactory.getMain().info("---------------------------------------------------------");
 
+				LogFactory.getMain().info(tUser.guest1.toString());
+			LogFactory.getMain().info(tUser.user1.toString());
+			LogFactory.getMain().info(tUser.user2.toString());
+			LogFactory.getMain().info(tUser.admin1.toString());
+
+
+			LogFactory.getMain().info("---------------------------------------------------------");
+
 			{
 
 				jCredential c = new jCredential();

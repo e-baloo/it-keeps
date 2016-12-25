@@ -2,7 +2,7 @@
  * Created by Marc on 13/12/2016.
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, EventEmitter} from '@angular/core';
 import {Http, Response, RequestOptions, Headers,} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/Rx';
@@ -13,17 +13,24 @@ import {JwtHelper} from "angular2-jwt";
 export class AuthService {
 
 	private static _instance:AuthService = null;
-
-	constructor(private http: Http) {
+  
+  private loggedInEmitter = new EventEmitter<boolean>();
+  private roleEmitter = new EventEmitter<string>();
+  
+  constructor(private http: Http) {
 		if(!AuthService._instance){
 			AuthService._instance = this;
 		}
+  
+    this.loggedInEmitter.emit(false);
 	}
 
 	public static getInstance():AuthService {
 		return AuthService._instance;
 	}
   
+	
+	
   
   private privateGetToken(): string {
     return localStorage.getItem(AuthService.TOKEN_NAME);
@@ -31,10 +38,14 @@ export class AuthService {
   
   private privateSetToken(token: string): void {
     localStorage.setItem(AuthService.TOKEN_NAME, token);
+    this.loggedInEmitter.emit(true);
+    this.roleEmitter.emit(this.getUserRole());
   }
   
   private privateRemoveToken(): void {
     localStorage.removeItem(AuthService.TOKEN_NAME);
+    this.loggedInEmitter.emit(false);
+    this.roleEmitter.emit(null);
   }
   
   
@@ -90,15 +101,7 @@ export class AuthService {
     
       this.privateRemoveToken();
     
-      this.http.delete(this.getBackendUrl() + 'logout/', options)
-        .map((response: Response) => response.json())
-        .subscribe(
-          json => this.privateRemoveToken(),
-          function (error) {
-            this.privateRemoveToken();
-            console.error("logout : " + error);
-          }
-        );
+      this.http.delete(this.getBackendUrl() + 'logout/', options);
     }
     
   }
@@ -179,6 +182,21 @@ export class AuthService {
 
 	}
 
+	
+	public isTokenIsValid(): boolean {
+    
+    let token = this.privateGetToken();
+    
+    if(!token) {
+      console.log("token is empty !!!");
+      return false;
+    }
+	  
+    return !AuthService.jwtHelper.isTokenExpired(token);
+	  
+  }
+	
+	
 	public getUserId(): string {
     let token = this.privateGetToken();
 
@@ -209,4 +227,20 @@ export class AuthService {
     return AuthService.jwtHelper.decodeToken(token).role;
   }
 
+  //http://stackoverflow.com/questions/37024918/angular2-changedetection-or-observable
+  //http://stackoverflow.com/questions/38284173/how-to-get-angularfire2-authentication-as-an-observable
+  //https://blog.sstorie.com/building-an-angular-2-reactive-auto-logout-timer-with-the-redux-pattern/
+  
+  
+  //Observable<TestModel>((subscriber: Subscriber<TestModel>) => subscriber.next(new TestModel())).map(o => JSON.stringify(o)
+  
+  getLoggedInEmitter() : EventEmitter<boolean> {
+	  return this.loggedInEmitter;
+  }
+  
+  getRoleEmitter() : EventEmitter<string> {
+	  return this.roleEmitter;
+  }
+  
+  
 }

@@ -31,7 +31,7 @@ public class rEntry {
     @Timed
     @GET // LIST
     @Produces({MediaType.APPLICATION_JSON})
-	@aApplicationRolesAllowed(enRole.ADMIN)
+	@aApplicationRolesAllowed(enRole.USER)
     @Path(ApiPath.API_ENTRY_GET_ALL)
     public Response readAll() {
         Rid requesterRid = new Rid(securityContext.getUserPrincipal().getName());

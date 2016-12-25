@@ -1,29 +1,66 @@
 ﻿<!-- main app container -->
+
 <nav class="navbar navbar-inverse">
   <div class="container-fluid">
+
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Logo</a>
+      <a class="navbar-brand" href="#" [routerLink]="['/welcome']" style="padding-top: 10px;">
+
+        <div [ngSwitch]="(roleEmitter | async)">
+          <div *ngSwitchCase="'USER'"><img src="../img/logo-itkeeps-green.png" height="32" width="32"/></div>
+          <div *ngSwitchCase="'ADMIN'"><img src="../img/logo-itkeeps-blue.png" height="32" width="32"/></div>
+          <div *ngSwitchCase="'ROOT'"><img src="../img/logo-itkeeps-red.png" height="32" width="32"/></div>
+          <div *ngSwitchDefault><img src="../img/logo-itkeeps-white.png" height="32" width="32"/></div>
+        </div>
+
+
+
+
+        <!-- <img src="../img/logo-itkeeps-white.png" height="32" width="32"/> -->
+      </a>
     </div>
-    <div class="collapse navbar-collapse" id="myNavbar">
+
+    <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Home</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Projects</a></li>
-        <li><a href="#">Contact</a></li>
+        <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+          <a [routerLink]="['/welcome']">Welcome</a>
+        </li>
+        <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+          <a [routerLink]="['/home']" >Home</a>
+        </li>
+        <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+          <a [routerLink]="['/about']">About</a>
+        </li>
       </ul>
+
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+        <li>
+          <a *ngIf="(loggedInEmitter == null) || !(loggedInEmitter | async)" [routerLink]="['/login']">
+            <span class="glyphicon glyphicon-log-in"></span> Login
+          </a>
+          <a *ngIf="(loggedInEmitter | async)" (click)="logout()">
+            <span class="glyphicon glyphicon-log-out"></span> Logout
+          </a>
+        </li>
       </ul>
-    </div>
+
+
+    </div><!--/.nav-collapse -->
   </div>
 </nav>
 
-<router-outlet></router-outlet>
+
+<div class="container">
+
+  <router-outlet></router-outlet>
+
+</div>
 
 <footer class="container-fluid text-center">
   <alert></alert>

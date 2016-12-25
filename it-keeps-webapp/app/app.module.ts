@@ -12,6 +12,10 @@ import {AuthGuard} from "./login/auth.guard";
 import {routing} from "./app.routing";
 import {NgModule} from "@angular/core";
 import {AlertService} from "./service/alert.service";
+import {WelcomeComponent} from "./welcome/welcome.component";
+import {AboutComponent} from "./about/about.component";
+import {PathService} from "./service/path.service";
+import {EntryService} from "./service/entry.service";
 
 @NgModule({
   imports: [
@@ -25,10 +29,14 @@ import {AlertService} from "./service/alert.service";
     AlertComponent,
     HomeComponent,
     LoginComponent,
+    WelcomeComponent,
+    AboutComponent
   ],
   providers: [
     AuthService,
     AclService,
+    PathService,
+    EntryService,
     AlertService,
     AUTH_PROVIDERS,
     AuthGuard,

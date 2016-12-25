@@ -26,7 +26,7 @@ public class rCredential {
 
 	@GET // LIST
 	@Produces({ MediaType.APPLICATION_JSON })
-	@aApplicationRolesAllowed(enRole.ADMIN)
+	@aApplicationRolesAllowed(enRole.USER)
 	@Timed
 	@Path(ApiPath.API_CRED_GET_ALL)
 	public Response readAll() {
