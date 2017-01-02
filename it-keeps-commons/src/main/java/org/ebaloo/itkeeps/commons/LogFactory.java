@@ -41,6 +41,33 @@ public class LogFactory {
 		   
 		   return _mainLogger;
 	   }
-	   
-	
+
+
+	public static void trace(String msg) {
+	   	if(_mainLogger == null || !_mainLogger.isTraceEnabled() || msg == null)
+	   		return;
+
+		  _mainLogger.trace(msg);
+	}
+
+
+	public static void trace(String format, Object... args) {
+	    if(_mainLogger == null || !_mainLogger.isTraceEnabled())
+            return;
+
+            try {
+                _mainLogger.trace(String.format(format, args));
+            } catch(Exception e) {
+                _mainLogger.trace("Exception : " + e.getMessage());
+            }
+	    }
+
+	public static void trace(Throwable t) {
+        if(_mainLogger == null || !_mainLogger.isTraceEnabled())
+            return;
+
+        trace("%s, %s", t.getMessage(), t.getStackTrace());
+    }
+
+
 }

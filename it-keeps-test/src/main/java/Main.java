@@ -47,6 +47,7 @@ public class Main {
 
 			LogFactory.getMain().info("START");
 
+
 			ItkeepsHttpClient guestClient = new ItkeepsHttpClient();
 
 			{
@@ -127,6 +128,9 @@ public class Main {
 			for (OrientVertex ov : GraphFactory.command(null, "SELECT FROM V")) {
 				LogFactory.getMain().info(ov.getRecord().toJSON());
 			}
+
+
+
 
 			LogFactory.getMain().info("---------------------------------------------------------");
 

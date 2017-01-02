@@ -261,5 +261,15 @@ public final class GraphFactory {
 		}
 	
 	}
+
+
+	public static void getVersion() {
+
+		if (singleton == null) {
+			singleton = getOrientGraphFactory();
+		}
+
+
+	}
     
 }
