@@ -33,7 +33,12 @@ public class jEntry extends jBaseChildAcl {
 
 	@JsonProperty(PATH)
 	public final void setPath(jBaseLight value) {
-		path = Optional.ofNullable(value);
+		this.path = Optional.ofNullable(value);
+
+		if(this.isPresentPath()) {
+			this.getLight().setParentId(this.getPath().getId());
+		}
+
 	}
 
 	@JsonIgnore

@@ -17,14 +17,18 @@ public class jBaseLight extends jObject {
 	public static final String CLASS_TYPE = "type";
     public static final String ID = Rid.RDI_NAME;
     public static final String VERSION = "ver";
+    public static final String PARENT_ID = "parentId";
 
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @JsonIgnore
 	private Optional<Rid> rid = Optional.empty();
 
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+	@JsonIgnore
+	private Optional<Rid> parentRid = Optional.empty();
 
-	// GUID
+
 	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	@JsonIgnore
 	private Optional<String> name = Optional.empty();
@@ -49,16 +53,37 @@ public class jBaseLight extends jObject {
         this.rid = Optional.of(id);
     }
 
+	@JsonIgnore
+	public final Rid getParentId() {
+		return this.parentRid.orElse(null);
+	}
 
-    @JsonProperty(value = ID, index = 10)
+	@JsonIgnore
+	public final void setParentId(Rid id) {
+		this.parentRid = Optional.of(id);
+	}
+
+
+    @JsonProperty(value = ID)
     private String _getId() {
         return rid.isPresent() ? rid.get().getSimple() : null;
 	}
 
-    @JsonProperty(value = ID, index = 10)
-    private void _setId(String guid) {
-        this.rid = StringUtils.isEmpty(guid) ? Optional.of(null) : Optional.of(new Rid(guid));
+    @JsonProperty(value = ID)
+    private void _setId(String id) {
+        this.rid = StringUtils.isEmpty(id) ? Optional.of(null) : Optional.of(new Rid(id));
 	}
+
+	@JsonProperty(value = PARENT_ID)
+	private String _getParentId() {
+		return parentRid.isPresent() ? parentRid.get().getSimple() : null;
+	}
+
+	@JsonProperty(value = PARENT_ID)
+	private void _setParentId(String id) {
+		this.rid = StringUtils.isEmpty(id) ? Optional.of(null) : Optional.of(new Rid(id));
+	}
+
 
 	@JsonIgnore
 	public final boolean isPresentRid() {

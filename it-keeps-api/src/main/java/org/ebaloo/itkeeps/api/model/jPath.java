@@ -34,7 +34,13 @@ public class jPath extends jBaseChildAcl {
 
 	@JsonProperty(PARENT_PATH)
 	public void setParent(jBaseLight value) {
+
 		this.parent = Optional.ofNullable(value);
+
+		if(this.isPresentParent()) {
+			this.getLight().setParentId(this.getParent().getId());
+		}
+
 	}
 
 	@JsonIgnore
